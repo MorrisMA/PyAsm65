@@ -122,6 +122,8 @@ for field in fields:
                     data = int(dt)
                 else:
                     data = code
+                # Process list of library calls whenever code generation turns
+                # to generating variable definitions
             elif op == directives[3]:
                 pass
             elif op == directives[4]:
@@ -150,6 +152,9 @@ for field in fields:
                     else:
                         addrsMode = 'abs'
                     operand = dt
+                    if re.match('^_\w*$', dt):
+                        if dt not in library:
+                            library.append(dt)
                 elif re.match('^.*,[bB]', dt):
                     addrsMode = 'bp'
                     operand = dt.split(',')[0]
@@ -161,6 +166,9 @@ for field in fields:
                     operand = dt.split(',')[0]
                 elif re.match('^\(.*,[sS]\)$', dt):
                     addrsMode = 'spI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*,[sS]\),[yY]$', dt):
+                    addrsMode = 'spIY'
                     operand = dt.split(',')[0][1:]
                 else:
                     addrsMode = '???'
@@ -196,6 +204,8 @@ for field in fields:
                     data = int(dt)
                 else:
                     data = code
+                # Process list of library calls whenever code generation turns
+                # to generating variable definitions
             elif op == directives[3]:
                 pass
             elif op == directives[4]:
@@ -228,8 +238,8 @@ for field in fields:
                 elif op == '.ds':
                     siz = len(dt)
                     variables[lbl] = (data, siz, val)
-
                     strVal = []
+
                     for ch in dt:
                         strVal.append('%02x' % (ord(ch)))
                     strVal = ''.join(strVal)
@@ -244,7 +254,7 @@ for field in fields:
                 else:
                     print('Error. Unknown define: %s.' % (op))
                     pass
-            else:   # parse source: opcode data; evaluate dt addressing mode.
+            else:
                 if dt == '':
                     addrsMode = 'imp'
                     operand = ''
@@ -260,6 +270,9 @@ for field in fields:
                     else:
                         addrsMode = 'abs'
                     operand = dt
+                    if re.match('^_\w*$', dt):
+                        if dt not in library:
+                            library.append(dt)
                 elif re.match('^.*,[bB]', dt):
                     addrsMode = 'bp'
                     operand = dt.split(',')[0]
@@ -271,6 +284,9 @@ for field in fields:
                     operand = dt.split(',')[0]
                 elif re.match('^\(.*,[sS]\)$', dt):
                     addrsMode = 'spI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*,[sS]\),[yY]$', dt):
+                    addrsMode = 'spIY'
                     operand = dt.split(',')[0][1:]
                 else:
                     addrsMode = '???'
