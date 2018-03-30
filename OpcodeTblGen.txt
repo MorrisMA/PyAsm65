@@ -77,7 +77,7 @@ A4  LDY  zp    Y   Y   Y   N   N   N   N   N
 B4  LDY  zpX   Y   Y   Y   Y   Y   Y   N   N
 C4  CPY  zp    Y   Y   Y   N   N   N   N   N
 D4  PSH  zp    Y   Y   Y   Y   Y   Y   N   N
-E4  CPX  zp    Y   Y   Y   N   N   N   N   N
+E4  CPX  zp    Y   Y   Y   Y   Y   Y   N   N
 F4  PUL  zp    Y   Y   Y   Y   Y   Y   N   N
 05  ORA  zp    Y   Y   Y   N   N   N   N   N
 15  ORA  zpX   Y   Y   Y   Y   Y   Y   N   N
@@ -137,7 +137,7 @@ F7  SMB7 zp    Y   N   N   N   N   N   N   N
 78  SEI  imp   N   N   N   N   N   N   N   N
 88  DEY  imp   N   Y   N   N   N   N   N   N
 98  TYA  imp   N   Y   N   N   N   N   Y   N
-A8  TAY  imp   N   Y   N   N   N   N   Y   N
+A8  TAY  imp   N   Y   N   N   N   N   N   N
 B8  CLV  imp   N   N   N   N   N   N   N   N
 C8  INY  imp   N   Y   N   N   N   N   N   N
 D8  CLD  imp   N   N   N   N   N   N   N   N
@@ -167,10 +167,10 @@ F9  SBC  absY  Y   Y   Y   N   N   N   N   N
 5A  PHY  imp   N   Y   N   Y   Y   N   N   N
 6A  ROR  acc   N   Y   N   N   N   N   Y   Y
 7A  PLY  imp   N   Y   N   Y   Y   N   N   N
-8A  TXA  imp   N   Y   N   N   N   N   N   N
-9A  TXS  imp   N   Y   N   N   N   N   Y   N
-AA  TAX  imp   N   Y   N   N   N   N   N   N
-BA  TSX  imp   N   Y   N   N   N   N   Y   N
+8A  TXA  imp   N   Y   N   Y   Y   N   N   Y
+9A  TXS  imp   Y   Y   Y   N   N   N   N   N
+AA  TAX  imp   N   Y   N   Y   Y   N   N   N
+BA  TSX  imp   Y   Y   Y   N   N   N   Y   N
 CA  DEX  imp   N   Y   N   Y   Y   N   N   N
 DA  PHX  imp   N   Y   N   Y   Y   N   N   N
 EA  NOP  imp   N   N   N   N   N   N   N   N
@@ -196,9 +196,9 @@ FB  OAY  imp   N   N   N   N   N   N   N   N
 2C  BIT  abs   Y   Y   Y   N   N   N   N   N
 3C  BIT  absX  Y   Y   Y   Y   Y   Y   N   N
 4C  JMP  abs   Y   N   N   N   N   N   N   N
-5C  PHR  rel16 Y   N   N   Y   N   N   N   N
-6C  JMP  absX  Y   N   N   Y   N   Y   N   N
-7C  JMP  absXI Y   N   N   Y   N   Y   N   N
+5C  PHR  rel16 Y   N   N   Y   N   Y   N   N
+6C  JMP  absX  Y   N   N   N   N   N   N   N
+7C  JMP  absXI Y   N   N   N   N   N   N   N
 8C  STY  abs   Y   Y   Y   N   N   N   N   N
 9C  STZ  absX  Y   Y   Y   Y   Y   Y   N   N
 AC  LDY  abs   Y   Y   Y   N   N   N   N   N
