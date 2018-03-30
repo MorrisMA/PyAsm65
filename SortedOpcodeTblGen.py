@@ -68,4 +68,7 @@ with open('InstrByNameTbl.txt', 'wt') as fout:
                 print(' '*instrLen, instrTbl[instr][i])
                 print(' '*instrLen, instrTbl[instr][i], file=fout)
 
-        
+numInstructions = len(list(instrTbl.keys())) - 32
+print('Number of unique instruction mnemonics: ', numInstructions)
+
+
