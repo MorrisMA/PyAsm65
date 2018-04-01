@@ -1,74 +1,74 @@
 '''
-    This program sorts the Opcode Table by the primary opcode.
+    This program sorts the opcode table into two dictionaries. The first sorts
+    on the base opcode. The second sorts on the mnemonic instruction name.
 '''
 
 with open('OpcodeTbl.txt', 'rt') as finp:
     lines = finp.readlines()
 
-instrTbl = {}
+instrByOpcodeTbl = {}
 
 for line in lines:
     flds = line.split()
-    instr = flds[0]
+    instr, addrMd = flds[0].split('_')
     opLen = int(flds[1])
     dtLen = int(flds[2])
     opcode = flds[3][-2:]
-    prefix = flds[3][:-2]
-    addrMd = flds[4]
 
-    if opcode in instrTbl:
-        instrTbl[opcode].append((instr, opLen, dtLen, opcode, prefix, addrMd))
+    if opcode in instrByOpcodeTbl:
+        instrByOpcodeTbl[opcode].append((instr, addrMd, opLen, dtLen, flds[3]))
     else:
-        instrTbl[opcode] = [(instr, opLen, dtLen, opcode, prefix, addrMd)]
+        instrByOpcodeTbl[opcode] = [(instr, addrMd, opLen, dtLen, flds[3])]
+
         
 with open('InstrByOpcodeTbl.txt', 'wt') as fout:
-    for instr in instrTbl:
+    for instr in instrByOpcodeTbl:
         print(instr, ' ', end='')
         print(instr, ' ', file=fout, end='')
-        for i in range(len(instrTbl[instr])):
+        for i in range(len(instrByOpcodeTbl[instr])):
             if i == 0:
-                print(instrTbl[instr][i])
-                print(instrTbl[instr][i], file=fout)
+                print(instrByOpcodeTbl[instr][i])
+                print(instrByOpcodeTbl[instr][i], file=fout)
             else:
-                print('   ', instrTbl[instr][i])
-                print('   ', instrTbl[instr][i], file=fout)
+                print('   ', instrByOpcodeTbl[instr][i])
+                print('   ', instrByOpcodeTbl[instr][i], file=fout)
 
-instrTbl.clear()
-instrLen = 0
+instrByNameTbl = {}
+maxInstrLen = 0
 
 for line in lines:
     flds = line.split()
-    instr = flds[0].split('_')[0]
+    instr, addrMd = flds[0].split('_')
     base = instr.split('.')[0]
     opLen = int(flds[1])
     dtLen = int(flds[2])
-    opcode = flds[3][-2:]
-    prefix = flds[3][:-2]
-    addrMd = flds[4]
 
-    if instrLen < len(base):
-        instrLen = len(base)
+    if base[-1].isdigit():
+        base = base[:-1]
 
-    if base in instrTbl:
-        instrTbl[base].append((instr, addrMd, opLen, dtLen, opcode, prefix))
+    if maxInstrLen < len(base):
+        maxInstrLen = len(base)
+
+    if base in instrByNameTbl:
+        instrByNameTbl[base].append((instr, addrMd, opLen, dtLen, flds[3]))
     else:
-        instrTbl[base] = [(instr, addrMd, opLen, dtLen, opcode, prefix)]
+        instrByNameTbl[base] = [(instr, addrMd, opLen, dtLen, flds[3])]
 
 with open('InstrByNameTbl.txt', 'wt') as fout:
-    instrLen += 1
-    for instr in instrTbl:
-        padLen = instrLen - len(instr)
+    maxInstrLen += 1
+    for instr in instrByNameTbl:
+        padLen = maxInstrLen - len(instr)
         print(instr, ' '*padLen, end='')
         print(instr, ' '*padLen, file=fout, end='')
-        for i in range(len(instrTbl[instr])):
+        for i in range(len(instrByNameTbl[instr])):
             if i == 0:
-                print(instrTbl[instr][i])
-                print(instrTbl[instr][i], file=fout)
+                print(instrByNameTbl[instr][i])
+                print(instrByNameTbl[instr][i], file=fout)
             else:
-                print(' '*instrLen, instrTbl[instr][i])
-                print(' '*instrLen, instrTbl[instr][i], file=fout)
+                print(' '*maxInstrLen, instrByNameTbl[instr][i])
+                print(' '*maxInstrLen, instrByNameTbl[instr][i], file=fout)
 
-numInstructions = len(list(instrTbl.keys())) - 32
-print('Number of unique instruction mnemonics: ', numInstructions)
+numUniqueMnemonics = len(instrByNameTbl.keys())
+print('Number of unique instruction mnemonics: ', numUniqueMnemonics)
 
 

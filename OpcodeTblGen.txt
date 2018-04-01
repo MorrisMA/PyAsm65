@@ -1,5 +1,5 @@
 cod opc  Mode ind siz isz osx osz ois oax oay
-00  BRK  imm   N   N   N   N   N   N   N   N
+00  BRK  imp   N   N   N   N   N   N   N   N
 10  BPL  rel   Y   Y   Y   N   N   N   N   N
 20  JSR  abs   Y   N   N   Y   N   N   N   N
 30  BMI  rel   Y   Y   Y   N   N   N   N   N
