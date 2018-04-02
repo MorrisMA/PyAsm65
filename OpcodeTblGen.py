@@ -83,27 +83,27 @@ indMap = {'txs_impI'      : ('txu_imp',     2, 0, '9B9A'), \
           
 
 accMap = {'asl_acc'       : ('asl_a',       1, 0, '0A'), \
-          'inc_acc'       : ('inc_a',       1, 0, '1A'), \
-          'rol_acc'       : ('rol_a',       1, 0, '2A'), \
-          'dec_acc'       : ('dec_a',       1, 0, '3A'), \
-          'lsr_acc'       : ('lsr_a',       1, 0, '4A'), \
-          'ror_acc'       : ('ror_a',       1, 0, '6A'), \
-          'dup_acc'       : ('dup_a',       1, 0, '0B'), \
-          'swp_acc'       : ('swp_a',       1, 0, '1B'), \
-          'rot_acc'       : ('rot_a',       1, 0, '2B'), \
-          'lsr_accI'      : ('asr_a',       2, 0, '9B4A'), \
-          'dup_accI'      : ('tai_imp',     2, 0, '9B0B'), \
-          'swp_accI'      : ('bsw_imp',     2, 0, '9B1B'), \
-          'rot_accI'      : ('rev_imp',     2, 0, '9B2B'), \
           'asl.w_acc'     : ('asl.w_a',     2, 0, 'AB0A'), \
+          'inc_acc'       : ('inc_a',       1, 0, '1A'), \
           'inc.w_acc'     : ('inc.w_a',     2, 0, 'AB1A'), \
+          'rol_acc'       : ('rol_a',       1, 0, '2A'), \
           'rol.w_acc'     : ('rol.w_a',     2, 0, 'AB2A'), \
+          'dec_acc'       : ('dec_a',       1, 0, '3A'), \
           'dec.w_acc'     : ('dec.w_a',     2, 0, 'AB3A'), \
-          'lsr.w_acc'     : ('lsr.w_a',     2, 0, 'AB4A'), \
-          'ror.w_acc'     : ('ror.w_a',     2, 0, 'AB6A'), \
-          'dup.w_acc'     : ('tia_imp',     2, 0, 'AB0B'), \
+          'lsr_acc'       : ('lsr_a',       1, 0, '4A'), \
+          'lsr_accI'      : ('asr_a',       2, 0, '9B4A'), \
           'lsr.w_accI'    : ('asr.w_a',     2, 0, 'BB4A'), \
-          'dup.w_accI'    : ('xai_imp',     2, 0, 'BB0B') } 
+          'lsr.w_acc'     : ('lsr.w_a',     2, 0, 'AB4A'), \
+          'ror_acc'       : ('ror_a',       1, 0, '6A'), \
+          'ror.w_acc'     : ('ror.w_a',     2, 0, 'AB6A'), \
+          'dup_acc'       : ('dup_a',       1, 0, '0B'), \
+          'dup_accI'      : ('tai_imp',     2, 0, '9B0B'), \
+          'dup.w_acc'     : ('tia_imp',     2, 0, 'AB0B'), \
+          'dup.w_accI'    : ('xai_imp',     2, 0, 'BB0B'), \
+          'swp_acc'       : ('swp_a',       1, 0, '1B'), \
+          'swp_accI'      : ('bsw_imp',     2, 0, '9B1B'), \
+          'rot_acc'       : ('rot_a',       1, 0, '2B'), \
+          'rot_accI'      : ('rev_imp',     2, 0, '9B2B') }
 
 osxMap = {'jsr.s_abs'     : ('jsr.s_abs',   2, 2, '8B20'), \
           'jsr.sw_absI'   : ('jsr.s_absI',  2, 2, 'DB20'), \
@@ -204,17 +204,25 @@ osxMap = {'jsr.s_abs'     : ('jsr.s_abs',   2, 2, '8B20'), \
           'tax.s_imp'     : ('tas_imp',     2, 0, '8BAA'), \
           'tax.sw_imp'    : ('tas.w_imp',   2, 0, 'CBAA') }
 
-oaxTuple = ('ora', 'and', 'eor', \
+regTuple = ('ora', 'and', 'eor', \
             'adc', 'sbc', \
-            'asl', 'rol', 'lsr', 'ror', \
-            'bit', 'trb', 'tsb', \
-            'dup', 'swp', 'rot' )
+            'bit', 'trb', 'tsb', )
+rmwTuple = ('asl', 'rol', 'lsr', 'asr', 'ror', )
+stkTuple = ('dup', 'swp', 'rot', )
+spcTuple = ('jmp')
 
-oaxTuple = ('ora', 'and', 'eor', \
-            'adc', 'sbc', \
-            'asl', 'rol', 'lsr', 'ror', \
-            'bit', 'trb', 'tsb', \
-            'dup', 'swp', 'rot' )
+indexedByX = {'zpX'    : 'zpA',   \
+              'zpXI'   : 'zpAI',  \
+              'zpXII'  : 'zpAII', \
+              'absX'   : 'absA',  \
+              'absXI'  : 'absAI', \
+              'absXII' : 'absAII' }
+indexedByY = {'zpY'    : 'zpIA',  \
+              'zpIY'   : 'zpIA',  \
+              'zpIIY'  : 'zpIIA', \
+              'absY'   : 'absA',  \
+              'absIY'  : 'absIA' }
+indexedByS = ('zpS', 'zpSI', 'zpSII', 'absS', 'absSI', 'absSII',)
 
 lines = []
 with open('OpcodeTblGen.txt', 'rt') as finp:
@@ -316,6 +324,8 @@ for fld in flds:
                 opcode = '_'.join([opcode, mode])
                 if opcode in accMap:
                     opcode, opLen, dtLen, code = accMap[opcode]
+                else:
+                    continue
                 if opcode in opcodeDict:
                     continue
                 opcodeList.append(opcode)
@@ -327,6 +337,8 @@ for fld in flds:
                 opcode = '_'.join([opcode, mode])
                 if opcode in indMap:
                     opcode, opLen, dtLen, code = indMap[opcode]
+                else:
+                    continue
                 if opcode in opcodeDict:
                     continue
                 opcodeList.append(opcode)
@@ -406,10 +418,12 @@ for fld in flds:
                     opcodeDict[opcode] = [opcode, opLen, dtLen, code]
                     print(opcode, opLen, dtLen, code)
                     print(opcode, opLen, dtLen, code, file=fout)
-            elif mode == 'acc':
+            elif mode in ['imp', 'acc']:
                 opcode = '_'.join([''.join([opcode, '.w']), mode])
                 if opcode in accMap:
                     opcode, opLen, dtLen, code = accMap[opcode]
+                else:
+                    continue
                 if opcode in opcodeDict:
                     continue
                 opcodeList.append(opcode)
@@ -464,6 +478,8 @@ for fld in flds:
                 opcode = '_'.join([''.join([opcode, '.w']), mode])
                 if opcode in relMap:
                     opcode, opLen, dtLen, code = relMap[opcode]
+                else:
+                    continue
                 if opcode in opcodeDict:
                     continue
                 opcodeList.append(opcode)
@@ -475,6 +491,8 @@ for fld in flds:
                 opcode = '_'.join([''.join([opcode, '.w']), mode])
                 if opcode in accMap:
                     opcode, opLen, dtLen, code = accMap[opcode]
+                else:
+                    continue
                 if opcode in opcodeDict:
                     continue
                 opcodeList.append(opcode)
@@ -486,6 +504,8 @@ for fld in flds:
                 opcode = '_'.join([''.join([opcode, '.w']), mode])
                 if opcode in indMap:
                     opcode, opLen, dtLen, code = indMap[opcode]
+                else:
+                    continue
                 if opcode in opcodeDict:
                     continue
                 opcodeList.append(opcode)
@@ -734,8 +754,191 @@ for fld in flds:
             print(opcode, opLen, dtLen, code)
             print(opcode, opLen, dtLen, code, file=fout)
 
+'''
+    Add instructions using the OAX or the OAY prefix instructions.
+        These prefixes affect the destination register of an instruction by
+        swapping the A with either the X or the Y registers. If the X or Y
+        registers are being used as index registers for the memory operand,
+        the A register assumes their role, i.e. is used as the index register.
 
+        The OAX prefix instructions is mutually exclusive with the OSX and OAY
+        prefix instructions. The OAY prefix instruction can be paired with
+        either OSX or OAX. However, pairing OAY indiscriminately with OSX can
+        result in instructions that perform the same function as those that are
+        native to the 6502/65C02/M65C02A or formed with shorter sequences of
+        prefix instructions.
 
+        Therefore, the following two code blocks will not add instructions to
+        the Opcode Table that have already been added by the previous seven
+        code blocks. To add OAX/OAY instructions, the existing Opcode Table will
+        be sorted by its base instruction mnemonic. The OAX/OAY prefix will be
+        added to those instructions in the sorted opcode table where its
+        addition creates useful, non-duplicate finctionality.
+'''
+
+instrByNameTbl = {}
+maxInstrLen = 0
+
+opcodes = list(opcodeList)
+
+for opcode in opcodes:
+    flds = opcodeDict[opcode]
+    instr, addrMd = flds[0].split('_')
+    base, *options = instr.split('.')
+    opLen = int(flds[1])
+    dtLen = int(flds[2])
+
+    if base[-1].isdigit():
+        base = base[:-1]
+
+    if maxInstrLen < len(base):
+        maxInstrLen = len(base)
+
+    if base in instrByNameTbl:
+        instrByNameTbl[base].append((base, options, addrMd, \
+                                     opLen, dtLen, flds[3]))
+    else:
+        instrByNameTbl[base] = [(base, options, addrMd, \
+                                 opLen, dtLen, flds[3])]
+'''
+    Add instructions using OAX prefix instruction.
+
+        The instructions must be in regTuple and spcTuple. For instructions in
+        regTuple, if the instruction uses X as an index register, then the X in
+        the addrMode is changed to A, i.e. A takes on the role of the index
+        register. If the instruction is in spcTuple, the instruction is an
+        instruction that does not use the ALU, i.e. jmp.
+'''
+
+for base in instrByNameTbl.keys():
+    if base in regTuple:
+        for i in range(len(instrByNameTbl[base])):
+            base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
+            
+            if addrMd in indexedByS:
+                continue
+            if addrMd in indexedByX:
+                addrMd = indexedByX[addrMd]
+
+            if len(options) < 1:
+                instr = '_'.join(['.'.join([base, 'x']), addrMd])
+            else:
+                instr = '_'.join(['.'.join([base, 'x'+options[0]]), addrMd])
+            code = ''.join([preByte['oax'], code])
+            opLen += 1
+            
+            opcodeList.append(instr)
+            opcodeDict[opcode] = [instr, opLen, dtLen, code]
+            print(instr, opLen, dtLen, code)
+            print(instr, opLen, dtLen, code, file=fout)
+    elif base in rmwTuple:
+        for i in range(len(instrByNameTbl[base])):
+            base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
+            
+            if addrMd in indexedByS:
+                continue
+            if addrMd in indexedByX:
+                addrMd = indexedByX[addrMd]
+            elif addrMd == 'a':
+                addrMd = 'x'
+
+            if len(options) > 0:
+                instr = '_'.join(['.'.join([base, options[0]]), addrMd])
+            else:
+                instr = '_'.join([base, addrMd])
+            code = ''.join([preByte['oax'], code])
+            opLen += 1
+            
+            opcodeList.append(instr)
+            opcodeDict[opcode] = [instr, opLen, dtLen, code]
+            print(instr, opLen, dtLen, code)
+            print(instr, opLen, dtLen, code, file=fout)
+    elif base in stkTuple:
+        for i in range(len(instrByNameTbl[base])):
+            base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
+            
+            instr = '_'.join([base, 'x'])
+            code = ''.join([preByte['oax'], code])
+            opLen += 1
+            
+            opcodeList.append(instr)
+            opcodeDict[opcode] = [instr, opLen, dtLen, code]
+            print(instr, opLen, dtLen, code)
+            print(instr, opLen, dtLen, code, file=fout)
+    elif base in spcTuple:
+        for i in range(len(instrByNameTbl[base])):
+            instr, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
+            if addrMd in indexedByX:
+                instr = '_'.join([instr, indexedByX[addrMd]])
+                code = ''.join([preByte['oax'], code])
+                opLen += 1
+                
+                opcodeList.append(instr)
+                opcodeDict[opcode] = [instr, opLen, dtLen, code]
+                print(instr, opLen, dtLen, code)
+                print(instr, opLen, dtLen, code, file=fout)       
+            
+'''
+    Add instructions using OAY prefix instruction.
+
+        The instructions must be in the tuples: regTuple, rmwTuple, stkTuple.
+        For instructions in tuples, regTuple and rmwTuple, if the instruction
+        uses Y as an index register, then the Y in the addrMode is changed to A,
+        i.e. A takes on the role of the index register.
+'''
+
+for base in instrByNameTbl.keys():
+    if base in regTuple:
+        for i in range(len(instrByNameTbl[base])):
+            base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
+            
+            if addrMd in indexedByY:
+                addrMd = indexedByY[addrMd]
+
+            if len(options) < 1:
+                instr = '_'.join(['.'.join([base, 'y']), addrMd])
+            else:
+                instr = '_'.join(['.'.join([base, 'y' + options[0]]), addrMd])
+            code = ''.join([preByte['oay'], code])
+            opLen += 1
+            
+            opcodeList.append(instr)
+            opcodeDict[opcode] = [instr, opLen, dtLen, code]
+            print(instr, opLen, dtLen, code)
+            print(instr, opLen, dtLen, code, file=fout)
+    elif base in rmwTuple:
+        for i in range(len(instrByNameTbl[base])):
+            base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
+            
+            if addrMd in indexedByY:
+                addrMd = indexedByY[addrMd]
+            elif addrMd == 'a':
+                addrMd = 'y'
+            else:
+                continue
+            
+            if len(options) > 0:
+                instr = '_'.join(['.'.join([base, options[0]]), addrMd])
+            else:
+                instr = '_'.join([base, addrMd])
+            code = ''.join([preByte['oay'], code])
+            opLen += 1
+            
+            opcodeList.append(instr)
+            opcodeDict[opcode] = [instr, opLen, dtLen, code]
+            print(instr, opLen, dtLen, code)
+            print(instr, opLen, dtLen, code, file=fout)
+    elif base in stkTuple:
+        for i in range(len(instrByNameTbl[base])):
+            base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
+            
+            instr = '_'.join([base, 'y'])
+            code = ''.join([preByte['oay'], code])
+            opLen += 1
+            
+            opcodeList.append(instr)
+            opcodeDict[opcode] = [instr, opLen, dtLen, code]
+            print(instr, opLen, dtLen, code)
+            print(instr, opLen, dtLen, code, file=fout)
 
 fout.close()
-
