@@ -202,12 +202,16 @@ osxMap = {'jsr.s_abs'     : ('jsr.s_abs',   2, 2, '8B20'), \
           'txa.s_imp'     : ('tsa_imp',     2, 0, '8B8A'), \
           'txa.sw_imp'    : ('tsa.w_imp',   2, 0, 'CB8A'), \
           'tax.s_imp'     : ('tas_imp',     2, 0, '8BAA'), \
-          'tax.sw_imp'    : ('tas.w_imp',   2, 0, 'CBAA') }
+          'tax.sw_imp'    : ('tas.w_imp',   2, 0, 'CBAA'), \
+          'txa.s_impI'    : ('tua_imp',     3, 0, '8B9B8A'), \
+          'txa.sw_impI'   : ('tua.w_imp',   2, 0, 'DB8A'), \
+          'tax.s_impI'    : ('tau_imp',     3, 0, '8B9BAA'), \
+          'tax.sw_impI'   : ('tau.w_imp',   2, 0, 'DBAA') }
 
-regTuple = ('ora', 'and', 'eor', \
+accTuple = ('ora', 'and', 'eor', \
             'adc', 'sbc', \
             'bit', 'trb', 'tsb', )
-rmwTuple = ('asl', 'rol', 'lsr', 'asr', 'ror', )
+rmwTuple = ('asl', 'rol', 'lsr', 'asr', 'ror', 'dec', 'inc',)
 stkTuple = ('dup', 'swp', 'rot', )
 spcTuple = ('jmp')
 
@@ -217,7 +221,7 @@ indexedByX = {'zpX'    : 'zpA',   \
               'absX'   : 'absA',  \
               'absXI'  : 'absAI', \
               'absXII' : 'absAII' }
-indexedByY = {'zpY'    : 'zpIA',  \
+indexedByY = {'zpY'    : 'zpA',   \
               'zpIY'   : 'zpIA',  \
               'zpIIY'  : 'zpIIA', \
               'absY'   : 'absA',  \
@@ -422,8 +426,6 @@ for fld in flds:
                 opcode = '_'.join([''.join([opcode, '.w']), mode])
                 if opcode in accMap:
                     opcode, opLen, dtLen, code = accMap[opcode]
-                else:
-                    continue
                 if opcode in opcodeDict:
                     continue
                 opcodeList.append(opcode)
@@ -737,13 +739,14 @@ for fld in flds:
             opcode = '_'.join([opcode, mode])
             if opcode in osxMap:
                 opcode, opLen, dtLen, code = osxMap[opcode]
-            elif opcode in opcodeDict:
+            if opcode in opcodeDict:
                 continue
             opcodeList.append(opcode)
             opcodeDict[opcode] = [opcode, opLen, dtLen, code]
             print(opcode, opLen, dtLen, code)
             print(opcode, opLen, dtLen, code, file=fout)
         else:
+            
             opcode = '_'.join([''.join([opcode, '.s']), mode + 'I'])
             if opcode in osxMap:
                 opcode, opLen, dtLen, code = osxMap[opcode]
@@ -803,15 +806,15 @@ for opcode in opcodes:
 '''
     Add instructions using OAX prefix instruction.
 
-        The instructions must be in regTuple and spcTuple. For instructions in
-        regTuple, if the instruction uses X as an index register, then the X in
+        The instructions must be in accTuple and spcTuple. For instructions in
+        accTuple, if the instruction uses X as an index register, then the X in
         the addrMode is changed to A, i.e. A takes on the role of the index
         register. If the instruction is in spcTuple, the instruction is an
         instruction that does not use the ALU, i.e. jmp.
 '''
 
 for base in instrByNameTbl.keys():
-    if base in regTuple:
+    if base in accTuple:
         for i in range(len(instrByNameTbl[base])):
             base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
             
@@ -823,7 +826,7 @@ for base in instrByNameTbl.keys():
             if len(options) < 1:
                 instr = '_'.join(['.'.join([base, 'x']), addrMd])
             else:
-                instr = '_'.join(['.'.join([base, 'x'+options[0]]), addrMd])
+                instr = '_'.join(['.'.join([base, 'x' + options[0]]), addrMd])
             code = ''.join([preByte['oax'], code])
             opLen += 1
             
@@ -837,15 +840,20 @@ for base in instrByNameTbl.keys():
             
             if addrMd in indexedByS:
                 continue
-            if addrMd in indexedByX:
+            elif addrMd in indexedByX:
                 addrMd = indexedByX[addrMd]
             elif addrMd == 'a':
-                addrMd = 'x'
-
-            if len(options) > 0:
-                instr = '_'.join(['.'.join([base, options[0]]), addrMd])
+                if base in ['dec', 'inc']:
+                    continue
+                else:
+                    addrMd = 'x'
             else:
+                continue
+
+            if len(options) < 1:
                 instr = '_'.join([base, addrMd])
+            else:
+                instr = '_'.join(['.'.join([base, options[0]]), addrMd])
             code = ''.join([preByte['oax'], code])
             opLen += 1
             
@@ -881,14 +889,14 @@ for base in instrByNameTbl.keys():
 '''
     Add instructions using OAY prefix instruction.
 
-        The instructions must be in the tuples: regTuple, rmwTuple, stkTuple.
-        For instructions in tuples, regTuple and rmwTuple, if the instruction
+        The instructions must be in the tuples: accTuple, rmwTuple, stkTuple.
+        For instructions in tuples, accTuple and rmwTuple, if the instruction
         uses Y as an index register, then the Y in the addrMode is changed to A,
         i.e. A takes on the role of the index register.
 '''
 
 for base in instrByNameTbl.keys():
-    if base in regTuple:
+    if base in accTuple:
         for i in range(len(instrByNameTbl[base])):
             base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
             
@@ -913,14 +921,17 @@ for base in instrByNameTbl.keys():
             if addrMd in indexedByY:
                 addrMd = indexedByY[addrMd]
             elif addrMd == 'a':
-                addrMd = 'y'
+                if base in ['dec', 'inc']:
+                    continue
+                else:
+                    addrMd = 'y'
             else:
                 continue
             
-            if len(options) > 0:
-                instr = '_'.join(['.'.join([base, options[0]]), addrMd])
-            else:
+            if len(options) < 1:
                 instr = '_'.join([base, addrMd])
+            else:
+                instr = '_'.join(['.'.join([base, options[0]]), addrMd])
             code = ''.join([preByte['oay'], code])
             opLen += 1
             
@@ -940,5 +951,26 @@ for base in instrByNameTbl.keys():
             opcodeDict[opcode] = [instr, opLen, dtLen, code]
             print(instr, opLen, dtLen, code)
             print(instr, opLen, dtLen, code, file=fout)
+
+'''
+    Add register-register instructions using OAX/OAY prefix instruction.
+'''
+
+xfrMap = {'txy'   : ('txy_imp', 2, 0, 'FB8A'), \
+          'txy.w' : ('txy.w_imp', 3, 0, 'FBAB8A'), \
+          'tyx'   : ('tyx_imp', 2, 0, 'FBAA'), \
+          'tyx.w' : ('tyx.w_imp', 3, 0, 'FBABAA') }
+
+for i in xfrMap.keys():
+    instr, opLen, dtLen, code = xfrMap[i]
+
+    opcodeList.append(instr)
+    opcodeDict[opcode] = [instr, opLen, dtLen, code]
+    print(instr, opLen, dtLen, code)
+    print(instr, opLen, dtLen, code, file=fout)
+
+'''
+    Close output file
+'''
 
 fout.close()
