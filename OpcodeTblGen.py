@@ -4,10 +4,11 @@
         This program generates the OpcodeTbl.txt file needed by the Simple
         M65C02A Assembler. The input to the program is a file the provides
         the base opcode, base addressing mode, and the allowed prefix
-        instructions. Opcodes are "decorated" by .w, .x, or .xw to signify
-        the size of the operation, the stack pointer to be used for stack
-        operations, or both: pha, pla, phx, plx, phy, ply, phs, pls, psh,
-        pul, phr, jsr, csr, rts, rti, phi, pli, phw, plw, and ent.
+        instructions. Opcodes are "decorated" by .w, .s, or .sw to signify
+        the size of the operation, a change in the default stack pointer to
+        be used for stack operations, or both: pha, pla, phx, plx, phy, ply,
+        phs, pls, psh, pul, phr, jsr, csr, rts, rti, phi, pli, phw, plw, and
+        ent.
 
         The white space delimited source file for the Opcode Table Generator
         has the following format:
@@ -214,6 +215,7 @@ accTuple = ('ora', 'and', 'eor', \
 rmwTuple = ('asl', 'rol', 'lsr', 'asr', 'ror', 'dec', 'inc',)
 stkTuple = ('dup', 'swp', 'rot', )
 spcTuple = ('jmp')
+ippTuple = ('sta', 'lda', 'cmp', )
 
 indexedByX = {'zpX'    : 'zpA',   \
               'zpXI'   : 'zpAI',  \
@@ -806,11 +808,12 @@ for opcode in opcodes:
 '''
     Add instructions using OAX prefix instruction.
 
-        The instructions must be in accTuple and spcTuple. For instructions in
-        accTuple, if the instruction uses X as an index register, then the X in
-        the addrMode is changed to A, i.e. A takes on the role of the index
-        register. If the instruction is in spcTuple, the instruction is an
-        instruction that does not use the ALU, i.e. jmp.
+        The instructions must be in the following Tuples:
+            accTuple, spcTuple, ippTuple.
+        For instructions in accTuple, if the instruction uses X as an index
+        register, then the X in the addrMode is changed to A, i.e. A takes
+        on the role of the index register. If the instruction is in spcTuple,
+        the instruction is an instruction that does not use the ALU, i.e. jmp.
 '''
 
 for base in instrByNameTbl.keys():
@@ -820,6 +823,7 @@ for base in instrByNameTbl.keys():
             
             if addrMd in indexedByS:
                 continue
+            
             if addrMd in indexedByX:
                 addrMd = indexedByX[addrMd]
 
@@ -885,11 +889,32 @@ for base in instrByNameTbl.keys():
                 opcodeDict[opcode] = [instr, opLen, dtLen, code]
                 print(instr, opLen, dtLen, code)
                 print(instr, opLen, dtLen, code, file=fout)       
+    elif base in ippTuple:
+        for i in range(len(instrByNameTbl[base])):
+            base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
+
+            if addrMd in indexedByS:
+                continue
             
+            if addrMd in indexedByX:
+                addrMd = indexedByX[addrMd]
+
+            if len(options) < 1:
+                instr = '_'.join(['.'.join([base, 'x']), addrMd])
+            else:
+                instr = '_'.join(['.'.join([base, 'x' + options[0]]), addrMd])
+            code = ''.join([preByte['oax'], code])
+            opLen += 1
+            
+            opcodeList.append(instr)
+            opcodeDict[opcode] = [instr, opLen, dtLen, code]
+            print(instr, opLen, dtLen, code)
+            print(instr, opLen, dtLen, code, file=fout)
 '''
     Add instructions using OAY prefix instruction.
 
-        The instructions must be in the tuples: accTuple, rmwTuple, stkTuple.
+        The instructions must be in the tuples:
+            accTuple, rmwTuple, stkTuple, ippTuple.
         For instructions in tuples, accTuple and rmwTuple, if the instruction
         uses Y as an index register, then the Y in the addrMode is changed to A,
         i.e. A takes on the role of the index register.
@@ -944,6 +969,24 @@ for base in instrByNameTbl.keys():
             base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
             
             instr = '_'.join([base, 'y'])
+            code = ''.join([preByte['oay'], code])
+            opLen += 1
+            
+            opcodeList.append(instr)
+            opcodeDict[opcode] = [instr, opLen, dtLen, code]
+            print(instr, opLen, dtLen, code)
+            print(instr, opLen, dtLen, code, file=fout)
+    elif base in ippTuple:
+        for i in range(len(instrByNameTbl[base])):
+            base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
+
+            if addrMd in indexedByY:
+                addrMd = indexedByY[addrMd]
+
+            if len(options) < 1:
+                instr = '_'.join(['.'.join([base, 'y']), addrMd])
+            else:
+                instr = '_'.join(['.'.join([base, 'y' + options[0]]), addrMd])
             code = ''.join([preByte['oay'], code])
             opLen += 1
             

@@ -200,7 +200,7 @@ FB  OAY  imp   N   N   N   N   N   N   N   N
 6C  JMP  absX  Y   N   N   Y   N   N   Y   N
 7C  JMP  absXI Y   N   N   Y   N   N   Y   N
 8C  STY  abs   Y   Y   Y   N   N   N   N   N
-9C  STZ  absX  Y   Y   Y   Y   Y   Y   Y   N
+9C  STZ  abs   Y   Y   Y   N   N   N   N   N
 AC  LDY  abs   Y   Y   Y   N   N   N   N   N
 BC  LDY  absX  Y   Y   Y   Y   Y   Y   Y   N
 CC  CPY  abs   Y   Y   Y   N   N   N   N   N

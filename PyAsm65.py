@@ -1,14 +1,11 @@
 import re
 import os
 
-with open('D:\\Git-Repo\\Mak-Pascal\\PC65\\test\\Sieve.asm', 'rt') as finp:
-    lines = finp.readlines()
-
 '''
     Read Opcodes Table
 '''
 
-with open('D:\\Git-Repo\\Mak-Pascal\\PC65\\utils\\OpcodeTbl.dat', 'rt') as finp:
+with open('OpcodeTbl.txt', 'rt') as finp:
     opcodeTbl = finp.readlines()
 
 '''
@@ -20,10 +17,12 @@ maxWidth = 0
 for opcode in opcodeTbl:
     op = opcode.split()
     key = op[0]
-    opcodes[key] = [int(op[2]), int(op[3]), op[4]]
+    opcodes[key] = [int(op[1]), int(op[2]), op[3]]
     if len(key) > maxWidth:
         maxWidth = len(key)
 
+##input('<Enter> to continue >> ')
+##
 ##'''
 ##    Print Opcodes Table
 ##'''
@@ -37,13 +36,24 @@ for opcode in opcodeTbl:
 ##print()
 ##print('-'*80)
 ##print()
+##
+##input('<Enter> to continue >> ')
+
+filename = input('Enter name of file to process: ')
+
+'''
+    Open input file
+'''
+
+with open(filename+'.asm', 'rt') as finp:
+    lines = finp.readlines()
 
 '''
     Strip comments, blank lines, etc.
 '''
 
 inLine = 0; srcLine = 0; source = []
-with open('D:\\Git-Repo\\Mak-Pascal\\PC65\\test\\Sieve.p01', 'wt') as fout:
+with open(filename+'.p01', 'wt') as fout:
     for line in lines:
         m = re.split('\s*;[\s\w]*', line)
         src = m[0].rstrip()
@@ -51,7 +61,7 @@ with open('D:\\Git-Repo\\Mak-Pascal\\PC65\\test\\Sieve.p01', 'wt') as fout:
             pass
         else:
             source.append([srcLine, inLine, src])
-            #print('%4d %4d' % (srcLine, inLine), src, file=fout)
+            print('%4d %4d' % (srcLine, inLine), src, file=fout)
             srcLine += 1
         inLine += 1
 
@@ -71,7 +81,7 @@ for src in source:
     #print('[%4d, %4d]' % (src[0], src[1]), flds)
 
 directives = ('.stack', '.code', '.data', '.proc', '.endp', '.end')
-defines = ('.eq', '.db', '.dw', '.dl', '.ds')
+defines  = ('.eq', '.db', '.dw', '.dl', '.ds')
 relative = ('bpl', 'bmi', 'bvc', 'bvs', 'bcc', 'bcs', 'bne', 'beq', 'bra', \
             'bge', 'bgt', 'ble', 'blt', 'bhs', 'bhi', 'bls', 'blo', \
             'jge', 'jgt', 'jle', 'jlt', 'jhs', 'jhi', 'jls', 'jlo', 'jra', \
@@ -110,29 +120,31 @@ for field in fields:
     else:
         print('Error. Unexpected number of fields: %d' % (numFields) \
               + ' in line #%d' % (srcLine))
+
+    # Process list of library calls whenever code generation turns
+    # to generating variable definitions
+
     if lbl == '':
         if op in directives:
-            if op == directives[0]:
+            if op == directives[0]:     # .stack    size
                 stkSize = int(dt)
-            elif op == directives[1]:
+            elif op == directives[1]:   # .code     [address]
                 if dt != '':
                     code = int(dt)
-            elif op == directives[2]:
+            elif op == directives[2]:   # .data     [address]
                 if dt != '':
                     data = int(dt)
                 else:
                     data = code
-                # Process list of library calls whenever code generation turns
-                # to generating variable definitions
-            elif op == directives[3]:
+            elif op == directives[3]:   # .proc
                 pass
-            elif op == directives[4]:
+            elif op == directives[4]:   # .endp
                 pass
-            elif op == directives[5]:
+            elif op == directives[5]:   # .end
                 pass
             else:
                 print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
-            print(' '*16,';',srcText)
+            #print(' '*16,';',srcText)
         else:
             if re.match('^\.\w$', op):
                 print('Error. Unexpected opcode: %s. Line #%d.' % (op, srcLine))
@@ -141,8 +153,8 @@ for field in fields:
                     addrsMode = 'imp'
                     operand = ''
                 elif re.match('^[aAxXyY]$', dt):
-                    addrsMode = dt
-                    operand = dt
+                    addrsMode = dt.lower()
+                    operand = dt.lower()
                 elif re.match('^#', dt):
                     addrsMode = 'imm'
                     operand = dt[1:]
@@ -155,17 +167,17 @@ for field in fields:
                     if re.match('^_\w*$', dt):
                         if dt not in library:
                             library.append(dt)
-                elif re.match('^.*,[bB]', dt):
-                    addrsMode = 'bp'
+                elif re.match('^.*,[xX]$', dt):
+                    addrsMode = 'zpX'
                     operand = dt.split(',')[0]
-                elif re.match('^\(.*,[bB]\)$', dt):
-                    addrsMode = 'bpI'
+                elif re.match('^\(.*,[xX]\)$', dt):
+                    addrsMode = 'zpXI'
                     operand = dt.split(',')[0][1:]
                 elif re.match('^.*,[sS]$', dt):
-                    addrsMode = 'sp'
+                    addrsMode = 'zpS'
                     operand = dt.split(',')[0]
                 elif re.match('^\(.*,[sS]\)$', dt):
-                    addrsMode = 'spI'
+                    addrsMode = 'zpSI'
                     operand = dt.split(',')[0][1:]
                 elif re.match('^\(.*,[sS]\),[yY]$', dt):
                     addrsMode = 'spIY'
@@ -180,9 +192,9 @@ for field in fields:
                     opLen = opcodes[opcode][0]
                     dtLen = opcodes[opcode][1]
                     opDat = opcodes[opcode][2]
-                    asmText = '%04x: %s%s' % (code, opDat, '00'*dtLen)
+                    asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
                     bufLen = 15 - len(asmText)
-                    print(asmText, ' '*bufLen, ';', srcText)
+                    #print(asmText, ' '*bufLen, ';', srcText)
                     mem.append([code, op, addrsMode, operand, \
                                 opLen, dtLen, opDat, ' '*bufLen+' ; '+srcText])
                     code += opLen + dtLen
@@ -194,6 +206,10 @@ for field in fields:
             print('Error: Redefinition of %s in %d' % (lbl, srcLine))
         elif op in directives:
             labels[lbl] = code
+            
+            # Process list of library calls whenever code generation turns
+            # to generating variable definitions
+
             if op == directives[0]:
                 stkSize = int(dt)
             elif op == directives[1]:
@@ -204,8 +220,6 @@ for field in fields:
                     data = int(dt)
                 else:
                     data = code
-                # Process list of library calls whenever code generation turns
-                # to generating variable definitions
             elif op == directives[3]:
                 pass
             elif op == directives[4]:
@@ -214,26 +228,25 @@ for field in fields:
                 pass
             else:
                 print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
-            print(' '*16,';',srcText)
+            #print(' '*16,';',srcText)
         else:
             if op == '':
                 labels[lbl] = code
-                print(' '*16,';',srcText)
+                #print(' '*16,';',srcText)
             elif op in defines:
                 if op == '.eq':
                     constants[lbl] = int(dt)
-                    print(' '*16,';',srcText)
+                    #print(' '*16,';',srcText)
                 elif op == '.db':
                     siz = int(dt)
                     val = '00'*siz
                     variables[lbl] = (data, siz, val)
 
-                    asmText = '%04x: %s' % (data, val[:8])
+                    asmText = '%04X %s' % (data, val[:8])
                     bufLen = 15 - len(asmText)
-                    print(asmText, ' '*bufLen, ';', srcText)
+                    #print(asmText, ' '*bufLen, ';', srcText)
                     mem.append([data, lbl, 'db', dt, siz, 0, val, \
                                 ' '*bufLen+' ; '+srcText])
-
                     data += siz
                 elif op == '.ds':
                     siz = len(dt)
@@ -241,15 +254,14 @@ for field in fields:
                     strVal = []
 
                     for ch in dt:
-                        strVal.append('%02x' % (ord(ch)))
+                        strVal.append('%02X' % (ord(ch)))
                     strVal = ''.join(strVal)
 
-                    asmText = '%04x: %s' % (data, strVal[:8])
+                    asmText = '%04X %s' % (data, strVal[:8])
                     bufLen = 15 - len(asmText)
-                    print(asmText, ' '*bufLen, ';', srcText)
+                    #print(asmText, ' '*bufLen, ';', srcText)
                     mem.append([data, lbl, 'ds', dt, siz, 0, strVal, \
                                 ' '*bufLen+' ; '+srcText])
-
                     data += siz
                 else:
                     print('Error. Unknown define: %s.' % (op))
@@ -259,8 +271,8 @@ for field in fields:
                     addrsMode = 'imp'
                     operand = ''
                 elif re.match('^[aAxXyY]$', dt):
-                    addrsMode = dt
-                    operand = dt
+                    addrsMode = dt.lower()
+                    operand = dt.lower()
                 elif re.match('^#', dt):
                     addrsMode = 'imm'
                     operand = dt[1:]
@@ -273,17 +285,17 @@ for field in fields:
                     if re.match('^_\w*$', dt):
                         if dt not in library:
                             library.append(dt)
-                elif re.match('^.*,[bB]', dt):
-                    addrsMode = 'bp'
+                elif re.match('^.*,[xX]$', dt):
+                    addrsMode = 'zpX'
                     operand = dt.split(',')[0]
-                elif re.match('^\(.*,[bB]\)$', dt):
-                    addrsMode = 'bpI'
+                elif re.match('^\(.*,[xX]\)$', dt):
+                    addrsMode = 'zpXI'
                     operand = dt.split(',')[0][1:]
                 elif re.match('^.*,[sS]$', dt):
-                    addrsMode = 'sp'
+                    addrsMode = 'zpS'
                     operand = dt.split(',')[0]
                 elif re.match('^\(.*,[sS]\)$', dt):
-                    addrsMode = 'spI'
+                    addrsMode = 'zpSI'
                     operand = dt.split(',')[0][1:]
                 elif re.match('^\(.*,[sS]\),[yY]$', dt):
                     addrsMode = 'spIY'
@@ -298,9 +310,9 @@ for field in fields:
                 if opcode in opcodes:
                     opLen = opcodes[opcode][0]
                     dtLen = opcodes[opcode][1]
-                    asmText = '%04x: %s%s' % (code, opDat, '00'*dtLen)
+                    asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
                     bufLen = 15 - len(asmText)
-                    print(asmText, ' '*bufLen, ';', srcText)
+                    #print(asmText, ' '*bufLen, ';', srcText)
                     mem.append([code, op, addrsMode, operand, \
                                 opLen, dtLen, opDat, ' '*bufLen+' ; '+srcText])
                     code += opLen + dtLen
@@ -328,7 +340,17 @@ for ln in mem:
         out[addrs] = [opLen, opStr, srcTxt]
     elif md == 'imm':
         val = 0
-        if dt.isnumeric():
+        if '_' in dt:
+            if dt in constants:
+                val = constants[dt]
+            elif dt in labels:
+                val = labels[dt]
+            elif dt in variables:
+                val, siz, strVal = variables[dt]
+            else:
+                print('Error. Expected number, constant, variable, or label:', \
+                      '%s %s %s' %(op, md, dt))
+        else:
             if len(dt) == 1:
                 val = int(dt)
             elif dt[0] == '0':
@@ -343,15 +365,7 @@ for ln in mem:
                     print('Error. Unknown numeric representation.')
             else:
                 val = int(dt)
-        else:
-            if dt in constants:
-                val = constants[dt]
-            elif dt in labels:
-                val = labels[dt]
-            elif dt in variables:
-                val, siz, strVal = variables[dt]
-            else:
-                print('Error. Expected number, constant, variable, or label.')
+
         if dtLen == 1:
             loStr = '%02X' % (val & 255)
             out[addrs] = [opLen + dtLen, \
@@ -401,7 +415,7 @@ for ln in mem:
             hiStr = '%02X' % ((val >> 8) & 255)
             out[addrs] = [opLen + dtLen, \
                           ''.join([opStr, loStr, hiStr]), srcTxt]
-    elif md in ('sp', 'spI', 'spIY', 'bp', 'bpI'):
+    elif md in ('zpS', 'zpSI', 'spIY', 'zpX', 'zpXI'):
         if dt in constants:
             val = constants[dt]
         elif dt.isnumeric():
@@ -422,8 +436,9 @@ for ln in mem:
                 val = int(dt)
         else:
             val = -1
-            print('Error. Missing constant or number: 0x%04X, %s' \
-                  % (addrs, dt))
+            print('Error. Missing constant or number: 0x%04X, %s %s %s' \
+                  % (addrs, op, md, dt))
+
         if dtLen == 1:
             loStr = '%02X' % (val & 255)
             out[addrs] = [opLen + dtLen, \
@@ -441,34 +456,35 @@ for ln in mem:
     Print results of Pass 2
 '''
 
-start = False
-prevAddrs = 0
-currAddrs = 0
-for i in out:
-    if start:
-        currAddrs = prevAddrs + prevLen
-        if i != currAddrs:
-            print('\tMissing conversion(s): 0x%04x-0x%04x' \
-                  % (prevAddrs + prevLen, i - 1))
-            start = False
+with open(filename+'.lst', 'wt') as fout:
+    start = False
+    prevAddrs = 0
+    currAddrs = 0
+    for i in out:
+        if start:
+            currAddrs = prevAddrs + prevLen
+            if i != currAddrs:
+                print('\tMissing conversion(s): 0x%04X-0x%04X' \
+                      % (prevAddrs + prevLen, i - 1), file=fout)
+                start = False
+            else:
+                prevAddrs = i
+                prevLen = out[i][0]
         else:
             prevAddrs = i
             prevLen = out[i][0]
-    else:
-        prevAddrs = i
-        prevLen = out[i][0]
-        start = True
-    length, outTxt, srcTxt = tuple(out[i])
-    print('%04X' % (i), outTxt[:8], srcTxt)
-    if len(outTxt) > 8:
-        outTxt = outTxt[8:]
-        addrs = i + 4
-        while True:
-            print('%04X' % (addrs), outTxt[:64])
-            if len(outTxt) > 64:
-                outTxt = outTxt[64:]
-            else:
-                break
-            addrs += 32
+            start = True
+        length, outTxt, srcTxt = tuple(out[i])
+        print('%04X' % (i), outTxt[:8], srcTxt, file=fout)
+        if len(outTxt) > 8:
+            outTxt = outTxt[8:]
+            addrs = i + 4
+            while True:
+                print('%04X' % (addrs), outTxt[:64], file=fout)
+                if len(outTxt) > 64:
+                    outTxt = outTxt[64:]
+                else:
+                    break
+                addrs += 32
 
 
