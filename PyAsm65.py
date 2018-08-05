@@ -1,108 +1,147 @@
 import re
 import os
 
-'''
-    Read Opcodes Table
-'''
+from PyAsm65Utilities import *
 
-with open('OpcodeTbl.txt', 'rt') as finp:
-    opcodeTbl = finp.readlines()
+directives = ('.stack', '.code', '.data', '.proc', '.endp', '.end')
+defines    = ('.eq', '.db', '.dw', '.dl', '.ds')
+relative   = ('bpl', 'bmi', 'bvc', 'bvs', 'bcc', 'bcs', 'bne', 'beq', \
+              'bra', \
+              'bge', 'bgt', 'ble', 'blt', 'bhs', 'bhi', 'bls', 'blo', \
+              'jge', 'jgt', 'jle', 'jlt', 'jhs', 'jhi', 'jls', 'jlo', \
+              'jra', \
+              'phr', 'csr')
 
-'''
-    Create Opcodes Dictionary
-'''
-
-opcodes = dict()
-maxWidth = 0
-for opcode in opcodeTbl:
-    op = opcode.split()
-    key = op[0]
-    opcodes[key] = [int(op[1]), int(op[2]), op[3]]
-    if len(key) > maxWidth:
-        maxWidth = len(key)
-
-##input('<Enter> to continue >> ')
+##'''
+##    Read Opcodes Table
+##'''
+##
+##with open('OpcodeTbl.txt', 'rt') as finp:
+##    opcodeTbl = finp.readlines()
+##
+##'''
+##    Create Opcodes Dictionary
+##'''
+##
+##opcodes = dict()
+##maxWidth = 0
+##for opcode in opcodeTbl:
+##    op = opcode.split()
+##    key = op[0]
+##    opcodes[key] = [int(op[1]), int(op[2]), op[3]]
+##    if len(key) > maxWidth:
+##        maxWidth = len(key)
 ##
 ##'''
 ##    Print Opcodes Table
 ##'''
 ##
-##print('-'*80)
-##print('\tOpcode Table')
-##print('-'*80)
-##print()
-##for key in opcodes:
-##    print('%-*s' % (maxWidth, key),':',opcodes[key])
-##print()
-##print('-'*80)
-##print()
+##with open('OpcodeTbl.lst', 'wt') as fout:
+##    print('-'*80, file=fout)
+##    print('\tOpcode Table', file=fout)
+##    print('-'*80, file=fout)
+##    print(file=fout)
+##    for key in opcodes:
+##        print('%-*s' % (maxWidth, key),':',opcodes[key], file=fout)
+##    print(file=fout)
+##    print('-'*80, file=fout)
+##    print(file=fout)
+
+opcodes = loadOpcodeTable() # Load default opcode table
+
+filename = input('Enter base name of file to process: ')
+libpath  = input('Enter path to library: ')
+
+##'''
+##    Open input file
+##'''
 ##
-##input('<Enter> to continue >> ')
+##with open(filename+'.asm', 'rt') as finp:
+##    lines = finp.readlines()
+##
+##'''
+##    Strip comments, blank lines, etc.
+##'''
+##
+##inLine = 1; srcLine = 1; source = []
+##with open(filename+'.p01', 'wt') as fout:
+##    for line in lines:
+##        m = re.split('\s*;[\s\w]*', line)
+##        src = m[0].rstrip()
+##        if src == '' or src == '\n':
+##            pass
+##        else:
+##            source.append([srcLine, inLine, src])
+##            print('%4d %4d' % (srcLine, inLine), src, file=fout)
+##            srcLine += 1
+##        inLine += 1
+##
+##'''
+##    Split source lines
+##'''
+##
+##fields = []
+##for src in source:
+##    if '"' in src[2]:
+##        line = src[2].split('"')
+##        flds = re.split('\s', line[0])[:2]
+##        flds.append(line[1])
+##    else:
+##        flds = re.split('[ \t][\s]*', src[2])
+##    fields.append([[src[:2]], flds])
+##    #print('[%4d, %4d]' % (src[0], src[1]), flds)
 
-filename = input('Enter name of file to process: ')
+finp = open(filename+'.asm', 'rt')
+fout = open(filename+'.p01', 'wt')
 
-'''
-    Open input file
-'''
+labels    = {}
+constants = {}
+variables = {}
+library   = []
 
-with open(filename+'.asm', 'rt') as finp:
-    lines = finp.readlines()
+line    = 0     # line number 
+code    = 0     # code space position
+data    = 0     # data space position
+stkSize = 0 
 
-'''
-    Strip comments, blank lines, etc.
-'''
+cod = []        # instructions
+dat = []        # data
 
-inLine = 0; srcLine = 0; source = []
-with open(filename+'.p01', 'wt') as fout:
-    for line in lines:
-        m = re.split('\s*;[\s\w]*', line)
+inpLine = 1
+srcLine = 1
+fields  = []    # fields in the input line
+
+while True:
+    ln = finp.readline()
+    if ln == '':
+        break
+    else:
+        m = re.split('\s*;[\s\w]*', ln)
         src = m[0].rstrip()
         if src == '' or src == '\n':
             pass
         else:
-            source.append([srcLine, inLine, src])
-            print('%4d %4d' % (srcLine, inLine), src, file=fout)
+            curSrc = [srcLine, inpLine, src]
+            print('%4d %4d' % (srcLine, inpLine), src, file=fout)
+            if '"' in curSrc[2]:
+                ln   = curSrc[2].split('"')
+                flds = re.split('\s', ln[0])[:2]
+                flds.append(ln[1])
+            else:
+                flds = re.split('[ \t][\s]*', curSrc[2])
+            fields.append([curSrc, flds])
             srcLine += 1
-        inLine += 1
+        inpLine += 1
 
-'''
-    Split source lines
-'''
-
-fields = []
-for src in source:
-    if '"' in src[2]:
-        line = src[2].split('"')
-        flds = re.split('\s', line[0])[:2]
-        flds.append(line[1])
-    else:
-        flds = re.split('[ \t][\s]*', src[2])
-    fields.append([[src[:2]], flds])
-    #print('[%4d, %4d]' % (src[0], src[1]), flds)
-
-directives = ('.stack', '.code', '.data', '.proc', '.endp', '.end')
-defines  = ('.eq', '.db', '.dw', '.dl', '.ds')
-relative = ('bpl', 'bmi', 'bvc', 'bvs', 'bcc', 'bcs', 'bne', 'beq', 'bra', \
-            'bge', 'bgt', 'ble', 'blt', 'bhs', 'bhi', 'bls', 'blo', \
-            'jge', 'jgt', 'jle', 'jlt', 'jhs', 'jhi', 'jls', 'jlo', 'jra', \
-            'phr', 'csr')
+finp.close()
+fout.close()
 
 '''
     Assembler Pass 1
 '''
 
-labels = {}; constants = {}; variables = {}; library = []
-
-line = 0
-code = 0
-data = 0
-stkSize = 0
-
-mem = []
-
 for field in fields:
-    srcLine = source[line][1]
-    srcText = source[line][2]
+    *_, srcLine, srcText = field[0]
     opcode = ''
     numFields = len(field[1])
     if numFields == 1:
@@ -121,30 +160,28 @@ for field in fields:
         print('Error. Unexpected number of fields: %d' % (numFields) \
               + ' in line #%d' % (srcLine))
 
-    # Process list of library calls whenever code generation turns
-    # to generating variable definitions
-
     if lbl == '':
         if op in directives:
             if op == directives[0]:     # .stack    size
-                stkSize = int(dt)
+                stkSize = numVal(dt)
             elif op == directives[1]:   # .code     [address]
                 if dt != '':
-                    code = int(dt)
+                    code = numVal(dt)
             elif op == directives[2]:   # .data     [address]
                 if dt != '':
-                    data = int(dt)
-                else:
-                    data = code
+                    data = numVal(dt)
             elif op == directives[3]:   # .proc
                 pass
             elif op == directives[4]:   # .endp
+                #
+                # Recursively import the library functions found during Pass 1.
+                #   Append library function source code to "fields".
+                #
                 pass
             elif op == directives[5]:   # .end
                 pass
             else:
                 print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
-            #print(' '*16,';',srcText)
         else:
             if re.match('^\.\w$', op):
                 print('Error. Unexpected opcode: %s. Line #%d.' % (op, srcLine))
@@ -194,8 +231,7 @@ for field in fields:
                     opDat = opcodes[opcode][2]
                     asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
                     bufLen = 15 - len(asmText)
-                    #print(asmText, ' '*bufLen, ';', srcText)
-                    mem.append([code, op, addrsMode, operand, \
+                    cod.append([code, op, addrsMode, operand, \
                                 opLen, dtLen, opDat, ' '*bufLen+' ; '+srcText])
                     code += opLen + dtLen
                 else:
@@ -206,37 +242,32 @@ for field in fields:
             print('Error: Redefinition of %s in %d' % (lbl, srcLine))
         elif op in directives:
             labels[lbl] = code
-            
-            # Process list of library calls whenever code generation turns
-            # to generating variable definitions
-
-            if op == directives[0]:
-                stkSize = int(dt)
-            elif op == directives[1]:
+            if op == directives[0]:     # .stack    size
+                stkSize = numVal(dt)
+            elif op == directives[1]:   # .code     [address]
                 if dt != '':
-                    code = int(dt)
-            elif op == directives[2]:
+                    code = numVal(dt)
+            elif op == directives[2]:   # .data     [address]
                 if dt != '':
-                    data = int(dt)
-                else:
-                    data = code
-            elif op == directives[3]:
+                    data = numVal(dt)
+            elif op == directives[3]:   # .proc
                 pass
-            elif op == directives[4]:
+            elif op == directives[4]:   # .endp
+                #
+                # Recursively import the library functions found during Pass 1.
+                #   Append library function source code to "fields".
+                #
                 pass
-            elif op == directives[5]:
+            elif op == directives[5]:   # .end
                 pass
             else:
                 print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
-            #print(' '*16,';',srcText)
         else:
             if op == '':
                 labels[lbl] = code
-                #print(' '*16,';',srcText)
             elif op in defines:
                 if op == '.eq':
-                    constants[lbl] = int(dt)
-                    #print(' '*16,';',srcText)
+                    constants[lbl] = numVal(dt)
                 elif op == '.db':
                     siz = int(dt)
                     val = '00'*siz
@@ -244,13 +275,12 @@ for field in fields:
 
                     asmText = '%04X %s' % (data, val[:8])
                     bufLen = 15 - len(asmText)
-                    #print(asmText, ' '*bufLen, ';', srcText)
-                    mem.append([data, lbl, 'db', dt, siz, 0, val, \
+                    dat.append([data, lbl, 'db', dt, siz, 0, val, \
                                 ' '*bufLen+' ; '+srcText])
                     data += siz
                 elif op == '.ds':
                     siz = len(dt)
-                    variables[lbl] = (data, siz, val)
+                    variables[lbl] = (data, siz, dt)
                     strVal = []
 
                     for ch in dt:
@@ -259,8 +289,7 @@ for field in fields:
 
                     asmText = '%04X %s' % (data, strVal[:8])
                     bufLen = 15 - len(asmText)
-                    #print(asmText, ' '*bufLen, ';', srcText)
-                    mem.append([data, lbl, 'ds', dt, siz, 0, strVal, \
+                    dat.append([data, lbl, 'ds', dt, siz, 0, strVal, \
                                 ' '*bufLen+' ; '+srcText])
                     data += siz
                 else:
@@ -312,8 +341,7 @@ for field in fields:
                     dtLen = opcodes[opcode][1]
                     asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
                     bufLen = 15 - len(asmText)
-                    #print(asmText, ' '*bufLen, ';', srcText)
-                    mem.append([code, op, addrsMode, operand, \
+                    cod.append([code, op, addrsMode, operand, \
                                 opLen, dtLen, opDat, ' '*bufLen+' ; '+srcText])
                     code += opLen + dtLen
                 else:
@@ -322,11 +350,27 @@ for field in fields:
     line += 1
 
 '''
+    Merge cod[] and dat[]; adjust address of each entry.
+'''
+
+for ln in dat:
+    data, lbl, op, dt, siz, zerVal, val, srcText = ln
+    cod.append([code + data, lbl, op, dt, siz, zerVal, val, srcText])
+
+'''
+    Adjust addresses of variables{}
+'''
+
+for key in variables.keys():
+    addr, siz, dt = variables[key]
+    variables[key] = (code + addr, siz, dt)
+
+'''
     Assembler Pass 2
 '''
 
 out = {}
-for ln in mem:
+for ln in cod:
     addrs = ln[0]
     op = ln[1]
     md = ln[2]

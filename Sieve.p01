@@ -1,0 +1,233 @@
+   1    2 	.STACK  1024
+   2    4 	.CODE	  1024
+   3    6 STATIC_LINK       .EQ  4
+   4    7 RETURN_VALUE      .EQ -4
+   5    8 HIGH_RETURN_VALUE .EQ -2
+   6   20 _pc65_main	.PROC
+   7   22 	phx.w
+   8   23 	tsx.w
+   9   25 	lda.w #1000
+  10   26 	pha.w
+  11   27 	lda #2
+  12   28 	pha.w
+  13   31 	jsr _idiv
+  14   32 	adj #4
+  15   33 	sta.w limit_005
+  16   35 	psh.w #sieve_002
+  17   36 	lda #1
+  18   37 	dec.w a
+  19   40 	asl.w a
+  20   42 	clc
+  21   43 	adc.w 0,S
+  22   44 	sta.w 0,S
+  23   45 	lda #0
+  24   47 	sta.w (0,S)
+  25   48 	adj #2
+  26   51 	lda #2
+  27   52 	sta.w i_003
+  28   53 L_008
+  29   54 	lda.w #1000
+  30   55 	cmp.w i_003
+  31   56 	bge L_009
+  32   57 	jmp L_010
+  33   58 L_009
+  34   60 	psh.w #sieve_002
+  35   61 	lda.w i_003
+  36   62 	dec.w a
+  37   65 	asl.w a
+  38   67 	clc
+  39   68 	adc.w 0,S
+  40   69 	sta.w 0,S
+  41   70 	lda #1
+  42   72 	sta.w (0,S)
+  43   73 	adj #2
+  44   74 	inc.w i_003
+  45   75 	jmp L_008
+  46   76 L_010
+  47   77 	dec.w i_003
+  48   80 	lda #1
+  49   81 	sta.w prime_006
+  50   84 L_011
+  51   86 	lda.w prime_006
+  52   87 	pha.w
+  53   88 	lda #1
+  54   90 	clc
+  55   91 	adc.w 0,S
+  56   92 	adj #2
+  57   93 	sta.w prime_006
+  58   95 L_013
+  59   96 	psh.w #sieve_002
+  60   97 	lda.w prime_006
+  61   98 	dec.w a
+  62  101 	asl.w a
+  63  103 	clc
+  64  104 	adc.w 0,S
+  65  105 	sta.w 0,S
+  66  107 	lda.w (0,S)
+  67  108 	adj #2
+  68  109 	eor #1
+  69  110 	cmp.w #1
+  70  111 	beq L_014
+  71  112 	jmp L_015
+  72  113 L_014
+  73  115 	lda.w prime_006
+  74  116 	pha.w
+  75  117 	lda #1
+  76  119 	clc
+  77  120 	adc.w 0,S
+  78  121 	adj #2
+  79  122 	sta.w prime_006
+  80  123 	jmp L_013
+  81  124 L_015
+  82  127 	lda #2
+  83  128 	pha.w
+  84  129 	lda.w prime_006
+  85  130 	pha.w
+  86  131 	jsr _imul
+  87  132 	adj #4
+  88  133 	sta.w factor_007
+  89  136 L_016
+  90  137 	lda.w factor_007
+  91  138 	pha.w
+  92  139 	lda.w #1000
+  93  140 	xma.w 0,S
+  94  141 	cmp.w 0,S
+  95  142 	adj #2
+  96  143 	php
+  97  144 	lda #1
+  98  145 	plp
+  99  146 	ble L_019
+ 100  147 	lda #0
+ 101  148 L_019
+ 102  149 	cmp.w #1
+ 103  150 	beq L_017
+ 104  151 	jmp L_018
+ 105  152 L_017
+ 106  154 	psh.w #sieve_002
+ 107  155 	lda.w factor_007
+ 108  156 	dec.w a
+ 109  159 	asl.w a
+ 110  161 	clc
+ 111  162 	adc.w 0,S
+ 112  163 	sta.w 0,S
+ 113  164 	lda #0
+ 114  166 	sta.w (0,S)
+ 115  167 	adj #2
+ 116  169 	lda.w factor_007
+ 117  170 	pha.w
+ 118  171 	lda.w prime_006
+ 119  173 	clc
+ 120  174 	adc.w 0,S
+ 121  175 	adj #2
+ 122  176 	sta.w factor_007
+ 123  179 	jmp L_016
+ 124  180 L_018
+ 125  181 	lda.w prime_006
+ 126  182 	pha.w
+ 127  183 	lda.w limit_005
+ 128  184 	xma.w 0,S
+ 129  185 	cmp.w 0,S
+ 130  186 	adj #2
+ 131  187 	php
+ 132  188 	lda #1
+ 133  189 	plp
+ 134  190 	bgt L_020
+ 135  191 	lda #0
+ 136  192 L_020
+ 137  193 	cmp.w #1
+ 138  194 	beq L_012
+ 139  195 	jmp L_011
+ 140  196 L_012
+ 141  199 	psh.w #S_021
+ 142  201 	psh.w #0
+ 143  203 	psh.w #21
+ 144  205 	jsr _swrite
+ 145  206 	adj #6
+ 146  207 	jsr _writeln
+ 147  209 	jsr _writeln
+ 148  212 	lda #1
+ 149  213 	sta.w i_003
+ 150  215 L_022
+ 151  217 	lda #0
+ 152  218 	sta.w j_004
+ 153  219 L_024
+ 154  220 	lda #19
+ 155  221 	cmp.w j_004
+ 156  222 	bge L_025
+ 157  223 	jmp L_026
+ 158  224 L_025
+ 159  226 	lda.w i_003
+ 160  227 	pha.w
+ 161  228 	lda.w j_004
+ 162  230 	clc
+ 163  231 	adc.w 0,S
+ 164  232 	adj #2
+ 165  233 	sta.w prime_006
+ 166  235 	psh.w #sieve_002
+ 167  236 	lda.w prime_006
+ 168  237 	dec.w a
+ 169  240 	asl.w a
+ 170  242 	clc
+ 171  243 	adc.w 0,S
+ 172  244 	sta.w 0,S
+ 173  246 	lda.w (0,S)
+ 174  247 	adj #2
+ 175  248 	cmp.w #1
+ 176  249 	beq L_027
+ 177  250 	jmp  L_028
+ 178  251 L_027
+ 179  253 	lda.w prime_006
+ 180  254 	pha.w
+ 181  255 	lda #3
+ 182  256 	pha.w
+ 183  257 	jsr _iwrite
+ 184  258 	adj #4
+ 185  260 	jmp L_029
+ 186  261 L_028
+ 187  263 	psh.w #S_030
+ 188  265 	psh.w #0
+ 189  267 	psh.w #3
+ 190  269 	jsr _swrite
+ 191  270 	adj #6
+ 192  271 L_029
+ 193  273 	inc.w j_004
+ 194  274 	jmp L_024
+ 195  275 L_026
+ 196  276 	dec.w j_004
+ 197  278 	jsr _writeln
+ 198  280 	lda.w i_003
+ 199  281 	pha.w
+ 200  282 	lda #20
+ 201  285 	clc
+ 202  286 	adc.w 0,S
+ 203  287 	adj #2
+ 204  288 	sta.w i_003
+ 205  289 	lda.w i_003
+ 206  290 	pha.w
+ 207  292 	lda.w #1000
+ 208  293 	xma.w 0,S
+ 209  294 	cmp.w 0,S
+ 210  295 	adj #2
+ 211  296 	php
+ 212  297 	lda #1
+ 213  298 	plp
+ 214  299 	bgt L_031
+ 215  300 	lda #0
+ 216  301 L_031
+ 217  302 	cmp.w #1
+ 218  303 	beq L_023
+ 219  304 	jmp L_022
+ 220  305 L_023
+ 221  307 	plx.w
+ 222  308 	rts
+ 223  310 	.ENDP	_pc65_main
+ 224  312 	.DATA
+ 225  314 sieve_002	.DB	2000
+ 226  315 i_003	.DB	2
+ 227  316 j_004	.DB	2
+ 228  317 limit_005	.DB	2
+ 229  318 prime_006	.DB	2
+ 230  319 factor_007	.DB	2
+ 231  320 S_030	.DS	"   "
+ 232  321 S_021	.DS	"Sieve of Eratosthenes"
+ 233  323 	.END
