@@ -12,87 +12,12 @@ relative   = ('bpl', 'bmi', 'bvc', 'bvs', 'bcc', 'bcs', 'bne', 'beq', \
               'jra', \
               'phr', 'csr')
 
-##'''
-##    Read Opcodes Table
-##'''
-##
-##with open('OpcodeTbl.txt', 'rt') as finp:
-##    opcodeTbl = finp.readlines()
-##
-##'''
-##    Create Opcodes Dictionary
-##'''
-##
-##opcodes = dict()
-##maxWidth = 0
-##for opcode in opcodeTbl:
-##    op = opcode.split()
-##    key = op[0]
-##    opcodes[key] = [int(op[1]), int(op[2]), op[3]]
-##    if len(key) > maxWidth:
-##        maxWidth = len(key)
-##
-##'''
-##    Print Opcodes Table
-##'''
-##
-##with open('OpcodeTbl.lst', 'wt') as fout:
-##    print('-'*80, file=fout)
-##    print('\tOpcode Table', file=fout)
-##    print('-'*80, file=fout)
-##    print(file=fout)
-##    for key in opcodes:
-##        print('%-*s' % (maxWidth, key),':',opcodes[key], file=fout)
-##    print(file=fout)
-##    print('-'*80, file=fout)
-##    print(file=fout)
+opcodes = dict()
 
-opcodes = loadOpcodeTable() # Load default opcode table
+loadOpcodeTable(opcodes) # Load default opcode table
 
 filename = input('Enter base name of file to process: ')
 libpath  = input('Enter path to library: ')
-
-##'''
-##    Open input file
-##'''
-##
-##with open(filename+'.asm', 'rt') as finp:
-##    lines = finp.readlines()
-##
-##'''
-##    Strip comments, blank lines, etc.
-##'''
-##
-##inLine = 1; srcLine = 1; source = []
-##with open(filename+'.p01', 'wt') as fout:
-##    for line in lines:
-##        m = re.split('\s*;[\s\w]*', line)
-##        src = m[0].rstrip()
-##        if src == '' or src == '\n':
-##            pass
-##        else:
-##            source.append([srcLine, inLine, src])
-##            print('%4d %4d' % (srcLine, inLine), src, file=fout)
-##            srcLine += 1
-##        inLine += 1
-##
-##'''
-##    Split source lines
-##'''
-##
-##fields = []
-##for src in source:
-##    if '"' in src[2]:
-##        line = src[2].split('"')
-##        flds = re.split('\s', line[0])[:2]
-##        flds.append(line[1])
-##    else:
-##        flds = re.split('[ \t][\s]*', src[2])
-##    fields.append([[src[:2]], flds])
-##    #print('[%4d, %4d]' % (src[0], src[1]), flds)
-
-finp = open(filename+'.asm', 'rt')
-fout = open(filename+'.p01', 'wt')
 
 labels    = {}
 constants = {}
@@ -109,7 +34,10 @@ dat = []        # data
 
 inpLine = 1
 srcLine = 1
-fields  = []    # fields in the input line
+source  = []    # fields in the input line
+
+finp = open(filename+'.asm', 'rt')
+fout = open(filename+'.p01', 'wt')
 
 while True:
     ln = finp.readline()
@@ -117,45 +45,49 @@ while True:
         break
     else:
         m = re.split('\s*;[\s\w]*', ln)
-        src = m[0].rstrip()
-        if src == '' or src == '\n':
+        srcText = m[0].rstrip()
+        if srcText == '' or srcText == '\n':
             pass
         else:
-            curSrc = [srcLine, inpLine, src]
-            print('%4d %4d' % (srcLine, inpLine), src, file=fout)
+            curSrc = [srcLine, inpLine, srcText]
+            print('%4d %4d' % (srcLine, inpLine), srcText, file=fout)
             if '"' in curSrc[2]:
                 ln   = curSrc[2].split('"')
                 flds = re.split('\s', ln[0])[:2]
                 flds.append(ln[1])
             else:
                 flds = re.split('[ \t][\s]*', curSrc[2])
-            fields.append([curSrc, flds])
+            source.append([curSrc, flds])
             srcLine += 1
         inpLine += 1
 
-finp.close()
 fout.close()
+finp.close()
+
+'''
+    Insert Peephole Optimization here
+'''
 
 '''
     Assembler Pass 1
 '''
 
-for field in fields:
-    *_, srcLine, srcText = field[0]
+for src in source:
+    *_, srcLine, srcText = src[0]
     opcode = ''
-    numFields = len(field[1])
+    numFields = len(src[1])
     if numFields == 1:
-        lbl = field[1][0]
+        lbl = src[1][0]
         op  = ''
         dt  = ''
     elif numFields == 2:
-        lbl = field[1][0]
-        op  = field[1][1].lower()
+        lbl = src[1][0]
+        op  = src[1][1].lower()
         dt  = ''
     elif numFields == 3:
-        lbl = field[1][0]
-        op  = field[1][1].lower()
-        dt  = field[1][2]
+        lbl = src[1][0]
+        op  = src[1][1].lower()
+        dt  = src[1][2]
     else:
         print('Error. Unexpected number of fields: %d' % (numFields) \
               + ' in line #%d' % (srcLine))
@@ -173,10 +105,6 @@ for field in fields:
             elif op == directives[3]:   # .proc
                 pass
             elif op == directives[4]:   # .endp
-                #
-                # Recursively import the library functions found during Pass 1.
-                #   Append library function source code to "fields".
-                #
                 pass
             elif op == directives[5]:   # .end
                 pass
@@ -253,10 +181,6 @@ for field in fields:
             elif op == directives[3]:   # .proc
                 pass
             elif op == directives[4]:   # .endp
-                #
-                # Recursively import the library functions found during Pass 1.
-                #   Append library function source code to "fields".
-                #
                 pass
             elif op == directives[5]:   # .end
                 pass
@@ -350,6 +274,12 @@ for field in fields:
     line += 1
 
 '''
+    Insert Loop(s) to add library functions
+'''
+
+
+
+'''
     Merge cod[] and dat[]; adjust address of each entry.
 '''
 
@@ -395,20 +325,7 @@ for ln in cod:
                 print('Error. Expected number, constant, variable, or label:', \
                       '%s %s %s' %(op, md, dt))
         else:
-            if len(dt) == 1:
-                val = int(dt)
-            elif dt[0] == '0':
-                radix = dt[1]
-                if radix == 'b':
-                    val = int(dt, base=2)
-                elif radix == 'o':
-                    val = int(dt, base=8)
-                elif radix == 'x':
-                    val = int(dt, base=16)
-                else:
-                    print('Error. Unknown numeric representation.')
-            else:
-                val = int(dt)
+            val = numVal(dt)
 
         if dtLen == 1:
             loStr = '%02X' % (val & 255)

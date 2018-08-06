@@ -1,5 +1,5 @@
    1    2 	.STACK  1024
-   2    4 	.CODE
+   2    4 	.CODE	  1024
    3    6 STATIC_LINK			.EQ	+4
    4    7 RETURN_VALUE		.EQ	-4
    5    8 HIGH_RETURN_VALUE	.EQ	-2

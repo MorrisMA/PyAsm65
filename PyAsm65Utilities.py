@@ -4,7 +4,7 @@
 
 import os
 
-def loadOpcodeTable(fn = 'OpcodeTbl', genOpcodeLst = False):
+def loadOpcodeTable(opcodes, fn = 'OpcodeTbl', genOpcodeLst = False):
     '''
         Read Opcodes Table
     '''
@@ -16,7 +16,6 @@ def loadOpcodeTable(fn = 'OpcodeTbl', genOpcodeLst = False):
         Create Opcodes Dictionary
     '''
 
-    opcodes = dict()
     maxWidth = 0
     for opcode in opcodeTbl:
         op = opcode.split()
@@ -60,3 +59,195 @@ def numVal(dt):
         val = int(dt)
     return val
     
+def asmPass1(code, data, lbl, op, dt, srcLine,
+             opcodes, directives, defines, relative):
+    if lbl == '':
+        if op in directives:
+            if op == directives[0]:     # .stack    size
+                stkSize = numVal(dt)
+            elif op == directives[1]:   # .code     [address]
+                if dt != '':
+                    code = numVal(dt)
+            elif op == directives[2]:   # .data     [address]
+                if dt != '':
+                    data = numVal(dt)
+            elif op == directives[3]:   # .proc
+                pass
+            elif op == directives[4]:   # .endp
+                pass
+            elif op == directives[5]:   # .end
+                pass
+            else:
+                print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
+        else:
+            if re.match('^\.\w$', op):
+                print('Error. Unexpected opcode: %s. Line #%d.' % (op, srcLine))
+            else:
+                if dt == '':
+                    addrsMode = 'imp'
+                    operand = ''
+                elif re.match('^[aAxXyY]$', dt):
+                    addrsMode = dt.lower()
+                    operand = dt.lower()
+                elif re.match('^#', dt):
+                    addrsMode = 'imm'
+                    operand = dt[1:]
+                elif re.match('^\w*$', dt):
+                    if op in relative:
+                        addrsMode = 'rel'
+                    else:
+                        addrsMode = 'abs'
+                    operand = dt
+                    if re.match('^_\w*$', dt):
+                        if dt not in library:
+                            library.append(dt)
+                elif re.match('^.*,[xX]$', dt):
+                    addrsMode = 'zpX'
+                    operand = dt.split(',')[0]
+                elif re.match('^\(.*,[xX]\)$', dt):
+                    addrsMode = 'zpXI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^.*,[sS]$', dt):
+                    addrsMode = 'zpS'
+                    operand = dt.split(',')[0]
+                elif re.match('^\(.*,[sS]\)$', dt):
+                    addrsMode = 'zpSI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*,[sS]\),[yY]$', dt):
+                    addrsMode = 'spIY'
+                    operand = dt.split(',')[0][1:]
+                else:
+                    addrsMode = '???'
+                    print('Error. Unknown addressing mode: %s. Line #%d.' \
+                          % (dt, srcLine))
+
+                opcode = op + '_' + addrsMode
+                if opcode in opcodes:
+                    opLen = opcodes[opcode][0]
+                    dtLen = opcodes[opcode][1]
+                    opDat = opcodes[opcode][2]
+                    asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
+                    bufLen = 15 - len(asmText)
+
+                    entry = [code, op, addrsMode, operand, \
+                              opLen, dtLen, opDat, ' '*bufLen+' ; '+srcText]
+                    code += opLen + dtLen
+                    return (True, entry)
+                else:
+                    print('Error. Unknown opcode: %s. Line #%d.' \
+                          % (opcode, srcLine))
+    else:
+        if lbl in labels or lbl in constants or lbl in variables:
+            print('Error: Redefinition of %s in %d' % (lbl, srcLine))
+        elif op in directives:
+            labels[lbl] = code
+            if op == directives[0]:     # .stack    size
+                stkSize = numVal(dt)
+            elif op == directives[1]:   # .code     [address]
+                if dt != '':
+                    code = numVal(dt)
+            elif op == directives[2]:   # .data     [address]
+                if dt != '':
+                    data = numVal(dt)
+            elif op == directives[3]:   # .proc
+                pass
+            elif op == directives[4]:   # .endp
+                pass
+            elif op == directives[5]:   # .end
+                pass
+            else:
+                print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
+        else:
+            if op == '':
+                labels[lbl] = code
+            elif op in defines:
+                if op == '.eq':
+                    constants[lbl] = numVal(dt)
+                elif op == '.db':
+                    siz = int(dt)
+                    val = '00'*siz
+                    variables[lbl] = (data, siz, val)
+
+                    asmText = '%04X %s' % (data, val[:8])
+                    bufLen = 15 - len(asmText)
+
+                    entry  = [data, lbl, 'ds', dt, siz, 0, strVal, \
+                              ' '*bufLen+' ; '+srcText]
+                    data += siz
+                    return (False, entry)
+                elif op == '.ds':
+                    siz = len(dt)
+                    variables[lbl] = (data, siz, dt)
+                    strVal = []
+
+                    for ch in dt:
+                        strVal.append('%02X' % (ord(ch)))
+                    strVal = ''.join(strVal)
+
+                    asmText = '%04X %s' % (data, strVal[:8])
+                    bufLen = 15 - len(asmText)
+
+                    entry  = [data, lbl, 'ds', dt, siz, 0, strVal, \
+                              ' '*bufLen+' ; '+srcText]
+                    data += siz
+                    return (False, entry)
+                else:
+                    print('Error. Unknown define: %s.' % (op))
+                    pass
+            else:
+                if dt == '':
+                    addrsMode = 'imp'
+                    operand = ''
+                elif re.match('^[aAxXyY]$', dt):
+                    addrsMode = dt.lower()
+                    operand = dt.lower()
+                elif re.match('^#', dt):
+                    addrsMode = 'imm'
+                    operand = dt[1:]
+                elif re.match('^\w*$', dt):
+                    if op in relative:
+                        addrsMode = 'rel'
+                    else:
+                        addrsMode = 'abs'
+                    operand = dt
+                    if re.match('^_\w*$', dt):
+                        if dt not in library:
+                            library.append(dt)
+                elif re.match('^.*,[xX]$', dt):
+                    addrsMode = 'zpX'
+                    operand = dt.split(',')[0]
+                elif re.match('^\(.*,[xX]\)$', dt):
+                    addrsMode = 'zpXI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^.*,[sS]$', dt):
+                    addrsMode = 'zpS'
+                    operand = dt.split(',')[0]
+                elif re.match('^\(.*,[sS]\)$', dt):
+                    addrsMode = 'zpSI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*,[sS]\),[yY]$', dt):
+                    addrsMode = 'spIY'
+                    operand = dt.split(',')[0][1:]
+                else:
+                    addrsMode = '???'
+                    print('Error. Unknown addressing mode: %s. Line #%d.' \
+                          % (dt, srcLine))
+
+                opcode = op + '_' + addrsMode
+
+                if opcode in opcodes:
+                    opLen = opcodes[opcode][0]
+                    dtLen = opcodes[opcode][1]
+                    asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
+                    bufLen = 15 - len(asmText)
+
+                    entry  = [code, op, addrsMode, operand, \
+                              opLen, dtLen, opDat, ' '*bufLen+' ; '+srcText]
+                    code += opLen + dtLen
+                    return (True, entry)
+                else:
+                    print('Error. Unknown opcode: %s. Line #%d.' \
+                          % (opcode, srcLine))
+    return (None, None)
+
+

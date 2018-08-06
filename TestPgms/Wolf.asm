@@ -1,7 +1,7 @@
 ;    1: PROGRAM WolfIsland (input, output);
 	.STACK  1024	;Set stack size
 
-	.CODE	;place in CODE segment
+	.CODE	  1024  ;place in CODE segment
 
 STATIC_LINK			.EQ	+4	;--- base-relative STATIC_LINK			EQU	<WORD PTR [bp+4]>
 RETURN_VALUE		.EQ	-4	;--- base-relativeRETURN_VALUE		EQU	<WORD PTR [bp-4]>
