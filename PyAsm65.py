@@ -36,37 +36,22 @@ inpLine = 1
 srcLine = 1
 source  = []    # fields in the input line
 
-finp = open(filename+'.asm', 'rt')
 fout = open(filename+'.p01', 'wt')
 
-while True:
-    ln = finp.readline()
-    if ln == '':
-        break
-    else:
-        m = re.split('\s*;[\s\w]*', ln)
-        srcText = m[0].rstrip()
-        if srcText == '' or srcText == '\n':
-            pass
-        else:
-            curSrc = [srcLine, inpLine, srcText]
-            print('%4d %4d' % (srcLine, inpLine), srcText, file=fout)
-            if '"' in curSrc[2]:
-                ln   = curSrc[2].split('"')
-                flds = re.split('\s', ln[0])[:2]
-                flds.append(ln[1])
-            else:
-                flds = re.split('[ \t][\s]*', curSrc[2])
-            source.append([curSrc, flds])
-            srcLine += 1
-        inpLine += 1
+for ln in readSource(filename):
+    srcLine = ln[0][0]
+    inpLine = ln[0][1]
+    srcText = ln[0][2]
+    print('%4d %4d' % (srcLine, inpLine), srcText, file=fout)
+    source.append(ln)
 
 fout.close()
-finp.close()
 
 '''
-    Insert Peephole Optimization here
+    Insert Peephole Optimizations here
 '''
+
+source = pho_ldaImmPha_to_pshImm(source)
 
 '''
     Assembler Pass 1

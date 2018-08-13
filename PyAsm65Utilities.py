@@ -3,6 +3,7 @@
 '''
 
 import os
+import re
 
 def loadOpcodeTable(opcodes, fn = 'OpcodeTbl', genOpcodeLst = False):
     '''
@@ -59,6 +60,67 @@ def numVal(dt):
         val = int(dt)
     return val
     
+def readSource(filename):
+    '''
+        readSource - generator that reads a file
+            removes comments / blank lines
+            splits non-blank lines into fields
+            associates lines produced with non-blank input lines
+    '''
+    finp = open(filename+'.asm', 'rt')
+    inpLine = 1; srcLine = 1
+    while True:
+        ln = finp.readline()
+        if ln == '':
+            finp.close()
+            return
+        else:
+            m = re.split('\s*;[\s\w]*', ln)
+            srcText = m[0].rstrip()
+            if srcText == '' or srcText == '\n':
+                pass
+            else:
+                curSrc = [srcLine, inpLine, srcText]
+                if '"' in curSrc[2]:
+                    ln   = curSrc[2].split('"')
+                    flds = re.split('\s', ln[0])[:2]
+                    flds.append(ln[1])
+                else:
+                    flds = re.split('[ \t][\s]*', curSrc[2])
+                    if len(flds) < 2:
+                        flds.append(str())
+                srcLine += 1
+                yield [curSrc, flds]
+            inpLine += 1
+
+def pho_ldaImmPha_to_pshImm(source):
+    print('ldaImmPha_to_pshImm')
+    newSrc = []
+    length  = len(source) - 1
+    i = 0
+    while i < length:
+        newLine = source[i]
+        srcLine, inpLine, *_ = newLine[0]
+        try:
+            lbl, op, dt = newLine[1]
+        except:
+            lbl, op = newLine[1]
+            dt = ''
+        if op in ['lda', 'lda.w'] and dt[0] == '#':
+            nxtLine = source[i+1]
+            try:
+                nxtLbl, nxtOp, *_ = nxtLine[1]
+            except:
+                nxtLbl, nxtOp = nxtLine[1]
+            if nxtOp in ['pha', 'pha.w', 'pha.s', 'pha.sw'] and nxtLbl == '':
+                op = 'psh'+'.'+nxtOp.split('.')[1]
+                newLine = [[srcLine, inpLine, lbl+'\t'+op+'\t'+dt], \
+                           [lbl, op, dt]]
+                i += 1
+        newSrc.append(newLine)
+        i += 1
+    return newSrc
+
 def asmPass1(code, data, lbl, op, dt, srcLine,
              opcodes, directives, defines, relative):
     if lbl == '':
