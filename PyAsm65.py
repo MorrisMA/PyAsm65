@@ -51,7 +51,7 @@ fout.close()
     Insert Peephole Optimizations here
 '''
 
-source = pho_ldaImmPha_to_pshImm(source)
+##source = pho_ldaImmPha_to_pshImm(source)
 
 '''
     Assembler Pass 1
@@ -130,7 +130,7 @@ for src in source:
                     addrsMode = 'zpSI'
                     operand = dt.split(',')[0][1:]
                 elif re.match('^\(.*,[sS]\),[yY]$', dt):
-                    addrsMode = 'spIY'
+                    addrsMode = 'zpSIY'
                     operand = dt.split(',')[0][1:]
                 else:
                     addrsMode = '???'
