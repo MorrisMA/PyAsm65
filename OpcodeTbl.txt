@@ -1806,5 +1806,5 @@ asr_y 3 0 FB9B4A
 asr.w_y 3 0 FBBB4A
 txy_imp 2 0 FB8A
 txy.w_imp 3 0 FBAB8A
-tyx_imp 2 0 FBAA
-tyx.w_imp 3 0 FBABAA
+tyx_imp 2 0 EB98
+tyx.w_imp 3 0 EBAB98

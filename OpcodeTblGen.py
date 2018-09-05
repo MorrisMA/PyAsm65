@@ -1001,8 +1001,8 @@ for base in instrByNameTbl.keys():
 
 xfrMap = {'txy'   : ('txy_imp', 2, 0, 'FB8A'), \
           'txy.w' : ('txy.w_imp', 3, 0, 'FBAB8A'), \
-          'tyx'   : ('tyx_imp', 2, 0, 'FBAA'), \
-          'tyx.w' : ('tyx.w_imp', 3, 0, 'FBABAA') }
+          'tyx'   : ('tyx_imp', 2, 0, 'EB98'), \
+          'tyx.w' : ('tyx.w_imp', 3, 0, 'EBAB98') }
 
 for i in xfrMap.keys():
     instr, opLen, dtLen, code = xfrMap[i]
