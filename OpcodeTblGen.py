@@ -223,12 +223,18 @@ indexedByX = {'zpX'    : 'zpA',   \
               'absX'   : 'absA',  \
               'absXI'  : 'absAI', \
               'absXII' : 'absAII' }
-indexedByY = {'zpY'    : 'zpA',   \
-              'zpIY'   : 'zpIA',  \
-              'zpIIY'  : 'zpIIA', \
-              'absY'   : 'absA',  \
-              'absIY'  : 'absIA' }
-indexedByS = ('zpS', 'zpSI', 'zpSII', 'absS', 'absSI', 'absSII',)
+indexedByY = {'zpY'    : 'zpA',    \
+              'zpIY'   : 'zpIA',   \
+              'zpIIY'  : 'zpIIA',  \
+              'absY'   : 'absA',   \
+              'absIY'  : 'absIA',  \
+              'zpSIY'  : 'zpSIA',  \
+              'zpSIIY' : 'zpSIIA', \
+              'absSIY' : 'absSIA', }
+indexedByS = ('zpS', 'zpSI', 'zpSII',    \
+              'zpSIY', 'zpSIIY',         \
+              'absS', 'absSI', 'absSII', \
+              'absSIY',)
 
 lines = []
 with open('OpcodeTblGen.txt', 'rt') as finp:
@@ -545,159 +551,189 @@ for fld in flds:
 '''
 
 for fld in flds:
-    code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
+	code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
 
-    opcode = opcode.lower()
-    osx = osx.lower()
+	opcode = opcode.lower()
+	osx = osx.lower()
 
-    if osx == 'y':
-        dtLen = int()
-        if mode in ('imp', 'acc'):
-            dtLen = 0
-        elif mode in oneByte:
-            dtLen = 1
-        elif mode in twoByte:
-            dtLen = 2
-        else:
-            print('Error. Unrecognized Addressing Mode: %s, %s.' \
-                  % (opcode, mode))
+	if osx == 'y':
+		dtLen = int()
+		if mode in ('imp', 'acc'):
+			dtLen = 0
+		elif mode in oneByte:
+			dtLen = 1
+		elif mode in twoByte:
+			dtLen = 2
+		else:
+			print('Error. Unrecognized Addressing Mode: %s, %s.' \
+				  % (opcode, mode))
 
-        code = preByte['osx'] + code; opLen = 2
-        if mode in ('zpX', 'absX', 'zpXI', 'absXI'):
-            if mode == 'zpX':
-                mode = 'zpS'
-            elif mode == 'absX':
-                mode = 'absS'
-            elif mode == 'zpXI':
-                mode = 'zpSI'
-            else:
-                mode = 'absSI'
+		code = preByte['osx'] + code; opLen = 2
+		if mode in ('zp',   'zpX',
+		            'zpI',  'zpXI',
+		            'zpIY', 
+		            'abs',  'absX',
+		            'absI', 'absXI',
+		            'zprel'          ):
+			if mode == 'zpX' or mode == 'zp':
+				mode = 'zpS'
+			elif mode == 'zpXI' or mode == 'zpI':
+				mode = 'zpSI'
+			elif mode == 'zpIY':
+				mode = 'zpSIY'
+			elif mode == 'absX' or mode == 'abs':
+				mode = 'absS'
+			elif mode == 'absXI' or mode == 'absI':
+				mode = 'absSI'
+			else:
+				mode = 'zpSrel'
 
-            opcode = '_'.join([opcode, mode])
-            if opcode in osxMap:
-                opcode, opLen, dtLen, code = osxMap[opcode]
-            if opcode in opcodeDict:
-                continue
-            opcodeList.append(opcode)
-            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-            print(opcode, opLen, dtLen, code)
-            print(opcode, opLen, dtLen, code, file=fout)
-        else:
-            opcode = '_'.join([''.join([opcode, '.s']), mode])
-            if opcode in osxMap:
-                opcode, opLen, dtLen, code = osxMap[opcode]
-            if opcode in opcodeDict:
-                continue
-            opcodeList.append(opcode)
-            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-            print(opcode, opLen, dtLen, code)
-            print(opcode, opLen, dtLen, code, file=fout)
+			opcode = '_'.join([opcode, mode])
+			if opcode in osxMap:
+				opcode, opLen, dtLen, code = osxMap[opcode]
+			if opcode in opcodeDict:
+				continue
+			opcodeList.append(opcode)
+			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+			print(opcode, opLen, dtLen, code)
+			print(opcode, opLen, dtLen, code, file=fout)
+		else:
+			opcode = '_'.join([''.join([opcode, '.s']), mode])
+			if opcode in osxMap:
+				opcode, opLen, dtLen, code = osxMap[opcode]
+			if opcode in opcodeDict:
+				continue
+			opcodeList.append(opcode)
+			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+			print(opcode, opLen, dtLen, code)
+			print(opcode, opLen, dtLen, code, file=fout)
 
 '''
     Add instructions using OSZ prefix instruction
 '''
 
 for fld in flds:
-    code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
+	code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
 
-    opcode = opcode.lower()
-    osz = osz.lower()
+	opcode = opcode.lower()
+	osz = osz.lower()
 
-    if osz == 'y':
-        dtLen = int()
-        if mode in ('imp', 'acc'):
-            dtLen = 0
-        elif mode in oneByte:
-            dtLen = 1
-        elif mode in twoByte:
-            dtLen = 2
-        else:
-            print('Error. Unrecognized Addressing Mode: %s, %s.' \
-                  % (opcode, mode))
+	if osz == 'y':
+		dtLen = int()
+		if mode in ('imp', 'acc'):
+			dtLen = 0
+		elif mode in oneByte:
+			dtLen = 1
+		elif mode in twoByte:
+			dtLen = 2
+		else:
+			print('Error. Unrecognized Addressing Mode: %s, %s.' \
+				  % (opcode, mode))
 
-        code = preByte['osz'] + code; opLen = 2
-        if mode in ('zpX', 'absX', 'zpXI', 'absXI'):
-            if mode == 'zpX':
-                mode = 'zpS'
-            elif mode == 'absX':
-                mode = 'absS'
-            elif mode == 'zpXI':
-                mode = 'zpSI'
-            else:
-                mode = 'absSI'
+		code = preByte['osz'] + code; opLen = 2
+		if mode in ('zp',   'zpX',
+		            'zpI',  'zpXI',
+		            'zpIY', 
+		            'abs',  'absX',
+		            'absI', 'absXI',
+		            'zprel'          ):
+			if mode == 'zpX' or mode == 'zp':
+				mode = 'zpS'
+			elif mode == 'zpXI' or mode == 'zpI':
+				mode = 'zpSI'
+			elif mode == 'zpIY':
+				mode = 'zpSIY'
+			elif mode == 'absX' or mode == 'abs':
+				mode = 'absS'
+			elif mode == 'absXI' or mode == 'absI':
+				mode = 'absSI'
+			else:
+				mode = 'zpSrel'
 
-            opcode = '_'.join([''.join([opcode, '.w']), mode])
-            if opcode in osxMap:
-                opcode, opLen, dtLen, code = osxMap[opcode]
-            if opcode in opcodeDict:
-                continue
-            opcodeList.append(opcode)
-            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-            print(opcode, opLen, dtLen, code)
-            print(opcode, opLen, dtLen, code, file=fout)
-        else:
-            opcode = '_'.join([''.join([opcode, '.sw']), mode])
-            if opcode in osxMap:
-                opcode, opLen, dtLen, code = osxMap[opcode]
-            if opcode in opcodeDict:
-                continue
-            opcodeList.append(opcode)
-            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-            print(opcode, opLen, dtLen, code)
-            print(opcode, opLen, dtLen, code, file=fout)
+			opcode = '_'.join([''.join([opcode, '.w']), mode])
+			if opcode in osxMap:
+				opcode, opLen, dtLen, code = osxMap[opcode]
+			if opcode in opcodeDict:
+				continue
+			opcodeList.append(opcode)
+			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+			print(opcode, opLen, dtLen, code)
+			print(opcode, opLen, dtLen, code, file=fout)
+		else:
+			opcode = '_'.join([''.join([opcode, '.sw']), mode])
+			if opcode in osxMap:
+				opcode, opLen, dtLen, code = osxMap[opcode]
+			if opcode in opcodeDict:
+				continue
+			opcodeList.append(opcode)
+			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+			print(opcode, opLen, dtLen, code)
+			print(opcode, opLen, dtLen, code, file=fout)
 
 '''
     Add instructions using OIS prefix instruction
 '''
 
 for fld in flds:
-    code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
+	code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
 
-    opcode = opcode.lower()
-    ois = ois.lower()
+	opcode = opcode.lower()
+	ois = ois.lower()
 
-    if ois == 'y':
-        dtLen = int()
-        if mode in ('imp', 'acc'):
-            dtLen = 0
-        elif mode in oneByte:
-            dtLen = 1
-        elif mode in twoByte:
-            dtLen = 2
-        else:
-            print('Error. Unrecognized Addressing Mode: %s, %s.' \
-                  % (opcode, mode))
+	if ois == 'y':
+		dtLen = int()
+		if mode in ('imp', 'acc'):
+			dtLen = 0
+		elif mode in oneByte:
+			dtLen = 1
+		elif mode in twoByte:
+			dtLen = 2
+		else:
+			print('Error. Unrecognized Addressing Mode: %s, %s.' \
+				  % (opcode, mode))
 
-        code = preByte['ois'] + code; opLen = 2
-        if mode in ('zpX', 'absX', 'zpXI', 'absXI'):
-            if mode == 'zpX':
-                mode = 'zpSI'
-            elif mode == 'absX':
-                mode = 'absSI'
-            elif mode == 'zpXI':
-                mode = 'zpSII'
-            else:
-                mode = 'absSII'
+		code = preByte['ois'] + code; opLen = 2
+		if mode in ('zp',   'zpX',
+		            'zpI',  'zpXI',
+		            'zpIY', 
+		            'abs',  'absX',
+		            'absI', 'absXI',
+		            'absY',
+		            'zprel'          ):
+			if mode == 'zpX' or mode == 'zp':
+				mode = 'zpSI'
+			elif mode == 'zpXI' or mode == 'zpI':
+				mode = 'zpSII'
+			elif mode == 'zpIY':
+				mode = 'zpSIIY'
+			elif mode == 'absX' or mode == 'abs':
+				mode = 'absSI'
+			elif mode == 'absXI' or mode == 'absI':
+				mode = 'absSII'
+			elif mode == 'absY':
+				mode = 'absSIY'
+			else:
+				mode = 'zpSIrel'
 
-            opcode = '_'.join([''.join([opcode, '.w']), mode])
-            if opcode in osxMap:
-                opcode, opLen, dtLen, code = osxMap[opcode]
-            if opcode in opcodeDict:
-                continue
-            opcodeList.append(opcode)
-            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-            print(opcode, opLen, dtLen, code)
-            print(opcode, opLen, dtLen, code, file=fout)
-        else:
-            opcode = '_'.join([''.join([opcode, '.sw']), mode + 'I'])
-            if opcode in osxMap:
-                opcode, opLen, dtLen, code = osxMap[opcode]
-            if opcode in opcodeDict:
-                continue
-            opcodeList.append(opcode)
-            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-            print(opcode, opLen, dtLen, code)
-            print(opcode, opLen, dtLen, code, file=fout)
+			opcode = '_'.join([''.join([opcode, '.w']), mode])
+			if opcode in osxMap:
+				opcode, opLen, dtLen, code = osxMap[opcode]
+			if opcode in opcodeDict:
+				continue
+			opcodeList.append(opcode)
+			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+			print(opcode, opLen, dtLen, code)
+			print(opcode, opLen, dtLen, code, file=fout)
+		else:
+			opcode = '_'.join([''.join([opcode, '.sw']), mode + 'I'])
+			if opcode in osxMap:
+				opcode, opLen, dtLen, code = osxMap[opcode]
+			if opcode in opcodeDict:
+				continue
+			opcodeList.append(opcode)
+			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+			print(opcode, opLen, dtLen, code)
+			print(opcode, opLen, dtLen, code, file=fout)
 
 '''
     Add instructions using OSX + IND prefix instruction
@@ -709,55 +745,66 @@ for fld in flds:
 '''
 
 for fld in flds:
-    code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
+	code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
 
-    opcode = opcode.lower()
-    ind = ind.lower()
-    osx = osx.lower()
+	opcode = opcode.lower()
+	ind = ind.lower()
+	osx = osx.lower()
 
-    if osx == 'y' and ind == 'y':
-        dtLen = int()
-        if mode in ('imp', 'acc'):
-            dtLen = 0
-        elif mode in oneByte:
-            dtLen = 1
-        elif mode in twoByte:
-            dtLen = 2
-        else:
-            print('Error. Unrecognized Addressing Mode: %s, %s.' \
-                  % (opcode, mode))
+	if osx == 'y' and ind == 'y':
+		dtLen = int()
+		if mode in ('imp', 'acc'):
+			dtLen = 0
+		elif mode in oneByte:
+			dtLen = 1
+		elif mode in twoByte:
+			dtLen = 2
+		else:
+			print('Error. Unrecognized Addressing Mode: %s, %s.' \
+				  % (opcode, mode))
 
-        code = preByte['osx'] + preByte['ind'] + code; opLen = 3
-        if mode in ('zpX', 'absX', 'zpXI', 'absXI'):
-            if mode == 'zpX':
-                mode = 'zpSI'
-            elif mode == 'absX':
-                mode = 'absSI'
-            elif mode == 'zpXI':
-                mode = 'zpSII'
-            else:
-                mode = 'absSII'
+		code = preByte['osx'] + preByte['ind'] + code; opLen = 3
+		if mode in ('zp',   'zpX',
+		            'zpI',  'zpXI',
+		            'zpIY', 
+		            'abs',  'absX',
+		            'absI', 'absXI',
+		            'absY',
+		            'zprel'          ):
+			if mode == 'zpX' or mode == 'zp':
+				mode = 'zpSI'
+			elif mode == 'zpXI' or mode == 'zpI':
+				mode = 'zpSII'
+			elif mode == 'zpIY':
+				mode = 'zpSIIY'
+			elif mode == 'absX' or mode == 'abs':
+				mode = 'absSI'
+			elif mode == 'absXI' or mode == 'absI':
+				mode = 'absSII'
+			elif mode == 'absY':
+				mode = 'absSIY'
+			else:
+				mode = 'zpSIrel'
 
-            opcode = '_'.join([opcode, mode])
-            if opcode in osxMap:
-                opcode, opLen, dtLen, code = osxMap[opcode]
-            if opcode in opcodeDict:
-                continue
-            opcodeList.append(opcode)
-            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-            print(opcode, opLen, dtLen, code)
-            print(opcode, opLen, dtLen, code, file=fout)
-        else:
-            
-            opcode = '_'.join([''.join([opcode, '.s']), mode + 'I'])
-            if opcode in osxMap:
-                opcode, opLen, dtLen, code = osxMap[opcode]
-            if opcode in opcodeDict:
-                continue
-            opcodeList.append(opcode)
-            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-            print(opcode, opLen, dtLen, code)
-            print(opcode, opLen, dtLen, code, file=fout)
+			opcode = '_'.join([opcode, mode])
+			if opcode in osxMap:
+				opcode, opLen, dtLen, code = osxMap[opcode]
+			if opcode in opcodeDict:
+				continue
+			opcodeList.append(opcode)
+			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+			print(opcode, opLen, dtLen, code)
+			print(opcode, opLen, dtLen, code, file=fout)
+		else:
+			opcode = '_'.join([''.join([opcode, '.s']), mode + 'I'])
+			if opcode in osxMap:
+				opcode, opLen, dtLen, code = osxMap[opcode]
+			if opcode in opcodeDict:
+				continue
+			opcodeList.append(opcode)
+			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+			print(opcode, opLen, dtLen, code)
+			print(opcode, opLen, dtLen, code, file=fout)
 
 '''
     Add instructions using the OAX or the OAY prefix instructions.
