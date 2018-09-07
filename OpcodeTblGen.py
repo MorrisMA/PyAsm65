@@ -118,22 +118,22 @@ osxMap = {'jsr.s_abs'     : ('jsr.s_abs',   2, 2, '8B20'), \
           'phr.s_rel16I'  : ('csr.s_rel',   2, 2, 'DB5C'), \
           'psh.s_imm'     : ('psh.s_imm',   2, 1, '8BE2'), \
           'psh.sw_imm'    : ('psh.sw_imm',  2, 2, 'CBE2'), \
-          'psh.s_zp'      : ('psh.s_zp',    2, 0, '8BD4'), \
-          'psh.s_zpI'     : ('psh.s_zpI',   3, 1, '8B9BD4'), \
-          'psh.sw_zp'     : ('psh.sw_zp',   2, 1, 'CBD4'), \
-          'psh.sw_zpI'    : ('psh.sw_zpI',  2, 1, 'DBD4'), \
-          'psh.s_abs'     : ('psh.s_abs',   2, 2, '8BDC'), \
-          'psh.s_absI'    : ('psh.s_absI',  3, 2, '8B9BDC'), \
-          'psh.sw_abs'    : ('psh.sw_abs',  2, 2, 'CBDC'), \
-          'psh.sw_absI'   : ('psh.sw_absI', 2, 2, 'DBDC'), \
-          'pul.s_zp'      : ('pul.s_zp',    2, 0, '8BF4'), \
-          'pul.s_zpI'     : ('pul.s_zpI',   3, 1, '8B9BF4'), \
-          'pul.sw_zp'     : ('pul.sw_zp',   2, 1, 'CBF4'), \
-          'pul.sw_zpI'    : ('pul.sw_zpI',  2, 1, 'DBF4'), \
-          'pul.s_abs'     : ('pul.s_abs',   2, 0, '8BFC'), \
-          'pul.s_absI'    : ('pul.s_absI',  3, 1, '8B9BFC'), \
-          'pul.sw_abs'    : ('pul.sw_abs',  2, 1, 'CBFC'), \
-          'pul.sw_absI'   : ('pul.sw_absI', 2, 1, 'DBFC'), \
+          'psh_zpS'       : ('psh.s_zp',    2, 1, '8BD4'), \
+          'psh_absS'      : ('psh.s_abs',   2, 2, '8BDC'), \
+          'psh.w_zpS'     : ('psh.sw_zp',   2, 1, 'CBD4'), \
+          'psh.w_absS'    : ('psh.sw_abs',  2, 2, 'CBDC'), \
+          'psh.w_zpSI'    : ('psh.sw_zpI',  2, 1, 'DBD4'), \
+          'psh.w_absSI'   : ('psh.sw_absI', 2, 2, 'DBDC'), \
+          'psh_zpSI'      : ('psh.s_zpI',   3, 1, '8B9BD4'), \
+          'psh_absSI'     : ('psh.s_absI',  3, 2, '8B9BDC'), \
+          'pul_zpS'       : ('pul.s_zp',    2, 1, '8BF4'), \
+          'pul_absS'      : ('pul.s_abs',   2, 2, '8BFC'), \
+          'pul.w_zpS'     : ('pul.sw_zp',   2, 1, 'CBF4'), \
+          'pul.w_absS'    : ('pul.sw_abs',  2, 2, 'CBFC'), \
+          'pul.w_zpSI'    : ('pul.sw_zpI',  2, 1, 'DBF4'), \
+          'pul.w_absSI'   : ('pul.sw_absI', 2, 2, 'DBFC'), \
+          'pul_zpSI'      : ('pul.s_zpI',   3, 1, '8B9BF4'), \
+          'pul_absSI'     : ('pul.s_absI',  3, 2, '8B9BFC'), \
           'php.s_imp'     : ('php.s_imp',   2, 0, '8B08'), \
           'plp.s_imp'     : ('plp.s_imp',   2, 0, '8B28'), \
           'pha.s_imp'     : ('pha.s_imp',   2, 0, '8B48'), \
