@@ -3,14 +3,30 @@ import os
 
 from PyAsm65Utilities import *
 
-directives = ('.stack', '.code', '.data', '.proc', '.endp', '.end')
-defines    = ('.eq', '.db', '.dw', '.dl', '.ds')
+directives = {'.stack' : '.stack', \
+              '.stk'   : '.stk', \
+              '.code'  : '.code', \
+              '.cod'   : '.cod', \
+              '.data'  : '.data', \
+              '.dat'   : '.dat', \
+              '.proc'  : '.proc', \
+              '.sub'   : '.sub', \
+              '.fnc'   : '.fnc', \
+              '.endp'  : '.endp', \
+              '.end'   : '.end', }
+
+defines    = ('.eq', \
+              '.db', '.byt', \
+              '.dw', '.wrd', \
+              '.dl', '.lng', '.flt', \
+              '.ds', '.str', )
+
 relative   = ('bpl', 'bmi', 'bvc', 'bvs', 'bcc', 'bcs', 'bne', 'beq', \
               'bra', \
               'bge', 'bgt', 'ble', 'blt', 'bhs', 'bhi', 'bls', 'blo', \
               'jge', 'jgt', 'jle', 'jlt', 'jhs', 'jhi', 'jls', 'jlo', \
               'jra', \
-              'phr', 'csr')
+              'phr', 'csr', )
 
 opcodes = dict()
 
@@ -51,7 +67,7 @@ fout.close()
     Insert Peephole Optimizations here
 '''
 
-##source = pho_ldaImmPha_to_pshImm(source)
+source = pho_ldaImmPha_to_pshImm(source)
 
 '''
     Assembler Pass 1
@@ -79,19 +95,19 @@ for src in source:
 
     if lbl == '':
         if op in directives:
-            if op == directives[0]:     # .stack    size
+            if op == directives['.stack']:      # .stack    size
                 stkSize = numVal(dt)
-            elif op == directives[1]:   # .code     [address]
+            elif op == directives['.code']:     # .code     [address]
                 if dt != '':
                     code = numVal(dt)
-            elif op == directives[2]:   # .data     [address]
+            elif op == directives['.data']:     # .data     [address]
                 if dt != '':
                     data = numVal(dt)
-            elif op == directives[3]:   # .proc
+            elif op == directives['.proc']:     # .proc
                 pass
-            elif op == directives[4]:   # .endp
+            elif op == directives['.endp']:     # .endp
                 pass
-            elif op == directives[5]:   # .end
+            elif op == directives['.end']:      # .end
                 pass
             else:
                 print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
@@ -155,19 +171,19 @@ for src in source:
             print('Error: Redefinition of %s in %d' % (lbl, srcLine))
         elif op in directives:
             labels[lbl] = code
-            if op == directives[0]:     # .stack    size
+            if op == directives['.stack']:      # .stack    size
                 stkSize = numVal(dt)
-            elif op == directives[1]:   # .code     [address]
+            elif op == directives['.code']:     # .code     [address]
                 if dt != '':
                     code = numVal(dt)
-            elif op == directives[2]:   # .data     [address]
+            elif op == directives['.data']:     # .data     [address]
                 if dt != '':
                     data = numVal(dt)
-            elif op == directives[3]:   # .proc
+            elif op == directives['.proc']:     # .proc
                 pass
-            elif op == directives[4]:   # .endp
+            elif op == directives['.endp']:     # .endp
                 pass
-            elif op == directives[5]:   # .end
+            elif op == directives['.end']:      # .end
                 pass
             else:
                 print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
