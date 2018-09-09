@@ -106,9 +106,8 @@ accMap = {'asl_acc'       : ('asl_a',       1, 0, '0A'), \
           'rot_acc'       : ('rot_a',       1, 0, '2B'), \
           'rot_accI'      : ('rev_imp',     2, 0, '9B2B') }
 
-osxMap = {'jsr.s_abs'     : ('jsr.s_abs',   2, 2, '8B20'), \
-          'jsr.sw_absI'   : ('jsr.s_absI',  2, 2, 'DB20'), \
-          'jsr.s_absI'    : ('jsr.s_absI',  2, 2, 'DB20'), \
+osxMap = {'jsr_absS'      : ('jsr.s_abs',   2, 2, '8B20'), \
+          'jsr_absSI'     : ('jsr.s_absI',  2, 2, 'DB20'), \
           'rti.s_imp'     : ('rti.s_imp',   2, 0, '8B40'), \
           'rts.s_imp'     : ('rts.s_imp',   2, 0, '8B60'), \
           'adj.s_imm'     : ('adj.s_imm',   2, 1, '8BC2'), \
@@ -134,20 +133,6 @@ osxMap = {'jsr.s_abs'     : ('jsr.s_abs',   2, 2, '8B20'), \
           'pul.w_absSI'   : ('pul.sw_absI', 2, 2, 'DBFC'), \
           'pul_zpSI'      : ('pul.s_zpI',   3, 1, '8B9BF4'), \
           'pul_absSI'     : ('pul.s_absI',  3, 2, '8B9BFC'), \
-          'php.s_imp'     : ('php.s_imp',   2, 0, '8B08'), \
-          'plp.s_imp'     : ('plp.s_imp',   2, 0, '8B28'), \
-          'pha.s_imp'     : ('pha.s_imp',   2, 0, '8B48'), \
-          'pha.sw_imp'    : ('pha.sw_imp',  2, 0, 'CB48'), \
-          'pla.s_imp'     : ('pla.s_imp',   2, 0, '8B68'), \
-          'pla.sw_imp'    : ('pla.sw_imp',  2, 0, 'CB68'), \
-          'phx.s_imp'     : ('phx.s_imp',   2, 0, '8BDA'), \
-          'phx.sw_imp'    : ('phx.sw_imp',  2, 0, 'CBDA'), \
-          'plx.s_imp'     : ('plx.s_imp',   2, 0, '8BFA'), \
-          'plx.sw_imp'    : ('plx.sw_imp',  2, 0, 'CBFA'), \
-          'phy.s_imp'     : ('phy.s_imp',   2, 0, '8B5A'), \
-          'phy.sw_imp'    : ('phy.sw_imp',  2, 0, 'CB5A'), \
-          'ply.s_imp'     : ('ply.s_imp',   2, 0, '8B7A'), \
-          'ply.sw_imp'    : ('ply.sw_imp',  2, 0, 'CB7A'), \
           'nxt.s_imp'     : ('nxt.s_imp',   2, 0, '8B3B'), \
           'nxt.s_impI'    : ('inxt.s_imp',  2, 0, 'DB3B'), \
           'phi.s_imp'     : ('phi.s_imp',   2, 0, '8B4B'), \
@@ -158,44 +143,44 @@ osxMap = {'jsr.s_abs'     : ('jsr.s_abs',   2, 2, '8B20'), \
           'ent.s_impI'    : ('ient.s_imp',  2, 0, 'DB7B'), \
           'ldx.s_imm'     : ('lds_imm',     2, 1, '8BA2'), \
           'ldx.sw_imm'    : ('lds.w_imm',   2, 2, 'CBA2'), \
-          'ldx.s_zp'      : ('lds_zp',      2, 1, '8BA6'), \
-          'ldx.s_zpI'     : ('lds_zpI',     3, 1, '8B9BA6'), \
-          'ldx.sw_zp'     : ('lds.w_zp',    2, 1, 'CBA6'), \
-          'ldx.sw_zpI'    : ('lds.w_zpI',   2, 1, 'DBA6'), \
+          'ldx_zpS'       : ('lds_zp',      2, 1, '8BA6'), \
+          'ldx_zpSI'      : ('lds_zpI',     3, 1, '8B9BA6'), \
+          'ldx.w_zpS'     : ('lds.w_zp',    2, 1, 'CBA6'), \
+          'ldx.w_zpSI'    : ('lds.w_zpI',   2, 1, 'DBA6'), \
           'ldx.s_zpY'     : ('lds_zpY',     2, 1, '8BB6'), \
           'ldx.s_zpYI'    : ('lds_zpIY',    3, 1, '8B9BB6'), \
           'ldx.sw_zpY'    : ('lds.w_zpY',   2, 1, 'CBB6'), \
           'ldx.sw_zpYI'   : ('lds.w_zpIY',  2, 1, 'DBB6'), \
-          'ldx.s_abs'     : ('lds_abs',     2, 2, '8BAE'), \
-          'ldx.s_absI'    : ('lds_absI',    3, 2, '8B9BAE'), \
-          'ldx.sw_abs'    : ('lds.w_abs',   2, 2, 'CBAE'), \
-          'ldx.sw_absI'   : ('lds.w_absI',  2, 2, 'DBAE'), \
+          'ldx_absS'      : ('lds_abs',     2, 2, '8BAE'), \
+          'ldx_absSI'     : ('lds_absI',    3, 2, '8B9BAE'), \
+          'ldx.w_absS'    : ('lds.w_abs',   2, 2, 'CBAE'), \
+          'ldx.w_absSI'   : ('lds.w_absI',  2, 2, 'DBAE'), \
           'ldx.s_absY'    : ('lds_absY',    2, 2, '8BBE'), \
-          'ldx.s_absYI'   : ('lds_absIY',   3, 2, '8B9BBE'), \
+          'ldx_absSIY'    : ('lds_absIY',   3, 2, '8B9BBE'), \
           'ldx.sw_absY'   : ('lds.w_absY',  2, 2, 'CBBE'), \
-          'ldx.sw_absYI'  : ('lds.w_absIY', 2, 2, 'DBBE'), \
-          'stx.s_zp'      : ('sts_zp',      2, 1, '8B86'), \
-          'stx.s_zpI'     : ('sts_zpI',     3, 1, '8B9B86'), \
-          'stx.sw_zp'     : ('sts.w_zp',    2, 1, 'CB86'), \
-          'stx.sw_zpI'    : ('sts.w_zpI',   2, 1, 'DB86'), \
+          'ldx.w_absSIY'  : ('lds.w_absIY', 2, 2, 'DBBE'), \
+          'stx_zpS'       : ('sts_zp',      2, 1, '8B86'), \
+          'stx_zpSI'      : ('sts_zpI',     3, 1, '8B9B86'), \
+          'stx.w_zpS'     : ('sts.w_zp',    2, 1, 'CB86'), \
+          'stx.w_zpSI'    : ('sts.w_zpI',   2, 1, 'DB86'), \
           'stx.s_zpY'     : ('sts_zpY',     2, 1, '8B96'), \
           'stx.s_zpYI'    : ('sts_zpIY',    3, 1, '8B9B96'), \
           'stx.sw_zpY'    : ('sts.w_zpY',   2, 1, 'CB96'), \
           'stx.sw_zpYI'   : ('sts.w_zpIY',  2, 1, 'DB96'), \
-          'stx.s_abs'     : ('sts_abs',     2, 2, '8B8E'), \
-          'stx.s_absI'    : ('sts_absI',    3, 2, '8B9B8E'), \
-          'stx.sw_abs'    : ('sts.w_abs',   2, 2, 'CB8E'), \
-          'stx.sw_absI'   : ('sts.w_absI',  2, 2, 'DB8E'), \
+          'stx_absS'      : ('sts_abs',     2, 2, '8B8E'), \
+          'stx_absSI'     : ('sts_absI',    3, 2, '8B9B8E'), \
+          'stx.w_absS'    : ('sts.w_abs',   2, 2, 'CB8E'), \
+          'stx.w_absSI'   : ('sts.w_absI',  2, 2, 'DB8E'), \
           'cpx.s_imm'     : ('cps_imm',     2, 1, '8BE0'), \
           'cpx.sw_imm'    : ('cps.w_imm',   2, 2, 'CBE0'), \
-          'cpx.s_zp'      : ('cps_zp',      2, 1, '8BE4'), \
-          'cpx.s_zpI'     : ('cps_zpI',     3, 1, '8B9BE4'), \
-          'cpx.sw_zp'     : ('cps.w_zp',    2, 1, 'CBE4'), \
-          'cpx.sw_zpI'    : ('cps.w_zpI',   2, 1, 'DBE4'), \
-          'cpx.s_abs'     : ('cps_abs',     2, 2, '8BEC'), \
-          'cpx.s_absI'    : ('cps_absI',    3, 2, '8B9BEC'), \
-          'cpx.sw_abs'    : ('cps.w_abs',   2, 2, 'CBEC'), \
-          'cpx.sw_absI'   : ('cps.w_absI',  2, 2, 'DBEC'), \
+          'cpx_zpS'       : ('cps_zp',      2, 1, '8BE4'), \
+          'cpx_zpSI'      : ('cps_zpI',     3, 1, '8B9BE4'), \
+          'cpx.w_zpS'     : ('cps.w_zp',    2, 1, 'CBE4'), \
+          'cpx.w_zpSI'    : ('cps.w_zpI',   2, 1, 'DBE4'), \
+          'cpx_absS'      : ('cps_abs',     2, 2, '8BEC'), \
+          'cpx_absSI'     : ('cps_absI',    3, 2, '8B9BEC'), \
+          'cpx.w_absS'    : ('cps.w_abs',   2, 2, 'CBEC'), \
+          'cpx.w_absSI'   : ('cps.w_absI',  2, 2, 'DBEC'), \
           'inx.s_imp'     : ('ins_imp',     2, 0, '8BE8'), \
           'inx.sw_imp'    : ('ins.w_imp',   2, 0, 'CBE8'), \
           'dex.s_imp'     : ('des_imp',     2, 0, '8BCA'), \
@@ -214,7 +199,7 @@ accTuple = ('ora', 'and', 'eor', \
             'bit', 'trb', 'tsb', )
 rmwTuple = ('asl', 'rol', 'lsr', 'asr', 'ror', 'dec', 'inc',)
 stkTuple = ('dup', 'swp', 'rot', )
-spcTuple = ('jmp')
+spcTuple = ('jmp', 'ldy', )
 ippTuple = ('sta', 'lda', 'cmp', )
 
 indexedByX = {'zpX'    : 'zpA',   \
@@ -551,189 +536,191 @@ for fld in flds:
 '''
 
 for fld in flds:
-	code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
+    code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
 
-	opcode = opcode.lower()
-	osx = osx.lower()
+    opcode = opcode.lower()
+    osx = osx.lower()
 
-	if osx == 'y':
-		dtLen = int()
-		if mode in ('imp', 'acc'):
-			dtLen = 0
-		elif mode in oneByte:
-			dtLen = 1
-		elif mode in twoByte:
-			dtLen = 2
-		else:
-			print('Error. Unrecognized Addressing Mode: %s, %s.' \
-				  % (opcode, mode))
+    if osx == 'y':
+        dtLen = int()
+        if mode in ('imp', 'acc'):
+            dtLen = 0
+        elif mode in oneByte:
+            dtLen = 1
+        elif mode in twoByte:
+            dtLen = 2
+        else:
+            print('Error. Unrecognized Addressing Mode: %s, %s.' \
+                  % (opcode, mode))
 
-		code = preByte['osx'] + code; opLen = 2
-		if mode in ('zp',   'zpX',
-		            'zpI',  'zpXI',
-		            'zpIY', 
-		            'abs',  'absX',
-		            'absI', 'absXI',
-		            'zprel'          ):
-			if mode == 'zpX' or mode == 'zp':
-				mode = 'zpS'
-			elif mode == 'zpXI' or mode == 'zpI':
-				mode = 'zpSI'
-			elif mode == 'zpIY':
-				mode = 'zpSIY'
-			elif mode == 'absX' or mode == 'abs':
-				mode = 'absS'
-			elif mode == 'absXI' or mode == 'absI':
-				mode = 'absSI'
-			else:
-				mode = 'zpSrel'
+        code = preByte['osx'] + code; opLen = 2
+        if mode in ('zp',   'zpX',
+                    'zpI',  'zpXI',
+                    'zpIY', 
+                    'abs',  'absX',
+                    'absI', 'absXI',
+                    'zprel'          ):
+            if mode == 'zpX' or mode == 'zp':
+                mode = 'zpS'
+            elif mode == 'zpXI' or mode == 'zpI':
+                mode = 'zpSI'
+            elif mode == 'zpIY':
+                mode = 'zpSIY'
+            elif mode == 'absX' or mode == 'abs':
+                mode = 'absS'
+            elif mode == 'absXI' or mode == 'absI':
+                mode = 'absSI'
+            else:
+                mode = 'zpSrel'
 
-			opcode = '_'.join([opcode, mode])
-			if opcode in osxMap:
-				opcode, opLen, dtLen, code = osxMap[opcode]
-			if opcode in opcodeDict:
-				continue
-			opcodeList.append(opcode)
-			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-			print(opcode, opLen, dtLen, code)
-			print(opcode, opLen, dtLen, code, file=fout)
-		else:
-			opcode = '_'.join([''.join([opcode, '.s']), mode])
-			if opcode in osxMap:
-				opcode, opLen, dtLen, code = osxMap[opcode]
-			if opcode in opcodeDict:
-				continue
-			opcodeList.append(opcode)
-			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-			print(opcode, opLen, dtLen, code)
-			print(opcode, opLen, dtLen, code, file=fout)
+            opcode = '_'.join([opcode, mode])
+            if opcode in osxMap:
+                opcode, opLen, dtLen, code = osxMap[opcode]
+            if opcode in opcodeDict:
+                continue
+            opcodeList.append(opcode)
+            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+            print(opcode, opLen, dtLen, code)
+            print(opcode, opLen, dtLen, code, file=fout)
+        else:
+            if mode == 'absY':
+                continue
+            opcode = '_'.join([''.join([opcode, '.s']), mode])
+            if opcode in osxMap:
+                opcode, opLen, dtLen, code = osxMap[opcode]
+            if opcode in opcodeDict:
+                continue
+            opcodeList.append(opcode)
+            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+            print(opcode, opLen, dtLen, code)
+            print(opcode, opLen, dtLen, code, file=fout)
 
 '''
     Add instructions using OSZ prefix instruction
 '''
 
 for fld in flds:
-	code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
+    code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
 
-	opcode = opcode.lower()
-	osz = osz.lower()
+    opcode = opcode.lower()
+    osz = osz.lower()
 
-	if osz == 'y':
-		dtLen = int()
-		if mode in ('imp', 'acc'):
-			dtLen = 0
-		elif mode in oneByte:
-			dtLen = 1
-		elif mode in twoByte:
-			dtLen = 2
-		else:
-			print('Error. Unrecognized Addressing Mode: %s, %s.' \
-				  % (opcode, mode))
+    if osz == 'y':
+        dtLen = int()
+        if mode in ('imp', 'acc'):
+            dtLen = 0
+        elif mode in oneByte:
+            dtLen = 1
+        elif mode in twoByte:
+            dtLen = 2
+        else:
+            print('Error. Unrecognized Addressing Mode: %s, %s.' \
+                  % (opcode, mode))
 
-		code = preByte['osz'] + code; opLen = 2
-		if mode in ('zp',   'zpX',
-		            'zpI',  'zpXI',
-		            'zpIY', 
-		            'abs',  'absX',
-		            'absI', 'absXI',
-		            'zprel'          ):
-			if mode == 'zpX' or mode == 'zp':
-				mode = 'zpS'
-			elif mode == 'zpXI' or mode == 'zpI':
-				mode = 'zpSI'
-			elif mode == 'zpIY':
-				mode = 'zpSIY'
-			elif mode == 'absX' or mode == 'abs':
-				mode = 'absS'
-			elif mode == 'absXI' or mode == 'absI':
-				mode = 'absSI'
-			else:
-				mode = 'zpSrel'
+        code = preByte['osz'] + code; opLen = 2
+        if mode in ('zp',   'zpX',
+                    'zpI',  'zpXI',
+                    'zpIY', 
+                    'abs',  'absX',
+                    'absI', 'absXI',
+                    'zprel'          ):
+            if mode == 'zpX' or mode == 'zp':
+                mode = 'zpS'
+            elif mode == 'zpXI' or mode == 'zpI':
+                mode = 'zpSI'
+            elif mode == 'zpIY':
+                mode = 'zpSIY'
+            elif mode == 'absX' or mode == 'abs':
+                mode = 'absS'
+            elif mode == 'absXI' or mode == 'absI':
+                mode = 'absSI'
+            else:
+                mode = 'zpSrel'
 
-			opcode = '_'.join([''.join([opcode, '.w']), mode])
-			if opcode in osxMap:
-				opcode, opLen, dtLen, code = osxMap[opcode]
-			if opcode in opcodeDict:
-				continue
-			opcodeList.append(opcode)
-			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-			print(opcode, opLen, dtLen, code)
-			print(opcode, opLen, dtLen, code, file=fout)
-		else:
-			opcode = '_'.join([''.join([opcode, '.sw']), mode])
-			if opcode in osxMap:
-				opcode, opLen, dtLen, code = osxMap[opcode]
-			if opcode in opcodeDict:
-				continue
-			opcodeList.append(opcode)
-			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-			print(opcode, opLen, dtLen, code)
-			print(opcode, opLen, dtLen, code, file=fout)
+            opcode = '_'.join([''.join([opcode, '.w']), mode])
+            if opcode in osxMap:
+                opcode, opLen, dtLen, code = osxMap[opcode]
+            if opcode in opcodeDict:
+                continue
+            opcodeList.append(opcode)
+            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+            print(opcode, opLen, dtLen, code)
+            print(opcode, opLen, dtLen, code, file=fout)
+        else:
+            opcode = '_'.join([''.join([opcode, '.sw']), mode])
+            if opcode in osxMap:
+                opcode, opLen, dtLen, code = osxMap[opcode]
+            if opcode in opcodeDict:
+                continue
+            opcodeList.append(opcode)
+            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+            print(opcode, opLen, dtLen, code)
+            print(opcode, opLen, dtLen, code, file=fout)
 
 '''
     Add instructions using OIS prefix instruction
 '''
 
 for fld in flds:
-	code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
+    code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
 
-	opcode = opcode.lower()
-	ois = ois.lower()
+    opcode = opcode.lower()
+    ois = ois.lower()
 
-	if ois == 'y':
-		dtLen = int()
-		if mode in ('imp', 'acc'):
-			dtLen = 0
-		elif mode in oneByte:
-			dtLen = 1
-		elif mode in twoByte:
-			dtLen = 2
-		else:
-			print('Error. Unrecognized Addressing Mode: %s, %s.' \
-				  % (opcode, mode))
+    if ois == 'y':
+        dtLen = int()
+        if mode in ('imp', 'acc'):
+            dtLen = 0
+        elif mode in oneByte:
+            dtLen = 1
+        elif mode in twoByte:
+            dtLen = 2
+        else:
+            print('Error. Unrecognized Addressing Mode: %s, %s.' \
+                  % (opcode, mode))
 
-		code = preByte['ois'] + code; opLen = 2
-		if mode in ('zp',   'zpX',
-		            'zpI',  'zpXI',
-		            'zpIY', 
-		            'abs',  'absX',
-		            'absI', 'absXI',
-		            'absY',
-		            'zprel'          ):
-			if mode == 'zpX' or mode == 'zp':
-				mode = 'zpSI'
-			elif mode == 'zpXI' or mode == 'zpI':
-				mode = 'zpSII'
-			elif mode == 'zpIY':
-				mode = 'zpSIIY'
-			elif mode == 'absX' or mode == 'abs':
-				mode = 'absSI'
-			elif mode == 'absXI' or mode == 'absI':
-				mode = 'absSII'
-			elif mode == 'absY':
-				mode = 'absSIY'
-			else:
-				mode = 'zpSIrel'
+        code = preByte['ois'] + code; opLen = 2
+        if mode in ('zp',   'zpX',
+                    'zpI',  'zpXI',
+                    'zpIY', 
+                    'abs',  'absX',
+                    'absI', 'absXI',
+                    'absY',
+                    'zprel'          ):
+            if mode == 'zpX' or mode == 'zp':
+                mode = 'zpSI'
+            elif mode == 'zpXI' or mode == 'zpI':
+                mode = 'zpSII'
+            elif mode == 'zpIY':
+                mode = 'zpSIIY'
+            elif mode == 'absX' or mode == 'abs':
+                mode = 'absSI'
+            elif mode == 'absXI' or mode == 'absI':
+                mode = 'absSII'
+            elif mode == 'absY':
+                mode = 'absSIY'
+            else:
+                mode = 'zpSIrel'
 
-			opcode = '_'.join([''.join([opcode, '.w']), mode])
-			if opcode in osxMap:
-				opcode, opLen, dtLen, code = osxMap[opcode]
-			if opcode in opcodeDict:
-				continue
-			opcodeList.append(opcode)
-			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-			print(opcode, opLen, dtLen, code)
-			print(opcode, opLen, dtLen, code, file=fout)
-		else:
-			opcode = '_'.join([''.join([opcode, '.sw']), mode + 'I'])
-			if opcode in osxMap:
-				opcode, opLen, dtLen, code = osxMap[opcode]
-			if opcode in opcodeDict:
-				continue
-			opcodeList.append(opcode)
-			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-			print(opcode, opLen, dtLen, code)
-			print(opcode, opLen, dtLen, code, file=fout)
+            opcode = '_'.join([''.join([opcode, '.w']), mode])
+            if opcode in osxMap:
+                opcode, opLen, dtLen, code = osxMap[opcode]
+            if opcode in opcodeDict:
+                continue
+            opcodeList.append(opcode)
+            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+            print(opcode, opLen, dtLen, code)
+            print(opcode, opLen, dtLen, code, file=fout)
+        else:
+            opcode = '_'.join([''.join([opcode, '.sw']), mode + 'I'])
+            if opcode in osxMap:
+                opcode, opLen, dtLen, code = osxMap[opcode]
+            if opcode in opcodeDict:
+                continue
+            opcodeList.append(opcode)
+            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+            print(opcode, opLen, dtLen, code)
+            print(opcode, opLen, dtLen, code, file=fout)
 
 '''
     Add instructions using OSX + IND prefix instruction
@@ -745,66 +732,66 @@ for fld in flds:
 '''
 
 for fld in flds:
-	code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
+    code, opcode, mode, ind, siz, isz, osx, osz, ois, oax, oay = fld
 
-	opcode = opcode.lower()
-	ind = ind.lower()
-	osx = osx.lower()
+    opcode = opcode.lower()
+    ind = ind.lower()
+    osx = osx.lower()
 
-	if osx == 'y' and ind == 'y':
-		dtLen = int()
-		if mode in ('imp', 'acc'):
-			dtLen = 0
-		elif mode in oneByte:
-			dtLen = 1
-		elif mode in twoByte:
-			dtLen = 2
-		else:
-			print('Error. Unrecognized Addressing Mode: %s, %s.' \
-				  % (opcode, mode))
+    if osx == 'y' and ind == 'y':
+        dtLen = int()
+        if mode in ('imp', 'acc'):
+            dtLen = 0
+        elif mode in oneByte:
+            dtLen = 1
+        elif mode in twoByte:
+            dtLen = 2
+        else:
+            print('Error. Unrecognized Addressing Mode: %s, %s.' \
+                  % (opcode, mode))
 
-		code = preByte['osx'] + preByte['ind'] + code; opLen = 3
-		if mode in ('zp',   'zpX',
-		            'zpI',  'zpXI',
-		            'zpIY', 
-		            'abs',  'absX',
-		            'absI', 'absXI',
-		            'absY',
-		            'zprel'          ):
-			if mode == 'zpX' or mode == 'zp':
-				mode = 'zpSI'
-			elif mode == 'zpXI' or mode == 'zpI':
-				mode = 'zpSII'
-			elif mode == 'zpIY':
-				mode = 'zpSIIY'
-			elif mode == 'absX' or mode == 'abs':
-				mode = 'absSI'
-			elif mode == 'absXI' or mode == 'absI':
-				mode = 'absSII'
-			elif mode == 'absY':
-				mode = 'absSIY'
-			else:
-				mode = 'zpSIrel'
+        code = preByte['osx'] + preByte['ind'] + code; opLen = 3
+        if mode in ('zp',   'zpX',
+                    'zpI',  'zpXI',
+                    'zpIY', 
+                    'abs',  'absX',
+                    'absI', 'absXI',
+                    'absY',
+                    'zprel'          ):
+            if mode == 'zpX' or mode == 'zp':
+                mode = 'zpSI'
+            elif mode == 'zpXI' or mode == 'zpI':
+                mode = 'zpSII'
+            elif mode == 'zpIY':
+                mode = 'zpSIIY'
+            elif mode == 'absX' or mode == 'abs':
+                mode = 'absSI'
+            elif mode == 'absXI' or mode == 'absI':
+                mode = 'absSII'
+            elif mode == 'absY':
+                mode = 'absSIY'
+            else:
+                mode = 'zpSIrel'
 
-			opcode = '_'.join([opcode, mode])
-			if opcode in osxMap:
-				opcode, opLen, dtLen, code = osxMap[opcode]
-			if opcode in opcodeDict:
-				continue
-			opcodeList.append(opcode)
-			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-			print(opcode, opLen, dtLen, code)
-			print(opcode, opLen, dtLen, code, file=fout)
-		else:
-			opcode = '_'.join([''.join([opcode, '.s']), mode + 'I'])
-			if opcode in osxMap:
-				opcode, opLen, dtLen, code = osxMap[opcode]
-			if opcode in opcodeDict:
-				continue
-			opcodeList.append(opcode)
-			opcodeDict[opcode] = [opcode, opLen, dtLen, code]
-			print(opcode, opLen, dtLen, code)
-			print(opcode, opLen, dtLen, code, file=fout)
+            opcode = '_'.join([opcode, mode])
+            if opcode in osxMap:
+                opcode, opLen, dtLen, code = osxMap[opcode]
+            if opcode in opcodeDict:
+                continue
+            opcodeList.append(opcode)
+            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+            print(opcode, opLen, dtLen, code)
+            print(opcode, opLen, dtLen, code, file=fout)
+        else:
+            opcode = '_'.join([''.join([opcode, '.s']), mode + 'I'])
+            if opcode in osxMap:
+                opcode, opLen, dtLen, code = osxMap[opcode]
+            if opcode in opcodeDict:
+                continue
+            opcodeList.append(opcode)
+            opcodeDict[opcode] = [opcode, opLen, dtLen, code]
+            print(opcode, opLen, dtLen, code)
+            print(opcode, opLen, dtLen, code, file=fout)
 
 '''
     Add instructions using the OAX or the OAY prefix instructions.
@@ -825,7 +812,7 @@ for fld in flds:
         code blocks. To add OAX/OAY instructions, the existing Opcode Table will
         be sorted by its base instruction mnemonic. The OAX/OAY prefix will be
         added to those instructions in the sorted opcode table where its
-        addition creates useful, non-duplicate finctionality.
+        addition creates useful, non-duplicate functionality.
 '''
 
 instrByNameTbl = {}
@@ -940,6 +927,9 @@ for base in instrByNameTbl.keys():
         for i in range(len(instrByNameTbl[base])):
             base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
 
+            if addrMd == 'imm' and base in ['lda', 'cmp',]:
+                continue
+
             if addrMd in indexedByS:
                 continue
             
@@ -1026,6 +1016,9 @@ for base in instrByNameTbl.keys():
     elif base in ippTuple:
         for i in range(len(instrByNameTbl[base])):
             base, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
+
+            if addrMd == 'imm' and base in ['lda', 'cmp',]:
+                continue
 
             if addrMd in indexedByY:
                 addrMd = indexedByY[addrMd]

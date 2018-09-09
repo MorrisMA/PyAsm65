@@ -752,7 +752,7 @@ dec.w_absI 2 2 BBCE
 dec.w_absXI 2 2 BBDE
 inc.w_absI 2 2 BBEE
 inc.w_absXI 2 2 BBFE
-jsr_absS 2 2 8B20
+jsr.s_abs 2 2 8B20
 rti.s_imp 2 0 8B40
 rts.s_imp 2 0 8B60
 cps_imm 2 1 8BE0
@@ -784,7 +784,7 @@ sty_zpS 2 1 8B94
 ldy_zpS 2 1 8BB4
 cpy_zpS 2 1 8BC4
 psh.s_zp 2 1 8BD4
-cpx_zpS 2 1 8BE4
+cps_zp 2 1 8BE4
 pul.s_zp 2 1 8BF4
 ora_zpS 2 1 8B15
 and_zpS 2 1 8B35
@@ -798,9 +798,9 @@ asl_zpS 2 1 8B16
 rol_zpS 2 1 8B36
 lsr_zpS 2 1 8B56
 ror_zpS 2 1 8B76
-stx_zpS 2 1 8B86
+sts_zp 2 1 8B86
 sts_zpY 2 1 8B96
-ldx_zpS 2 1 8BA6
+lds_zp 2 1 8BA6
 lds_zpY 2 1 8BB6
 dec_zpS 2 1 8BD6
 inc_zpS 2 1 8BF6
@@ -847,7 +847,7 @@ stz_absS 2 2 8B9C
 ldy_absS 2 2 8BBC
 cpy_absS 2 2 8BCC
 psh.s_abs 2 2 8BDC
-cpx_absS 2 2 8BEC
+cps_abs 2 2 8BEC
 pul.s_abs 2 2 8BFC
 ora_absS 2 2 8B1D
 and_absS 2 2 8B3D
@@ -861,8 +861,8 @@ asl_absS 2 2 8B1E
 rol_absS 2 2 8B3E
 lsr_absS 2 2 8B5E
 ror_absS 2 2 8B7E
-stx_absS 2 2 8B8E
-ldx_absS 2 2 8BAE
+sts_abs 2 2 8B8E
+lds_abs 2 2 8BAE
 dec_absS 2 2 8BDE
 inc_absS 2 2 8BFE
 bbr0_zpSrel 2 2 8B0F
@@ -910,7 +910,7 @@ sty.w_zpS 2 1 CB94
 ldy.w_zpS 2 1 CBB4
 cpy.w_zpS 2 1 CBC4
 psh.sw_zp 2 1 CBD4
-cpx.w_zpS 2 1 CBE4
+cps.w_zp 2 1 CBE4
 pul.sw_zp 2 1 CBF4
 ora.w_zpS 2 1 CB15
 and.w_zpS 2 1 CB35
@@ -924,9 +924,9 @@ asl.w_zpS 2 1 CB16
 rol.w_zpS 2 1 CB36
 lsr.w_zpS 2 1 CB56
 ror.w_zpS 2 1 CB76
-stx.w_zpS 2 1 CB86
+sts.w_zp 2 1 CB86
 sts.w_zpY 2 1 CB96
-ldx.w_zpS 2 1 CBA6
+lds.w_zp 2 1 CBA6
 lds.w_zpY 2 1 CBB6
 dec.w_zpS 2 1 CBD6
 inc.w_zpS 2 1 CBF6
@@ -948,7 +948,7 @@ stz.w_absS 2 2 CB9C
 ldy.w_absS 2 2 CBBC
 cpy.w_absS 2 2 CBCC
 psh.sw_abs 2 2 CBDC
-cpx.w_absS 2 2 CBEC
+cps.w_abs 2 2 CBEC
 pul.sw_abs 2 2 CBFC
 ora.w_absS 2 2 CB1D
 and.w_absS 2 2 CB3D
@@ -962,8 +962,9 @@ asl.w_absS 2 2 CB1E
 rol.w_absS 2 2 CB3E
 lsr.w_absS 2 2 CB5E
 ror.w_absS 2 2 CB7E
-stx.w_absS 2 2 CB8E
-ldx.w_absS 2 2 CBAE
+sts.w_abs 2 2 CB8E
+lds.w_abs 2 2 CBAE
+lds.w_absY 2 2 CBBE
 dec.w_absS 2 2 CBDE
 inc.w_absS 2 2 CBFE
 ora.w_zpSII 2 1 DB01
@@ -991,15 +992,15 @@ sty.w_zpSI 2 1 DB94
 ldy.w_zpSI 2 1 DBB4
 cpy.w_zpSI 2 1 DBC4
 psh.sw_zpI 2 1 DBD4
-cpx.w_zpSI 2 1 DBE4
+cps.w_zpI 2 1 DBE4
 pul.sw_zpI 2 1 DBF4
 asl.w_zpSI 2 1 DB16
 rol.w_zpSI 2 1 DB36
 lsr.w_zpSI 2 1 DB56
 ror.w_zpSI 2 1 DB76
-stx.w_zpSI 2 1 DB86
+sts.w_zpI 2 1 DB86
 sts.w_zpIY 2 1 DB96
-ldx.w_zpSI 2 1 DBA6
+lds.w_zpI 2 1 DBA6
 lds.w_zpIY 2 1 DBB6
 dec.w_zpSI 2 1 DBD6
 inc.w_zpSI 2 1 DBF6
@@ -1022,7 +1023,7 @@ stz.w_absSI 2 2 DB9C
 ldy.w_absSI 2 2 DBBC
 cpy.w_absSI 2 2 DBCC
 psh.sw_absI 2 2 DBDC
-cpx.w_absSI 2 2 DBEC
+cps.w_absI 2 2 DBEC
 pul.sw_absI 2 2 DBFC
 ora.w_absSI 2 2 DB1D
 and.w_absSI 2 2 DB3D
@@ -1036,12 +1037,12 @@ asl.w_absSI 2 2 DB1E
 rol.w_absSI 2 2 DB3E
 lsr.w_absSI 2 2 DB5E
 ror.w_absSI 2 2 DB7E
-stx.w_absSI 2 2 DB8E
-ldx.w_absSI 2 2 DBAE
-ldx.w_absSIY 2 2 DBBE
+sts.w_absI 2 2 DB8E
+lds.w_absI 2 2 DBAE
+lds.w_absIY 2 2 DBBE
 dec.w_absSI 2 2 DBDE
 inc.w_absSI 2 2 DBFE
-jsr_absSI 3 2 8B9B20
+jsr.s_absI 2 2 DB20
 ora_zpSII 3 1 8B9B01
 ora_zpSIIY 3 1 8B9B11
 and_zpSII 3 1 8B9B21
@@ -1067,15 +1068,15 @@ sty_zpSI 3 1 8B9B94
 ldy_zpSI 3 1 8B9BB4
 cpy_zpSI 3 1 8B9BC4
 psh.s_zpI 3 1 8B9BD4
-cpx_zpSI 3 1 8B9BE4
+cps_zpI 3 1 8B9BE4
 pul.s_zpI 3 1 8B9BF4
 asl_zpSI 3 1 8B9B16
 rol_zpSI 3 1 8B9B36
 lsr_zpSI 3 1 8B9B56
 ror_zpSI 3 1 8B9B76
-stx_zpSI 3 1 8B9B86
+sts_zpI 3 1 8B9B86
 sts_zpIY 3 1 8B9B96
-ldx_zpSI 3 1 8B9BA6
+lds_zpI 3 1 8B9BA6
 lds_zpIY 3 1 8B9BB6
 dec_zpSI 3 1 8B9BD6
 inc_zpSI 3 1 8B9BF6
@@ -1095,6 +1096,14 @@ smb4_zpSI 3 1 8B9BC7
 smb5_zpSI 3 1 8B9BD7
 smb6_zpSI 3 1 8B9BE7
 smb7_zpSI 3 1 8B9BF7
+ora_absSIY 3 2 8B9B19
+and_absSIY 3 2 8B9B39
+eor_absSIY 3 2 8B9B59
+adc_absSIY 3 2 8B9B79
+sta_absSIY 3 2 8B9B99
+lda_absSIY 3 2 8B9BB9
+cmp_absSIY 3 2 8B9BD9
+sbc_absSIY 3 2 8B9BF9
 tua_imp 3 0 8B9B8A
 tau_imp 3 0 8B9BAA
 inxt.s_imp 2 0 DB3B
@@ -1110,7 +1119,7 @@ stz_absSI 3 2 8B9B9C
 ldy_absSI 3 2 8B9BBC
 cpy_absSI 3 2 8B9BCC
 psh.s_absI 3 2 8B9BDC
-cpx_absSI 3 2 8B9BEC
+cps_absI 3 2 8B9BEC
 pul.s_absI 3 2 8B9BFC
 ora_absSI 3 2 8B9B1D
 and_absSI 3 2 8B9B3D
@@ -1124,8 +1133,9 @@ asl_absSI 3 2 8B9B1E
 rol_absSI 3 2 8B9B3E
 lsr_absSI 3 2 8B9B5E
 ror_absSI 3 2 8B9B7E
-stx_absSI 3 2 8B9B8E
-ldx_absSI 3 2 8B9BAE
+sts_absI 3 2 8B9B8E
+lds_absI 3 2 8B9BAE
+lds_absIY 3 2 8B9BBE
 dec_absSI 3 2 8B9BDE
 inc_absSI 3 2 8B9BFE
 bbr0_zpSIrel 3 2 8B9B0F
@@ -1144,6 +1154,14 @@ bbs4_zpSIrel 3 2 8B9BCF
 bbs5_zpSIrel 3 2 8B9BDF
 bbs6_zpSIrel 3 2 8B9BEF
 bbs7_zpSIrel 3 2 8B9BFF
+ldy_zpA 2 1 EBB4
+ldy_absA 2 2 EBBC
+ldy_zpAI 3 1 EB9BB4
+ldy_absAI 3 2 EB9BBC
+ldy_zpA 3 1 EBABB4
+ldy_absA 3 2 EBABBC
+ldy_zpAI 3 1 EBBBB4
+ldy_absAI 3 2 EBBBBC
 ora.x_zpAI 2 1 EB01
 ora.x_zpIY 2 1 EB11
 ora.x_zpI 2 1 EB12
@@ -1318,7 +1336,6 @@ lda.x_zpI 2 1 EBB2
 lda.x_ipp 2 1 EBA3
 lda.x_zp 2 1 EBA5
 lda.x_zpA 2 1 EBB5
-lda.x_imm 2 1 EBA9
 lda.x_absY 2 2 EBB9
 lda.x_abs 2 2 EBAD
 lda.x_absA 2 2 EBBD
@@ -1335,7 +1352,6 @@ lda.xw_zpI 3 1 EBABB2
 lda.xw_ipp 3 1 EBABA3
 lda.xw_zp 3 1 EBABA5
 lda.xw_zpA 3 1 EBABB5
-lda.xw_imm 3 2 EBABA9
 lda.xw_absY 3 2 EBABB9
 lda.xw_abs 3 2 EBABAD
 lda.xw_absA 3 2 EBABBD
@@ -1352,7 +1368,6 @@ cmp.x_zpI 2 1 EBD2
 cmp.x_ipp 2 1 EBC3
 cmp.x_zp 2 1 EBC5
 cmp.x_zpA 2 1 EBD5
-cmp.x_imm 2 1 EBC9
 cmp.x_absY 2 2 EBD9
 cmp.x_abs 2 2 EBCD
 cmp.x_absA 2 2 EBDD
@@ -1369,7 +1384,6 @@ cmp.xw_zpI 3 1 EBABD2
 cmp.xw_ipp 3 1 EBABC3
 cmp.xw_zp 3 1 EBABC5
 cmp.xw_zpA 3 1 EBABD5
-cmp.xw_imm 3 2 EBABC9
 cmp.xw_absY 3 2 EBABD9
 cmp.xw_abs 3 2 EBABCD
 cmp.xw_absA 3 2 EBABDD
@@ -1568,6 +1582,7 @@ ora.yw_absSIA 3 2 FBDB19
 ora.yw_absSI 3 2 FBDB1D
 ora.y_zpSII 4 1 FB8B9B01
 ora.y_zpSIIA 4 1 FB8B9B11
+ora.y_absSIA 4 2 FB8B9B19
 ora.y_absSI 4 2 FB8B9B1D
 and.y_zpXI 2 1 FB21
 and.y_zpIA 2 1 FB31
@@ -1617,6 +1632,7 @@ and.yw_absSIA 3 2 FBDB39
 and.yw_absSI 3 2 FBDB3D
 and.y_zpSII 4 1 FB8B9B21
 and.y_zpSIIA 4 1 FB8B9B31
+and.y_absSIA 4 2 FB8B9B39
 and.y_absSI 4 2 FB8B9B3D
 eor.y_zpXI 2 1 FB41
 eor.y_zpIA 2 1 FB51
@@ -1666,6 +1682,7 @@ eor.yw_absSIA 3 2 FBDB59
 eor.yw_absSI 3 2 FBDB5D
 eor.y_zpSII 4 1 FB8B9B41
 eor.y_zpSIIA 4 1 FB8B9B51
+eor.y_absSIA 4 2 FB8B9B59
 eor.y_absSI 4 2 FB8B9B5D
 adc.y_zpXI 2 1 FB61
 adc.y_zpIA 2 1 FB71
@@ -1715,6 +1732,7 @@ adc.yw_absSIA 3 2 FBDB79
 adc.yw_absSI 3 2 FBDB7D
 adc.y_zpSII 4 1 FB8B9B61
 adc.y_zpSIIA 4 1 FB8B9B71
+adc.y_absSIA 4 2 FB8B9B79
 adc.y_absSI 4 2 FB8B9B7D
 sta.y_zpXI 2 1 FB81
 sta.y_zpIA 2 1 FB91
@@ -1762,6 +1780,7 @@ sta.yw_absSIA 3 2 FBDB99
 sta.yw_absSI 3 2 FBDB9D
 sta.y_zpSII 4 1 FB8B9B81
 sta.y_zpSIIA 4 1 FB8B9B91
+sta.y_absSIA 4 2 FB8B9B99
 sta.y_absSI 4 2 FB8B9B9D
 lda.y_zpXI 2 1 FBA1
 lda.y_zpIA 2 1 FBB1
@@ -1769,7 +1788,6 @@ lda.y_zpI 2 1 FBB2
 lda.y_ipp 2 1 FBA3
 lda.y_zp 2 1 FBA5
 lda.y_zpX 2 1 FBB5
-lda.y_imm 2 1 FBA9
 lda.y_absA 2 2 FBB9
 lda.y_abs 2 2 FBAD
 lda.y_absX 2 2 FBBD
@@ -1786,7 +1804,6 @@ lda.yw_zpI 3 1 FBABB2
 lda.yw_ipp 3 1 FBABA3
 lda.yw_zp 3 1 FBABA5
 lda.yw_zpX 3 1 FBABB5
-lda.yw_imm 3 2 FBABA9
 lda.yw_absA 3 2 FBABB9
 lda.yw_abs 3 2 FBABAD
 lda.yw_absX 3 2 FBABBD
@@ -1811,6 +1828,7 @@ lda.yw_absSIA 3 2 FBDBB9
 lda.yw_absSI 3 2 FBDBBD
 lda.y_zpSII 4 1 FB8B9BA1
 lda.y_zpSIIA 4 1 FB8B9BB1
+lda.y_absSIA 4 2 FB8B9BB9
 lda.y_absSI 4 2 FB8B9BBD
 cmp.y_zpXI 2 1 FBC1
 cmp.y_zpIA 2 1 FBD1
@@ -1818,7 +1836,6 @@ cmp.y_zpI 2 1 FBD2
 cmp.y_ipp 2 1 FBC3
 cmp.y_zp 2 1 FBC5
 cmp.y_zpX 2 1 FBD5
-cmp.y_imm 2 1 FBC9
 cmp.y_absA 2 2 FBD9
 cmp.y_abs 2 2 FBCD
 cmp.y_absX 2 2 FBDD
@@ -1835,7 +1852,6 @@ cmp.yw_zpI 3 1 FBABD2
 cmp.yw_ipp 3 1 FBABC3
 cmp.yw_zp 3 1 FBABC5
 cmp.yw_zpX 3 1 FBABD5
-cmp.yw_imm 3 2 FBABC9
 cmp.yw_absA 3 2 FBABD9
 cmp.yw_abs 3 2 FBABCD
 cmp.yw_absX 3 2 FBABDD
@@ -1860,6 +1876,7 @@ cmp.yw_absSIA 3 2 FBDBD9
 cmp.yw_absSI 3 2 FBDBDD
 cmp.y_zpSII 4 1 FB8B9BC1
 cmp.y_zpSIIA 4 1 FB8B9BD1
+cmp.y_absSIA 4 2 FB8B9BD9
 cmp.y_absSI 4 2 FB8B9BDD
 sbc.y_zpXI 2 1 FBE1
 sbc.y_zpIA 2 1 FBF1
@@ -1909,6 +1926,7 @@ sbc.yw_absSIA 3 2 FBDBF9
 sbc.yw_absSI 3 2 FBDBFD
 sbc.y_zpSII 4 1 FB8B9BE1
 sbc.y_zpSIIA 4 1 FB8B9BF1
+sbc.y_absSIA 4 2 FB8B9BF9
 sbc.y_absSI 4 2 FB8B9BFD
 asl_y 2 0 FB0A
 asl.w_y 3 0 FBAB0A
