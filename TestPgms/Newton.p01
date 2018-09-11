@@ -1,0 +1,416 @@
+   1    2 	.stk	1024
+   2    3 	.cod	512
+   3    4 STATIC_LINK			.equ	+5
+   4    5 RETURN_VALUE		.equ	-3
+   5    6 HIGH_RETURN_VALUE	.equ	-1
+   6    7 _start
+   7    8 	tsx.w
+   8    9 	lds.w	#16383
+   9   10 	jmp	_pc65_main
+  10   19 _pc65_main	.sub
+  11   20 	phx.w
+  12   21 	tsx.w
+  13   23 L_005
+  14   25 	jsr _writeln
+  15   27 	psh.w #S_007
+  16   28 	psh.w #0
+  17   29 	psh.w #30
+  18   30 	jsr _swrite
+  19   31 	adj #6
+  20   33 	psh.w #number_002
+  21   34 	jsr _fread
+  22   35 	pli
+  23   36 	sta.w 0,I++
+  24   37 	swp
+  25   38 	sta.w 0,I++
+  26   41 	lda.w number_002+2
+  27   42 	swp
+  28   43 	lda.w number_002
+  29   44 	swp
+  30   45 	pha.w
+  31   46 	swp
+  32   47 	pha.w
+  33   48 	lda #0
+  34   49 	pha.w
+  35   50 	jsr _fconv
+  36   51 	adj #2
+  37   52 	swp
+  38   53 	pha.w
+  39   54 	swp
+  40   55 	pha.w
+  41   56 	jsr _fcmp
+  42   57 	adj #8
+  43   58 	cmp.w #0
+  44   59 	php
+  45   60 	lda #1
+  46   61 	plp
+  47   62 	beq L_010
+  48   63 	lda #0
+  49   64 L_010
+  50   65 	cmp.w #1
+  51   66 	beq L_008
+  52   67 	jmp  L_009
+  53   68 L_008
+  54   70 	lda.w number_002+2
+  55   71 	swp
+  56   72 	lda.w number_002
+  57   73 	swp
+  58   74 	pha.w
+  59   75 	swp
+  60   76 	pha.w
+  61   77 	lda #12
+  62   78 	pha.w
+  63   79 	lda #6
+  64   80 	pha.w
+  65   81 	jsr _fwrite
+  66   82 	adj #8
+  67   83 	lda.w F_011+2
+  68   84 	swp
+  69   85 	lda.w F_011
+  70   86 	swp
+  71   87 	pha.w
+  72   88 	swp
+  73   89 	pha.w
+  74   90 	lda #12
+  75   91 	pha.w
+  76   92 	lda #6
+  77   93 	pha.w
+  78   94 	jsr _fwrite
+  79   95 	adj #8
+  80   96 	jsr _writeln
+  81   99 	jmp L_012
+  82  100 L_009
+  83  101 	lda.w number_002+2
+  84  102 	swp
+  85  103 	lda.w number_002
+  86  104 	swp
+  87  105 	pha.w
+  88  106 	swp
+  89  107 	pha.w
+  90  108 	lda #0
+  91  109 	pha.w
+  92  110 	jsr _fconv
+  93  111 	adj #2
+  94  112 	swp
+  95  113 	pha.w
+  96  114 	swp
+  97  115 	pha.w
+  98  116 	jsr _fcmp
+  99  117 	adj #8
+ 100  118 	cmp.w #0
+ 101  119 	php
+ 102  120 	lda #1
+ 103  121 	plp
+ 104  122 	blt L_015
+ 105  123 	lda #0
+ 106  124 L_015
+ 107  125 	cmp.w #1
+ 108  126 	beq L_013
+ 109  127 	jmp  L_014
+ 110  128 L_013
+ 111  130 	psh.w #S_016
+ 112  131 	psh.w #0
+ 113  132 	psh.w #22
+ 114  133 	jsr _swrite
+ 115  134 	adj #6
+ 116  135 	jsr _writeln
+ 117  138 	jmp L_017
+ 118  139 L_014
+ 119  141 	lda.w number_002+2
+ 120  142 	swp
+ 121  143 	lda.w number_002
+ 122  144 	swp
+ 123  145 	pha.w
+ 124  146 	swp
+ 125  147 	pha.w
+ 126  148 	jsr _fsqrt
+ 127  149 	adj #4
+ 128  150 	sta.w sqroot_004
+ 129  151 	swp
+ 130  152 	sta.w sqroot_004+2
+ 131  154 	lda.w number_002+2
+ 132  155 	swp
+ 133  156 	lda.w number_002
+ 134  157 	swp
+ 135  158 	pha.w
+ 136  159 	swp
+ 137  160 	pha.w
+ 138  161 	lda #12
+ 139  162 	pha.w
+ 140  163 	lda #6
+ 141  164 	pha.w
+ 142  165 	jsr _fwrite
+ 143  166 	adj #8
+ 144  167 	lda.w sqroot_004+2
+ 145  168 	swp
+ 146  169 	lda.w sqroot_004
+ 147  170 	swp
+ 148  171 	pha.w
+ 149  172 	swp
+ 150  173 	pha.w
+ 151  174 	lda #12
+ 152  175 	pha.w
+ 153  176 	lda #6
+ 154  177 	pha.w
+ 155  178 	jsr _fwrite
+ 156  179 	adj #8
+ 157  180 	jsr _writeln
+ 158  182 	jsr _writeln
+ 159  185 	lda #1
+ 160  186 	pha.w
+ 161  187 	jsr _fconv
+ 162  188 	adj #2
+ 163  189 	sta.w root_003
+ 164  190 	swp
+ 165  191 	sta.w root_003+2
+ 166  193 L_018
+ 167  195 	lda.w number_002+2
+ 168  196 	swp
+ 169  197 	lda.w number_002
+ 170  198 	swp
+ 171  199 	pha.w
+ 172  200 	swp
+ 173  201 	pha.w
+ 174  202 	lda.w root_003+2
+ 175  203 	swp
+ 176  204 	lda.w root_003
+ 177  205 	swp
+ 178  206 	pha.w
+ 179  207 	swp
+ 180  208 	pha.w
+ 181  209 	jsr _fdiv
+ 182  210 	adj #8
+ 183  211 	swp
+ 184  212 	pha.w
+ 185  213 	swp
+ 186  214 	pha.w
+ 187  215 	lda.w root_003+2
+ 188  216 	swp
+ 189  217 	lda.w root_003
+ 190  218 	swp
+ 191  219 	pha.w
+ 192  220 	swp
+ 193  221 	pha.w
+ 194  222 	jsr _fadd
+ 195  223 	adj #8
+ 196  224 	swp
+ 197  225 	pha.w
+ 198  226 	swp
+ 199  227 	pha.w
+ 200  228 	lda #2
+ 201  229 	pha.w
+ 202  230 	jsr _fconv
+ 203  231 	adj #2
+ 204  232 	swp
+ 205  233 	pha.w
+ 206  234 	swp
+ 207  235 	pha.w
+ 208  236 	jsr _fdiv
+ 209  237 	adj #8
+ 210  238 	sta.w root_003
+ 211  239 	swp
+ 212  240 	sta.w root_003+2
+ 213  242 	lda.w root_003+2
+ 214  243 	swp
+ 215  244 	lda.w root_003
+ 216  245 	swp
+ 217  246 	pha.w
+ 218  247 	swp
+ 219  248 	pha.w
+ 220  249 	lda #24
+ 221  250 	pha.w
+ 222  251 	lda #6
+ 223  252 	pha.w
+ 224  253 	jsr _fwrite
+ 225  254 	adj #8
+ 226  256 	lda #100
+ 227  257 	pha.w
+ 228  258 	lda.w root_003+2
+ 229  259 	swp
+ 230  260 	lda.w root_003
+ 231  261 	swp
+ 232  262 	pha.w
+ 233  263 	swp
+ 234  264 	pha.w
+ 235  265 	lda.w sqroot_004+2
+ 236  266 	swp
+ 237  267 	lda.w sqroot_004
+ 238  268 	swp
+ 239  269 	pha.w
+ 240  270 	swp
+ 241  271 	pha.w
+ 242  272 	jsr _fsub
+ 243  273 	adj #8
+ 244  274 	swp
+ 245  275 	pha.w
+ 246  276 	swp
+ 247  277 	pha.w
+ 248  278 	jsr _fabs
+ 249  279 	adj #4
+ 250  280 	swp
+ 251  281 	pha.w
+ 252  282 	swp
+ 253  283 	pha.w
+ 254  284 	pla.w
+ 255  285 	swp
+ 256  286 	pla.w
+ 257  287 	ply.w
+ 258  288 	pha.w
+ 259  289 	swp
+ 260  290 	pha.w
+ 261  291 	phy.w
+ 262  292 	jsr _fconv
+ 263  293 	adj #2
+ 264  294 	ply.w
+ 265  295 	swp.y
+ 266  296 	ply.w
+ 267  297 	swp
+ 268  298 	pha.w
+ 269  299 	swp
+ 270  300 	pha.w
+ 271  301 	phy.w
+ 272  302 	swp.y
+ 273  303 	phy.w
+ 274  304 	jsr _fmul
+ 275  305 	adj #8
+ 276  306 	swp
+ 277  307 	pha.w
+ 278  308 	swp
+ 279  309 	pha.w
+ 280  310 	lda.w sqroot_004+2
+ 281  311 	swp
+ 282  312 	lda.w sqroot_004
+ 283  313 	swp
+ 284  314 	pha.w
+ 285  315 	swp
+ 286  316 	pha.w
+ 287  317 	jsr _fdiv
+ 288  318 	adj #8
+ 289  319 	swp
+ 290  320 	pha.w
+ 291  321 	swp
+ 292  322 	pha.w
+ 293  323 	lda #12
+ 294  324 	pha.w
+ 295  325 	lda #2
+ 296  326 	pha.w
+ 297  327 	jsr _fwrite
+ 298  328 	adj #8
+ 299  330 	lda #37
+ 300  331 	pha.w
+ 301  332 	psh.w #0
+ 302  333 	jsr _cwrite
+ 303  334 	adj #4
+ 304  336 	jsr _writeln
+ 305  337 	lda.w number_002+2
+ 306  338 	swp
+ 307  339 	lda.w number_002
+ 308  340 	swp
+ 309  341 	pha.w
+ 310  342 	swp
+ 311  343 	pha.w
+ 312  344 	lda.w root_003+2
+ 313  345 	swp
+ 314  346 	lda.w root_003
+ 315  347 	swp
+ 316  348 	pha.w
+ 317  349 	swp
+ 318  350 	pha.w
+ 319  351 	swp
+ 320  352 	pha.w
+ 321  353 	swp
+ 322  354 	pha.w
+ 323  355 	jsr _fmul
+ 324  356 	adj #8
+ 325  357 	swp
+ 326  358 	pha.w
+ 327  359 	swp
+ 328  360 	pha.w
+ 329  361 	jsr _fdiv
+ 330  362 	adj #8
+ 331  363 	swp
+ 332  364 	pha.w
+ 333  365 	swp
+ 334  366 	pha.w
+ 335  367 	lda #1
+ 336  368 	pha.w
+ 337  369 	jsr _fconv
+ 338  370 	adj #2
+ 339  371 	swp
+ 340  372 	pha.w
+ 341  373 	swp
+ 342  374 	pha.w
+ 343  375 	jsr _fsub
+ 344  376 	adj #8
+ 345  377 	swp
+ 346  378 	pha.w
+ 347  379 	swp
+ 348  380 	pha.w
+ 349  381 	jsr _fabs
+ 350  382 	adj #4
+ 351  383 	swp
+ 352  384 	pha.w
+ 353  385 	swp
+ 354  386 	pha.w
+ 355  387 	lda.w F_020+2
+ 356  388 	swp
+ 357  389 	lda.w F_020
+ 358  390 	swp
+ 359  391 	pha.w
+ 360  392 	swp
+ 361  393 	pha.w
+ 362  394 	jsr _fcmp
+ 363  395 	adj #8
+ 364  396 	cmp.w #0
+ 365  397 	php
+ 366  398 	lda #1
+ 367  399 	plp
+ 368  400 	blt L_021
+ 369  401 	lda #0
+ 370  402 L_021
+ 371  403 	cmp.w #1
+ 372  404 	beq L_019
+ 373  405 	jmp L_018
+ 374  406 L_019
+ 375  409 L_017
+ 376  410 L_012
+ 377  411 	lda.w number_002+2
+ 378  412 	swp
+ 379  413 	lda.w number_002
+ 380  414 	swp
+ 381  415 	pha.w
+ 382  416 	swp
+ 383  417 	pha.w
+ 384  418 	lda #0
+ 385  420 	pha.w
+ 386  421 	jsr _fconv
+ 387  422 	adj #2
+ 388  423 	swp
+ 389  424 	pha.w
+ 390  425 	swp
+ 391  426 	pha.w
+ 392  427 	jsr _fcmp
+ 393  428 	adj #8
+ 394  429 	cmp.w #0
+ 395  430 	php
+ 396  431 	lda #1
+ 397  432 	plp
+ 398  433 	beq L_022
+ 399  434 	lda #0
+ 400  435 L_022
+ 401  436 	cmp.w #1
+ 402  437 	beq L_006
+ 403  438 	jmp L_005
+ 404  439 L_006
+ 405  440 	plx.w
+ 406  441 	rts
+ 407  442 	.end	_pc65_main
+ 408  444 	.dat
+ 409  446 number_002	.byt	4
+ 410  447 root_003	.byt	4
+ 411  448 sqroot_004	.byt	4
+ 412  449 F_020	.flt	1.000000e-06
+ 413  450 F_011	.flt	0.000000e+00
+ 414  451 S_016	.str	"*** ERROR:  number < 0"
+ 415  452 S_007	.str	"Enter new number (0 to quit): "
+ 416  454 	.end

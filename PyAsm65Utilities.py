@@ -125,19 +125,21 @@ def asmPass1(code, data, lbl, op, dt, srcLine,
              opcodes, directives, defines, relative):
     if lbl == '':
         if op in directives:
-            if op == directives[0]:     # .stack    size
-                stkSize = numVal(dt)
-            elif op == directives[1]:   # .code     [address]
+            if op == directives['.stack'] or op == directives['.stk']:
+                stkSize = numVal(dt)            # .stack    size
+            elif op == directives['.code'] or op == directives['.cod']:
                 if dt != '':
-                    code = numVal(dt)
-            elif op == directives[2]:   # .data     [address]
+                    code = numVal(dt)           # .code     [address]
+            elif op == directives['.data'] or op == directives['.dat']:
                 if dt != '':
-                    data = numVal(dt)
-            elif op == directives[3]:   # .proc
+                    data = numVal(dt)           # .data     [address]
+            elif op == directives['.proc'] \
+                 or op == directives['.sub'] \
+                 or op == directives['.fnc']:   # .proc
                 pass
-            elif op == directives[4]:   # .endp
+            elif op == directives['.endp']:     # .endp
                 pass
-            elif op == directives[5]:   # .end
+            elif op == directives['.end']:      # .end
                 pass
             else:
                 print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
@@ -176,7 +178,13 @@ def asmPass1(code, data, lbl, op, dt, srcLine,
                     addrsMode = 'zpSI'
                     operand = dt.split(',')[0][1:]
                 elif re.match('^\(.*,[sS]\),[yY]$', dt):
-                    addrsMode = 'spIY'
+                    addrsMode = 'zpSIY'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^.*,[iI][+]{2}$', dt):
+                    addrsMode = 'ipp'
+                    operand = dt.split(',')[0]
+                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
+                    addrsMode = 'ippI'
                     operand = dt.split(',')[0][1:]
                 else:
                     addrsMode = '???'
@@ -203,19 +211,21 @@ def asmPass1(code, data, lbl, op, dt, srcLine,
             print('Error: Redefinition of %s in %d' % (lbl, srcLine))
         elif op in directives:
             labels[lbl] = code
-            if op == directives[0]:     # .stack    size
-                stkSize = numVal(dt)
-            elif op == directives[1]:   # .code     [address]
+            if op == directives['.stack'] or op == directives['.stk']:
+                stkSize = numVal(dt)            # .stack    size
+            elif op == directives['.code'] or op == directives['.cod']:
                 if dt != '':
-                    code = numVal(dt)
-            elif op == directives[2]:   # .data     [address]
+                    code = numVal(dt)           # .code     [address]
+            elif op == directives['.data'] or op == directives['.dat']:
                 if dt != '':
-                    data = numVal(dt)
-            elif op == directives[3]:   # .proc
+                    data = numVal(dt)           # .data     [address]
+            elif op == directives['.proc'] \
+                 or op == directives['.sub'] \
+                 or op == directives['.fnc']:   # .proc
                 pass
-            elif op == directives[4]:   # .endp
+            elif op == directives['.endp']:     # .endp
                 pass
-            elif op == directives[5]:   # .end
+            elif op == directives['.end']:      # .end
                 pass
             else:
                 print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
@@ -223,21 +233,19 @@ def asmPass1(code, data, lbl, op, dt, srcLine,
             if op == '':
                 labels[lbl] = code
             elif op in defines:
-                if op == '.eq':
+                if op == '.eq' or op == '.equ':
                     constants[lbl] = numVal(dt)
-                elif op == '.db':
+                elif op == '.db' or op == '.byt':
                     siz = int(dt)
                     val = '00'*siz
                     variables[lbl] = (data, siz, val)
 
                     asmText = '%04X %s' % (data, val[:8])
                     bufLen = 15 - len(asmText)
-
-                    entry  = [data, lbl, 'ds', dt, siz, 0, strVal, \
-                              ' '*bufLen+' ; '+srcText]
+                    dat.append([data, lbl, 'db', dt, siz, 0, val, \
+                                ' '*bufLen+' ; '+srcText])
                     data += siz
-                    return (False, entry)
-                elif op == '.ds':
+                elif op == '.ds' or op == '.str':
                     siz = len(dt)
                     variables[lbl] = (data, siz, dt)
                     strVal = []
@@ -248,11 +256,9 @@ def asmPass1(code, data, lbl, op, dt, srcLine,
 
                     asmText = '%04X %s' % (data, strVal[:8])
                     bufLen = 15 - len(asmText)
-
-                    entry  = [data, lbl, 'ds', dt, siz, 0, strVal, \
-                              ' '*bufLen+' ; '+srcText]
+                    dat.append([data, lbl, 'ds', dt, siz, 0, strVal, \
+                                ' '*bufLen+' ; '+srcText])
                     data += siz
-                    return (False, entry)
                 else:
                     print('Error. Unknown define: %s.' % (op))
                     pass
@@ -288,7 +294,13 @@ def asmPass1(code, data, lbl, op, dt, srcLine,
                     addrsMode = 'zpSI'
                     operand = dt.split(',')[0][1:]
                 elif re.match('^\(.*,[sS]\),[yY]$', dt):
-                    addrsMode = 'spIY'
+                    addrsMode = 'zpSIY'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^.*,[iI][+]{2}$', dt):
+                    addrsMode = 'ipp'
+                    operand = dt.split(',')[0]
+                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
+                    addrsMode = 'ippI'
                     operand = dt.split(',')[0][1:]
                 else:
                     addrsMode = '???'

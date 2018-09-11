@@ -1,0 +1,255 @@
+0200 ABBA        ; 	tsx.w
+0202 CBA2FF3F    ; 	lds.w	#16383
+0206 4C0902      ; 	jmp	_pc65_main
+0209 ABDA        ; 	phx.w
+020B ABBA        ; 	tsx.w
+020D 20FFFF      ; 	jsr _writeln
+0210 ABE2AE04    ; 	psh.w #S_007
+0214 ABE20000    ; 	psh.w #0
+0218 ABE21E00    ; 	psh.w #30
+021C 20FFFF      ; 	jsr _swrite
+021F C206        ; 	adj #6
+0221 ABE28C04    ; 	psh.w #number_002
+0225 20FFFF      ; 	jsr _fread
+0228 6B          ; 	pli
+0229 AB8300      ; 	sta.w 0,I++
+022C AB8300      ; 	sta.w 0,I++
+022F ABAD8C04    ; 	lda.w number_002
+0233 AB48        ; 	pha.w
+0235 AB48        ; 	pha.w
+0237 ABE20000    ; 	psh.w	#0
+023B 20FFFF      ; 	jsr _fconv
+023E C202        ; 	adj #2
+0240 AB48        ; 	pha.w
+0242 AB48        ; 	pha.w
+0244 20FFFF      ; 	jsr _fcmp
+0247 C208        ; 	adj #8
+0249 ABC90000    ; 	cmp.w #0
+024D 08          ; 	php
+024E A901        ; 	lda #1
+0250 28          ; 	plp
+0251 F002        ; 	beq L_010
+0253 A900        ; 	lda #0
+0255 ABC90100    ; 	cmp.w #1
+0259 F003        ; 	beq L_008
+025B 4C8E02      ; 	jmp  L_009
+025E ABAD8C04    ; 	lda.w number_002
+0262 AB48        ; 	pha.w
+0264 AB48        ; 	pha.w
+0266 ABE20C00    ; 	psh.w	#12
+026A ABE20600    ; 	psh.w	#6
+026E 20FFFF      ; 	jsr _fwrite
+0271 C208        ; 	adj #8
+0273 ABADFFFF    ; 	lda.w F_011
+0277 AB48        ; 	pha.w
+0279 AB48        ; 	pha.w
+027B ABE20C00    ; 	psh.w	#12
+027F ABE20600    ; 	psh.w	#6
+0283 20FFFF      ; 	jsr _fwrite
+0286 C208        ; 	adj #8
+0288 20FFFF      ; 	jsr _writeln
+028B 4C5A04      ; 	jmp L_012
+028E ABAD8C04    ; 	lda.w number_002
+0292 AB48        ; 	pha.w
+0294 AB48        ; 	pha.w
+0296 ABE20000    ; 	psh.w	#0
+029A 20FFFF      ; 	jsr _fconv
+029D C202        ; 	adj #2
+029F AB48        ; 	pha.w
+02A1 AB48        ; 	pha.w
+02A3 20FFFF      ; 	jsr _fcmp
+02A6 C208        ; 	adj #8
+02A8 ABC90000    ; 	cmp.w #0
+02AC 08          ; 	php
+02AD A901        ; 	lda #1
+02AF 28          ; 	plp
+02B0 AB7002      ; 	blt L_015
+02B3 A900        ; 	lda #0
+02B5 ABC90100    ; 	cmp.w #1
+02B9 F003        ; 	beq L_013
+02BB 4CD502      ; 	jmp  L_014
+02BE ABE29804    ; 	psh.w #S_016
+02C2 ABE20000    ; 	psh.w #0
+02C6 ABE21600    ; 	psh.w #22
+02CA 20FFFF      ; 	jsr _swrite
+02CD C206        ; 	adj #6
+02CF 20FFFF      ; 	jsr _writeln
+02D2 4C5A04      ; 	jmp L_017
+02D5 ABAD8C04    ; 	lda.w number_002
+02D9 AB48        ; 	pha.w
+02DB AB48        ; 	pha.w
+02DD 20FFFF      ; 	jsr _fsqrt
+02E0 C204        ; 	adj #4
+02E2 AB8D9404    ; 	sta.w sqroot_004
+02E6 ABAD8C04    ; 	lda.w number_002
+02EA AB48        ; 	pha.w
+02EC AB48        ; 	pha.w
+02EE ABE20C00    ; 	psh.w	#12
+02F2 ABE20600    ; 	psh.w	#6
+02F6 20FFFF      ; 	jsr _fwrite
+02F9 C208        ; 	adj #8
+02FB ABAD9404    ; 	lda.w sqroot_004
+02FF AB48        ; 	pha.w
+0301 AB48        ; 	pha.w
+0303 ABE20C00    ; 	psh.w	#12
+0307 ABE20600    ; 	psh.w	#6
+030B 20FFFF      ; 	jsr _fwrite
+030E C208        ; 	adj #8
+0310 20FFFF      ; 	jsr _writeln
+0313 20FFFF      ; 	jsr _writeln
+0316 ABE20100    ; 	psh.w	#1
+031A 20FFFF      ; 	jsr _fconv
+031D C202        ; 	adj #2
+031F AB8D9004    ; 	sta.w root_003
+0323 ABAD8C04    ; 	lda.w number_002
+0327 AB48        ; 	pha.w
+0329 AB48        ; 	pha.w
+032B ABAD9004    ; 	lda.w root_003
+032F AB48        ; 	pha.w
+0331 AB48        ; 	pha.w
+0333 20FFFF      ; 	jsr _fdiv
+0336 C208        ; 	adj #8
+0338 AB48        ; 	pha.w
+033A AB48        ; 	pha.w
+033C ABAD9004    ; 	lda.w root_003
+0340 AB48        ; 	pha.w
+0342 AB48        ; 	pha.w
+0344 20FFFF      ; 	jsr _fadd
+0347 C208        ; 	adj #8
+0349 AB48        ; 	pha.w
+034B AB48        ; 	pha.w
+034D ABE20200    ; 	psh.w	#2
+0351 20FFFF      ; 	jsr _fconv
+0354 C202        ; 	adj #2
+0356 AB48        ; 	pha.w
+0358 AB48        ; 	pha.w
+035A 20FFFF      ; 	jsr _fdiv
+035D C208        ; 	adj #8
+035F AB8D9004    ; 	sta.w root_003
+0363 ABAD9004    ; 	lda.w root_003
+0367 AB48        ; 	pha.w
+0369 AB48        ; 	pha.w
+036B ABE21800    ; 	psh.w	#24
+036F ABE20600    ; 	psh.w	#6
+0373 20FFFF      ; 	jsr _fwrite
+0376 C208        ; 	adj #8
+0378 ABE26400    ; 	psh.w	#100
+037C ABAD9004    ; 	lda.w root_003
+0380 AB48        ; 	pha.w
+0382 AB48        ; 	pha.w
+0384 ABAD9404    ; 	lda.w sqroot_004
+0388 AB48        ; 	pha.w
+038A AB48        ; 	pha.w
+038C 20FFFF      ; 	jsr _fsub
+038F C208        ; 	adj #8
+0391 AB48        ; 	pha.w
+0393 AB48        ; 	pha.w
+0395 20FFFF      ; 	jsr _fabs
+0398 C204        ; 	adj #4
+039A AB48        ; 	pha.w
+039C AB48        ; 	pha.w
+039E AB68        ; 	pla.w
+03A0 AB68        ; 	pla.w
+03A2 AB7A        ; 	ply.w
+03A4 AB48        ; 	pha.w
+03A6 AB48        ; 	pha.w
+03A8 AB5A        ; 	phy.w
+03AA 20FFFF      ; 	jsr _fconv
+03AD C202        ; 	adj #2
+03AF AB7A        ; 	ply.w
+03B1 AB7A        ; 	ply.w
+03B3 AB48        ; 	pha.w
+03B5 AB48        ; 	pha.w
+03B7 AB5A        ; 	phy.w
+03B9 AB5A        ; 	phy.w
+03BB 20FFFF      ; 	jsr _fmul
+03BE C208        ; 	adj #8
+03C0 AB48        ; 	pha.w
+03C2 AB48        ; 	pha.w
+03C4 ABAD9404    ; 	lda.w sqroot_004
+03C8 AB48        ; 	pha.w
+03CA AB48        ; 	pha.w
+03CC 20FFFF      ; 	jsr _fdiv
+03CF C208        ; 	adj #8
+03D1 AB48        ; 	pha.w
+03D3 AB48        ; 	pha.w
+03D5 ABE20C00    ; 	psh.w	#12
+03D9 ABE20200    ; 	psh.w	#2
+03DD 20FFFF      ; 	jsr _fwrite
+03E0 C208        ; 	adj #8
+03E2 ABE22500    ; 	psh.w	#37
+03E6 ABE20000    ; 	psh.w #0
+03EA 20FFFF      ; 	jsr _cwrite
+03ED C204        ; 	adj #4
+03EF 20FFFF      ; 	jsr _writeln
+03F2 ABAD8C04    ; 	lda.w number_002
+03F6 AB48        ; 	pha.w
+03F8 AB48        ; 	pha.w
+03FA ABAD9004    ; 	lda.w root_003
+03FE AB48        ; 	pha.w
+0400 AB48        ; 	pha.w
+0402 AB48        ; 	pha.w
+0404 AB48        ; 	pha.w
+0406 20FFFF      ; 	jsr _fmul
+0409 C208        ; 	adj #8
+040B AB48        ; 	pha.w
+040D AB48        ; 	pha.w
+040F 20FFFF      ; 	jsr _fdiv
+0412 C208        ; 	adj #8
+0414 AB48        ; 	pha.w
+0416 AB48        ; 	pha.w
+0418 ABE20100    ; 	psh.w	#1
+041C 20FFFF      ; 	jsr _fconv
+041F C202        ; 	adj #2
+0421 AB48        ; 	pha.w
+0423 AB48        ; 	pha.w
+0425 20FFFF      ; 	jsr _fsub
+0428 C208        ; 	adj #8
+042A AB48        ; 	pha.w
+042C AB48        ; 	pha.w
+042E 20FFFF      ; 	jsr _fabs
+0431 C204        ; 	adj #4
+0433 AB48        ; 	pha.w
+0435 AB48        ; 	pha.w
+0437 ABADFFFF    ; 	lda.w F_020
+043B AB48        ; 	pha.w
+043D AB48        ; 	pha.w
+043F 20FFFF      ; 	jsr _fcmp
+0442 C208        ; 	adj #8
+0444 ABC90000    ; 	cmp.w #0
+0448 08          ; 	php
+0449 A901        ; 	lda #1
+044B 28          ; 	plp
+044C AB7002      ; 	blt L_021
+044F A900        ; 	lda #0
+0451 ABC90100    ; 	cmp.w #1
+0455 F003        ; 	beq L_019
+0457 4C2303      ; 	jmp L_018
+045A ABAD8C04    ; 	lda.w number_002
+045E AB48        ; 	pha.w
+0460 AB48        ; 	pha.w
+0462 ABE20000    ; 	psh.w	#0
+0466 20FFFF      ; 	jsr _fconv
+0469 C202        ; 	adj #2
+046B AB48        ; 	pha.w
+046D AB48        ; 	pha.w
+046F 20FFFF      ; 	jsr _fcmp
+0472 C208        ; 	adj #8
+0474 ABC90000    ; 	cmp.w #0
+0478 08          ; 	php
+0479 A901        ; 	lda #1
+047B 28          ; 	plp
+047C F002        ; 	beq L_022
+047E A900        ; 	lda #0
+0480 ABC90100    ; 	cmp.w #1
+0484 F003        ; 	beq L_006
+0486 4C0D02      ; 	jmp L_005
+0489 ABFA        ; 	plx.w
+048B 60          ; 	rts
+048C 00000000    ; number_002	.byt	4
+0490 00000000    ; root_003	.byt	4
+0494 00000000    ; sqroot_004	.byt	4
+0498 2A2A2A20    ; S_016	.str	"*** ERROR:  number < 0"
+049C 4552524F523A20206E756D626572203C2030
+04AE 456E7465    ; S_007	.str	"Enter new number (0 to quit): "
+04B2 72206E6577206E756D62657220283020746F2071756974293A20

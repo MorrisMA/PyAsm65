@@ -15,7 +15,7 @@ directives = {'.stack' : '.stack', \
               '.endp'  : '.endp', \
               '.end'   : '.end', }
 
-defines    = ('.eq', \
+defines    = ('.eq', '.equ', \
               '.db', '.byt', \
               '.dw', '.wrd', \
               '.dl', '.lng', '.flt', \
@@ -30,7 +30,7 @@ relative   = ('bpl', 'bmi', 'bvc', 'bvs', 'bcc', 'bcs', 'bne', 'beq', \
 
 opcodes = dict()
 
-loadOpcodeTable(opcodes) # Load default opcode table
+opcodes = loadOpcodeTable(opcodes,genOpcodeLst=True) # Load default opcode table
 
 filename = input('Enter base name of file to process: ')
 libpath  = input('Enter path to library: ')
@@ -95,22 +95,25 @@ for src in source:
 
     if lbl == '':
         if op in directives:
-            if op == directives['.stack']:      # .stack    size
-                stkSize = numVal(dt)
-            elif op == directives['.code']:     # .code     [address]
+            if op == directives['.stack'] or op == directives['.stk']:
+                stkSize = numVal(dt)            # .stack    size
+            elif op == directives['.code'] or op == directives['.cod']:
                 if dt != '':
-                    code = numVal(dt)
-            elif op == directives['.data']:     # .data     [address]
+                    code = numVal(dt)           # .code     [address]
+            elif op == directives['.data'] or op == directives['.dat']:
                 if dt != '':
-                    data = numVal(dt)
-            elif op == directives['.proc']:     # .proc
+                    data = numVal(dt)           # .data     [address]
+            elif op == directives['.proc'] \
+                 or op == directives['.sub'] \
+                 or op == directives['.fnc']:   # .proc
                 pass
             elif op == directives['.endp']:     # .endp
                 pass
             elif op == directives['.end']:      # .end
                 pass
             else:
-                print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
+                print('Error. Unknown directive: line #%d, %s, %s.' \
+                      % (srcLine, op, srcLine, directives[op]))
         else:
             if re.match('^\.\w$', op):
                 print('Error. Unexpected opcode: %s. Line #%d.' % (op, srcLine))
@@ -148,6 +151,12 @@ for src in source:
                 elif re.match('^\(.*,[sS]\),[yY]$', dt):
                     addrsMode = 'zpSIY'
                     operand = dt.split(',')[0][1:]
+                elif re.match('^.*,[iI][+]{2}$', dt):
+                    addrsMode = 'ipp'
+                    operand = dt.split(',')[0]
+                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
+                    addrsMode = 'ippI'
+                    operand = dt.split(',')[0][1:]
                 else:
                     addrsMode = '???'
                     print('Error. Unknown addressing mode: %s. Line #%d.' \
@@ -171,29 +180,32 @@ for src in source:
             print('Error: Redefinition of %s in %d' % (lbl, srcLine))
         elif op in directives:
             labels[lbl] = code
-            if op == directives['.stack']:      # .stack    size
-                stkSize = numVal(dt)
-            elif op == directives['.code']:     # .code     [address]
+            if op == directives['.stack'] or op == directives['.stk']:
+                stkSize = numVal(dt)            # .stack    size
+            elif op == directives['.code'] or op == directives['.cod']:
                 if dt != '':
-                    code = numVal(dt)
-            elif op == directives['.data']:     # .data     [address]
+                    code = numVal(dt)           # .code     [address]
+            elif op == directives['.data'] or op == directives['.dat']:
                 if dt != '':
-                    data = numVal(dt)
-            elif op == directives['.proc']:     # .proc
+                    data = numVal(dt)           # .data     [address]
+            elif op == directives['.proc'] \
+                 or op == directives['.sub'] \
+                 or op == directives['.fnc']:   # .proc
                 pass
             elif op == directives['.endp']:     # .endp
                 pass
             elif op == directives['.end']:      # .end
                 pass
             else:
-                print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
+                print('Error. Unknown directive: line #%d, %s, %s.' \
+                      % (srcLine, op, srcLine, directives[op]))
         else:
             if op == '':
                 labels[lbl] = code
             elif op in defines:
-                if op == '.eq':
+                if op == '.eq' or op == '.equ':
                     constants[lbl] = numVal(dt)
-                elif op == '.db':
+                elif op == '.db' or op == '.byt':
                     siz = int(dt)
                     val = '00'*siz
                     variables[lbl] = (data, siz, val)
@@ -203,7 +215,7 @@ for src in source:
                     dat.append([data, lbl, 'db', dt, siz, 0, val, \
                                 ' '*bufLen+' ; '+srcText])
                     data += siz
-                elif op == '.ds':
+                elif op == '.ds' or op == '.str':
                     siz = len(dt)
                     variables[lbl] = (data, siz, dt)
                     strVal = []
@@ -252,7 +264,13 @@ for src in source:
                     addrsMode = 'zpSI'
                     operand = dt.split(',')[0][1:]
                 elif re.match('^\(.*,[sS]\),[yY]$', dt):
-                    addrsMode = 'spIY'
+                    addrsMode = 'zpSIY'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^.*,[iI][+]{2}$', dt):
+                    addrsMode = 'ipp'
+                    operand = dt.split(',')[0]
+                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
+                    addrsMode = 'ippI'
                     operand = dt.split(',')[0][1:]
                 else:
                     addrsMode = '???'
@@ -357,7 +375,7 @@ for ln in cod:
                                   ''.join([opStr, loStr, hiStr]), srcTxt]
         else:
             print('Error. Destination not found in symbol table.')
-    elif md == 'abs':
+    elif md in ('abs', 'absI', 'absX', 'absXI', 'absY', 'absIY',):
         if dt in constants or dt in labels or dt in variables:
             if dt in constants:
                 val = constants[dt]
@@ -377,7 +395,7 @@ for ln in cod:
             hiStr = '%02X' % ((val >> 8) & 255)
             out[addrs] = [opLen + dtLen, \
                           ''.join([opStr, loStr, hiStr]), srcTxt]
-    elif md in ('zpS', 'zpSI', 'spIY', 'zpX', 'zpXI'):
+    elif md in ('zpS', 'zpSI', 'zpSIY', 'zpX', 'zpXI', 'ipp', 'ippI',):
         if dt in constants:
             val = constants[dt]
         elif dt.isnumeric():
@@ -410,7 +428,7 @@ for ln in cod:
             hiStr = '%02X' % ((val >> 8) & 255)
             out[addrs] = [opLen + dtLen, \
                           ''.join([opStr, loStr, hiStr]), srcTxt]
-    elif md in ('db', 'ds'):
+    elif md in ('db', 'byt', 'ds', 'str'):
         val, siz, strVal = variables[op]
         out[addrs] = [siz, opStr, srcTxt]
 
