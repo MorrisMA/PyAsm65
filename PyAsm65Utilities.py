@@ -109,8 +109,11 @@ def pho_ldaImmPha_to_pshImm(source):
         try:
             lbl, op, dt = newLine[1]
         except:
-            lbl, op = newLine[1]
-            dt = ''
+            try:
+                lbl, op = newLine[1]
+                dt = ''
+            except:
+                print('ERROR: line=%d, %s' % (i, newLine))
         if op in ['lda', 'lda.w'] and dt[0] == '#':
             nxtLine = source[i+1]
             try:

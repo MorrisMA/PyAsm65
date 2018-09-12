@@ -1,0 +1,1493 @@
+0200 ABBA        ; 	tsx.w
+0202 CBA2FF3F    ; 	lds.w #16383
+0206 4C370A      ; 	jmp _pc65_main
+0209 ABDA        ; 	phx.w
+020B ABBA        ; 	tsx.w
+020D C2FC        ; 	adj #-4
+020F C2FE        ; 	adj #-2
+0211 20FFFF      ; 	jsr _eol
+0214 AB8D1A4A    ; 	sta.w newline_014
+0218 ABAD1A4A    ; 	lda.w newline_014
+021C ABC90100    ; 	cmp.w #1
+0220 F003        ; 	beq L_018
+0222 4C5D02      ; 	jmp  L_019
+0225 20FFFF      ; 	jsr _readln
+0228 20FFFF      ; 	jsr _writeln
+022B ABAD144A    ; 	lda.w linenumber_011
+022F AB48        ; 	pha.w
+0231 A901        ; 	lda #1
+0233 18          ; 	clc
+0234 CB7501      ; 	adc.w 1,S
+0237 C202        ; 	adj #2
+0239 AB8D144A    ; 	sta.w linenumber_011
+023D ABAD144A    ; 	lda.w linenumber_011
+0241 AB48        ; 	pha.w
+0243 ABE20500    ; 	psh.w	#5
+0247 20FFFF      ; 	jsr _iwrite
+024A C204        ; 	adj #4
+024C ABE2BF4A    ; 	psh.w #S_020
+0250 ABE20000    ; 	psh.w #0
+0254 ABE20300    ; 	psh.w #3
+0258 20FFFF      ; 	jsr _swrite
+025B C206        ; 	adj #6
+025D ABAD1A4A    ; 	lda.w newline_014
+0261 AB48        ; 	pha.w
+0263 20FFFF      ; 	jsr _eof
+0266 CB1501      ; 	ora.w 1,S
+0269 C202        ; 	adj #2
+026B ABC90100    ; 	cmp.w #1
+026F F003        ; 	beq L_021
+0271 4C7C02      ; 	jmp  L_022
+0274 A920        ; 	lda #32
+0276 8DFBFF      ; 	sta ch_017
+0279 4C9802      ; 	jmp L_023
+027C AB8A        ; 	txa.w
+027E 18          ; 	clc
+027F AB69FBFF    ; 	adc.w #ch_017
+0283 AB48        ; 	pha.w
+0285 20FFFF      ; 	jsr _cread
+0288 6B          ; 	pli
+0289 8300        ; 	sta 0,I++
+028B B5FB        ; 	lda ch_017,X
+028D AB48        ; 	pha.w
+028F ABE20000    ; 	psh.w #0
+0293 20FFFF      ; 	jsr _cwrite
+0296 C204        ; 	adj #4
+0298 B5FB        ; 	lda ch_017,X
+029A A8          ; 	tay
+029B 98          ; 	tya
+029C AB95FD      ; 	sta.w RETURN_VALUE,X
+029F ABB5FD      ; 	lda.w RETURN_VALUE,X
+02A2 AB9A        ; 	txs.w
+02A4 ABFA        ; 	plx.w
+02A6 60          ; 	rts
+02A7 ABDA        ; 	phx.w
+02A9 ABBA        ; 	tsx.w
+02AB C2FC        ; 	adj #-4
+02AD B507        ; 	lda ch_025,X
+02AF AB48        ; 	pha.w
+02B1 A961        ; 	lda #97
+02B3 CB4401      ; 	xma.w 1,S
+02B6 CBD501      ; 	cmp.w 1,S
+02B9 C202        ; 	adj #2
+02BB 08          ; 	php
+02BC A901        ; 	lda #1
+02BE 28          ; 	plp
+02BF AB5002      ; 	bge L_026
+02C2 A900        ; 	lda #0
+02C4 AB48        ; 	pha.w
+02C6 B507        ; 	lda ch_025,X
+02C8 AB48        ; 	pha.w
+02CA A97A        ; 	lda #122
+02CC CB4401      ; 	xma.w 1,S
+02CF CBD501      ; 	cmp.w 1,S
+02D2 C202        ; 	adj #2
+02D4 08          ; 	php
+02D5 A901        ; 	lda #1
+02D7 28          ; 	plp
+02D8 AB3002      ; 	ble L_027
+02DB A900        ; 	lda #0
+02DD CB3501      ; 	and.w 1,S
+02E0 C202        ; 	adj #2
+02E2 AB48        ; 	pha.w
+02E4 B507        ; 	lda ch_025,X
+02E6 AB48        ; 	pha.w
+02E8 A941        ; 	lda #65
+02EA CB4401      ; 	xma.w 1,S
+02ED CBD501      ; 	cmp.w 1,S
+02F0 C202        ; 	adj #2
+02F2 08          ; 	php
+02F3 A901        ; 	lda #1
+02F5 28          ; 	plp
+02F6 AB5002      ; 	bge L_028
+02F9 A900        ; 	lda #0
+02FB AB48        ; 	pha.w
+02FD B507        ; 	lda ch_025,X
+02FF AB48        ; 	pha.w
+0301 A95A        ; 	lda #90
+0303 CB4401      ; 	xma.w 1,S
+0306 CBD501      ; 	cmp.w 1,S
+0309 C202        ; 	adj #2
+030B 08          ; 	php
+030C A901        ; 	lda #1
+030E 28          ; 	plp
+030F AB3002      ; 	ble L_029
+0312 A900        ; 	lda #0
+0314 CB3501      ; 	and.w 1,S
+0317 C202        ; 	adj #2
+0319 CB1501      ; 	ora.w 1,S
+031C C202        ; 	adj #2
+031E AB95FD      ; 	sta.w RETURN_VALUE,X
+0321 ABB5FD      ; 	lda.w RETURN_VALUE,X
+0324 AB9A        ; 	txs.w
+0326 ABFA        ; 	plx.w
+0328 60          ; 	rts
+0329 ABDA        ; 	phx.w
+032B ABBA        ; 	tsx.w
+032D C2FC        ; 	adj #-4
+032F A900        ; 	lda #0
+0331 AB8D1C4A    ; 	sta.w gotword_015
+0335 20FFFF      ; 	jsr _eof
+0338 4901        ; 	eor #1
+033A ABC90100    ; 	cmp.w #1
+033E F003        ; 	beq L_034
+0340 4C7103      ; 	jmp  L_035
+0343 ABB505      ; 	lda.w STATIC_LINK,X
+0346 AB48        ; 	pha.w
+0348 200902      ; 	jsr nextchar_016
+034B C202        ; 	adj #2
+034D 8DFDFF      ; 	sta ch_033
+0350 20FFFF      ; 	jsr _eof
+0353 AB48        ; 	pha.w
+0355 B5FD        ; 	lda ch_033,X
+0357 AB48        ; 	pha.w
+0359 ABB505      ; 	lda.w STATIC_LINK,X
+035C AB48        ; 	pha.w
+035E 20A702      ; 	jsr isletter_024
+0361 C204        ; 	adj #4
+0363 CB1501      ; 	ora.w 1,S
+0366 C202        ; 	adj #2
+0368 ABC90100    ; 	cmp.w #1
+036C F003        ; 	beq L_037
+036E 4C4303      ; 	jmp L_036
+0371 20FFFF      ; 	jsr _eof
+0374 4901        ; 	eor #1
+0376 ABC90100    ; 	cmp.w #1
+037A F003        ; 	beq L_038
+037C 4C8C04      ; 	jmp  L_039
+037F A900        ; 	lda #0
+0381 AB95FF      ; 	sta.w charcount_032,X
+0384 B5FD        ; 	lda ch_033,X
+0386 AB48        ; 	pha.w
+0388 ABB505      ; 	lda.w STATIC_LINK,X
+038B AB48        ; 	pha.w
+038D 20A702      ; 	jsr isletter_024
+0390 C204        ; 	adj #4
+0392 ABC90100    ; 	cmp.w #1
+0396 F003        ; 	beq L_041
+0398 4C4C04      ; 	jmp L_042
+039B ABB5FF      ; 	lda.w charcount_032,X
+039E AB48        ; 	pha.w
+03A0 A914        ; 	lda #20
+03A2 CB4401      ; 	xma.w 1,S
+03A5 CBD501      ; 	cmp.w 1,S
+03A8 C202        ; 	adj #2
+03AA 08          ; 	php
+03AB A901        ; 	lda #1
+03AD 28          ; 	plp
+03AE AB7002      ; 	blt L_045
+03B1 A900        ; 	lda #0
+03B3 ABC90100    ; 	cmp.w #1
+03B7 F003        ; 	beq L_043
+03B9 4C3C04      ; 	jmp  L_044
+03BC B5FD        ; 	lda ch_033,X
+03BE AB48        ; 	pha.w
+03C0 A941        ; 	lda #65
+03C2 CB4401      ; 	xma.w 1,S
+03C5 CBD501      ; 	cmp.w 1,S
+03C8 C202        ; 	adj #2
+03CA 08          ; 	php
+03CB A901        ; 	lda #1
+03CD 28          ; 	plp
+03CE AB5002      ; 	bge L_048
+03D1 A900        ; 	lda #0
+03D3 AB48        ; 	pha.w
+03D5 B5FD        ; 	lda ch_033,X
+03D7 AB48        ; 	pha.w
+03D9 A95A        ; 	lda #90
+03DB CB4401      ; 	xma.w 1,S
+03DE CBD501      ; 	cmp.w 1,S
+03E1 C202        ; 	adj #2
+03E3 08          ; 	php
+03E4 A901        ; 	lda #1
+03E6 28          ; 	plp
+03E7 AB3002      ; 	ble L_049
+03EA A900        ; 	lda #0
+03EC CB3501      ; 	and.w 1,S
+03EF C202        ; 	adj #2
+03F1 ABC90100    ; 	cmp.w #1
+03F5 F003        ; 	beq L_046
+03F7 4C1604      ; 	jmp  L_047
+03FA B5FD        ; 	lda ch_033,X
+03FC AB48        ; 	pha.w
+03FE ABE26100    ; 	psh.w	#97
+0402 A941        ; 	lda #65
+0404 CB4401      ; 	xma.w 1,S
+0407 38          ; 	sec
+0408 CBF501      ; 	sbc.w 1,S
+040B C202        ; 	adj #2
+040D 18          ; 	clc
+040E CB7501      ; 	adc.w 1,S
+0411 C202        ; 	adj #2
+0413 8DFDFF      ; 	sta ch_033
+0416 ABB5FF      ; 	lda.w charcount_032,X
+0419 AB48        ; 	pha.w
+041B A901        ; 	lda #1
+041D 18          ; 	clc
+041E CB7501      ; 	adc.w 1,S
+0421 C202        ; 	adj #2
+0423 AB95FF      ; 	sta.w charcount_032,X
+0426 ABB507      ; 	lda.w buffer_031,X
+0429 AB48        ; 	pha.w
+042B ABB5FF      ; 	lda.w charcount_032,X
+042E AB3A        ; 	dec.w a
+0430 18          ; 	clc
+0431 CB7501      ; 	adc.w 1,S
+0434 CB9501      ; 	sta.w 1,S
+0437 B5FD        ; 	lda ch_033,X
+0439 6B          ; 	pli
+043A 8300        ; 	sta 0,I++
+043C ABB505      ; 	lda.w STATIC_LINK,X
+043F AB48        ; 	pha.w
+0441 200902      ; 	jsr nextchar_016
+0444 C202        ; 	adj #2
+0446 8DFDFF      ; 	sta ch_033
+0449 4C8403      ; 	jmp L_040
+044C ABB5FF      ; 	lda.w charcount_032,X
+044F AB48        ; 	pha.w
+0451 A901        ; 	lda #1
+0453 18          ; 	clc
+0454 CB7501      ; 	adc.w 1,S
+0457 C202        ; 	adj #2
+0459 AB95FF      ; 	sta.w charcount_032,X
+045C A914        ; 	lda #20
+045E ABD5FF      ; 	cmp.w charcount_032,X
+0461 AB5003      ; 	bge L_051
+0464 4C8304      ; 	jmp L_052
+0467 ABB507      ; 	lda.w buffer_031,X
+046A AB48        ; 	pha.w
+046C ABB5FF      ; 	lda.w charcount_032,X
+046F AB3A        ; 	dec.w a
+0471 18          ; 	clc
+0472 CB7501      ; 	adc.w 1,S
+0475 CB9501      ; 	sta.w 1,S
+0478 A920        ; 	lda #32
+047A 6B          ; 	pli
+047B 8300        ; 	sta 0,I++
+047D ABF6FF      ; 	inc.w charcount_032,X
+0480 4C5C04      ; 	jmp L_050
+0483 ABD6FF      ; 	dec.w charcount_032,X
+0486 A901        ; 	lda #1
+0488 AB8D1C4A    ; 	sta.w gotword_015
+048C AB9A        ; 	txs.w
+048E ABFA        ; 	plx.w
+0490 60          ; 	rts
+0491 ABDA        ; 	phx.w
+0493 ABBA        ; 	tsx.w
+0495 C2FC        ; 	adj #-4
+0497 ABAD124A    ; 	lda.w nextnumberindex_010
+049B AB48        ; 	pha.w
+049D ABA9E803    ; 	lda.w #1000
+04A1 CB4401      ; 	xma.w 1,S
+04A4 CBD501      ; 	cmp.w 1,S
+04A7 C202        ; 	adj #2
+04A9 08          ; 	php
+04AA A901        ; 	lda #1
+04AC 28          ; 	plp
+04AD AB7002      ; 	blt L_057
+04B0 A900        ; 	lda #0
+04B2 ABC90100    ; 	cmp.w #1
+04B6 F003        ; 	beq L_055
+04B8 4C6005      ; 	jmp  L_056
+04BB ABB507      ; 	lda.w lastnumberindex_054,X
+04BE AB48        ; 	pha.w
+04C0 A900        ; 	lda #0
+04C2 CB4401      ; 	xma.w 1,S
+04C5 CBD501      ; 	cmp.w 1,S
+04C8 C202        ; 	adj #2
+04CA 08          ; 	php
+04CB A901        ; 	lda #1
+04CD 28          ; 	plp
+04CE D002        ; 	bne L_060
+04D0 A900        ; 	lda #0
+04D2 ABC90100    ; 	cmp.w #1
+04D6 F003        ; 	beq L_058
+04D8 4CFE04      ; 	jmp  L_059
+04DB ABE26C3A    ; 	psh.w #numbertable_008
+04DF ABB507      ; 	lda.w lastnumberindex_054,X
+04E2 AB0A        ; 	asl.w a
+04E4 AB0A        ; 	asl.w a
+04E6 18          ; 	clc
+04E7 CB7501      ; 	adc.w 1,S
+04EA CB9501      ; 	sta.w 1,S
+04ED AB68        ; 	pla.w
+04EF 18          ; 	clc
+04F0 AB690200    ; 	adc.w #nextindex_006
+04F4 AB48        ; 	pha.w
+04F6 ABAD124A    ; 	lda.w nextnumberindex_010
+04FA 6B          ; 	pli
+04FB AB8300      ; 	sta.w 0,I++
+04FE ABE26C3A    ; 	psh.w #numbertable_008
+0502 ABAD124A    ; 	lda.w nextnumberindex_010
+0506 AB0A        ; 	asl.w a
+0508 AB0A        ; 	asl.w a
+050A 18          ; 	clc
+050B CB7501      ; 	adc.w 1,S
+050E CB9501      ; 	sta.w 1,S
+0511 AB68        ; 	pla.w
+0513 18          ; 	clc
+0514 AB690000    ; 	adc.w #number_005
+0518 AB48        ; 	pha.w
+051A ABAD144A    ; 	lda.w linenumber_011
+051E 6B          ; 	pli
+051F AB8300      ; 	sta.w 0,I++
+0522 ABE26C3A    ; 	psh.w #numbertable_008
+0526 ABAD124A    ; 	lda.w nextnumberindex_010
+052A AB0A        ; 	asl.w a
+052C AB0A        ; 	asl.w a
+052E 18          ; 	clc
+052F CB7501      ; 	adc.w 1,S
+0532 CB9501      ; 	sta.w 1,S
+0535 AB68        ; 	pla.w
+0537 18          ; 	clc
+0538 AB690200    ; 	adc.w #nextindex_006
+053C AB48        ; 	pha.w
+053E A900        ; 	lda #0
+0540 6B          ; 	pli
+0541 AB8300      ; 	sta.w 0,I++
+0544 ABAD124A    ; 	lda.w nextnumberindex_010
+0548 AB95FD      ; 	sta.w RETURN_VALUE,X
+054B ABAD124A    ; 	lda.w nextnumberindex_010
+054F AB48        ; 	pha.w
+0551 A901        ; 	lda #1
+0553 18          ; 	clc
+0554 CB7501      ; 	adc.w 1,S
+0557 C202        ; 	adj #2
+0559 AB8D124A    ; 	sta.w nextnumberindex_010
+055D 4C6B05      ; 	jmp L_061
+0560 A901        ; 	lda #1
+0562 AB8D184A    ; 	sta.w numbertablefull_013
+0566 A900        ; 	lda #0
+0568 AB95FD      ; 	sta.w RETURN_VALUE,X
+056B ABB5FD      ; 	lda.w RETURN_VALUE,X
+056E AB9A        ; 	txs.w
+0570 ABFA        ; 	plx.w
+0572 60          ; 	rts
+0573 ABDA        ; 	phx.w
+0575 ABBA        ; 	tsx.w
+0577 C2FE        ; 	adj #-2
+0579 ABAD1A4A    ; 	lda.w newline_014
+057D ABC90100    ; 	cmp.w #1
+0581 F003        ; 	beq L_064
+0583 4C9B05      ; 	jmp  L_065
+0586 ABAD144A    ; 	lda.w linenumber_011
+058A AB48        ; 	pha.w
+058C A901        ; 	lda #1
+058E CB4401      ; 	xma.w 1,S
+0591 38          ; 	sec
+0592 CBF501      ; 	sbc.w 1,S
+0595 C202        ; 	adj #2
+0597 AB8D144A    ; 	sta.w linenumber_011
+059B A901        ; 	lda #1
+059D AB95FF      ; 	sta.w i_063,X
+05A0 ABE28C0B    ; 	psh.w #wordtable_007
+05A4 ABB5FF      ; 	lda.w i_063,X
+05A7 AB3A        ; 	dec.w a
+05A9 AB48        ; 	pha.w
+05AB ABE21800    ; 	psh.w #24
+05AF 20FFFF      ; 	jsr _imul
+05B2 C204        ; 	adj #4
+05B4 18          ; 	clc
+05B5 CB7501      ; 	adc.w 1,S
+05B8 CB9501      ; 	sta.w 1,S
+05BB AB68        ; 	pla.w
+05BD 18          ; 	clc
+05BE AB690000    ; 	adc.w #word_002
+05C2 AB48        ; 	pha.w
+05C4 ABE28C0B    ; 	psh.w #wordtable_007
+05C8 ABAD104A    ; 	lda.w nextwordindex_009
+05CC AB3A        ; 	dec.w a
+05CE AB48        ; 	pha.w
+05D0 ABE21800    ; 	psh.w #24
+05D4 20FFFF      ; 	jsr _imul
+05D7 C204        ; 	adj #4
+05D9 18          ; 	clc
+05DA CB7501      ; 	adc.w 1,S
+05DD CB9501      ; 	sta.w 1,S
+05E0 AB68        ; 	pla.w
+05E2 18          ; 	clc
+05E3 AB690000    ; 	adc.w #word_002
+05E7 AB48        ; 	pha.w
+05E9 ABE21400    ; 	psh.w #20
+05ED 20FFFF      ; 	jsr _cmpsb
+05F0 C206        ; 	adj #+6
+05F2 08          ; 	php
+05F3 A901        ; 	lda #1
+05F5 28          ; 	plp
+05F6 D002        ; 	bne L_069
+05F8 A900        ; 	lda #0
+05FA ABC90100    ; 	cmp.w #1
+05FE F003        ; 	beq L_067
+0600 4C1606      ; 	jmp L_068
+0603 ABB5FF      ; 	lda.w i_063,X
+0606 AB48        ; 	pha.w
+0608 A901        ; 	lda #1
+060A 18          ; 	clc
+060B CB7501      ; 	adc.w 1,S
+060E C202        ; 	adj #2
+0610 AB95FF      ; 	sta.w i_063,X
+0613 4CA005      ; 	jmp L_066
+0616 ABB5FF      ; 	lda.w i_063,X
+0619 AB48        ; 	pha.w
+061B ABAD104A    ; 	lda.w nextwordindex_009
+061F CB4401      ; 	xma.w 1,S
+0622 CBD501      ; 	cmp.w 1,S
+0625 C202        ; 	adj #2
+0627 08          ; 	php
+0628 A901        ; 	lda #1
+062A 28          ; 	plp
+062B AB7002      ; 	blt L_072
+062E A900        ; 	lda #0
+0630 ABC90100    ; 	cmp.w #1
+0634 F003        ; 	beq L_070
+0636 4C9806      ; 	jmp  L_071
+0639 ABE28C0B    ; 	psh.w #wordtable_007
+063D ABB5FF      ; 	lda.w i_063,X
+0640 AB3A        ; 	dec.w a
+0642 AB48        ; 	pha.w
+0644 ABE21800    ; 	psh.w #24
+0648 20FFFF      ; 	jsr _imul
+064B C204        ; 	adj #4
+064D 18          ; 	clc
+064E CB7501      ; 	adc.w 1,S
+0651 CB9501      ; 	sta.w 1,S
+0654 AB68        ; 	pla.w
+0656 18          ; 	clc
+0657 AB691600    ; 	adc.w #lastnumberindex_004
+065B AB48        ; 	pha.w
+065D ABE28C0B    ; 	psh.w #wordtable_007
+0661 ABB5FF      ; 	lda.w i_063,X
+0664 AB3A        ; 	dec.w a
+0666 AB48        ; 	pha.w
+0668 ABE21800    ; 	psh.w #24
+066C 20FFFF      ; 	jsr _imul
+066F C204        ; 	adj #4
+0671 18          ; 	clc
+0672 CB7501      ; 	adc.w 1,S
+0675 CB9501      ; 	sta.w 1,S
+0678 AB68        ; 	pla.w
+067A 18          ; 	clc
+067B AB691600    ; 	adc.w #lastnumberindex_004
+067F AB48        ; 	pha.w
+0681 6B          ; 	pli
+0682 ABA300      ; 	lda.w 0,I++
+0685 AB48        ; 	pha.w
+0687 ABB505      ; 	lda.w STATIC_LINK,X
+068A AB48        ; 	pha.w
+068C 209104      ; 	jsr appendlinenumber_053
+068F C204        ; 	adj #4
+0691 6B          ; 	pli
+0692 AB8300      ; 	sta.w 0,I++
+0695 4C5D07      ; 	jmp L_073
+0698 ABAD104A    ; 	lda.w nextwordindex_009
+069C AB48        ; 	pha.w
+069E ABA9F401    ; 	lda.w #500
+06A2 CB4401      ; 	xma.w 1,S
+06A5 CBD501      ; 	cmp.w 1,S
+06A8 C202        ; 	adj #2
+06AA 08          ; 	php
+06AB A901        ; 	lda #1
+06AD 28          ; 	plp
+06AE AB7002      ; 	blt L_076
+06B1 A900        ; 	lda #0
+06B3 ABC90100    ; 	cmp.w #1
+06B7 F003        ; 	beq L_074
+06B9 4C5707      ; 	jmp  L_075
+06BC ABAD104A    ; 	lda.w nextwordindex_009
+06C0 AB48        ; 	pha.w
+06C2 A901        ; 	lda #1
+06C4 18          ; 	clc
+06C5 CB7501      ; 	adc.w 1,S
+06C8 C202        ; 	adj #2
+06CA AB8D104A    ; 	sta.w nextwordindex_009
+06CE ABE28C0B    ; 	psh.w #wordtable_007
+06D2 ABB5FF      ; 	lda.w i_063,X
+06D5 AB3A        ; 	dec.w a
+06D7 AB48        ; 	pha.w
+06D9 ABE21800    ; 	psh.w #24
+06DD 20FFFF      ; 	jsr _imul
+06E0 C204        ; 	adj #4
+06E2 18          ; 	clc
+06E3 CB7501      ; 	adc.w 1,S
+06E6 CB9501      ; 	sta.w 1,S
+06E9 AB68        ; 	pla.w
+06EB 18          ; 	clc
+06EC AB691400    ; 	adc.w #firstnumberindex_003
+06F0 AB48        ; 	pha.w
+06F2 ABE20000    ; 	psh.w	#0
+06F6 ABB505      ; 	lda.w STATIC_LINK,X
+06F9 AB48        ; 	pha.w
+06FB 209104      ; 	jsr appendlinenumber_053
+06FE C204        ; 	adj #4
+0700 6B          ; 	pli
+0701 AB8300      ; 	sta.w 0,I++
+0704 ABE28C0B    ; 	psh.w #wordtable_007
+0708 ABB5FF      ; 	lda.w i_063,X
+070B AB3A        ; 	dec.w a
+070D AB48        ; 	pha.w
+070F ABE21800    ; 	psh.w #24
+0713 20FFFF      ; 	jsr _imul
+0716 C204        ; 	adj #4
+0718 18          ; 	clc
+0719 CB7501      ; 	adc.w 1,S
+071C CB9501      ; 	sta.w 1,S
+071F AB68        ; 	pla.w
+0721 18          ; 	clc
+0722 AB691600    ; 	adc.w #lastnumberindex_004
+0726 AB48        ; 	pha.w
+0728 ABE28C0B    ; 	psh.w #wordtable_007
+072C ABB5FF      ; 	lda.w i_063,X
+072F AB3A        ; 	dec.w a
+0731 AB48        ; 	pha.w
+0733 ABE21800    ; 	psh.w #24
+0737 20FFFF      ; 	jsr _imul
+073A C204        ; 	adj #4
+073C 18          ; 	clc
+073D CB7501      ; 	adc.w 1,S
+0740 CB9501      ; 	sta.w 1,S
+0743 AB68        ; 	pla.w
+0745 18          ; 	clc
+0746 AB691400    ; 	adc.w #firstnumberindex_003
+074A AB48        ; 	pha.w
+074C 6B          ; 	pli
+074D ABA300      ; 	lda.w 0,I++
+0750 6B          ; 	pli
+0751 AB8300      ; 	sta.w 0,I++
+0754 4C5D07      ; 	jmp L_077
+0757 A901        ; 	lda #1
+0759 AB8D164A    ; 	sta.w wordtablefull_012
+075D ABAD1A4A    ; 	lda.w newline_014
+0761 ABC90100    ; 	cmp.w #1
+0765 F003        ; 	beq L_078
+0767 4C7C07      ; 	jmp  L_079
+076A ABAD144A    ; 	lda.w linenumber_011
+076E AB48        ; 	pha.w
+0770 A901        ; 	lda #1
+0772 18          ; 	clc
+0773 CB7501      ; 	adc.w 1,S
+0776 C202        ; 	adj #2
+0778 AB8D144A    ; 	sta.w linenumber_011
+077C AB9A        ; 	txs.w
+077E ABFA        ; 	plx.w
+0780 60          ; 	rts
+0781 ABDA        ; 	phx.w
+0783 ABBA        ; 	tsx.w
+0785 C2E4        ; 	adj #-28
+0787 A901        ; 	lda #1
+0789 AB95FF      ; 	sta.w i_081,X
+078C ABAD104A    ; 	lda.w nextwordindex_009
+0790 AB48        ; 	pha.w
+0792 A902        ; 	lda #2
+0794 CB4401      ; 	xma.w 1,S
+0797 38          ; 	sec
+0798 CBF501      ; 	sbc.w 1,S
+079B C202        ; 	adj #2
+079D ABD5FF      ; 	cmp.w i_081,X
+07A0 AB5003      ; 	bge L_085
+07A3 4CE408      ; 	jmp L_086
+07A6 ABB5FF      ; 	lda.w i_081,X
+07A9 AB48        ; 	pha.w
+07AB A901        ; 	lda #1
+07AD 18          ; 	clc
+07AE CB7501      ; 	adc.w 1,S
+07B1 C202        ; 	adj #2
+07B3 AB95FD      ; 	sta.w j_082,X
+07B6 ABAD104A    ; 	lda.w nextwordindex_009
+07BA AB48        ; 	pha.w
+07BC A901        ; 	lda #1
+07BE CB4401      ; 	xma.w 1,S
+07C1 38          ; 	sec
+07C2 CBF501      ; 	sbc.w 1,S
+07C5 C202        ; 	adj #2
+07C7 ABD5FD      ; 	cmp.w j_082,X
+07CA AB5003      ; 	bge L_088
+07CD 4CDB08      ; 	jmp L_089
+07D0 ABE28C0B    ; 	psh.w #wordtable_007
+07D4 ABB5FF      ; 	lda.w i_081,X
+07D7 AB3A        ; 	dec.w a
+07D9 AB48        ; 	pha.w
+07DB ABE21800    ; 	psh.w #24
+07DF 20FFFF      ; 	jsr _imul
+07E2 C204        ; 	adj #4
+07E4 18          ; 	clc
+07E5 CB7501      ; 	adc.w 1,S
+07E8 CB9501      ; 	sta.w 1,S
+07EB AB68        ; 	pla.w
+07ED 18          ; 	clc
+07EE AB690000    ; 	adc.w #word_002
+07F2 AB48        ; 	pha.w
+07F4 ABE28C0B    ; 	psh.w #wordtable_007
+07F8 ABB5FD      ; 	lda.w j_082,X
+07FB AB3A        ; 	dec.w a
+07FD AB48        ; 	pha.w
+07FF ABE21800    ; 	psh.w #24
+0803 20FFFF      ; 	jsr _imul
+0806 C204        ; 	adj #4
+0808 18          ; 	clc
+0809 CB7501      ; 	adc.w 1,S
+080C CB9501      ; 	sta.w 1,S
+080F AB68        ; 	pla.w
+0811 18          ; 	clc
+0812 AB690000    ; 	adc.w #word_002
+0816 AB48        ; 	pha.w
+0818 ABE21400    ; 	psh.w #20
+081C 20FFFF      ; 	jsr _cmpsb
+081F C206        ; 	adj #+6
+0821 08          ; 	php
+0822 A901        ; 	lda #1
+0824 28          ; 	plp
+0825 AB1002      ; 	bgt L_092
+0828 A900        ; 	lda #0
+082A ABC90100    ; 	cmp.w #1
+082E F003        ; 	beq L_090
+0830 4CD508      ; 	jmp  L_091
+0833 AB8A        ; 	txa.w
+0835 18          ; 	clc
+0836 AB69E5FF    ; 	adc.w #temp_083
+083A AB48        ; 	pha.w
+083C ABE28C0B    ; 	psh.w #wordtable_007
+0840 ABB5FF      ; 	lda.w i_081,X
+0843 AB3A        ; 	dec.w a
+0845 AB48        ; 	pha.w
+0847 ABE21800    ; 	psh.w #24
+084B 20FFFF      ; 	jsr _imul
+084E C204        ; 	adj #4
+0850 18          ; 	clc
+0851 CB7501      ; 	adc.w 1,S
+0854 CB9501      ; 	sta.w 1,S
+0857 EB1B        ; 	swp x
+0859 A918        ; 	lda #24
+085B ABFA        ; 	plx.w
+085D AB7A        ; 	ply.w
+085F 540F        ; 	mov #15
+0861 EB1B        ; 	swp x
+0863 ABE28C0B    ; 	psh.w #wordtable_007
+0867 ABB5FF      ; 	lda.w i_081,X
+086A AB3A        ; 	dec.w a
+086C AB48        ; 	pha.w
+086E ABE21800    ; 	psh.w #24
+0872 20FFFF      ; 	jsr _imul
+0875 C204        ; 	adj #4
+0877 18          ; 	clc
+0878 CB7501      ; 	adc.w 1,S
+087B CB9501      ; 	sta.w 1,S
+087E ABE28C0B    ; 	psh.w #wordtable_007
+0882 ABB5FD      ; 	lda.w j_082,X
+0885 AB3A        ; 	dec.w a
+0887 AB48        ; 	pha.w
+0889 ABE21800    ; 	psh.w #24
+088D 20FFFF      ; 	jsr _imul
+0890 C204        ; 	adj #4
+0892 18          ; 	clc
+0893 CB7501      ; 	adc.w 1,S
+0896 CB9501      ; 	sta.w 1,S
+0899 EB1B        ; 	swp x
+089B A918        ; 	lda #24
+089D ABFA        ; 	plx.w
+089F AB7A        ; 	ply.w
+08A1 540F        ; 	mov #15
+08A3 EB1B        ; 	swp x
+08A5 ABE28C0B    ; 	psh.w #wordtable_007
+08A9 ABB5FD      ; 	lda.w j_082,X
+08AC AB3A        ; 	dec.w a
+08AE AB48        ; 	pha.w
+08B0 ABE21800    ; 	psh.w #24
+08B4 20FFFF      ; 	jsr _imul
+08B7 C204        ; 	adj #4
+08B9 18          ; 	clc
+08BA CB7501      ; 	adc.w 1,S
+08BD CB9501      ; 	sta.w 1,S
+08C0 AB8A        ; 	txa.w
+08C2 18          ; 	clc
+08C3 AB69E5FF    ; 	adc.w #temp_083
+08C7 AB48        ; 	pha.w
+08C9 EB1B        ; 	swp x
+08CB A918        ; 	lda #24
+08CD ABFA        ; 	plx.w
+08CF AB7A        ; 	ply.w
+08D1 540F        ; 	mov #15
+08D3 EB1B        ; 	swp x
+08D5 ABF6FD      ; 	inc.w j_082,X
+08D8 4CB607      ; 	jmp L_087
+08DB ABD6FD      ; 	dec.w j_082,X
+08DE ABF6FF      ; 	inc.w i_081,X
+08E1 4C8C07      ; 	jmp L_084
+08E4 ABD6FF      ; 	dec.w i_081,X
+08E7 AB9A        ; 	txs.w
+08E9 ABFA        ; 	plx.w
+08EB 60          ; 	rts
+08EC ABDA        ; 	phx.w
+08EE ABBA        ; 	tsx.w
+08F0 ABE26C3A    ; 	psh.w #numbertable_008
+08F4 ABB507      ; 	lda.w i_094,X
+08F7 AB0A        ; 	asl.w a
+08F9 AB0A        ; 	asl.w a
+08FB 18          ; 	clc
+08FC CB7501      ; 	adc.w 1,S
+08FF CB9501      ; 	sta.w 1,S
+0902 AB68        ; 	pla.w
+0904 18          ; 	clc
+0905 AB690000    ; 	adc.w #number_005
+0909 AB48        ; 	pha.w
+090B 6B          ; 	pli
+090C ABA300      ; 	lda.w 0,I++
+090F AB48        ; 	pha.w
+0911 ABE20400    ; 	psh.w	#4
+0915 20FFFF      ; 	jsr _iwrite
+0918 C204        ; 	adj #4
+091A ABE26C3A    ; 	psh.w #numbertable_008
+091E ABB507      ; 	lda.w i_094,X
+0921 AB0A        ; 	asl.w a
+0923 AB0A        ; 	asl.w a
+0925 18          ; 	clc
+0926 CB7501      ; 	adc.w 1,S
+0929 CB9501      ; 	sta.w 1,S
+092C AB68        ; 	pla.w
+092E 18          ; 	clc
+092F AB690200    ; 	adc.w #nextindex_006
+0933 AB48        ; 	pha.w
+0935 6B          ; 	pli
+0936 ABA300      ; 	lda.w 0,I++
+0939 AB9507      ; 	sta.w i_094,X
+093C ABB507      ; 	lda.w i_094,X
+093F AB48        ; 	pha.w
+0941 A900        ; 	lda #0
+0943 CB4401      ; 	xma.w 1,S
+0946 CBD501      ; 	cmp.w 1,S
+0949 C202        ; 	adj #2
+094B 08          ; 	php
+094C A901        ; 	lda #1
+094E 28          ; 	plp
+094F F002        ; 	beq L_097
+0951 A900        ; 	lda #0
+0953 ABC90100    ; 	cmp.w #1
+0957 F003        ; 	beq L_096
+0959 4CF008      ; 	jmp L_095
+095C 20FFFF      ; 	jsr _writeln
+095F AB9A        ; 	txs.w
+0961 ABFA        ; 	plx.w
+0963 60          ; 	rts
+0964 ABDA        ; 	phx.w
+0966 ABBA        ; 	tsx.w
+0968 C2FE        ; 	adj #-2
+096A 20FFFF      ; 	jsr _writeln
+096D 20FFFF      ; 	jsr _writeln
+0970 ABE2B04A    ; 	psh.w #S_100
+0974 ABE20000    ; 	psh.w #0
+0978 ABE20F00    ; 	psh.w #15
+097C 20FFFF      ; 	jsr _swrite
+097F C206        ; 	adj #6
+0981 20FFFF      ; 	jsr _writeln
+0984 ABE2A14A    ; 	psh.w #S_101
+0988 ABE20000    ; 	psh.w #0
+098C ABE20F00    ; 	psh.w #15
+0990 20FFFF      ; 	jsr _swrite
+0993 C206        ; 	adj #6
+0995 20FFFF      ; 	jsr _writeln
+0998 20FFFF      ; 	jsr _writeln
+099B ABB505      ; 	lda.w STATIC_LINK,X
+099E AB48        ; 	pha.w
+09A0 208107      ; 	jsr sortwords_080
+09A3 C202        ; 	adj #2
+09A5 A901        ; 	lda #1
+09A7 AB95FF      ; 	sta.w i_099,X
+09AA ABAD104A    ; 	lda.w nextwordindex_009
+09AE AB48        ; 	pha.w
+09B0 A901        ; 	lda #1
+09B2 CB4401      ; 	xma.w 1,S
+09B5 38          ; 	sec
+09B6 CBF501      ; 	sbc.w 1,S
+09B9 C202        ; 	adj #2
+09BB ABD5FF      ; 	cmp.w i_099,X
+09BE AB5003      ; 	bge L_103
+09C1 4C2F0A      ; 	jmp L_104
+09C4 ABE28C0B    ; 	psh.w #wordtable_007
+09C8 ABB5FF      ; 	lda.w i_099,X
+09CB AB3A        ; 	dec.w a
+09CD AB48        ; 	pha.w
+09CF ABE21800    ; 	psh.w #24
+09D3 20FFFF      ; 	jsr _imul
+09D6 C204        ; 	adj #4
+09D8 18          ; 	clc
+09D9 CB7501      ; 	adc.w 1,S
+09DC CB9501      ; 	sta.w 1,S
+09DF AB68        ; 	pla.w
+09E1 18          ; 	clc
+09E2 AB690000    ; 	adc.w #word_002
+09E6 AB48        ; 	pha.w
+09E8 ABE20000    ; 	psh.w #0
+09EC ABE21400    ; 	psh.w #20
+09F0 20FFFF      ; 	jsr _swrite
+09F3 C206        ; 	adj #6
+09F5 ABE28C0B    ; 	psh.w #wordtable_007
+09F9 ABB5FF      ; 	lda.w i_099,X
+09FC AB3A        ; 	dec.w a
+09FE AB48        ; 	pha.w
+0A00 ABE21800    ; 	psh.w #24
+0A04 20FFFF      ; 	jsr _imul
+0A07 C204        ; 	adj #4
+0A09 18          ; 	clc
+0A0A CB7501      ; 	adc.w 1,S
+0A0D CB9501      ; 	sta.w 1,S
+0A10 AB68        ; 	pla.w
+0A12 18          ; 	clc
+0A13 AB691400    ; 	adc.w #firstnumberindex_003
+0A17 AB48        ; 	pha.w
+0A19 6B          ; 	pli
+0A1A ABA300      ; 	lda.w 0,I++
+0A1D AB48        ; 	pha.w
+0A1F ABB505      ; 	lda.w STATIC_LINK,X
+0A22 AB48        ; 	pha.w
+0A24 20EC08      ; 	jsr printnumbers_093
+0A27 C204        ; 	adj #4
+0A29 ABF6FF      ; 	inc.w i_099,X
+0A2C 4CAA09      ; 	jmp L_102
+0A2F ABD6FF      ; 	dec.w i_099,X
+0A32 AB9A        ; 	txs.w
+0A34 ABFA        ; 	plx.w
+0A36 60          ; 	rts
+0A37 ABDA        ; 	phx.w
+0A39 ABBA        ; 	tsx.w
+0A3B A900        ; 	lda #0
+0A3D AB8D164A    ; 	sta.w wordtablefull_012
+0A41 A900        ; 	lda #0
+0A43 AB8D184A    ; 	sta.w numbertablefull_013
+0A47 A901        ; 	lda #1
+0A49 AB8D104A    ; 	sta.w nextwordindex_009
+0A4D A901        ; 	lda #1
+0A4F AB8D124A    ; 	sta.w nextnumberindex_010
+0A53 A901        ; 	lda #1
+0A55 AB8D144A    ; 	sta.w linenumber_011
+0A59 ABE2994A    ; 	psh.w #S_105
+0A5D ABE20000    ; 	psh.w #0
+0A61 ABE20800    ; 	psh.w #8
+0A65 20FFFF      ; 	jsr _swrite
+0A68 C206        ; 	adj #6
+0A6A 20FFFF      ; 	jsr _eof
+0A6D AB48        ; 	pha.w
+0A6F ABAD164A    ; 	lda.w wordtablefull_012
+0A73 CB1501      ; 	ora.w 1,S
+0A76 C202        ; 	adj #2
+0A78 AB48        ; 	pha.w
+0A7A ABAD184A    ; 	lda.w numbertablefull_013
+0A7E CB1501      ; 	ora.w 1,S
+0A81 C202        ; 	adj #2
+0A83 4901        ; 	eor #1
+0A85 ABC90100    ; 	cmp.w #1
+0A89 F003        ; 	beq L_107
+0A8B 4CD10A      ; 	jmp L_108
+0A8E ABE28C0B    ; 	psh.w #wordtable_007
+0A92 ABAD104A    ; 	lda.w nextwordindex_009
+0A96 AB3A        ; 	dec.w a
+0A98 AB48        ; 	pha.w
+0A9A ABE21800    ; 	psh.w #24
+0A9E 20FFFF      ; 	jsr _imul
+0AA1 C204        ; 	adj #4
+0AA3 18          ; 	clc
+0AA4 CB7501      ; 	adc.w 1,S
+0AA7 CB9501      ; 	sta.w 1,S
+0AAA AB68        ; 	pla.w
+0AAC 18          ; 	clc
+0AAD AB690000    ; 	adc.w #word_002
+0AB1 AB48        ; 	pha.w
+0AB3 ABDA        ; 	phx.w
+0AB5 202903      ; 	jsr readword_030
+0AB8 C204        ; 	adj #4
+0ABA ABAD1C4A    ; 	lda.w gotword_015
+0ABE ABC90100    ; 	cmp.w #1
+0AC2 F003        ; 	beq L_109
+0AC4 4CCE0A      ; 	jmp  L_110
+0AC7 ABDA        ; 	phx.w
+0AC9 207305      ; 	jsr enterword_062
+0ACC C202        ; 	adj #2
+0ACE 4C6A0A      ; 	jmp L_106
+0AD1 ABAD164A    ; 	lda.w wordtablefull_012
+0AD5 ABC90100    ; 	cmp.w #1
+0AD9 F003        ; 	beq L_111
+0ADB 4CF80A      ; 	jmp  L_112
+0ADE 20FFFF      ; 	jsr _writeln
+0AE1 ABE26E4A    ; 	psh.w #S_113
+0AE5 ABE20000    ; 	psh.w #0
+0AE9 ABE22B00    ; 	psh.w #43
+0AED 20FFFF      ; 	jsr _swrite
+0AF0 C206        ; 	adj #6
+0AF2 20FFFF      ; 	jsr _writeln
+0AF5 4C260B      ; 	jmp L_114
+0AF8 ABAD184A    ; 	lda.w numbertablefull_013
+0AFC ABC90100    ; 	cmp.w #1
+0B00 F003        ; 	beq L_115
+0B02 4C1F0B      ; 	jmp  L_116
+0B05 20FFFF      ; 	jsr _writeln
+0B08 ABE2414A    ; 	psh.w #S_117
+0B0C ABE20000    ; 	psh.w #0
+0B10 ABE22D00    ; 	psh.w #45
+0B14 20FFFF      ; 	jsr _swrite
+0B17 C206        ; 	adj #6
+0B19 20FFFF      ; 	jsr _writeln
+0B1C 4C260B      ; 	jmp L_118
+0B1F ABDA        ; 	phx.w
+0B21 206409      ; 	jsr printxref_098
+0B24 C202        ; 	adj #2
+0B26 20FFFF      ; 	jsr _writeln
+0B29 ABAD104A    ; 	lda.w nextwordindex_009
+0B2D AB48        ; 	pha.w
+0B2F A901        ; 	lda #1
+0B31 CB4401      ; 	xma.w 1,S
+0B34 38          ; 	sec
+0B35 CBF501      ; 	sbc.w 1,S
+0B38 C202        ; 	adj #2
+0B3A AB48        ; 	pha.w
+0B3C ABE20500    ; 	psh.w	#5
+0B40 20FFFF      ; 	jsr _iwrite
+0B43 C204        ; 	adj #4
+0B45 ABE2334A    ; 	psh.w #S_119
+0B49 ABE20000    ; 	psh.w #0
+0B4D ABE20E00    ; 	psh.w #14
+0B51 20FFFF      ; 	jsr _swrite
+0B54 C206        ; 	adj #6
+0B56 20FFFF      ; 	jsr _writeln
+0B59 ABAD124A    ; 	lda.w nextnumberindex_010
+0B5D AB48        ; 	pha.w
+0B5F A901        ; 	lda #1
+0B61 CB4401      ; 	xma.w 1,S
+0B64 38          ; 	sec
+0B65 CBF501      ; 	sbc.w 1,S
+0B68 C202        ; 	adj #2
+0B6A AB48        ; 	pha.w
+0B6C ABE20500    ; 	psh.w	#5
+0B70 20FFFF      ; 	jsr _iwrite
+0B73 C204        ; 	adj #4
+0B75 ABE21E4A    ; 	psh.w #S_120
+0B79 ABE20000    ; 	psh.w #0
+0B7D ABE21500    ; 	psh.w #21
+0B81 20FFFF      ; 	jsr _swrite
+0B84 C206        ; 	adj #6
+0B86 20FFFF      ; 	jsr _writeln
+0B89 ABFA        ; 	plx.w
+0B8B 60          ; 	rts
+0B8C 00000000    ; wordtable_007	.byt 12000
+0B90 0000000000000000000000000000000000000000000000000000000000000000
+0BB0 0000000000000000000000000000000000000000000000000000000000000000
+0BD0 0000000000000000000000000000000000000000000000000000000000000000
+0BF0 0000000000000000000000000000000000000000000000000000000000000000
+0C10 0000000000000000000000000000000000000000000000000000000000000000
+0C30 0000000000000000000000000000000000000000000000000000000000000000
+0C50 0000000000000000000000000000000000000000000000000000000000000000
+0C70 0000000000000000000000000000000000000000000000000000000000000000
+0C90 0000000000000000000000000000000000000000000000000000000000000000
+0CB0 0000000000000000000000000000000000000000000000000000000000000000
+0CD0 0000000000000000000000000000000000000000000000000000000000000000
+0CF0 0000000000000000000000000000000000000000000000000000000000000000
+0D10 0000000000000000000000000000000000000000000000000000000000000000
+0D30 0000000000000000000000000000000000000000000000000000000000000000
+0D50 0000000000000000000000000000000000000000000000000000000000000000
+0D70 0000000000000000000000000000000000000000000000000000000000000000
+0D90 0000000000000000000000000000000000000000000000000000000000000000
+0DB0 0000000000000000000000000000000000000000000000000000000000000000
+0DD0 0000000000000000000000000000000000000000000000000000000000000000
+0DF0 0000000000000000000000000000000000000000000000000000000000000000
+0E10 0000000000000000000000000000000000000000000000000000000000000000
+0E30 0000000000000000000000000000000000000000000000000000000000000000
+0E50 0000000000000000000000000000000000000000000000000000000000000000
+0E70 0000000000000000000000000000000000000000000000000000000000000000
+0E90 0000000000000000000000000000000000000000000000000000000000000000
+0EB0 0000000000000000000000000000000000000000000000000000000000000000
+0ED0 0000000000000000000000000000000000000000000000000000000000000000
+0EF0 0000000000000000000000000000000000000000000000000000000000000000
+0F10 0000000000000000000000000000000000000000000000000000000000000000
+0F30 0000000000000000000000000000000000000000000000000000000000000000
+0F50 0000000000000000000000000000000000000000000000000000000000000000
+0F70 0000000000000000000000000000000000000000000000000000000000000000
+0F90 0000000000000000000000000000000000000000000000000000000000000000
+0FB0 0000000000000000000000000000000000000000000000000000000000000000
+0FD0 0000000000000000000000000000000000000000000000000000000000000000
+0FF0 0000000000000000000000000000000000000000000000000000000000000000
+1010 0000000000000000000000000000000000000000000000000000000000000000
+1030 0000000000000000000000000000000000000000000000000000000000000000
+1050 0000000000000000000000000000000000000000000000000000000000000000
+1070 0000000000000000000000000000000000000000000000000000000000000000
+1090 0000000000000000000000000000000000000000000000000000000000000000
+10B0 0000000000000000000000000000000000000000000000000000000000000000
+10D0 0000000000000000000000000000000000000000000000000000000000000000
+10F0 0000000000000000000000000000000000000000000000000000000000000000
+1110 0000000000000000000000000000000000000000000000000000000000000000
+1130 0000000000000000000000000000000000000000000000000000000000000000
+1150 0000000000000000000000000000000000000000000000000000000000000000
+1170 0000000000000000000000000000000000000000000000000000000000000000
+1190 0000000000000000000000000000000000000000000000000000000000000000
+11B0 0000000000000000000000000000000000000000000000000000000000000000
+11D0 0000000000000000000000000000000000000000000000000000000000000000
+11F0 0000000000000000000000000000000000000000000000000000000000000000
+1210 0000000000000000000000000000000000000000000000000000000000000000
+1230 0000000000000000000000000000000000000000000000000000000000000000
+1250 0000000000000000000000000000000000000000000000000000000000000000
+1270 0000000000000000000000000000000000000000000000000000000000000000
+1290 0000000000000000000000000000000000000000000000000000000000000000
+12B0 0000000000000000000000000000000000000000000000000000000000000000
+12D0 0000000000000000000000000000000000000000000000000000000000000000
+12F0 0000000000000000000000000000000000000000000000000000000000000000
+1310 0000000000000000000000000000000000000000000000000000000000000000
+1330 0000000000000000000000000000000000000000000000000000000000000000
+1350 0000000000000000000000000000000000000000000000000000000000000000
+1370 0000000000000000000000000000000000000000000000000000000000000000
+1390 0000000000000000000000000000000000000000000000000000000000000000
+13B0 0000000000000000000000000000000000000000000000000000000000000000
+13D0 0000000000000000000000000000000000000000000000000000000000000000
+13F0 0000000000000000000000000000000000000000000000000000000000000000
+1410 0000000000000000000000000000000000000000000000000000000000000000
+1430 0000000000000000000000000000000000000000000000000000000000000000
+1450 0000000000000000000000000000000000000000000000000000000000000000
+1470 0000000000000000000000000000000000000000000000000000000000000000
+1490 0000000000000000000000000000000000000000000000000000000000000000
+14B0 0000000000000000000000000000000000000000000000000000000000000000
+14D0 0000000000000000000000000000000000000000000000000000000000000000
+14F0 0000000000000000000000000000000000000000000000000000000000000000
+1510 0000000000000000000000000000000000000000000000000000000000000000
+1530 0000000000000000000000000000000000000000000000000000000000000000
+1550 0000000000000000000000000000000000000000000000000000000000000000
+1570 0000000000000000000000000000000000000000000000000000000000000000
+1590 0000000000000000000000000000000000000000000000000000000000000000
+15B0 0000000000000000000000000000000000000000000000000000000000000000
+15D0 0000000000000000000000000000000000000000000000000000000000000000
+15F0 0000000000000000000000000000000000000000000000000000000000000000
+1610 0000000000000000000000000000000000000000000000000000000000000000
+1630 0000000000000000000000000000000000000000000000000000000000000000
+1650 0000000000000000000000000000000000000000000000000000000000000000
+1670 0000000000000000000000000000000000000000000000000000000000000000
+1690 0000000000000000000000000000000000000000000000000000000000000000
+16B0 0000000000000000000000000000000000000000000000000000000000000000
+16D0 0000000000000000000000000000000000000000000000000000000000000000
+16F0 0000000000000000000000000000000000000000000000000000000000000000
+1710 0000000000000000000000000000000000000000000000000000000000000000
+1730 0000000000000000000000000000000000000000000000000000000000000000
+1750 0000000000000000000000000000000000000000000000000000000000000000
+1770 0000000000000000000000000000000000000000000000000000000000000000
+1790 0000000000000000000000000000000000000000000000000000000000000000
+17B0 0000000000000000000000000000000000000000000000000000000000000000
+17D0 0000000000000000000000000000000000000000000000000000000000000000
+17F0 0000000000000000000000000000000000000000000000000000000000000000
+1810 0000000000000000000000000000000000000000000000000000000000000000
+1830 0000000000000000000000000000000000000000000000000000000000000000
+1850 0000000000000000000000000000000000000000000000000000000000000000
+1870 0000000000000000000000000000000000000000000000000000000000000000
+1890 0000000000000000000000000000000000000000000000000000000000000000
+18B0 0000000000000000000000000000000000000000000000000000000000000000
+18D0 0000000000000000000000000000000000000000000000000000000000000000
+18F0 0000000000000000000000000000000000000000000000000000000000000000
+1910 0000000000000000000000000000000000000000000000000000000000000000
+1930 0000000000000000000000000000000000000000000000000000000000000000
+1950 0000000000000000000000000000000000000000000000000000000000000000
+1970 0000000000000000000000000000000000000000000000000000000000000000
+1990 0000000000000000000000000000000000000000000000000000000000000000
+19B0 0000000000000000000000000000000000000000000000000000000000000000
+19D0 0000000000000000000000000000000000000000000000000000000000000000
+19F0 0000000000000000000000000000000000000000000000000000000000000000
+1A10 0000000000000000000000000000000000000000000000000000000000000000
+1A30 0000000000000000000000000000000000000000000000000000000000000000
+1A50 0000000000000000000000000000000000000000000000000000000000000000
+1A70 0000000000000000000000000000000000000000000000000000000000000000
+1A90 0000000000000000000000000000000000000000000000000000000000000000
+1AB0 0000000000000000000000000000000000000000000000000000000000000000
+1AD0 0000000000000000000000000000000000000000000000000000000000000000
+1AF0 0000000000000000000000000000000000000000000000000000000000000000
+1B10 0000000000000000000000000000000000000000000000000000000000000000
+1B30 0000000000000000000000000000000000000000000000000000000000000000
+1B50 0000000000000000000000000000000000000000000000000000000000000000
+1B70 0000000000000000000000000000000000000000000000000000000000000000
+1B90 0000000000000000000000000000000000000000000000000000000000000000
+1BB0 0000000000000000000000000000000000000000000000000000000000000000
+1BD0 0000000000000000000000000000000000000000000000000000000000000000
+1BF0 0000000000000000000000000000000000000000000000000000000000000000
+1C10 0000000000000000000000000000000000000000000000000000000000000000
+1C30 0000000000000000000000000000000000000000000000000000000000000000
+1C50 0000000000000000000000000000000000000000000000000000000000000000
+1C70 0000000000000000000000000000000000000000000000000000000000000000
+1C90 0000000000000000000000000000000000000000000000000000000000000000
+1CB0 0000000000000000000000000000000000000000000000000000000000000000
+1CD0 0000000000000000000000000000000000000000000000000000000000000000
+1CF0 0000000000000000000000000000000000000000000000000000000000000000
+1D10 0000000000000000000000000000000000000000000000000000000000000000
+1D30 0000000000000000000000000000000000000000000000000000000000000000
+1D50 0000000000000000000000000000000000000000000000000000000000000000
+1D70 0000000000000000000000000000000000000000000000000000000000000000
+1D90 0000000000000000000000000000000000000000000000000000000000000000
+1DB0 0000000000000000000000000000000000000000000000000000000000000000
+1DD0 0000000000000000000000000000000000000000000000000000000000000000
+1DF0 0000000000000000000000000000000000000000000000000000000000000000
+1E10 0000000000000000000000000000000000000000000000000000000000000000
+1E30 0000000000000000000000000000000000000000000000000000000000000000
+1E50 0000000000000000000000000000000000000000000000000000000000000000
+1E70 0000000000000000000000000000000000000000000000000000000000000000
+1E90 0000000000000000000000000000000000000000000000000000000000000000
+1EB0 0000000000000000000000000000000000000000000000000000000000000000
+1ED0 0000000000000000000000000000000000000000000000000000000000000000
+1EF0 0000000000000000000000000000000000000000000000000000000000000000
+1F10 0000000000000000000000000000000000000000000000000000000000000000
+1F30 0000000000000000000000000000000000000000000000000000000000000000
+1F50 0000000000000000000000000000000000000000000000000000000000000000
+1F70 0000000000000000000000000000000000000000000000000000000000000000
+1F90 0000000000000000000000000000000000000000000000000000000000000000
+1FB0 0000000000000000000000000000000000000000000000000000000000000000
+1FD0 0000000000000000000000000000000000000000000000000000000000000000
+1FF0 0000000000000000000000000000000000000000000000000000000000000000
+2010 0000000000000000000000000000000000000000000000000000000000000000
+2030 0000000000000000000000000000000000000000000000000000000000000000
+2050 0000000000000000000000000000000000000000000000000000000000000000
+2070 0000000000000000000000000000000000000000000000000000000000000000
+2090 0000000000000000000000000000000000000000000000000000000000000000
+20B0 0000000000000000000000000000000000000000000000000000000000000000
+20D0 0000000000000000000000000000000000000000000000000000000000000000
+20F0 0000000000000000000000000000000000000000000000000000000000000000
+2110 0000000000000000000000000000000000000000000000000000000000000000
+2130 0000000000000000000000000000000000000000000000000000000000000000
+2150 0000000000000000000000000000000000000000000000000000000000000000
+2170 0000000000000000000000000000000000000000000000000000000000000000
+2190 0000000000000000000000000000000000000000000000000000000000000000
+21B0 0000000000000000000000000000000000000000000000000000000000000000
+21D0 0000000000000000000000000000000000000000000000000000000000000000
+21F0 0000000000000000000000000000000000000000000000000000000000000000
+2210 0000000000000000000000000000000000000000000000000000000000000000
+2230 0000000000000000000000000000000000000000000000000000000000000000
+2250 0000000000000000000000000000000000000000000000000000000000000000
+2270 0000000000000000000000000000000000000000000000000000000000000000
+2290 0000000000000000000000000000000000000000000000000000000000000000
+22B0 0000000000000000000000000000000000000000000000000000000000000000
+22D0 0000000000000000000000000000000000000000000000000000000000000000
+22F0 0000000000000000000000000000000000000000000000000000000000000000
+2310 0000000000000000000000000000000000000000000000000000000000000000
+2330 0000000000000000000000000000000000000000000000000000000000000000
+2350 0000000000000000000000000000000000000000000000000000000000000000
+2370 0000000000000000000000000000000000000000000000000000000000000000
+2390 0000000000000000000000000000000000000000000000000000000000000000
+23B0 0000000000000000000000000000000000000000000000000000000000000000
+23D0 0000000000000000000000000000000000000000000000000000000000000000
+23F0 0000000000000000000000000000000000000000000000000000000000000000
+2410 0000000000000000000000000000000000000000000000000000000000000000
+2430 0000000000000000000000000000000000000000000000000000000000000000
+2450 0000000000000000000000000000000000000000000000000000000000000000
+2470 0000000000000000000000000000000000000000000000000000000000000000
+2490 0000000000000000000000000000000000000000000000000000000000000000
+24B0 0000000000000000000000000000000000000000000000000000000000000000
+24D0 0000000000000000000000000000000000000000000000000000000000000000
+24F0 0000000000000000000000000000000000000000000000000000000000000000
+2510 0000000000000000000000000000000000000000000000000000000000000000
+2530 0000000000000000000000000000000000000000000000000000000000000000
+2550 0000000000000000000000000000000000000000000000000000000000000000
+2570 0000000000000000000000000000000000000000000000000000000000000000
+2590 0000000000000000000000000000000000000000000000000000000000000000
+25B0 0000000000000000000000000000000000000000000000000000000000000000
+25D0 0000000000000000000000000000000000000000000000000000000000000000
+25F0 0000000000000000000000000000000000000000000000000000000000000000
+2610 0000000000000000000000000000000000000000000000000000000000000000
+2630 0000000000000000000000000000000000000000000000000000000000000000
+2650 0000000000000000000000000000000000000000000000000000000000000000
+2670 0000000000000000000000000000000000000000000000000000000000000000
+2690 0000000000000000000000000000000000000000000000000000000000000000
+26B0 0000000000000000000000000000000000000000000000000000000000000000
+26D0 0000000000000000000000000000000000000000000000000000000000000000
+26F0 0000000000000000000000000000000000000000000000000000000000000000
+2710 0000000000000000000000000000000000000000000000000000000000000000
+2730 0000000000000000000000000000000000000000000000000000000000000000
+2750 0000000000000000000000000000000000000000000000000000000000000000
+2770 0000000000000000000000000000000000000000000000000000000000000000
+2790 0000000000000000000000000000000000000000000000000000000000000000
+27B0 0000000000000000000000000000000000000000000000000000000000000000
+27D0 0000000000000000000000000000000000000000000000000000000000000000
+27F0 0000000000000000000000000000000000000000000000000000000000000000
+2810 0000000000000000000000000000000000000000000000000000000000000000
+2830 0000000000000000000000000000000000000000000000000000000000000000
+2850 0000000000000000000000000000000000000000000000000000000000000000
+2870 0000000000000000000000000000000000000000000000000000000000000000
+2890 0000000000000000000000000000000000000000000000000000000000000000
+28B0 0000000000000000000000000000000000000000000000000000000000000000
+28D0 0000000000000000000000000000000000000000000000000000000000000000
+28F0 0000000000000000000000000000000000000000000000000000000000000000
+2910 0000000000000000000000000000000000000000000000000000000000000000
+2930 0000000000000000000000000000000000000000000000000000000000000000
+2950 0000000000000000000000000000000000000000000000000000000000000000
+2970 0000000000000000000000000000000000000000000000000000000000000000
+2990 0000000000000000000000000000000000000000000000000000000000000000
+29B0 0000000000000000000000000000000000000000000000000000000000000000
+29D0 0000000000000000000000000000000000000000000000000000000000000000
+29F0 0000000000000000000000000000000000000000000000000000000000000000
+2A10 0000000000000000000000000000000000000000000000000000000000000000
+2A30 0000000000000000000000000000000000000000000000000000000000000000
+2A50 0000000000000000000000000000000000000000000000000000000000000000
+2A70 0000000000000000000000000000000000000000000000000000000000000000
+2A90 0000000000000000000000000000000000000000000000000000000000000000
+2AB0 0000000000000000000000000000000000000000000000000000000000000000
+2AD0 0000000000000000000000000000000000000000000000000000000000000000
+2AF0 0000000000000000000000000000000000000000000000000000000000000000
+2B10 0000000000000000000000000000000000000000000000000000000000000000
+2B30 0000000000000000000000000000000000000000000000000000000000000000
+2B50 0000000000000000000000000000000000000000000000000000000000000000
+2B70 0000000000000000000000000000000000000000000000000000000000000000
+2B90 0000000000000000000000000000000000000000000000000000000000000000
+2BB0 0000000000000000000000000000000000000000000000000000000000000000
+2BD0 0000000000000000000000000000000000000000000000000000000000000000
+2BF0 0000000000000000000000000000000000000000000000000000000000000000
+2C10 0000000000000000000000000000000000000000000000000000000000000000
+2C30 0000000000000000000000000000000000000000000000000000000000000000
+2C50 0000000000000000000000000000000000000000000000000000000000000000
+2C70 0000000000000000000000000000000000000000000000000000000000000000
+2C90 0000000000000000000000000000000000000000000000000000000000000000
+2CB0 0000000000000000000000000000000000000000000000000000000000000000
+2CD0 0000000000000000000000000000000000000000000000000000000000000000
+2CF0 0000000000000000000000000000000000000000000000000000000000000000
+2D10 0000000000000000000000000000000000000000000000000000000000000000
+2D30 0000000000000000000000000000000000000000000000000000000000000000
+2D50 0000000000000000000000000000000000000000000000000000000000000000
+2D70 0000000000000000000000000000000000000000000000000000000000000000
+2D90 0000000000000000000000000000000000000000000000000000000000000000
+2DB0 0000000000000000000000000000000000000000000000000000000000000000
+2DD0 0000000000000000000000000000000000000000000000000000000000000000
+2DF0 0000000000000000000000000000000000000000000000000000000000000000
+2E10 0000000000000000000000000000000000000000000000000000000000000000
+2E30 0000000000000000000000000000000000000000000000000000000000000000
+2E50 0000000000000000000000000000000000000000000000000000000000000000
+2E70 0000000000000000000000000000000000000000000000000000000000000000
+2E90 0000000000000000000000000000000000000000000000000000000000000000
+2EB0 0000000000000000000000000000000000000000000000000000000000000000
+2ED0 0000000000000000000000000000000000000000000000000000000000000000
+2EF0 0000000000000000000000000000000000000000000000000000000000000000
+2F10 0000000000000000000000000000000000000000000000000000000000000000
+2F30 0000000000000000000000000000000000000000000000000000000000000000
+2F50 0000000000000000000000000000000000000000000000000000000000000000
+2F70 0000000000000000000000000000000000000000000000000000000000000000
+2F90 0000000000000000000000000000000000000000000000000000000000000000
+2FB0 0000000000000000000000000000000000000000000000000000000000000000
+2FD0 0000000000000000000000000000000000000000000000000000000000000000
+2FF0 0000000000000000000000000000000000000000000000000000000000000000
+3010 0000000000000000000000000000000000000000000000000000000000000000
+3030 0000000000000000000000000000000000000000000000000000000000000000
+3050 0000000000000000000000000000000000000000000000000000000000000000
+3070 0000000000000000000000000000000000000000000000000000000000000000
+3090 0000000000000000000000000000000000000000000000000000000000000000
+30B0 0000000000000000000000000000000000000000000000000000000000000000
+30D0 0000000000000000000000000000000000000000000000000000000000000000
+30F0 0000000000000000000000000000000000000000000000000000000000000000
+3110 0000000000000000000000000000000000000000000000000000000000000000
+3130 0000000000000000000000000000000000000000000000000000000000000000
+3150 0000000000000000000000000000000000000000000000000000000000000000
+3170 0000000000000000000000000000000000000000000000000000000000000000
+3190 0000000000000000000000000000000000000000000000000000000000000000
+31B0 0000000000000000000000000000000000000000000000000000000000000000
+31D0 0000000000000000000000000000000000000000000000000000000000000000
+31F0 0000000000000000000000000000000000000000000000000000000000000000
+3210 0000000000000000000000000000000000000000000000000000000000000000
+3230 0000000000000000000000000000000000000000000000000000000000000000
+3250 0000000000000000000000000000000000000000000000000000000000000000
+3270 0000000000000000000000000000000000000000000000000000000000000000
+3290 0000000000000000000000000000000000000000000000000000000000000000
+32B0 0000000000000000000000000000000000000000000000000000000000000000
+32D0 0000000000000000000000000000000000000000000000000000000000000000
+32F0 0000000000000000000000000000000000000000000000000000000000000000
+3310 0000000000000000000000000000000000000000000000000000000000000000
+3330 0000000000000000000000000000000000000000000000000000000000000000
+3350 0000000000000000000000000000000000000000000000000000000000000000
+3370 0000000000000000000000000000000000000000000000000000000000000000
+3390 0000000000000000000000000000000000000000000000000000000000000000
+33B0 0000000000000000000000000000000000000000000000000000000000000000
+33D0 0000000000000000000000000000000000000000000000000000000000000000
+33F0 0000000000000000000000000000000000000000000000000000000000000000
+3410 0000000000000000000000000000000000000000000000000000000000000000
+3430 0000000000000000000000000000000000000000000000000000000000000000
+3450 0000000000000000000000000000000000000000000000000000000000000000
+3470 0000000000000000000000000000000000000000000000000000000000000000
+3490 0000000000000000000000000000000000000000000000000000000000000000
+34B0 0000000000000000000000000000000000000000000000000000000000000000
+34D0 0000000000000000000000000000000000000000000000000000000000000000
+34F0 0000000000000000000000000000000000000000000000000000000000000000
+3510 0000000000000000000000000000000000000000000000000000000000000000
+3530 0000000000000000000000000000000000000000000000000000000000000000
+3550 0000000000000000000000000000000000000000000000000000000000000000
+3570 0000000000000000000000000000000000000000000000000000000000000000
+3590 0000000000000000000000000000000000000000000000000000000000000000
+35B0 0000000000000000000000000000000000000000000000000000000000000000
+35D0 0000000000000000000000000000000000000000000000000000000000000000
+35F0 0000000000000000000000000000000000000000000000000000000000000000
+3610 0000000000000000000000000000000000000000000000000000000000000000
+3630 0000000000000000000000000000000000000000000000000000000000000000
+3650 0000000000000000000000000000000000000000000000000000000000000000
+3670 0000000000000000000000000000000000000000000000000000000000000000
+3690 0000000000000000000000000000000000000000000000000000000000000000
+36B0 0000000000000000000000000000000000000000000000000000000000000000
+36D0 0000000000000000000000000000000000000000000000000000000000000000
+36F0 0000000000000000000000000000000000000000000000000000000000000000
+3710 0000000000000000000000000000000000000000000000000000000000000000
+3730 0000000000000000000000000000000000000000000000000000000000000000
+3750 0000000000000000000000000000000000000000000000000000000000000000
+3770 0000000000000000000000000000000000000000000000000000000000000000
+3790 0000000000000000000000000000000000000000000000000000000000000000
+37B0 0000000000000000000000000000000000000000000000000000000000000000
+37D0 0000000000000000000000000000000000000000000000000000000000000000
+37F0 0000000000000000000000000000000000000000000000000000000000000000
+3810 0000000000000000000000000000000000000000000000000000000000000000
+3830 0000000000000000000000000000000000000000000000000000000000000000
+3850 0000000000000000000000000000000000000000000000000000000000000000
+3870 0000000000000000000000000000000000000000000000000000000000000000
+3890 0000000000000000000000000000000000000000000000000000000000000000
+38B0 0000000000000000000000000000000000000000000000000000000000000000
+38D0 0000000000000000000000000000000000000000000000000000000000000000
+38F0 0000000000000000000000000000000000000000000000000000000000000000
+3910 0000000000000000000000000000000000000000000000000000000000000000
+3930 0000000000000000000000000000000000000000000000000000000000000000
+3950 0000000000000000000000000000000000000000000000000000000000000000
+3970 0000000000000000000000000000000000000000000000000000000000000000
+3990 0000000000000000000000000000000000000000000000000000000000000000
+39B0 0000000000000000000000000000000000000000000000000000000000000000
+39D0 0000000000000000000000000000000000000000000000000000000000000000
+39F0 0000000000000000000000000000000000000000000000000000000000000000
+3A10 0000000000000000000000000000000000000000000000000000000000000000
+3A30 0000000000000000000000000000000000000000000000000000000000000000
+3A50 00000000000000000000000000000000000000000000000000000000
+3A6C 00000000    ; numbertable_008	.byt 4004
+3A70 0000000000000000000000000000000000000000000000000000000000000000
+3A90 0000000000000000000000000000000000000000000000000000000000000000
+3AB0 0000000000000000000000000000000000000000000000000000000000000000
+3AD0 0000000000000000000000000000000000000000000000000000000000000000
+3AF0 0000000000000000000000000000000000000000000000000000000000000000
+3B10 0000000000000000000000000000000000000000000000000000000000000000
+3B30 0000000000000000000000000000000000000000000000000000000000000000
+3B50 0000000000000000000000000000000000000000000000000000000000000000
+3B70 0000000000000000000000000000000000000000000000000000000000000000
+3B90 0000000000000000000000000000000000000000000000000000000000000000
+3BB0 0000000000000000000000000000000000000000000000000000000000000000
+3BD0 0000000000000000000000000000000000000000000000000000000000000000
+3BF0 0000000000000000000000000000000000000000000000000000000000000000
+3C10 0000000000000000000000000000000000000000000000000000000000000000
+3C30 0000000000000000000000000000000000000000000000000000000000000000
+3C50 0000000000000000000000000000000000000000000000000000000000000000
+3C70 0000000000000000000000000000000000000000000000000000000000000000
+3C90 0000000000000000000000000000000000000000000000000000000000000000
+3CB0 0000000000000000000000000000000000000000000000000000000000000000
+3CD0 0000000000000000000000000000000000000000000000000000000000000000
+3CF0 0000000000000000000000000000000000000000000000000000000000000000
+3D10 0000000000000000000000000000000000000000000000000000000000000000
+3D30 0000000000000000000000000000000000000000000000000000000000000000
+3D50 0000000000000000000000000000000000000000000000000000000000000000
+3D70 0000000000000000000000000000000000000000000000000000000000000000
+3D90 0000000000000000000000000000000000000000000000000000000000000000
+3DB0 0000000000000000000000000000000000000000000000000000000000000000
+3DD0 0000000000000000000000000000000000000000000000000000000000000000
+3DF0 0000000000000000000000000000000000000000000000000000000000000000
+3E10 0000000000000000000000000000000000000000000000000000000000000000
+3E30 0000000000000000000000000000000000000000000000000000000000000000
+3E50 0000000000000000000000000000000000000000000000000000000000000000
+3E70 0000000000000000000000000000000000000000000000000000000000000000
+3E90 0000000000000000000000000000000000000000000000000000000000000000
+3EB0 0000000000000000000000000000000000000000000000000000000000000000
+3ED0 0000000000000000000000000000000000000000000000000000000000000000
+3EF0 0000000000000000000000000000000000000000000000000000000000000000
+3F10 0000000000000000000000000000000000000000000000000000000000000000
+3F30 0000000000000000000000000000000000000000000000000000000000000000
+3F50 0000000000000000000000000000000000000000000000000000000000000000
+3F70 0000000000000000000000000000000000000000000000000000000000000000
+3F90 0000000000000000000000000000000000000000000000000000000000000000
+3FB0 0000000000000000000000000000000000000000000000000000000000000000
+3FD0 0000000000000000000000000000000000000000000000000000000000000000
+3FF0 0000000000000000000000000000000000000000000000000000000000000000
+4010 0000000000000000000000000000000000000000000000000000000000000000
+4030 0000000000000000000000000000000000000000000000000000000000000000
+4050 0000000000000000000000000000000000000000000000000000000000000000
+4070 0000000000000000000000000000000000000000000000000000000000000000
+4090 0000000000000000000000000000000000000000000000000000000000000000
+40B0 0000000000000000000000000000000000000000000000000000000000000000
+40D0 0000000000000000000000000000000000000000000000000000000000000000
+40F0 0000000000000000000000000000000000000000000000000000000000000000
+4110 0000000000000000000000000000000000000000000000000000000000000000
+4130 0000000000000000000000000000000000000000000000000000000000000000
+4150 0000000000000000000000000000000000000000000000000000000000000000
+4170 0000000000000000000000000000000000000000000000000000000000000000
+4190 0000000000000000000000000000000000000000000000000000000000000000
+41B0 0000000000000000000000000000000000000000000000000000000000000000
+41D0 0000000000000000000000000000000000000000000000000000000000000000
+41F0 0000000000000000000000000000000000000000000000000000000000000000
+4210 0000000000000000000000000000000000000000000000000000000000000000
+4230 0000000000000000000000000000000000000000000000000000000000000000
+4250 0000000000000000000000000000000000000000000000000000000000000000
+4270 0000000000000000000000000000000000000000000000000000000000000000
+4290 0000000000000000000000000000000000000000000000000000000000000000
+42B0 0000000000000000000000000000000000000000000000000000000000000000
+42D0 0000000000000000000000000000000000000000000000000000000000000000
+42F0 0000000000000000000000000000000000000000000000000000000000000000
+4310 0000000000000000000000000000000000000000000000000000000000000000
+4330 0000000000000000000000000000000000000000000000000000000000000000
+4350 0000000000000000000000000000000000000000000000000000000000000000
+4370 0000000000000000000000000000000000000000000000000000000000000000
+4390 0000000000000000000000000000000000000000000000000000000000000000
+43B0 0000000000000000000000000000000000000000000000000000000000000000
+43D0 0000000000000000000000000000000000000000000000000000000000000000
+43F0 0000000000000000000000000000000000000000000000000000000000000000
+4410 0000000000000000000000000000000000000000000000000000000000000000
+4430 0000000000000000000000000000000000000000000000000000000000000000
+4450 0000000000000000000000000000000000000000000000000000000000000000
+4470 0000000000000000000000000000000000000000000000000000000000000000
+4490 0000000000000000000000000000000000000000000000000000000000000000
+44B0 0000000000000000000000000000000000000000000000000000000000000000
+44D0 0000000000000000000000000000000000000000000000000000000000000000
+44F0 0000000000000000000000000000000000000000000000000000000000000000
+4510 0000000000000000000000000000000000000000000000000000000000000000
+4530 0000000000000000000000000000000000000000000000000000000000000000
+4550 0000000000000000000000000000000000000000000000000000000000000000
+4570 0000000000000000000000000000000000000000000000000000000000000000
+4590 0000000000000000000000000000000000000000000000000000000000000000
+45B0 0000000000000000000000000000000000000000000000000000000000000000
+45D0 0000000000000000000000000000000000000000000000000000000000000000
+45F0 0000000000000000000000000000000000000000000000000000000000000000
+4610 0000000000000000000000000000000000000000000000000000000000000000
+4630 0000000000000000000000000000000000000000000000000000000000000000
+4650 0000000000000000000000000000000000000000000000000000000000000000
+4670 0000000000000000000000000000000000000000000000000000000000000000
+4690 0000000000000000000000000000000000000000000000000000000000000000
+46B0 0000000000000000000000000000000000000000000000000000000000000000
+46D0 0000000000000000000000000000000000000000000000000000000000000000
+46F0 0000000000000000000000000000000000000000000000000000000000000000
+4710 0000000000000000000000000000000000000000000000000000000000000000
+4730 0000000000000000000000000000000000000000000000000000000000000000
+4750 0000000000000000000000000000000000000000000000000000000000000000
+4770 0000000000000000000000000000000000000000000000000000000000000000
+4790 0000000000000000000000000000000000000000000000000000000000000000
+47B0 0000000000000000000000000000000000000000000000000000000000000000
+47D0 0000000000000000000000000000000000000000000000000000000000000000
+47F0 0000000000000000000000000000000000000000000000000000000000000000
+4810 0000000000000000000000000000000000000000000000000000000000000000
+4830 0000000000000000000000000000000000000000000000000000000000000000
+4850 0000000000000000000000000000000000000000000000000000000000000000
+4870 0000000000000000000000000000000000000000000000000000000000000000
+4890 0000000000000000000000000000000000000000000000000000000000000000
+48B0 0000000000000000000000000000000000000000000000000000000000000000
+48D0 0000000000000000000000000000000000000000000000000000000000000000
+48F0 0000000000000000000000000000000000000000000000000000000000000000
+4910 0000000000000000000000000000000000000000000000000000000000000000
+4930 0000000000000000000000000000000000000000000000000000000000000000
+4950 0000000000000000000000000000000000000000000000000000000000000000
+4970 0000000000000000000000000000000000000000000000000000000000000000
+4990 0000000000000000000000000000000000000000000000000000000000000000
+49B0 0000000000000000000000000000000000000000000000000000000000000000
+49D0 0000000000000000000000000000000000000000000000000000000000000000
+49F0 0000000000000000000000000000000000000000000000000000000000000000
+4A10 0000        ; nextwordindex_009	.byt 2
+4A12 0000        ; nextnumberindex_010	.byt 2
+4A14 0000        ; linenumber_011	.byt 2
+4A16 0000        ; wordtablefull_012	.byt 2
+4A18 0000        ; numbertablefull_013	.byt 2
+4A1A 0000        ; newline_014	.byt 2
+4A1C 0000        ; gotword_015	.byt 2
+4A1E 206C696E    ; S_120	.str " line number entries."
+4A22 65206E756D62657220656E74726965732E
+4A33 20776F72    ; S_119	.str " word entries."
+4A37 6420656E74726965732E
+4A41 2A2A2A20    ; S_117	.str "*** The number table is not large enough. ***"
+4A45 546865206E756D626572207461626C65206973206E6F74206C6172676520656E
+4A65 6F7567682E202A2A2A
+4A6E 2A2A2A20    ; S_113	.str "*** The word table is not large enough. ***"
+4A72 54686520776F7264207461626C65206973206E6F74206C6172676520656E6F75
+4A92 67682E202A2A2A
+4A99 20202020    ; S_105	.str "    1 : "
+4A9D 31203A20
+4AA1 2D2D2D2D    ; S_101	.str "---------------"
+4AA5 2D2D2D2D2D2D2D2D2D2D2D
+4AB0 43726F73    ; S_100	.str "Cross-reference"
+4AB4 732D7265666572656E6365
+4ABF 203A20      ; S_020	.str " : "

@@ -21,22 +21,22 @@
   21   34 	jsr _fread
   22   35 	pli
   23   36 	sta.w 0,I++
-  24   37 	swp
+  24   37 	swp a
   25   38 	sta.w 0,I++
   26   41 	lda.w number_002+2
-  27   42 	swp
+  27   42 	swp a
   28   43 	lda.w number_002
-  29   44 	swp
+  29   44 	swp a
   30   45 	pha.w
-  31   46 	swp
+  31   46 	swp a
   32   47 	pha.w
   33   48 	lda #0
   34   49 	pha.w
   35   50 	jsr _fconv
   36   51 	adj #2
-  37   52 	swp
+  37   52 	swp a
   38   53 	pha.w
-  39   54 	swp
+  39   54 	swp a
   40   55 	pha.w
   41   56 	jsr _fcmp
   42   57 	adj #8
@@ -52,11 +52,11 @@
   52   67 	jmp  L_009
   53   68 L_008
   54   70 	lda.w number_002+2
-  55   71 	swp
+  55   71 	swp a
   56   72 	lda.w number_002
-  57   73 	swp
+  57   73 	swp a
   58   74 	pha.w
-  59   75 	swp
+  59   75 	swp a
   60   76 	pha.w
   61   77 	lda #12
   62   78 	pha.w
@@ -65,11 +65,11 @@
   65   81 	jsr _fwrite
   66   82 	adj #8
   67   83 	lda.w F_011+2
-  68   84 	swp
+  68   84 	swp a
   69   85 	lda.w F_011
-  70   86 	swp
+  70   86 	swp a
   71   87 	pha.w
-  72   88 	swp
+  72   88 	swp a
   73   89 	pha.w
   74   90 	lda #12
   75   91 	pha.w
@@ -81,19 +81,19 @@
   81   99 	jmp L_012
   82  100 L_009
   83  101 	lda.w number_002+2
-  84  102 	swp
+  84  102 	swp a
   85  103 	lda.w number_002
-  86  104 	swp
+  86  104 	swp a
   87  105 	pha.w
-  88  106 	swp
+  88  106 	swp a
   89  107 	pha.w
   90  108 	lda #0
   91  109 	pha.w
   92  110 	jsr _fconv
   93  111 	adj #2
-  94  112 	swp
+  94  112 	swp a
   95  113 	pha.w
-  96  114 	swp
+  96  114 	swp a
   97  115 	pha.w
   98  116 	jsr _fcmp
   99  117 	adj #8
@@ -117,23 +117,23 @@
  117  138 	jmp L_017
  118  139 L_014
  119  141 	lda.w number_002+2
- 120  142 	swp
+ 120  142 	swp a
  121  143 	lda.w number_002
- 122  144 	swp
+ 122  144 	swp a
  123  145 	pha.w
- 124  146 	swp
+ 124  146 	swp a
  125  147 	pha.w
  126  148 	jsr _fsqrt
  127  149 	adj #4
  128  150 	sta.w sqroot_004
- 129  151 	swp
+ 129  151 	swp a
  130  152 	sta.w sqroot_004+2
  131  154 	lda.w number_002+2
- 132  155 	swp
+ 132  155 	swp a
  133  156 	lda.w number_002
- 134  157 	swp
+ 134  157 	swp a
  135  158 	pha.w
- 136  159 	swp
+ 136  159 	swp a
  137  160 	pha.w
  138  161 	lda #12
  139  162 	pha.w
@@ -142,11 +142,11 @@
  142  165 	jsr _fwrite
  143  166 	adj #8
  144  167 	lda.w sqroot_004+2
- 145  168 	swp
+ 145  168 	swp a
  146  169 	lda.w sqroot_004
- 147  170 	swp
+ 147  170 	swp a
  148  171 	pha.w
- 149  172 	swp
+ 149  172 	swp a
  150  173 	pha.w
  151  174 	lda #12
  152  175 	pha.w
@@ -161,61 +161,61 @@
  161  187 	jsr _fconv
  162  188 	adj #2
  163  189 	sta.w root_003
- 164  190 	swp
+ 164  190 	swp a
  165  191 	sta.w root_003+2
  166  193 L_018
  167  195 	lda.w number_002+2
- 168  196 	swp
+ 168  196 	swp a
  169  197 	lda.w number_002
- 170  198 	swp
+ 170  198 	swp a
  171  199 	pha.w
- 172  200 	swp
+ 172  200 	swp a
  173  201 	pha.w
  174  202 	lda.w root_003+2
- 175  203 	swp
+ 175  203 	swp a
  176  204 	lda.w root_003
- 177  205 	swp
+ 177  205 	swp a
  178  206 	pha.w
- 179  207 	swp
+ 179  207 	swp a
  180  208 	pha.w
  181  209 	jsr _fdiv
  182  210 	adj #8
- 183  211 	swp
+ 183  211 	swp a
  184  212 	pha.w
- 185  213 	swp
+ 185  213 	swp a
  186  214 	pha.w
  187  215 	lda.w root_003+2
- 188  216 	swp
+ 188  216 	swp a
  189  217 	lda.w root_003
- 190  218 	swp
+ 190  218 	swp a
  191  219 	pha.w
- 192  220 	swp
+ 192  220 	swp a
  193  221 	pha.w
  194  222 	jsr _fadd
  195  223 	adj #8
- 196  224 	swp
+ 196  224 	swp a
  197  225 	pha.w
- 198  226 	swp
+ 198  226 	swp a
  199  227 	pha.w
  200  228 	lda #2
  201  229 	pha.w
  202  230 	jsr _fconv
  203  231 	adj #2
- 204  232 	swp
+ 204  232 	swp a
  205  233 	pha.w
- 206  234 	swp
+ 206  234 	swp a
  207  235 	pha.w
  208  236 	jsr _fdiv
  209  237 	adj #8
  210  238 	sta.w root_003
- 211  239 	swp
+ 211  239 	swp a
  212  240 	sta.w root_003+2
  213  242 	lda.w root_003+2
- 214  243 	swp
+ 214  243 	swp a
  215  244 	lda.w root_003
- 216  245 	swp
+ 216  245 	swp a
  217  246 	pha.w
- 218  247 	swp
+ 218  247 	swp a
  219  248 	pha.w
  220  249 	lda #24
  221  250 	pha.w
@@ -226,69 +226,69 @@
  226  256 	lda #100
  227  257 	pha.w
  228  258 	lda.w root_003+2
- 229  259 	swp
+ 229  259 	swp a
  230  260 	lda.w root_003
- 231  261 	swp
+ 231  261 	swp a
  232  262 	pha.w
- 233  263 	swp
+ 233  263 	swp a
  234  264 	pha.w
  235  265 	lda.w sqroot_004+2
- 236  266 	swp
+ 236  266 	swp a
  237  267 	lda.w sqroot_004
- 238  268 	swp
+ 238  268 	swp a
  239  269 	pha.w
- 240  270 	swp
+ 240  270 	swp a
  241  271 	pha.w
  242  272 	jsr _fsub
  243  273 	adj #8
- 244  274 	swp
+ 244  274 	swp a
  245  275 	pha.w
- 246  276 	swp
+ 246  276 	swp a
  247  277 	pha.w
  248  278 	jsr _fabs
  249  279 	adj #4
- 250  280 	swp
+ 250  280 	swp a
  251  281 	pha.w
- 252  282 	swp
+ 252  282 	swp a
  253  283 	pha.w
  254  284 	pla.w
- 255  285 	swp
+ 255  285 	swp a
  256  286 	pla.w
  257  287 	ply.w
  258  288 	pha.w
- 259  289 	swp
+ 259  289 	swp a
  260  290 	pha.w
  261  291 	phy.w
  262  292 	jsr _fconv
  263  293 	adj #2
  264  294 	ply.w
- 265  295 	swp.y
+ 265  295 	swp y
  266  296 	ply.w
- 267  297 	swp
+ 267  297 	swp a
  268  298 	pha.w
- 269  299 	swp
+ 269  299 	swp a
  270  300 	pha.w
  271  301 	phy.w
- 272  302 	swp.y
+ 272  302 	swp y
  273  303 	phy.w
  274  304 	jsr _fmul
  275  305 	adj #8
- 276  306 	swp
+ 276  306 	swp a
  277  307 	pha.w
- 278  308 	swp
+ 278  308 	swp a
  279  309 	pha.w
  280  310 	lda.w sqroot_004+2
- 281  311 	swp
+ 281  311 	swp a
  282  312 	lda.w sqroot_004
- 283  313 	swp
+ 283  313 	swp a
  284  314 	pha.w
- 285  315 	swp
+ 285  315 	swp a
  286  316 	pha.w
  287  317 	jsr _fdiv
  288  318 	adj #8
- 289  319 	swp
+ 289  319 	swp a
  290  320 	pha.w
- 291  321 	swp
+ 291  321 	swp a
  292  322 	pha.w
  293  323 	lda #12
  294  324 	pha.w
@@ -303,61 +303,61 @@
  303  334 	adj #4
  304  336 	jsr _writeln
  305  337 	lda.w number_002+2
- 306  338 	swp
+ 306  338 	swp a
  307  339 	lda.w number_002
- 308  340 	swp
+ 308  340 	swp a
  309  341 	pha.w
- 310  342 	swp
+ 310  342 	swp a
  311  343 	pha.w
  312  344 	lda.w root_003+2
- 313  345 	swp
+ 313  345 	swp a
  314  346 	lda.w root_003
- 315  347 	swp
+ 315  347 	swp a
  316  348 	pha.w
- 317  349 	swp
+ 317  349 	swp a
  318  350 	pha.w
- 319  351 	swp
+ 319  351 	swp a
  320  352 	pha.w
- 321  353 	swp
+ 321  353 	swp a
  322  354 	pha.w
  323  355 	jsr _fmul
  324  356 	adj #8
- 325  357 	swp
+ 325  357 	swp a
  326  358 	pha.w
- 327  359 	swp
+ 327  359 	swp a
  328  360 	pha.w
  329  361 	jsr _fdiv
  330  362 	adj #8
- 331  363 	swp
+ 331  363 	swp a
  332  364 	pha.w
- 333  365 	swp
+ 333  365 	swp a
  334  366 	pha.w
  335  367 	lda #1
  336  368 	pha.w
  337  369 	jsr _fconv
  338  370 	adj #2
- 339  371 	swp
+ 339  371 	swp a
  340  372 	pha.w
- 341  373 	swp
+ 341  373 	swp a
  342  374 	pha.w
  343  375 	jsr _fsub
  344  376 	adj #8
- 345  377 	swp
+ 345  377 	swp a
  346  378 	pha.w
- 347  379 	swp
+ 347  379 	swp a
  348  380 	pha.w
  349  381 	jsr _fabs
  350  382 	adj #4
- 351  383 	swp
+ 351  383 	swp a
  352  384 	pha.w
- 353  385 	swp
+ 353  385 	swp a
  354  386 	pha.w
  355  387 	lda.w F_020+2
- 356  388 	swp
+ 356  388 	swp a
  357  389 	lda.w F_020
- 358  390 	swp
+ 358  390 	swp a
  359  391 	pha.w
- 360  392 	swp
+ 360  392 	swp a
  361  393 	pha.w
  362  394 	jsr _fcmp
  363  395 	adj #8
@@ -375,19 +375,19 @@
  375  409 L_017
  376  410 L_012
  377  411 	lda.w number_002+2
- 378  412 	swp
+ 378  412 	swp a
  379  413 	lda.w number_002
- 380  414 	swp
+ 380  414 	swp a
  381  415 	pha.w
- 382  416 	swp
+ 382  416 	swp a
  383  417 	pha.w
  384  418 	lda #0
  385  420 	pha.w
  386  421 	jsr _fconv
  387  422 	adj #2
- 388  423 	swp
+ 388  423 	swp a
  389  424 	pha.w
- 390  425 	swp
+ 390  425 	swp a
  391  426 	pha.w
  392  427 	jsr _fcmp
  393  428 	adj #8
