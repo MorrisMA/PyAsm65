@@ -170,7 +170,8 @@ for src in source:
                     asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
                     bufLen = 15 - len(asmText)
                     cod.append([code, op, addrsMode, operand, \
-                                opLen, dtLen, opDat, ' '*bufLen+' ; '+srcText])
+                                opLen, dtLen, opDat, \
+                                ' '*bufLen + ' ; ' + srcText])
                     code += opLen + dtLen
                 else:
                     print('Error. Unknown opcode: %s. Line #%d.' \
@@ -213,7 +214,7 @@ for src in source:
                     asmText = '%04X %s' % (data, val[:8])
                     bufLen = 15 - len(asmText)
                     dat.append([data, lbl, 'db', dt, siz, 0, val, \
-                                ' '*bufLen+' ; '+srcText])
+                                ' '*bufLen + ' ; ' + srcText])
                     data += siz
                 elif op == '.ds' or op == '.str':
                     siz = len(dt)
@@ -227,7 +228,7 @@ for src in source:
                     asmText = '%04X %s' % (data, strVal[:8])
                     bufLen = 15 - len(asmText)
                     dat.append([data, lbl, 'ds', dt, siz, 0, strVal, \
-                                ' '*bufLen+' ; '+srcText])
+                                ' '*bufLen + ' ; ' + srcText])
                     data += siz
                 else:
                     print('Error. Unknown define: %s.' % (op))
@@ -285,7 +286,8 @@ for src in source:
                     asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
                     bufLen = 15 - len(asmText)
                     cod.append([code, op, addrsMode, operand, \
-                                opLen, dtLen, opDat, ' '*bufLen+' ; '+srcText])
+                                opLen, dtLen, opDat, \
+                                ' '*bufLen + ' ; ' + srcText])
                     code += opLen + dtLen
                 else:
                     print('Error. Unknown opcode: %s. Line #%d.' \
@@ -466,5 +468,3 @@ with open(filename+'.lst', 'wt') as fout:
                 else:
                     break
                 addrs += 32
-
-

@@ -377,7 +377,7 @@
 05B0 ABE20004    ; 	psh.w	#1024
 05B4 20FFFF      ; 	jsr _idiv
 05B7 C204        ; 	adj #4
-05B9 1B          ; 	swp	a
+05B9 1B          ; 	swp a
 05BA AB8D3A16    ; 	sta.w seed_010
 05BE ABAD3A16    ; 	lda.w seed_010
 05C2 AB48        ; 	pha.w
@@ -1009,7 +1009,7 @@
 0BE6 ABE20C00    ; 	psh.w	#12
 0BEA 20FFFF      ; 	jsr _idiv
 0BED C204        ; 	adj #4
-0BEF 1B          ; 	swp	a
+0BEF 1B          ; 	swp a
 0BF0 AB48        ; 	pha.w
 0BF2 A900        ; 	lda #0
 0BF4 CB4401      ; 	xma.w 1,S
@@ -1289,7 +1289,7 @@
 0EB0 ABE20500    ; 	psh.w	#5
 0EB4 20FFFF      ; 	jsr _idiv
 0EB7 C204        ; 	adj #4
-0EB9 1B          ; 	swp	a
+0EB9 1B          ; 	swp a
 0EBA AB48        ; 	pha.w
 0EBC A900        ; 	lda #0
 0EBE CB4401      ; 	xma.w 1,S

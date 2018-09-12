@@ -10,9 +10,11 @@ def loadOpcodeTable(opcodes, fn = 'OpcodeTbl', genOpcodeLst = False):
         Read Opcodes Table
     '''
 
-    with open(fn+'.txt', 'rt') as finp:
+    with open(fn + '.txt', 'rt') as finp:
         opcodeTbl = finp.readlines()
 
+    print('len(OpcodeTbl) = %d' % (len(opcodeTbl)))
+    
     '''
         Create Opcodes Dictionary
     '''
@@ -21,7 +23,10 @@ def loadOpcodeTable(opcodes, fn = 'OpcodeTbl', genOpcodeLst = False):
     for opcode in opcodeTbl:
         op = opcode.split()
         key = op[0]
-        opcodes[key] = [int(op[1]), int(op[2]), op[3]]
+        if key in opcodes:
+            print('Error - duplicate key found: %s' % (key))
+        else:
+            opcodes[key] = [int(op[1]), int(op[2]), op[3]]
         if len(key) > maxWidth:
             maxWidth = len(key)
 
@@ -30,7 +35,7 @@ def loadOpcodeTable(opcodes, fn = 'OpcodeTbl', genOpcodeLst = False):
     '''
 
     if genOpcodeLst:
-        with open(fn+'.lst', 'wt') as fout:
+        with open(fn + '.lst', 'wt') as fout:
             print('-'*80, file=fout)
             print('\tOpcode Table', file=fout)
             print('-'*80, file=fout)

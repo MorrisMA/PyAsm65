@@ -915,7 +915,14 @@ for base in instrByNameTbl.keys():
         for i in range(len(instrByNameTbl[base])):
             instr, options, addrMd, opLen, dtLen, code = instrByNameTbl[base][i]
             if addrMd in indexedByX:
-                instr = '_'.join([instr, indexedByX[addrMd]])
+                if instr == 'ldy':
+                    if len(options) == 0:
+                        pass
+                    else:
+                        instr = '.'.join([instr, options[0]])
+                    instr = '_'.join([instr, indexedByX[addrMd]])
+                else: 
+                    instr = '_'.join([instr, indexedByX[addrMd]])
                 code = ''.join([preByte['oax'], code])
                 opLen += 1
                 

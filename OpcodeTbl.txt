@@ -1158,10 +1158,10 @@ ldy_zpA 2 1 EBB4
 ldy_absA 2 2 EBBC
 ldy_zpAI 3 1 EB9BB4
 ldy_absAI 3 2 EB9BBC
-ldy_zpA 3 1 EBABB4
-ldy_absA 3 2 EBABBC
-ldy_zpAI 3 1 EBBBB4
-ldy_absAI 3 2 EBBBBC
+ldy.w_zpA 3 1 EBABB4
+ldy.w_absA 3 2 EBABBC
+ldy.w_zpAI 3 1 EBBBB4
+ldy.w_absAI 3 2 EBBBBC
 ora.x_zpAI 2 1 EB01
 ora.x_zpIY 2 1 EB11
 ora.x_zpI 2 1 EB12

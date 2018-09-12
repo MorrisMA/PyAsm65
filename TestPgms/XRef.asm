@@ -959,12 +959,12 @@ L_090
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	swp.x
+	swp x
 	lda #24
 	plx.w
 	ply.w
 	mvb #51
--	swp.x
+-	swp x
 ;  213:             wordtable[i] := wordtable[j];
 	psh.w #wordtable_007
 	lda.w i_081,X
@@ -986,12 +986,12 @@ L_090
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	swp.x
+	swp x
 	lda #24
 	plx.w
 	ply.w
 	mvb #51
--	swp.x
+-	swp x
 ;  214:             wordtable[j] := temp;
 	psh.w #wordtable_007
 	lda.w j_082,X
@@ -1007,12 +1007,12 @@ L_090
 	clc
 	adc.w #temp_083
 	pha.w
-	swp.x
+	swp x
 	lda #24
 	plx.w
 	ply.w
 	mvb #51
--	swp.x
+-	swp x
 ;  215:         END;
 L_091
 ;  216:         END;
