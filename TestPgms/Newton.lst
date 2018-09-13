@@ -1,6 +1,6 @@
 0200 ABBA        ; 	tsx.w
-0202 CBA2FF3F    ; 	lds.w	#16383
-0206 4C0902      ; 	jmp	_pc65_main
+0202 CBA2FF3F    ; 	lds.w #16383
+0206 4C0902      ; 	jmp _pc65_main
 0209 ABDA        ; 	phx.w
 020B ABBA        ; 	tsx.w
 020D 20FFFF      ; 	jsr _writeln
@@ -342,10 +342,10 @@
 04E8 4C0D02      ; 	jmp L_005
 04EB ABFA        ; 	plx.w
 04ED 60          ; 	rts
-04EE 00000000    ; number_002	.byt	4
-04F2 00000000    ; root_003	.byt	4
-04F6 00000000    ; sqroot_004	.byt	4
-04FA 2A2A2A20    ; S_016	.str	"*** ERROR:  number < 0"
+04EE 00000000    ; number_002	.byt 4
+04F2 00000000    ; root_003	.byt 4
+04F6 00000000    ; sqroot_004	.byt 4
+04FA 2A2A2A20    ; S_016	.str "*** ERROR:  number < 0"
 04FE 4552524F523A20206E756D626572203C2030
-0510 456E7465    ; S_007	.str	"Enter new number (0 to quit): "
+0510 456E7465    ; S_007	.str "Enter new number (0 to quit): "
 0514 72206E6577206E756D62657220283020746F2071756974293A20

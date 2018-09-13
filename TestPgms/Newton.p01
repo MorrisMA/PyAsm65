@@ -1,12 +1,12 @@
-   1    2 	.stk	1024
-   2    3 	.cod	512
-   3    4 STATIC_LINK			.equ	+5
-   4    5 RETURN_VALUE		.equ	-3
-   5    6 HIGH_RETURN_VALUE	.equ	-1
+   1    2 	.stk 1024
+   2    3 	.cod 512
+   3    4 STATIC_LINK			.equ +5
+   4    5 RETURN_VALUE		.equ -3
+   5    6 HIGH_RETURN_VALUE	.equ -1
    6    7 _start
    7    8 	tsx.w
-   8    9 	lds.w	#16383
-   9   10 	jmp	_pc65_main
+   8    9 	lds.w #16383
+   9   10 	jmp _pc65_main
   10   19 _pc65_main	.sub
   11   20 	phx.w
   12   21 	tsx.w
@@ -404,13 +404,13 @@
  404  439 L_006
  405  440 	plx.w
  406  441 	rts
- 407  442 	.end	_pc65_main
+ 407  442 	.end _pc65_main
  408  444 	.dat
- 409  446 number_002	.byt	4
- 410  447 root_003	.byt	4
- 411  448 sqroot_004	.byt	4
+ 409  446 number_002	.byt 4
+ 410  447 root_003	.byt 4
+ 411  448 sqroot_004	.byt 4
  412  449 F_020	.flt	1.000000e-06
  413  450 F_011	.flt	0.000000e+00
- 414  451 S_016	.str	"*** ERROR:  number < 0"
- 415  452 S_007	.str	"Enter new number (0 to quit): "
+ 414  451 S_016	.str "*** ERROR:  number < 0"
+ 415  452 S_007	.str "Enter new number (0 to quit): "
  416  454 	.end
