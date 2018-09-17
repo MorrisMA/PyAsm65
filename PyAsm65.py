@@ -73,6 +73,8 @@ source = pho_ldaImmPha_to_pshImm(source)
     Assembler Pass 1
 '''
 
+print('\tPass 1')
+
 for src in source:
     *_, srcLine, srcText = src[0]
     opcode = ''
@@ -127,15 +129,6 @@ for src in source:
                 elif re.match('^#', dt):
                     addrsMode = 'imm'
                     operand = dt[1:]
-                elif re.match('^\w*$', dt):
-                    if op in relative:
-                        addrsMode = 'rel'
-                    else:
-                        addrsMode = 'abs'
-                    operand = dt
-                    if re.match('^_\w*$', dt):
-                        if dt not in library:
-                            library.append(dt)
                 elif re.match('^.*,[xX]$', dt):
                     addrsMode = 'zpX'
                     operand = dt.split(',')[0]
@@ -157,10 +150,20 @@ for src in source:
                 elif re.match('^\(.*,[iI][+]{2}\)$', dt):
                     addrsMode = 'ippI'
                     operand = dt.split(',')[0][1:]
+                elif re.match('^\w*$', dt):
+                    if op in relative:
+                        addrsMode = 'rel'
+                    else:
+                        addrsMode = 'abs'
+                    operand = dt
+                    if re.match('^_\w*$', dt):
+                        if dt not in library:
+                            library.append(dt)
                 else:
-                    addrsMode = '???'
-                    print('Error. Unknown addressing mode: %s. Line #%d.' \
-                          % (dt, srcLine))
+                    addrsMode = 'abs'
+                    operand = dt
+#                    print('Error. Unknown addressing mode: %s. Line #%d.' \
+#                          % (dt, srcLine))
 
                 opcode = op + '_' + addrsMode
                 if opcode in opcodes:
@@ -216,6 +219,26 @@ for src in source:
                     dat.append([data, lbl, 'db', dt, siz, 0, val, \
                                 ' '*bufLen + ' ; ' + srcText])
                     data += siz
+                elif op == '.dw' or op == '.wrd':
+                    siz = 2*int(dt)
+                    val = '00'*siz
+                    variables[lbl] = (data, siz, val)
+
+                    asmText = '%04X %s' % (data, val[:8])
+                    bufLen = 15 - len(asmText)
+                    dat.append([data, lbl, 'db', dt, siz, 0, val, \
+                                ' '*bufLen + ' ; ' + srcText])
+                    data += siz
+                elif op == '.dl' or op == '.lng' or op == '.flt':
+                    siz = 4
+                    val = '00'*siz
+                    variables[lbl] = (data, siz, val)
+
+                    asmText = '%04X %s' % (data, val[:8])
+                    bufLen = 15 - len(asmText)
+                    dat.append([data, lbl, 'db', dt, siz, 0, val, \
+                                ' '*bufLen + ' ; ' + srcText])
+                    data += siz
                 elif op == '.ds' or op == '.str':
                     siz = len(dt)
                     variables[lbl] = (data, siz, dt)
@@ -237,21 +260,12 @@ for src in source:
                 if dt == '':
                     addrsMode = 'imp'
                     operand = ''
-                elif re.match('^[aAxXyY]$', dt):
+                elif re.match('^[aAxXyY]{1}$', dt):
                     addrsMode = dt.lower()
                     operand = dt.lower()
                 elif re.match('^#', dt):
                     addrsMode = 'imm'
                     operand = dt[1:]
-                elif re.match('^\w*$', dt):
-                    if op in relative:
-                        addrsMode = 'rel'
-                    else:
-                        addrsMode = 'abs'
-                    operand = dt
-                    if re.match('^_\w*$', dt):
-                        if dt not in library:
-                            library.append(dt)
                 elif re.match('^.*,[xX]$', dt):
                     addrsMode = 'zpX'
                     operand = dt.split(',')[0]
@@ -273,10 +287,20 @@ for src in source:
                 elif re.match('^\(.*,[iI][+]{2}\)$', dt):
                     addrsMode = 'ippI'
                     operand = dt.split(',')[0][1:]
+                elif re.match('^\w*$', dt):
+                    if op in relative:
+                        addrsMode = 'rel'
+                    else:
+                        addrsMode = 'abs'
+                    operand = dt
+                    if re.match('^_\w*$', dt):
+                        if dt not in library:
+                            library.append(dt)
                 else:
-                    addrsMode = '???'
-                    print('Error. Unknown addressing mode: %s. Line #%d.' \
-                          % (dt, srcLine))
+                    addrsMode = 'abs'
+                    operand = dt
+#                    print('Error. Unknown addressing mode: %s. Line #%d.' \
+#                          % (dt, srcLine))
 
                 opcode = op + '_' + addrsMode
 
@@ -317,8 +341,29 @@ for key in variables.keys():
     variables[key] = (code + addr, siz, dt)
 
 '''
+    Create a common dictionary for variables, labels, and constants that will be
+    used by the eval() to resolve operand expressions during Pass 2.
+'''
+
+vlc = {}
+vlc.update(labels)
+vlc.update(constants)
+for var in variables:
+    value, *_ = variables[var]
+    vlc[var] = value
+
+print('-'*80)
+print
+for key in vlc:
+    print('%-18s : %s' % (key, vlc[key]))
+print
+print('-'*80)
+
+'''
     Assembler Pass 2
 '''
+
+print('\tPass 2')
 
 out = {}
 for ln in cod:
@@ -334,19 +379,25 @@ for ln in cod:
     if md == 'imp' or md == 'a' or md == 'x' or md == 'y':
         out[addrs] = [opLen, opStr, srcTxt]
     elif md == 'imm':
-        val = 0
-        if '_' in dt:
-            if dt in constants:
-                val = constants[dt]
-            elif dt in labels:
-                val = labels[dt]
-            elif dt in variables:
-                val, siz, strVal = variables[dt]
-            else:
-                print('Error. Expected number, constant, variable, or label:', \
-                      '%s %s %s' %(op, md, dt))
-        else:
-            val = numVal(dt)
+#        val = 0
+#        if '_' in dt:
+#            if dt in constants:
+#                val = constants[dt]
+#            elif dt in labels:
+#                val = labels[dt]
+#            elif dt in variables:
+#                val, siz, strVal = variables[dt]
+#            else:
+#                print('Error. Expected number, constant, variable, or label:', \
+#                      '%s %s %s' % (op, md, dt))
+#        else:
+#            val = numVal(dt)
+
+        try:
+            val = eval(str(dt), vlc)
+        except:
+            print('--- Error: eval(%s) failed' % dt)
+            val = 0
 
         if dtLen == 1:
             loStr = '%02X' % (val & 255)
@@ -359,7 +410,8 @@ for ln in cod:
                           ''.join([opStr, loStr, hiStr]), srcTxt]
     elif md == 'rel':
         if dt in labels:
-            delta = labels[dt] - (addrs + opLen + dtLen)
+#            delta = labels[dt] - (addrs + opLen + dtLen)
+            delta = eval(str(dt), vlc) - (addrs + opLen + dtLen)
             if dtLen == 1:
                 if delta < -128 or delta > 127:
                     print('Error. Target address out of range.')
@@ -377,17 +429,37 @@ for ln in cod:
                                   ''.join([opStr, loStr, hiStr]), srcTxt]
         else:
             print('Error. Destination not found in symbol table.')
-    elif md in ('abs', 'absI', 'absX', 'absXI', 'absY', 'absIY',):
-        if dt in constants or dt in labels or dt in variables:
-            if dt in constants:
-                val = constants[dt]
-            elif dt in labels:
-                val = labels[dt]
-            else:
-                val, siz, strVal = variables[dt]
-        else:
+    elif md in ['zpS', 'zpSI', 'zpSIY', 'zpX', 'zpXI', 'ipp', 'ippI',]:
+#        if dt in constants:
+#            val = constants[dt]
+#        elif dt.isnumeric():
+#            if len(dt) == 1:
+#                val = int(dt)
+#            elif dt[0] == '0':
+#                radix = dt[1]
+#                if radix == 'b':
+#                    val = int(dt, base=2)
+#                elif radix == 'o':
+#                    val = int(dt, base=8)
+#                elif radix == 'x':
+#                    val = int(dt, base=16)
+#                else:
+#                    print('Error. Unknown numeric representation: 0x%04X, %s' \
+#                          % (addrs, dt))
+#            else:
+#                val = int(dt)
+#        else:
+#            val = -1
+#            print('Error. Missing constant or number: 0x%04X, %s %s %s' \
+#                  % (addrs, op, md, dt))
+
+        try:
+            val = eval(str(dt), vlc)
+        except:
             val = -1
-            print('\tMissing symbol: 0x%04X, %s' % (addrs, dt))
+            print('Error. Missing constant or number: 0x%04X, %s %s %s' \
+                  % (addrs, op, md, dt))
+
         if dtLen == 1:
             loStr = '%02X' % (val & 255)
             out[addrs] = [opLen + dtLen, \
@@ -397,30 +469,23 @@ for ln in cod:
             hiStr = '%02X' % ((val >> 8) & 255)
             out[addrs] = [opLen + dtLen, \
                           ''.join([opStr, loStr, hiStr]), srcTxt]
-    elif md in ('zpS', 'zpSI', 'zpSIY', 'zpX', 'zpXI', 'ipp', 'ippI',):
-        if dt in constants:
-            val = constants[dt]
-        elif dt.isnumeric():
-            if len(dt) == 1:
-                val = int(dt)
-            elif dt[0] == '0':
-                radix = dt[1]
-                if radix == 'b':
-                    val = int(dt, base=2)
-                elif radix == 'o':
-                    val = int(dt, base=8)
-                elif radix == 'x':
-                    val = int(dt, base=16)
-                else:
-                    print('Error. Unknown numeric representation: 0x%04X, %s' \
-                          % (addrs, dt))
-            else:
-                val = int(dt)
-        else:
+    elif md in ['abs', 'absI', 'absX', 'absXI', 'absY', 'absIY',]:
+#        if dt in constants or dt in labels or dt in variables:
+#            if dt in constants:
+#                val = constants[dt]
+#            elif dt in labels:
+#                val = labels[dt]
+#            else:
+#                val, siz, strVal = variables[dt]
+#        else:
+#            val = -1
+#            print('\tMissing symbol: 0x%04X, %s' % (addrs, dt))
+        try:
+            val = eval(str(dt), vlc)
+        except:
             val = -1
-            print('Error. Missing constant or number: 0x%04X, %s %s %s' \
-                  % (addrs, op, md, dt))
-
+            print('\tMissing symbol: 0x%04X, %s, %s' % (addrs, dt, md))
+        
         if dtLen == 1:
             loStr = '%02X' % (val & 255)
             out[addrs] = [opLen + dtLen, \

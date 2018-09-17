@@ -26,6 +26,8 @@ import math
 
 variables = {'var1':2.5,}
 constants = {'const1':22/7,
+             'const2':333/106,
+             'const3':355/113,
              'pi':math.pi,}
 
 while True:
