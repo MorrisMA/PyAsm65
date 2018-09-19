@@ -122,7 +122,7 @@ def pho_ldaImmPha_to_pshImm(source):
                 nxtLbl, nxtOp = nxtLine[1]
             if nxtOp in ['pha', 'pha.w', 'pha.s', 'pha.sw'] and nxtLbl == '':
                 op = 'psh'+'.'+nxtOp.split('.')[1]
-                newLine = [[srcLine, inpLine, lbl+'\t'+op+'\t'+dt], \
+                newLine = [[srcLine, inpLine, lbl+'\t'+op+' '+dt], \
                            [lbl, op, dt]]
                 i += 1
         newSrc.append(newLine)

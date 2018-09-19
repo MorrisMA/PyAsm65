@@ -1,0 +1,695 @@
+   1    2 	.stk 1024
+   2    3 	.cod 512
+   3    4 STATIC_LINK .equ +5
+   4    5 RETURN_VALUE .equ -3
+   5    6 HIGH_RETURN_VALUE .equ -1
+   6    7 _start
+   7    8 	tsx.w
+   8    9 	lds.w #16383
+   9   10 	jmp _pc65_main
+  10   37 n_004 .equ +7
+  11   38 partbefore_005 .equ -1
+  12   39 partafter_006 .equ -3
+  13   53 part_008 .equ +7
+  14   54 hundredsdigit_009 .equ -1
+  15   55 tenspart_010 .equ -3
+  16   56 tensdigit_011 .equ -5
+  17   57 onesdigit_012 .equ -7
+  18   63 digit_014 .equ +7
+  19   64 doones_013	.sub
+  20   65 	phx.w
+  21   66 	tsx.w
+  22   68 	lda.w digit_014,X
+  23   70 	cmp.w #1
+  24   71 	bne L_017
+  25   72 L_016
+  26   73 	psh.w #S_018
+  27   74 	psh.w #0
+  28   75 	psh.w #4
+  29   76 	jsr _swrite
+  30   77 	adj #6
+  31   78 	jmp L_015
+  32   79 L_017
+  33   81 	cmp.w #2
+  34   82 	bne L_020
+  35   83 L_019
+  36   84 	psh.w #S_021
+  37   85 	psh.w #0
+  38   86 	psh.w #4
+  39   87 	jsr _swrite
+  40   88 	adj #6
+  41   89 	jmp L_015
+  42   90 L_020
+  43   92 	cmp.w #3
+  44   93 	bne L_023
+  45   94 L_022
+  46   95 	psh.w #S_024
+  47   96 	psh.w #0
+  48   97 	psh.w #6
+  49   98 	jsr _swrite
+  50   99 	adj #6
+  51  100 	jmp L_015
+  52  101 L_023
+  53  103 	cmp.w #4
+  54  104 	bne L_026
+  55  105 L_025
+  56  106 	psh.w #S_027
+  57  107 	psh.w #0
+  58  108 	psh.w #5
+  59  109 	jsr _swrite
+  60  110 	adj #6
+  61  111 	jmp L_015
+  62  112 L_026
+  63  114 	cmp.w #5
+  64  115 	bne L_029
+  65  116 L_028
+  66  117 	psh.w #S_030
+  67  118 	psh.w #0
+  68  119 	psh.w #5
+  69  120 	jsr _swrite
+  70  121 	adj #6
+  71  122 	jmp L_015
+  72  123 L_029
+  73  125 	cmp.w #6
+  74  126 	bne L_032
+  75  127 L_031
+  76  128 	psh.w #S_033
+  77  129 	psh.w #0
+  78  130 	psh.w #4
+  79  131 	jsr _swrite
+  80  132 	adj #6
+  81  133 	jmp L_015
+  82  134 L_032
+  83  136 	cmp.w #7
+  84  137 	bne L_035
+  85  138 L_034
+  86  139 	psh.w #S_036
+  87  140 	psh.w #0
+  88  141 	psh.w #6
+  89  142 	jsr _swrite
+  90  143 	adj #6
+  91  144 	jmp L_015
+  92  145 L_035
+  93  147 	cmp.w #8
+  94  148 	bne L_038
+  95  149 L_037
+  96  150 	psh.w #S_039
+  97  151 	psh.w #0
+  98  152 	psh.w #6
+  99  153 	jsr _swrite
+ 100  154 	adj #6
+ 101  155 	jmp L_015
+ 102  156 L_038
+ 103  158 	cmp.w #9
+ 104  159 	bne L_041
+ 105  160 L_040
+ 106  161 	psh.w #S_042
+ 107  162 	psh.w #0
+ 108  163 	psh.w #5
+ 109  164 	jsr _swrite
+ 110  165 	adj #6
+ 111  166 	jmp L_015
+ 112  167 L_041
+ 113  169 L_015
+ 114  171 	txs.w
+ 115  172 	plx.w
+ 116  173 	rts
+ 117  174 	.end doones_013
+ 118  183 teens_044 .equ +7
+ 119  184 doteens_043	.sub
+ 120  185 	phx.w
+ 121  186 	tsx.w
+ 122  188 	lda.w teens_044,X
+ 123  190 	cmp.w #10
+ 124  191 	bne L_047
+ 125  192 L_046
+ 126  193 	psh.w #S_048
+ 127  194 	psh.w #0
+ 128  195 	psh.w #4
+ 129  196 	jsr _swrite
+ 130  197 	adj #6
+ 131  198 	jmp L_045
+ 132  199 L_047
+ 133  201 	cmp.w #11
+ 134  202 	bne L_050
+ 135  203 L_049
+ 136  204 	psh.w #S_051
+ 137  205 	psh.w #0
+ 138  206 	psh.w #7
+ 139  207 	jsr _swrite
+ 140  208 	adj #6
+ 141  209 	jmp L_045
+ 142  210 L_050
+ 143  212 	cmp.w #12
+ 144  213 	bne L_053
+ 145  214 L_052
+ 146  215 	psh.w #S_054
+ 147  216 	psh.w #0
+ 148  217 	psh.w #7
+ 149  218 	jsr _swrite
+ 150  219 	adj #6
+ 151  220 	jmp L_045
+ 152  221 L_053
+ 153  223 	cmp.w #13
+ 154  224 	bne L_056
+ 155  225 L_055
+ 156  226 	psh.w #S_057
+ 157  227 	psh.w #0
+ 158  228 	psh.w #9
+ 159  229 	jsr _swrite
+ 160  230 	adj #6
+ 161  231 	jmp L_045
+ 162  232 L_056
+ 163  234 	cmp.w #14
+ 164  235 	bne L_059
+ 165  236 L_058
+ 166  237 	psh.w #S_060
+ 167  238 	psh.w #0
+ 168  239 	psh.w #9
+ 169  240 	jsr _swrite
+ 170  241 	adj #6
+ 171  242 	jmp L_045
+ 172  243 L_059
+ 173  245 	cmp.w #15
+ 174  246 	bne L_062
+ 175  247 L_061
+ 176  248 	psh.w #S_063
+ 177  249 	psh.w #0
+ 178  250 	psh.w #8
+ 179  251 	jsr _swrite
+ 180  252 	adj #6
+ 181  253 	jmp L_045
+ 182  254 L_062
+ 183  256 	cmp.w #16
+ 184  257 	bne L_065
+ 185  258 L_064
+ 186  259 	psh.w #S_066
+ 187  260 	psh.w #0
+ 188  261 	psh.w #8
+ 189  262 	jsr _swrite
+ 190  263 	adj #6
+ 191  264 	jmp L_045
+ 192  265 L_065
+ 193  267 	cmp.w #17
+ 194  268 	bne L_068
+ 195  269 L_067
+ 196  270 	psh.w #S_069
+ 197  271 	psh.w #0
+ 198  272 	psh.w #10
+ 199  273 	jsr _swrite
+ 200  274 	adj #6
+ 201  275 	jmp L_045
+ 202  276 L_068
+ 203  278 	cmp.w #18
+ 204  279 	bne L_071
+ 205  280 L_070
+ 206  281 	psh.w #S_072
+ 207  282 	psh.w #0
+ 208  283 	psh.w #9
+ 209  284 	jsr _swrite
+ 210  285 	adj #6
+ 211  286 	jmp L_045
+ 212  287 L_071
+ 213  289 	cmp.w #19
+ 214  290 	bne L_074
+ 215  291 L_073
+ 216  292 	psh.w #S_075
+ 217  293 	psh.w #0
+ 218  294 	psh.w #9
+ 219  295 	jsr _swrite
+ 220  296 	adj #6
+ 221  297 	jmp L_045
+ 222  298 L_074
+ 223  300 L_045
+ 224  302 	txs.w
+ 225  303 	plx.w
+ 226  304 	rts
+ 227  305 	.end doteens_043
+ 228  314 digit_077 .equ +7
+ 229  315 dotens_076	.sub
+ 230  316 	phx.w
+ 231  317 	tsx.w
+ 232  319 	lda.w digit_077,X
+ 233  321 	cmp.w #2
+ 234  322 	bne L_080
+ 235  323 L_079
+ 236  324 	psh.w #S_081
+ 237  325 	psh.w #0
+ 238  326 	psh.w #7
+ 239  327 	jsr _swrite
+ 240  328 	adj #6
+ 241  329 	jmp L_078
+ 242  330 L_080
+ 243  332 	cmp.w #3
+ 244  333 	bne L_083
+ 245  334 L_082
+ 246  335 	psh.w #S_084
+ 247  336 	psh.w #0
+ 248  337 	psh.w #7
+ 249  338 	jsr _swrite
+ 250  339 	adj #6
+ 251  340 	jmp L_078
+ 252  341 L_083
+ 253  343 	cmp.w #4
+ 254  344 	bne L_086
+ 255  345 L_085
+ 256  346 	psh.w #S_087
+ 257  347 	psh.w #0
+ 258  348 	psh.w #6
+ 259  349 	jsr _swrite
+ 260  350 	adj #6
+ 261  351 	jmp L_078
+ 262  352 L_086
+ 263  354 	cmp.w #5
+ 264  355 	bne L_089
+ 265  356 L_088
+ 266  357 	psh.w #S_090
+ 267  358 	psh.w #0
+ 268  359 	psh.w #6
+ 269  360 	jsr _swrite
+ 270  361 	adj #6
+ 271  362 	jmp L_078
+ 272  363 L_089
+ 273  365 	cmp.w #6
+ 274  366 	bne L_092
+ 275  367 L_091
+ 276  368 	psh.w #S_093
+ 277  369 	psh.w #0
+ 278  370 	psh.w #6
+ 279  371 	jsr _swrite
+ 280  372 	adj #6
+ 281  373 	jmp L_078
+ 282  374 L_092
+ 283  376 	cmp.w #7
+ 284  377 	bne L_095
+ 285  378 L_094
+ 286  379 	psh.w #S_096
+ 287  380 	psh.w #0
+ 288  381 	psh.w #8
+ 289  382 	jsr _swrite
+ 290  383 	adj #6
+ 291  384 	jmp L_078
+ 292  385 L_095
+ 293  387 	cmp.w #8
+ 294  388 	bne L_098
+ 295  389 L_097
+ 296  390 	psh.w #S_099
+ 297  391 	psh.w #0
+ 298  392 	psh.w #7
+ 299  393 	jsr _swrite
+ 300  394 	adj #6
+ 301  395 	jmp L_078
+ 302  396 L_098
+ 303  398 	cmp.w #9
+ 304  399 	bne L_101
+ 305  400 L_100
+ 306  401 	psh.w #S_102
+ 307  402 	psh.w #0
+ 308  403 	psh.w #7
+ 309  404 	jsr _swrite
+ 310  405 	adj #6
+ 311  406 	jmp L_078
+ 312  407 L_101
+ 313  409 L_078
+ 314  411 	txs.w
+ 315  412 	plx.w
+ 316  413 	rts
+ 317  414 	.end dotens_076
+ 318  417 dopart_007	.sub
+ 319  418 	phx.w
+ 320  419 	tsx.w
+ 321  420 	adj #-8
+ 322  424 	lda.w part_008,X
+ 323  425 	pha.w
+ 324  426 	lda #100
+ 325  427 	pha.w
+ 326  428 	jsr _idiv
+ 327  429 	adj #4
+ 328  430 	sta.w hundredsdigit_009,X
+ 329  432 	lda.w part_008,X
+ 330  433 	pha.w
+ 331  434 	lda #100
+ 332  435 	pha.w
+ 333  436 	jsr _idiv
+ 334  437 	adj #4
+ 335  438 	swp a
+ 336  439 	sta.w tenspart_010,X
+ 337  443 	lda.w hundredsdigit_009,X
+ 338  444 	pha.w
+ 339  445 	lda #0
+ 340  446 	xma.w 1,S
+ 341  447 	cmp.w 1,S
+ 342  448 	adj #2
+ 343  449 	php
+ 344  450 	lda #1
+ 345  451 	plp
+ 346  452 	bgt L_105
+ 347  453 	lda #0
+ 348  454 L_105
+ 349  455 	cmp.w #1
+ 350  456 	beq L_103
+ 351  457 	jmp L_104
+ 352  458 L_103
+ 353  460 	lda.w hundredsdigit_009,X
+ 354  461 	pha.w
+ 355  462 	phx.w
+ 356  463 	jsr doones_013
+ 357  464 	adj #4
+ 358  466 	psh.w #S_106
+ 359  467 	psh.w #0
+ 360  468 	psh.w #8
+ 361  469 	jsr _swrite
+ 362  470 	adj #6
+ 363  472 L_104
+ 364  476 	lda.w tenspart_010,X
+ 365  477 	pha.w
+ 366  478 	lda #10
+ 367  479 	xma.w 1,S
+ 368  480 	cmp.w 1,S
+ 369  481 	adj #2
+ 370  482 	php
+ 371  483 	lda #1
+ 372  484 	plp
+ 373  485 	bge L_109
+ 374  486 	lda #0
+ 375  487 L_109
+ 376  488 	pha.w
+ 377  489 	lda.w tenspart_010,X
+ 378  490 	pha.w
+ 379  491 	lda #19
+ 380  492 	xma.w 1,S
+ 381  493 	cmp.w 1,S
+ 382  494 	adj #2
+ 383  495 	php
+ 384  496 	lda #1
+ 385  497 	plp
+ 386  498 	ble L_110
+ 387  499 	lda #0
+ 388  500 L_110
+ 389  501 	and.w 1,S
+ 390  502 	adj #2
+ 391  503 	cmp.w #1
+ 392  504 	beq L_107
+ 393  505 	jmp L_108
+ 394  506 L_107
+ 395  508 	lda.w tenspart_010,X
+ 396  509 	pha.w
+ 397  510 	phx.w
+ 398  511 	jsr doteens_043
+ 399  512 	adj #4
+ 400  515 	jmp L_111
+ 401  516 L_108
+ 402  518 	lda.w tenspart_010,X
+ 403  519 	pha.w
+ 404  520 	lda #10
+ 405  521 	pha.w
+ 406  522 	jsr _idiv
+ 407  523 	adj #4
+ 408  524 	sta.w tensdigit_011,X
+ 409  526 	lda.w tenspart_010,X
+ 410  527 	pha.w
+ 411  528 	lda #10
+ 412  529 	pha.w
+ 413  530 	jsr _idiv
+ 414  531 	adj #4
+ 415  532 	swp a
+ 416  533 	sta.w onesdigit_012,X
+ 417  536 	lda.w tensdigit_011,X
+ 418  537 	pha.w
+ 419  538 	lda #0
+ 420  539 	xma.w 1,S
+ 421  540 	cmp.w 1,S
+ 422  541 	adj #2
+ 423  542 	php
+ 424  543 	lda #1
+ 425  544 	plp
+ 426  545 	bgt L_114
+ 427  546 	lda #0
+ 428  547 L_114
+ 429  548 	cmp.w #1
+ 430  549 	beq L_112
+ 431  550 	jmp L_113
+ 432  551 L_112
+ 433  552 	lda.w tensdigit_011,X
+ 434  553 	pha.w
+ 435  554 	phx.w
+ 436  555 	jsr dotens_076
+ 437  556 	adj #4
+ 438  557 L_113
+ 439  559 	lda.w onesdigit_012,X
+ 440  560 	pha.w
+ 441  561 	lda #0
+ 442  562 	xma.w 1,S
+ 443  563 	cmp.w 1,S
+ 444  564 	adj #2
+ 445  565 	php
+ 446  566 	lda #1
+ 447  567 	plp
+ 448  568 	bgt L_117
+ 449  569 	lda #0
+ 450  570 L_117
+ 451  571 	cmp.w #1
+ 452  572 	beq L_115
+ 453  573 	jmp L_116
+ 454  574 L_115
+ 455  575 	lda.w onesdigit_012,X
+ 456  576 	pha.w
+ 457  577 	phx.w
+ 458  578 	jsr doones_013
+ 459  579 	adj #4
+ 460  580 L_116
+ 461  582 L_111
+ 462  584 	txs.w
+ 463  585 	plx.w
+ 464  586 	rts
+ 465  587 	.end dopart_007
+ 466  590 translate_003	.sub
+ 467  591 	phx.w
+ 468  592 	tsx.w
+ 469  593 	adj #-4
+ 470  597 	lda.w n_004,X
+ 471  598 	pha.w
+ 472  599 	lda.w #1000
+ 473  600 	pha.w
+ 474  601 	jsr _idiv
+ 475  602 	adj #4
+ 476  603 	sta.w partbefore_005,X
+ 477  605 	lda.w n_004,X
+ 478  606 	pha.w
+ 479  607 	lda.w #1000
+ 480  608 	pha.w
+ 481  609 	jsr _idiv
+ 482  610 	adj #4
+ 483  611 	swp a
+ 484  612 	sta.w partafter_006,X
+ 485  615 	lda.w partbefore_005,X
+ 486  616 	pha.w
+ 487  617 	lda #0
+ 488  618 	xma.w 1,S
+ 489  619 	cmp.w 1,S
+ 490  620 	adj #2
+ 491  621 	php
+ 492  622 	lda #1
+ 493  623 	plp
+ 494  624 	bgt L_120
+ 495  625 	lda #0
+ 496  626 L_120
+ 497  627 	cmp.w #1
+ 498  628 	beq L_118
+ 499  629 	jmp L_119
+ 500  630 L_118
+ 501  632 	lda.w partbefore_005,X
+ 502  633 	pha.w
+ 503  634 	phx.w
+ 504  635 	jsr dopart_007
+ 505  636 	adj #4
+ 506  638 	psh.w #S_121
+ 507  639 	psh.w #0
+ 508  640 	psh.w #9
+ 509  641 	jsr _swrite
+ 510  642 	adj #6
+ 511  644 L_119
+ 512  647 	lda.w partafter_006,X
+ 513  648 	pha.w
+ 514  649 	lda #0
+ 515  650 	xma.w 1,S
+ 516  651 	cmp.w 1,S
+ 517  652 	adj #2
+ 518  653 	php
+ 519  654 	lda #1
+ 520  655 	plp
+ 521  656 	bgt L_124
+ 522  657 	lda #0
+ 523  658 L_124
+ 524  659 	cmp.w #1
+ 525  660 	beq L_122
+ 526  661 	jmp L_123
+ 527  662 L_122
+ 528  663 	lda.w partafter_006,X
+ 529  664 	pha.w
+ 530  665 	phx.w
+ 531  666 	jsr dopart_007
+ 532  667 	adj #4
+ 533  668 L_123
+ 534  670 	txs.w
+ 535  671 	plx.w
+ 536  672 	rts
+ 537  673 	.end translate_003
+ 538  677 _pc65_main	.sub
+ 539  678 	phx.w
+ 540  679 	tsx.w
+ 541  683 L_125
+ 542  685 	psh.w #number_002
+ 543  686 	jsr _iread
+ 544  687 	pli
+ 545  688 	sta.w 0,I++
+ 546  690 	lda.w number_002
+ 547  691 	pha.w
+ 548  692 	lda #6
+ 549  693 	pha.w
+ 550  694 	jsr _iwrite
+ 551  695 	adj #4
+ 552  696 	psh.w #S_127
+ 553  697 	psh.w #0
+ 554  698 	psh.w #2
+ 555  699 	jsr _swrite
+ 556  700 	adj #6
+ 557  703 	lda.w number_002
+ 558  704 	pha.w
+ 559  705 	lda #0
+ 560  706 	xma.w 1,S
+ 561  707 	cmp.w 1,S
+ 562  708 	adj #2
+ 563  709 	php
+ 564  710 	lda #1
+ 565  711 	plp
+ 566  712 	blt L_130
+ 567  713 	lda #0
+ 568  714 L_130
+ 569  715 	cmp.w #1
+ 570  716 	beq L_128
+ 571  717 	jmp L_129
+ 572  718 L_128
+ 573  720 	psh.w #S_131
+ 574  721 	psh.w #0
+ 575  722 	psh.w #26
+ 576  723 	jsr _swrite
+ 577  724 	adj #6
+ 578  727 	jmp L_132
+ 579  728 L_129
+ 580  729 	lda.w number_002
+ 581  730 	pha.w
+ 582  731 	lda.w #30000
+ 583  732 	xma.w 1,S
+ 584  733 	cmp.w 1,S
+ 585  734 	adj #2
+ 586  735 	php
+ 587  736 	lda #1
+ 588  737 	plp
+ 589  738 	bgt L_135
+ 590  739 	lda #0
+ 591  740 L_135
+ 592  741 	cmp.w #1
+ 593  742 	beq L_133
+ 594  743 	jmp L_134
+ 595  744 L_133
+ 596  746 	psh.w #S_136
+ 597  747 	psh.w #0
+ 598  748 	psh.w #25
+ 599  749 	jsr _swrite
+ 600  750 	adj #6
+ 601  751 	lda.w #30000
+ 602  752 	pha.w
+ 603  753 	lda #1
+ 604  754 	pha.w
+ 605  755 	jsr _iwrite
+ 606  756 	adj #4
+ 607  759 	jmp L_137
+ 608  760 L_134
+ 609  761 	lda.w number_002
+ 610  762 	pha.w
+ 611  763 	lda #0
+ 612  764 	xma.w 1,S
+ 613  765 	cmp.w 1,S
+ 614  766 	adj #2
+ 615  767 	php
+ 616  768 	lda #1
+ 617  769 	plp
+ 618  770 	beq L_140
+ 619  771 	lda #0
+ 620  772 L_140
+ 621  773 	cmp.w #1
+ 622  774 	beq L_138
+ 623  775 	jmp L_139
+ 624  776 L_138
+ 625  778 	psh.w #S_141
+ 626  779 	psh.w #0
+ 627  780 	psh.w #5
+ 628  781 	jsr _swrite
+ 629  782 	adj #6
+ 630  785 	jmp L_142
+ 631  786 L_139
+ 632  788 	lda.w number_002
+ 633  789 	pha.w
+ 634  790 	phx.w
+ 635  791 	jsr translate_003
+ 636  792 	adj #4
+ 637  794 L_142
+ 638  795 L_137
+ 639  796 L_132
+ 640  799 	jsr _writeln
+ 641  801 	lda.w number_002
+ 642  802 	pha.w
+ 643  803 	lda #0
+ 644  804 	xma.w 1,S
+ 645  805 	cmp.w 1,S
+ 646  806 	adj #2
+ 647  807 	php
+ 648  808 	lda #1
+ 649  809 	plp
+ 650  810 	beq L_143
+ 651  811 	lda #0
+ 652  812 L_143
+ 653  813 	cmp.w #1
+ 654  814 	beq L_126
+ 655  815 	jmp L_125
+ 656  816 L_126
+ 657  818 	plx.w
+ 658  819 	rts
+ 659  820 	.end _pc65_main
+ 660  822 	.dat
+ 661  824 number_002 .byt 2
+ 662  825 S_141 .str " zero"
+ 663  826 S_136 .str " ***** Error -- number > "
+ 664  827 S_131 .str " ***** Error -- number < 0"
+ 665  828 S_127 .str " :"
+ 666  829 S_121 .str " thousand"
+ 667  830 S_106 .str " hundred"
+ 668  831 S_102 .str " ninety"
+ 669  832 S_099 .str " eighty"
+ 670  833 S_096 .str " seventy"
+ 671  834 S_093 .str " sixty"
+ 672  835 S_090 .str " fifty"
+ 673  836 S_087 .str " forty"
+ 674  837 S_084 .str " thirty"
+ 675  838 S_081 .str " twenty"
+ 676  839 S_075 .str " nineteen"
+ 677  840 S_072 .str " eighteen"
+ 678  841 S_069 .str " seventeen"
+ 679  842 S_066 .str " sixteen"
+ 680  843 S_063 .str " fifteen"
+ 681  844 S_060 .str " fourteen"
+ 682  845 S_057 .str " thirteen"
+ 683  846 S_054 .str " twelve"
+ 684  847 S_051 .str " eleven"
+ 685  848 S_048 .str " ten"
+ 686  849 S_042 .str " nine"
+ 687  850 S_039 .str " eight"
+ 688  851 S_036 .str " seven"
+ 689  852 S_033 .str " six"
+ 690  853 S_030 .str " five"
+ 691  854 S_027 .str " four"
+ 692  855 S_024 .str " three"
+ 693  856 S_021 .str " two"
+ 694  857 S_018 .str " one"
+ 695  859 	.end

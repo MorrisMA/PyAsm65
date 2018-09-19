@@ -88,9 +88,9 @@ for src in source:
         op  = src[1][1].lower()
         dt  = ''
     elif numFields == 3:
-        lbl = src[1][0]
+        lbl = src[1][0].strip()
         op  = src[1][1].lower()
-        dt  = src[1][2]
+        dt  = src[1][2].strip()
     else:
         print('Error. Unexpected number of fields: %d' % (numFields) \
               + ' in line #%d' % (srcLine))
@@ -379,20 +379,6 @@ for ln in cod:
     if md == 'imp' or md == 'a' or md == 'x' or md == 'y':
         out[addrs] = [opLen, opStr, srcTxt]
     elif md == 'imm':
-#        val = 0
-#        if '_' in dt:
-#            if dt in constants:
-#                val = constants[dt]
-#            elif dt in labels:
-#                val = labels[dt]
-#            elif dt in variables:
-#                val, siz, strVal = variables[dt]
-#            else:
-#                print('Error. Expected number, constant, variable, or label:', \
-#                      '%s %s %s' % (op, md, dt))
-#        else:
-#            val = numVal(dt)
-
         try:
             val = eval(str(dt), vlc)
         except:
@@ -410,7 +396,6 @@ for ln in cod:
                           ''.join([opStr, loStr, hiStr]), srcTxt]
     elif md == 'rel':
         if dt in labels:
-#            delta = labels[dt] - (addrs + opLen + dtLen)
             delta = eval(str(dt), vlc) - (addrs + opLen + dtLen)
             if dtLen == 1:
                 if delta < -128 or delta > 127:
@@ -430,29 +415,6 @@ for ln in cod:
         else:
             print('Error. Destination not found in symbol table.')
     elif md in ['zpS', 'zpSI', 'zpSIY', 'zpX', 'zpXI', 'ipp', 'ippI',]:
-#        if dt in constants:
-#            val = constants[dt]
-#        elif dt.isnumeric():
-#            if len(dt) == 1:
-#                val = int(dt)
-#            elif dt[0] == '0':
-#                radix = dt[1]
-#                if radix == 'b':
-#                    val = int(dt, base=2)
-#                elif radix == 'o':
-#                    val = int(dt, base=8)
-#                elif radix == 'x':
-#                    val = int(dt, base=16)
-#                else:
-#                    print('Error. Unknown numeric representation: 0x%04X, %s' \
-#                          % (addrs, dt))
-#            else:
-#                val = int(dt)
-#        else:
-#            val = -1
-#            print('Error. Missing constant or number: 0x%04X, %s %s %s' \
-#                  % (addrs, op, md, dt))
-
         try:
             val = eval(str(dt), vlc)
         except:
@@ -470,16 +432,6 @@ for ln in cod:
             out[addrs] = [opLen + dtLen, \
                           ''.join([opStr, loStr, hiStr]), srcTxt]
     elif md in ['abs', 'absI', 'absX', 'absXI', 'absY', 'absIY',]:
-#        if dt in constants or dt in labels or dt in variables:
-#            if dt in constants:
-#                val = constants[dt]
-#            elif dt in labels:
-#                val = labels[dt]
-#            else:
-#                val, siz, strVal = variables[dt]
-#        else:
-#            val = -1
-#            print('\tMissing symbol: 0x%04X, %s' % (addrs, dt))
         try:
             val = eval(str(dt), vlc)
         except:

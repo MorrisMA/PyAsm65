@@ -1,6 +1,6 @@
 0200 ABBA        ; 	tsx.w
-0202 CBA2FF3F    ; 	lds.w	#16383
-0206 4C3113      ; 	jmp	_pc65_main
+0202 CBA2FF3F    ; 	lds.w #16383
+0206 4C3113      ; 	jmp _pc65_main
 0209 ABDA        ; 	phx.w
 020B ABBA        ; 	tsx.w
 020D C2FA        ; 	adj #-6
@@ -11,7 +11,7 @@
 0219 AB5003      ; 	bge L_018
 021C 4CCD02      ; 	jmp L_019
 021F ABE23814    ; 	psh.w #island_002
-0223 ABE20000    ; 	psh.w	#0
+0223 ABE20000    ; 	psh.w #0
 0227 ABE21600    ; 	psh.w #22
 022B 20FFFF      ; 	jsr _imul
 022E C204        ; 	adj #4
@@ -27,7 +27,7 @@
 0245 6B          ; 	pli
 0246 AB8300      ; 	sta.w 0,I++
 0249 ABE23814    ; 	psh.w #island_002
-024D ABE20A00    ; 	psh.w	#10
+024D ABE20A00    ; 	psh.w #10
 0251 ABE21600    ; 	psh.w #22
 0255 20FFFF      ; 	jsr _imul
 0258 C204        ; 	adj #4
@@ -365,7 +365,7 @@
 0593 C2FC        ; 	adj #-4
 0595 ABAD3A16    ; 	lda.w seed_010
 0599 AB48        ; 	pha.w
-059B ABE21500    ; 	psh.w	#21
+059B ABE21500    ; 	psh.w #21
 059F 20FFFF      ; 	jsr _imul
 05A2 C204        ; 	adj #4
 05A4 AB48        ; 	pha.w
@@ -374,7 +374,7 @@
 05A9 CB7501      ; 	adc.w 1,S
 05AC C202        ; 	adj #2
 05AE AB48        ; 	pha.w
-05B0 ABE20004    ; 	psh.w	#1024
+05B0 ABE20004    ; 	psh.w #1024
 05B4 20FFFF      ; 	jsr _idiv
 05B7 C204        ; 	adj #4
 05B9 1B          ; 	swp a
@@ -386,7 +386,7 @@
 05C9 20FFFF      ; 	jsr _imul
 05CC C204        ; 	adj #4
 05CE AB48        ; 	pha.w
-05D0 ABE20004    ; 	psh.w	#1024
+05D0 ABE20004    ; 	psh.w #1024
 05D4 20FFFF      ; 	jsr _idiv
 05D7 C204        ; 	adj #4
 05D9 AB95FD      ; 	sta.w RETURN_VALUE,X
@@ -412,7 +412,7 @@
 0604 A900        ; 	lda #0
 0606 ABC90100    ; 	cmp.w #1
 060A F003        ; 	beq L_046
-060C 4CE406      ; 	jmp  L_047
+060C 4CE406      ; 	jmp L_047
 060F A900        ; 	lda #0
 0611 AB95FF      ; 	sta.w adj_043,X
 0614 ABB5FF      ; 	lda.w adj_043,X
@@ -507,8 +507,8 @@
 06E7 4901        ; 	eor #1
 06E9 ABC90100    ; 	cmp.w #1
 06ED F003        ; 	beq L_053
-06EF 4CDD07      ; 	jmp  L_054
-06F2 ABE20500    ; 	psh.w	#5
+06EF 4CDD07      ; 	jmp L_054
+06F2 ABE20500    ; 	psh.w #5
 06F6 ABB505      ; 	lda.w STATIC_LINK,X
 06F9 AB48        ; 	pha.w
 06FB 208F05      ; 	jsr random_035
@@ -685,7 +685,7 @@
 088E A900        ; 	lda #0
 0890 ABC90100    ; 	cmp.w #1
 0894 F003        ; 	beq L_066
-0896 4C5709      ; 	jmp  L_067
+0896 4C5709      ; 	jmp L_067
 0899 ABE23814    ; 	psh.w #island_002
 089D ABB509      ; 	lda.w oldrow_061,X
 08A0 AB48        ; 	pha.w
@@ -711,47 +711,47 @@
 08D0 CBF501      ; 	sbc.w 1,S
 08D3 C202        ; 	adj #2
 08D5 AB8D3016    ; 	sta.w numwolves_005
-08D9 ABE2AB16    ; 	psh.w #S_069
+08D9 ABE29E16    ; 	psh.w #S_069
 08DD ABE20000    ; 	psh.w #0
 08E1 ABE20300    ; 	psh.w #3
 08E5 20FFFF      ; 	jsr _swrite
 08E8 C206        ; 	adj #6
 08EA ABAD3616    ; 	lda.w t_008
 08EE AB48        ; 	pha.w
-08F0 ABE20400    ; 	psh.w	#4
+08F0 ABE20400    ; 	psh.w #4
 08F4 20FFFF      ; 	jsr _iwrite
 08F7 C204        ; 	adj #4
-08F9 ABE29B16    ; 	psh.w #S_070
+08F9 ABE29016    ; 	psh.w #S_070
 08FD ABE20000    ; 	psh.w #0
 0901 ABE21000    ; 	psh.w #16
 0905 20FFFF      ; 	jsr _swrite
 0908 C206        ; 	adj #6
-090A ABE25B00    ; 	psh.w	#91
+090A ABE25B00    ; 	psh.w #91
 090E ABE20000    ; 	psh.w #0
 0912 20FFFF      ; 	jsr _cwrite
 0915 C204        ; 	adj #4
 0917 ABB509      ; 	lda.w oldrow_061,X
 091A AB48        ; 	pha.w
-091C ABE20100    ; 	psh.w	#1
+091C ABE20100    ; 	psh.w #1
 0920 20FFFF      ; 	jsr _iwrite
 0923 C204        ; 	adj #4
-0925 ABE29916    ; 	psh.w #S_071
+0925 ABE28F16    ; 	psh.w #S_071
 0929 ABE20000    ; 	psh.w #0
 092D ABE20200    ; 	psh.w #2
 0931 20FFFF      ; 	jsr _swrite
 0934 C206        ; 	adj #6
 0936 ABB507      ; 	lda.w oldcol_062,X
 0939 AB48        ; 	pha.w
-093B ABE20100    ; 	psh.w	#1
+093B ABE20100    ; 	psh.w #1
 093F 20FFFF      ; 	jsr _iwrite
 0942 C204        ; 	adj #4
-0944 ABE25D00    ; 	psh.w	#93
+0944 ABE25D00    ; 	psh.w #93
 0948 ABE20000    ; 	psh.w #0
 094C 20FFFF      ; 	jsr _cwrite
 094F C204        ; 	adj #4
 0951 20FFFF      ; 	jsr _writeln
 0954 4CD90D      ; 	jmp L_072
-0957 ABE20000    ; 	psh.w	#0
+0957 ABE20000    ; 	psh.w #0
 095B ABB509      ; 	lda.w oldrow_061,X
 095E AB48        ; 	pha.w
 0960 ABB507      ; 	lda.w oldcol_062,X
@@ -797,7 +797,7 @@
 09BB ABB5FB      ; 	lda.w moved_065,X
 09BE ABC90100    ; 	cmp.w #1
 09C2 F003        ; 	beq L_075
-09C4 4CE00B      ; 	jmp  L_076
+09C4 4CE00B      ; 	jmp L_076
 09C7 ABE23814    ; 	psh.w #island_002
 09CB ABB5FF      ; 	lda.w newrow_063,X
 09CE AB48        ; 	pha.w
@@ -826,7 +826,7 @@
 0A02 A900        ; 	lda #0
 0A04 ABC90100    ; 	cmp.w #1
 0A08 F003        ; 	beq L_077
-0A0A 4C010B      ; 	jmp  L_078
+0A0A 4C010B      ; 	jmp L_078
 0A0D ABE22A15    ; 	psh.w #foodunits_003
 0A11 ABB509      ; 	lda.w oldrow_061,X
 0A14 AB3A        ; 	dec.w a
@@ -876,41 +876,41 @@
 0A7D CBF501      ; 	sbc.w 1,S
 0A80 C202        ; 	adj #2
 0A82 AB8D3216    ; 	sta.w numrabbits_006
-0A86 ABE2AB16    ; 	psh.w #S_069
+0A86 ABE29E16    ; 	psh.w #S_069
 0A8A ABE20000    ; 	psh.w #0
 0A8E ABE20300    ; 	psh.w #3
 0A92 20FFFF      ; 	jsr _swrite
 0A95 C206        ; 	adj #6
 0A97 ABAD3616    ; 	lda.w t_008
 0A9B AB48        ; 	pha.w
-0A9D ABE20400    ; 	psh.w	#4
+0A9D ABE20400    ; 	psh.w #4
 0AA1 20FFFF      ; 	jsr _iwrite
 0AA4 C204        ; 	adj #4
-0AA6 ABE28616    ; 	psh.w #S_080
+0AA6 ABE27E16    ; 	psh.w #S_080
 0AAA ABE20000    ; 	psh.w #0
 0AAE ABE21300    ; 	psh.w #19
 0AB2 20FFFF      ; 	jsr _swrite
 0AB5 C206        ; 	adj #6
-0AB7 ABE25B00    ; 	psh.w	#91
+0AB7 ABE25B00    ; 	psh.w #91
 0ABB ABE20000    ; 	psh.w #0
 0ABF 20FFFF      ; 	jsr _cwrite
 0AC2 C204        ; 	adj #4
 0AC4 ABB5FF      ; 	lda.w newrow_063,X
 0AC7 AB48        ; 	pha.w
-0AC9 ABE20100    ; 	psh.w	#1
+0AC9 ABE20100    ; 	psh.w #1
 0ACD 20FFFF      ; 	jsr _iwrite
 0AD0 C204        ; 	adj #4
-0AD2 ABE29916    ; 	psh.w #S_071
+0AD2 ABE28F16    ; 	psh.w #S_071
 0AD6 ABE20000    ; 	psh.w #0
 0ADA ABE20200    ; 	psh.w #2
 0ADE 20FFFF      ; 	jsr _swrite
 0AE1 C206        ; 	adj #6
 0AE3 ABB5FD      ; 	lda.w newcol_064,X
 0AE6 AB48        ; 	pha.w
-0AE8 ABE20100    ; 	psh.w	#1
+0AE8 ABE20100    ; 	psh.w #1
 0AEC 20FFFF      ; 	jsr _iwrite
 0AEF C204        ; 	adj #4
-0AF1 ABE25D00    ; 	psh.w	#93
+0AF1 ABE25D00    ; 	psh.w #93
 0AF5 ABE20000    ; 	psh.w #0
 0AF9 20FFFF      ; 	jsr _cwrite
 0AFC C204        ; 	adj #4
@@ -1006,7 +1006,7 @@
 0BDD AB8300      ; 	sta.w 0,I++
 0BE0 ABAD3616    ; 	lda.w t_008
 0BE4 AB48        ; 	pha.w
-0BE6 ABE20C00    ; 	psh.w	#12
+0BE6 ABE20C00    ; 	psh.w #12
 0BEA 20FFFF      ; 	jsr _idiv
 0BED C204        ; 	adj #4
 0BEF 1B          ; 	swp a
@@ -1053,7 +1053,7 @@
 0C4B C202        ; 	adj #2
 0C4D ABC90100    ; 	cmp.w #1
 0C51 F003        ; 	beq L_081
-0C53 4CD90D      ; 	jmp  L_082
+0C53 4CD90D      ; 	jmp L_082
 0C56 ABE22A15    ; 	psh.w #foodunits_003
 0C5A ABB5FF      ; 	lda.w newrow_063,X
 0C5D AB3A        ; 	dec.w a
@@ -1089,7 +1089,7 @@
 0CA8 6B          ; 	pli
 0CA9 ABA300      ; 	lda.w 0,I++
 0CAC AB48        ; 	pha.w
-0CAE ABE20200    ; 	psh.w	#2
+0CAE ABE20200    ; 	psh.w #2
 0CB2 20FFFF      ; 	jsr _idiv
 0CB5 C204        ; 	adj #4
 0CB7 6B          ; 	pli
@@ -1097,7 +1097,7 @@
 0CBB ABB5FB      ; 	lda.w moved_065,X
 0CBE ABC90100    ; 	cmp.w #1
 0CC2 F003        ; 	beq L_085
-0CC4 4CD90D      ; 	jmp  L_086
+0CC4 4CD90D      ; 	jmp L_086
 0CC7 ABE23814    ; 	psh.w #island_002
 0CCB ABB509      ; 	lda.w oldrow_061,X
 0CCE AB48        ; 	pha.w
@@ -1158,41 +1158,41 @@
 0D55 CB7501      ; 	adc.w 1,S
 0D58 C202        ; 	adj #2
 0D5A AB8D3016    ; 	sta.w numwolves_005
-0D5E ABE2AB16    ; 	psh.w #S_069
+0D5E ABE29E16    ; 	psh.w #S_069
 0D62 ABE20000    ; 	psh.w #0
 0D66 ABE20300    ; 	psh.w #3
 0D6A 20FFFF      ; 	jsr _swrite
 0D6D C206        ; 	adj #6
 0D6F ABAD3616    ; 	lda.w t_008
 0D73 AB48        ; 	pha.w
-0D75 ABE20400    ; 	psh.w	#4
+0D75 ABE20400    ; 	psh.w #4
 0D79 20FFFF      ; 	jsr _iwrite
 0D7C C204        ; 	adj #4
-0D7E ABE27616    ; 	psh.w #S_087
+0D7E ABE27016    ; 	psh.w #S_087
 0D82 ABE20000    ; 	psh.w #0
 0D86 ABE21000    ; 	psh.w #16
 0D8A 20FFFF      ; 	jsr _swrite
 0D8D C206        ; 	adj #6
-0D8F ABE25B00    ; 	psh.w	#91
+0D8F ABE25B00    ; 	psh.w #91
 0D93 ABE20000    ; 	psh.w #0
 0D97 20FFFF      ; 	jsr _cwrite
 0D9A C204        ; 	adj #4
 0D9C ABB509      ; 	lda.w oldrow_061,X
 0D9F AB48        ; 	pha.w
-0DA1 ABE20100    ; 	psh.w	#1
+0DA1 ABE20100    ; 	psh.w #1
 0DA5 20FFFF      ; 	jsr _iwrite
 0DA8 C204        ; 	adj #4
-0DAA ABE29916    ; 	psh.w #S_071
+0DAA ABE28F16    ; 	psh.w #S_071
 0DAE ABE20000    ; 	psh.w #0
 0DB2 ABE20200    ; 	psh.w #2
 0DB6 20FFFF      ; 	jsr _swrite
 0DB9 C206        ; 	adj #6
 0DBB ABB507      ; 	lda.w oldcol_062,X
 0DBE AB48        ; 	pha.w
-0DC0 ABE20100    ; 	psh.w	#1
+0DC0 ABE20100    ; 	psh.w #1
 0DC4 20FFFF      ; 	jsr _iwrite
 0DC7 C204        ; 	adj #4
-0DC9 ABE25D00    ; 	psh.w	#93
+0DC9 ABE25D00    ; 	psh.w #93
 0DCD ABE20000    ; 	psh.w #0
 0DD1 20FFFF      ; 	jsr _cwrite
 0DD4 C204        ; 	adj #4
@@ -1203,7 +1203,7 @@
 0DDE ABDA        ; 	phx.w
 0DE0 ABBA        ; 	tsx.w
 0DE2 C2FA        ; 	adj #-6
-0DE4 ABE20100    ; 	psh.w	#1
+0DE4 ABE20100    ; 	psh.w #1
 0DE8 ABB509      ; 	lda.w oldrow_089,X
 0DEB AB48        ; 	pha.w
 0DED ABB507      ; 	lda.w oldcol_090,X
@@ -1249,7 +1249,7 @@
 0E48 ABB5FB      ; 	lda.w moved_093,X
 0E4B ABC90100    ; 	cmp.w #1
 0E4F F003        ; 	beq L_096
-0E51 4CAA0E      ; 	jmp  L_097
+0E51 4CAA0E      ; 	jmp L_097
 0E54 ABE23814    ; 	psh.w #island_002
 0E58 ABB5FF      ; 	lda.w newrow_091,X
 0E5B AB48        ; 	pha.w
@@ -1286,7 +1286,7 @@
 0EA7 AB8300      ; 	sta.w 0,I++
 0EAA ABAD3616    ; 	lda.w t_008
 0EAE AB48        ; 	pha.w
-0EB0 ABE20500    ; 	psh.w	#5
+0EB0 ABE20500    ; 	psh.w #5
 0EB4 20FFFF      ; 	jsr _idiv
 0EB7 C204        ; 	adj #4
 0EB9 1B          ; 	swp a
@@ -1302,11 +1302,11 @@
 0ECC A900        ; 	lda #0
 0ECE ABC90100    ; 	cmp.w #1
 0ED2 F003        ; 	beq L_098
-0ED4 4C9B0F      ; 	jmp  L_099
+0ED4 4C9B0F      ; 	jmp L_099
 0ED7 ABB5FB      ; 	lda.w moved_093,X
 0EDA ABC90100    ; 	cmp.w #1
 0EDE F003        ; 	beq L_101
-0EE0 4C9B0F      ; 	jmp  L_102
+0EE0 4C9B0F      ; 	jmp L_102
 0EE3 ABE23814    ; 	psh.w #island_002
 0EE7 ABB509      ; 	lda.w oldrow_089,X
 0EEA AB48        ; 	pha.w
@@ -1331,41 +1331,41 @@
 0F17 CB7501      ; 	adc.w 1,S
 0F1A C202        ; 	adj #2
 0F1C AB8D3216    ; 	sta.w numrabbits_006
-0F20 ABE2AB16    ; 	psh.w #S_069
+0F20 ABE29E16    ; 	psh.w #S_069
 0F24 ABE20000    ; 	psh.w #0
 0F28 ABE20300    ; 	psh.w #3
 0F2C 20FFFF      ; 	jsr _swrite
 0F2F C206        ; 	adj #6
 0F31 ABAD3616    ; 	lda.w t_008
 0F35 AB48        ; 	pha.w
-0F37 ABE20400    ; 	psh.w	#4
+0F37 ABE20400    ; 	psh.w #4
 0F3B 20FFFF      ; 	jsr _iwrite
 0F3E C204        ; 	adj #4
-0F40 ABE26416    ; 	psh.w #S_103
+0F40 ABE26016    ; 	psh.w #S_103
 0F44 ABE20000    ; 	psh.w #0
 0F48 ABE21200    ; 	psh.w #18
 0F4C 20FFFF      ; 	jsr _swrite
 0F4F C206        ; 	adj #6
-0F51 ABE25B00    ; 	psh.w	#91
+0F51 ABE25B00    ; 	psh.w #91
 0F55 ABE20000    ; 	psh.w #0
 0F59 20FFFF      ; 	jsr _cwrite
 0F5C C204        ; 	adj #4
 0F5E ABB509      ; 	lda.w oldrow_089,X
 0F61 AB48        ; 	pha.w
-0F63 ABE20100    ; 	psh.w	#1
+0F63 ABE20100    ; 	psh.w #1
 0F67 20FFFF      ; 	jsr _iwrite
 0F6A C204        ; 	adj #4
-0F6C ABE29916    ; 	psh.w #S_071
+0F6C ABE28F16    ; 	psh.w #S_071
 0F70 ABE20000    ; 	psh.w #0
 0F74 ABE20200    ; 	psh.w #2
 0F78 20FFFF      ; 	jsr _swrite
 0F7B C206        ; 	adj #6
 0F7D ABB507      ; 	lda.w oldcol_090,X
 0F80 AB48        ; 	pha.w
-0F82 ABE20100    ; 	psh.w	#1
+0F82 ABE20100    ; 	psh.w #1
 0F86 20FFFF      ; 	jsr _iwrite
 0F89 C204        ; 	adj #4
-0F8B ABE25D00    ; 	psh.w	#93
+0F8B ABE25D00    ; 	psh.w #93
 0F8F ABE20000    ; 	psh.w #0
 0F93 20FFFF      ; 	jsr _cwrite
 0F96 C204        ; 	adj #4
@@ -1416,7 +1416,7 @@
 1001 A900        ; 	lda #0
 1003 ABC90100    ; 	cmp.w #1
 1007 F003        ; 	beq L_113
-1009 4C2010      ; 	jmp  L_114
+1009 4C2010      ; 	jmp L_114
 100C ABB5FF      ; 	lda.w row_105,X
 100F AB48        ; 	pha.w
 1011 ABB5FD      ; 	lda.w col_106,X
@@ -1471,7 +1471,7 @@
 108D A900        ; 	lda #0
 108F ABC90100    ; 	cmp.w #1
 1093 F003        ; 	beq L_122
-1095 4CAC10      ; 	jmp  L_123
+1095 4CAC10      ; 	jmp L_123
 1098 ABB5FF      ; 	lda.w row_105,X
 109B AB48        ; 	pha.w
 109D ABB5FD      ; 	lda.w col_106,X
@@ -1493,17 +1493,17 @@
 10C5 ABBA        ; 	tsx.w
 10C7 C2FA        ; 	adj #-6
 10C9 20FFFF      ; 	jsr _writeln
-10CC ABE2AB16    ; 	psh.w #S_069
+10CC ABE29E16    ; 	psh.w #S_069
 10D0 ABE20000    ; 	psh.w #0
 10D4 ABE20300    ; 	psh.w #3
 10D8 20FFFF      ; 	jsr _swrite
 10DB C206        ; 	adj #6
 10DD ABAD3616    ; 	lda.w t_008
 10E1 AB48        ; 	pha.w
-10E3 ABE20400    ; 	psh.w	#4
+10E3 ABE20400    ; 	psh.w #4
 10E7 20FFFF      ; 	jsr _iwrite
 10EA C204        ; 	adj #4
-10EC ABE25616    ; 	psh.w #S_129
+10EC ABE25316    ; 	psh.w #S_129
 10F0 ABE20000    ; 	psh.w #0
 10F4 ABE20E00    ; 	psh.w #14
 10F8 20FFFF      ; 	jsr _swrite
@@ -1516,8 +1516,8 @@
 110A ABD5FF      ; 	cmp.w row_126,X
 110D AB5003      ; 	bge L_131
 1110 4C0712      ; 	jmp L_132
-1113 ABE22000    ; 	psh.w	#32
-1117 ABE20A00    ; 	psh.w	#10
+1113 ABE22000    ; 	psh.w #32
+1117 ABE20A00    ; 	psh.w #10
 111B 20FFFF      ; 	jsr _cwrite
 111E C204        ; 	adj #4
 1120 A901        ; 	lda #1
@@ -1556,8 +1556,8 @@
 1171 A900        ; 	lda #0
 1173 ABC90100    ; 	cmp.w #1
 1177 F003        ; 	beq L_136
-1179 4C9011      ; 	jmp  L_137
-117C ABE25416    ; 	psh.w #S_139
+1179 4C9011      ; 	jmp L_137
+117C ABE25216    ; 	psh.w #S_139
 1180 ABE20000    ; 	psh.w #0
 1184 ABE20200    ; 	psh.w #2
 1188 20FFFF      ; 	jsr _swrite
@@ -1576,8 +1576,8 @@
 11A5 A900        ; 	lda #0
 11A7 ABC90100    ; 	cmp.w #1
 11AB F003        ; 	beq L_141
-11AD 4CC411      ; 	jmp  L_142
-11B0 ABE25216    ; 	psh.w #S_144
+11AD 4CC411      ; 	jmp L_142
+11B0 ABE25116    ; 	psh.w #S_144
 11B4 ABE20000    ; 	psh.w #0
 11B8 ABE20200    ; 	psh.w #2
 11BC 20FFFF      ; 	jsr _swrite
@@ -1596,7 +1596,7 @@
 11D9 A900        ; 	lda #0
 11DB ABC90100    ; 	cmp.w #1
 11DF F003        ; 	beq L_146
-11E1 4CF511      ; 	jmp  L_147
+11E1 4CF511      ; 	jmp L_147
 11E4 ABE25016    ; 	psh.w #S_149
 11E8 ABE20000    ; 	psh.w #0
 11EC ABE20200    ; 	psh.w #2
@@ -1655,7 +1655,7 @@
 1270 A900        ; 	lda #0
 1272 ABC90100    ; 	cmp.w #1
 1276 F003        ; 	beq L_159
-1278 4CA912      ; 	jmp  L_160
+1278 4CA912      ; 	jmp L_160
 127B ABE23814    ; 	psh.w #island_002
 127F ABB5FF      ; 	lda.w row_151,X
 1282 AB48        ; 	pha.w
@@ -1702,7 +1702,7 @@
 12E4 A900        ; 	lda #0
 12E6 ABC90100    ; 	cmp.w #1
 12EA F003        ; 	beq L_163
-12EC 4C1A13      ; 	jmp  L_164
+12EC 4C1A13      ; 	jmp L_164
 12EF ABE23814    ; 	psh.w #island_002
 12F3 ABB5FF      ; 	lda.w row_151,X
 12F6 AB48        ; 	pha.w
@@ -1780,7 +1780,7 @@
 13A8 A900        ; 	lda #0
 13AA ABC90100    ; 	cmp.w #1
 13AE F003        ; 	beq L_168
-13B0 4CCC13      ; 	jmp  L_169
+13B0 4CCC13      ; 	jmp L_169
 13B3 ABDA        ; 	phx.w
 13B5 20C310      ; 	jsr printisland_125
 13B8 C202        ; 	adj #2
@@ -1838,7 +1838,7 @@
 1433 C202        ; 	adj #2
 1435 ABFA        ; 	plx.w
 1437 60          ; 	rts
-1438 00000000    ; island_002	.byt	242
+1438 00000000    ; island_002 .byt 242
 143C 0000000000000000000000000000000000000000000000000000000000000000
 145C 0000000000000000000000000000000000000000000000000000000000000000
 147C 0000000000000000000000000000000000000000000000000000000000000000
@@ -1847,38 +1847,38 @@
 14DC 0000000000000000000000000000000000000000000000000000000000000000
 14FC 0000000000000000000000000000000000000000000000000000000000000000
 151C 0000000000000000000000000000
-152A 00000000    ; foodunits_003	.byt	162
+152A 00000000    ; foodunits_003 .byt 162
 152E 0000000000000000000000000000000000000000000000000000000000000000
 154E 0000000000000000000000000000000000000000000000000000000000000000
 156E 0000000000000000000000000000000000000000000000000000000000000000
 158E 0000000000000000000000000000000000000000000000000000000000000000
 15AE 000000000000000000000000000000000000000000000000000000000000
-15CC 00000000    ; printtimes_004	.byt	100
+15CC 00000000    ; printtimes_004 .byt 100
 15D0 0000000000000000000000000000000000000000000000000000000000000000
 15F0 0000000000000000000000000000000000000000000000000000000000000000
 1610 0000000000000000000000000000000000000000000000000000000000000000
-1630 0000        ; numwolves_005	.byt	2
-1632 0000        ; numrabbits_006	.byt	2
-1634 0000        ; numprinttimes_007	.byt	2
-1636 0000        ; t_008	.byt	2
-1638 0000        ; xpt_009	.byt	2
-163A 0000        ; seed_010	.byt	2
-163C 00000000    ; rowoffset_011	.byt	10
+1630 0000        ; numwolves_005 .byt 2
+1632 0000        ; numrabbits_006 .byt 2
+1634 0000        ; numprinttimes_007 .byt 2
+1636 0000        ; t_008 .byt 2
+1638 0000        ; xpt_009 .byt 2
+163A 0000        ; seed_010 .byt 2
+163C 00000000    ; rowoffset_011 .byt 10
 1640 000000000000
-1646 00000000    ; coloffset_012	.byt	10
+1646 00000000    ; coloffset_012 .byt 10
 164A 000000000000
-1650 7220        ; S_149	.str	"r "
-1652 5720        ; S_144	.str	"W "
-1654 2E20        ; S_139	.str	". "
-1656 203A2057    ; S_129	.str	" : Wolf Island"
-165A 6F6C662049736C616E64
-1664 203A2052    ; S_103	.str	" : Rabbit born at "
-1668 616262697420626F726E20617420
-1676 203A2057    ; S_087	.str	" : Wolf born at "
-167A 6F6C6620626F726E20617420
-1686 203A2052    ; S_080	.str	" : Rabbit eaten at "
-168A 616262697420656174656E20617420
-1699 2C20        ; S_071	.str	", "
-169B 203A2057    ; S_070	.str	" : Wolf died at "
-169F 6F6C66206469656420617420
-16AB 74203D      ; S_069	.str	"t ="
+1650 72          ; S_149 .str "r "
+1651 57          ; S_144 .str "W "
+1652 2E          ; S_139 .str ". "
+1653 3A20576F    ; S_129 .str " : Wolf Island"
+1657 6C662049736C616E64
+1660 3A205261    ; S_103 .str " : Rabbit born at "
+1664 6262697420626F726E206174
+1670 3A20576F    ; S_087 .str " : Wolf born at "
+1674 6C6620626F726E206174
+167E 3A205261    ; S_080 .str " : Rabbit eaten at "
+1682 6262697420656174656E206174
+168F 2C          ; S_071 .str ", "
+1690 3A20576F    ; S_070 .str " : Wolf died at "
+1694 6C662064696564206174
+169E 74203D      ; S_069 .str "t ="

@@ -10,7 +10,7 @@
 0218 ABAD1A4A    ; 	lda.w newline_014
 021C ABC90100    ; 	cmp.w #1
 0220 F003        ; 	beq L_018
-0222 4C5D02      ; 	jmp  L_019
+0222 4C5D02      ; 	jmp L_019
 0225 20FFFF      ; 	jsr _readln
 0228 20FFFF      ; 	jsr _writeln
 022B ABAD144A    ; 	lda.w linenumber_011
@@ -22,10 +22,10 @@
 0239 AB8D144A    ; 	sta.w linenumber_011
 023D ABAD144A    ; 	lda.w linenumber_011
 0241 AB48        ; 	pha.w
-0243 ABE20500    ; 	psh.w	#5
+0243 ABE20500    ; 	psh.w #5
 0247 20FFFF      ; 	jsr _iwrite
 024A C204        ; 	adj #4
-024C ABE2BF4A    ; 	psh.w #S_020
+024C ABE2B84A    ; 	psh.w #S_020
 0250 ABE20000    ; 	psh.w #0
 0254 ABE20300    ; 	psh.w #3
 0258 20FFFF      ; 	jsr _swrite
@@ -37,7 +37,7 @@
 0269 C202        ; 	adj #2
 026B ABC90100    ; 	cmp.w #1
 026F F003        ; 	beq L_021
-0271 4C7C02      ; 	jmp  L_022
+0271 4C7C02      ; 	jmp L_022
 0274 A920        ; 	lda #32
 0276 8DFBFF      ; 	sta ch_017
 0279 4C9802      ; 	jmp L_023
@@ -131,7 +131,7 @@
 0338 4901        ; 	eor #1
 033A ABC90100    ; 	cmp.w #1
 033E F003        ; 	beq L_034
-0340 4C7103      ; 	jmp  L_035
+0340 4C7103      ; 	jmp L_035
 0343 ABB505      ; 	lda.w STATIC_LINK,X
 0346 AB48        ; 	pha.w
 0348 200902      ; 	jsr nextchar_016
@@ -154,7 +154,7 @@
 0374 4901        ; 	eor #1
 0376 ABC90100    ; 	cmp.w #1
 037A F003        ; 	beq L_038
-037C 4C8C04      ; 	jmp  L_039
+037C 4C8C04      ; 	jmp L_039
 037F A900        ; 	lda #0
 0381 AB95FF      ; 	sta.w charcount_032,X
 0384 B5FD        ; 	lda ch_033,X
@@ -179,7 +179,7 @@
 03B1 A900        ; 	lda #0
 03B3 ABC90100    ; 	cmp.w #1
 03B7 F003        ; 	beq L_043
-03B9 4C3C04      ; 	jmp  L_044
+03B9 4C3C04      ; 	jmp L_044
 03BC B5FD        ; 	lda ch_033,X
 03BE AB48        ; 	pha.w
 03C0 A941        ; 	lda #65
@@ -207,10 +207,10 @@
 03EF C202        ; 	adj #2
 03F1 ABC90100    ; 	cmp.w #1
 03F5 F003        ; 	beq L_046
-03F7 4C1604      ; 	jmp  L_047
+03F7 4C1604      ; 	jmp L_047
 03FA B5FD        ; 	lda ch_033,X
 03FC AB48        ; 	pha.w
-03FE ABE26100    ; 	psh.w	#97
+03FE ABE26100    ; 	psh.w #97
 0402 A941        ; 	lda #65
 0404 CB4401      ; 	xma.w 1,S
 0407 38          ; 	sec
@@ -288,7 +288,7 @@
 04B0 A900        ; 	lda #0
 04B2 ABC90100    ; 	cmp.w #1
 04B6 F003        ; 	beq L_055
-04B8 4C6005      ; 	jmp  L_056
+04B8 4C6005      ; 	jmp L_056
 04BB ABB507      ; 	lda.w lastnumberindex_054,X
 04BE AB48        ; 	pha.w
 04C0 A900        ; 	lda #0
@@ -302,7 +302,7 @@
 04D0 A900        ; 	lda #0
 04D2 ABC90100    ; 	cmp.w #1
 04D6 F003        ; 	beq L_058
-04D8 4CFE04      ; 	jmp  L_059
+04D8 4CFE04      ; 	jmp L_059
 04DB ABE26C3A    ; 	psh.w #numbertable_008
 04DF ABB507      ; 	lda.w lastnumberindex_054,X
 04E2 AB0A        ; 	asl.w a
@@ -369,7 +369,7 @@
 0579 ABAD1A4A    ; 	lda.w newline_014
 057D ABC90100    ; 	cmp.w #1
 0581 F003        ; 	beq L_064
-0583 4C9B05      ; 	jmp  L_065
+0583 4C9B05      ; 	jmp L_065
 0586 ABAD144A    ; 	lda.w linenumber_011
 058A AB48        ; 	pha.w
 058C A901        ; 	lda #1
@@ -440,7 +440,7 @@
 062E A900        ; 	lda #0
 0630 ABC90100    ; 	cmp.w #1
 0634 F003        ; 	beq L_070
-0636 4C9806      ; 	jmp  L_071
+0636 4C9806      ; 	jmp L_071
 0639 ABE28C0B    ; 	psh.w #wordtable_007
 063D ABB5FF      ; 	lda.w i_063,X
 0640 AB3A        ; 	dec.w a
@@ -492,7 +492,7 @@
 06B1 A900        ; 	lda #0
 06B3 ABC90100    ; 	cmp.w #1
 06B7 F003        ; 	beq L_074
-06B9 4C5707      ; 	jmp  L_075
+06B9 4C5707      ; 	jmp L_075
 06BC ABAD104A    ; 	lda.w nextwordindex_009
 06C0 AB48        ; 	pha.w
 06C2 A901        ; 	lda #1
@@ -514,7 +514,7 @@
 06EB 18          ; 	clc
 06EC AB691400    ; 	adc.w #firstnumberindex_003
 06F0 AB48        ; 	pha.w
-06F2 ABE20000    ; 	psh.w	#0
+06F2 ABE20000    ; 	psh.w #0
 06F6 ABB505      ; 	lda.w STATIC_LINK,X
 06F9 AB48        ; 	pha.w
 06FB 209104      ; 	jsr appendlinenumber_053
@@ -559,7 +559,7 @@
 075D ABAD1A4A    ; 	lda.w newline_014
 0761 ABC90100    ; 	cmp.w #1
 0765 F003        ; 	beq L_078
-0767 4C7C07      ; 	jmp  L_079
+0767 4C7C07      ; 	jmp L_079
 076A ABAD144A    ; 	lda.w linenumber_011
 076E AB48        ; 	pha.w
 0770 A901        ; 	lda #1
@@ -640,7 +640,7 @@
 0828 A900        ; 	lda #0
 082A ABC90100    ; 	cmp.w #1
 082E F003        ; 	beq L_090
-0830 4CD508      ; 	jmp  L_091
+0830 4CD508      ; 	jmp L_091
 0833 AB8A        ; 	txa.w
 0835 18          ; 	clc
 0836 AB69E5FF    ; 	adc.w #temp_083
@@ -732,7 +732,7 @@
 090B 6B          ; 	pli
 090C ABA300      ; 	lda.w 0,I++
 090F AB48        ; 	pha.w
-0911 ABE20400    ; 	psh.w	#4
+0911 ABE20400    ; 	psh.w #4
 0915 20FFFF      ; 	jsr _iwrite
 0918 C204        ; 	adj #4
 091A ABE26C3A    ; 	psh.w #numbertable_008
@@ -772,13 +772,13 @@
 0968 C2FE        ; 	adj #-2
 096A 20FFFF      ; 	jsr _writeln
 096D 20FFFF      ; 	jsr _writeln
-0970 ABE2B04A    ; 	psh.w #S_100
+0970 ABE2A94A    ; 	psh.w #S_100
 0974 ABE20000    ; 	psh.w #0
 0978 ABE20F00    ; 	psh.w #15
 097C 20FFFF      ; 	jsr _swrite
 097F C206        ; 	adj #6
 0981 20FFFF      ; 	jsr _writeln
-0984 ABE2A14A    ; 	psh.w #S_101
+0984 ABE29A4A    ; 	psh.w #S_101
 0988 ABE20000    ; 	psh.w #0
 098C ABE20F00    ; 	psh.w #15
 0990 20FFFF      ; 	jsr _swrite
@@ -858,7 +858,7 @@
 0A4F AB8D124A    ; 	sta.w nextnumberindex_010
 0A53 A901        ; 	lda #1
 0A55 AB8D144A    ; 	sta.w linenumber_011
-0A59 ABE2994A    ; 	psh.w #S_105
+0A59 ABE2974A    ; 	psh.w #S_105
 0A5D ABE20000    ; 	psh.w #0
 0A61 ABE20800    ; 	psh.w #8
 0A65 20FFFF      ; 	jsr _swrite
@@ -896,7 +896,7 @@
 0ABA ABAD1C4A    ; 	lda.w gotword_015
 0ABE ABC90100    ; 	cmp.w #1
 0AC2 F003        ; 	beq L_109
-0AC4 4CCE0A      ; 	jmp  L_110
+0AC4 4CCE0A      ; 	jmp L_110
 0AC7 ABDA        ; 	phx.w
 0AC9 207305      ; 	jsr enterword_062
 0ACC C202        ; 	adj #2
@@ -904,9 +904,9 @@
 0AD1 ABAD164A    ; 	lda.w wordtablefull_012
 0AD5 ABC90100    ; 	cmp.w #1
 0AD9 F003        ; 	beq L_111
-0ADB 4CF80A      ; 	jmp  L_112
+0ADB 4CF80A      ; 	jmp L_112
 0ADE 20FFFF      ; 	jsr _writeln
-0AE1 ABE26E4A    ; 	psh.w #S_113
+0AE1 ABE26C4A    ; 	psh.w #S_113
 0AE5 ABE20000    ; 	psh.w #0
 0AE9 ABE22B00    ; 	psh.w #43
 0AED 20FFFF      ; 	jsr _swrite
@@ -916,9 +916,9 @@
 0AF8 ABAD184A    ; 	lda.w numbertablefull_013
 0AFC ABC90100    ; 	cmp.w #1
 0B00 F003        ; 	beq L_115
-0B02 4C1F0B      ; 	jmp  L_116
+0B02 4C1F0B      ; 	jmp L_116
 0B05 20FFFF      ; 	jsr _writeln
-0B08 ABE2414A    ; 	psh.w #S_117
+0B08 ABE23F4A    ; 	psh.w #S_117
 0B0C ABE20000    ; 	psh.w #0
 0B10 ABE22D00    ; 	psh.w #45
 0B14 20FFFF      ; 	jsr _swrite
@@ -937,10 +937,10 @@
 0B35 CBF501      ; 	sbc.w 1,S
 0B38 C202        ; 	adj #2
 0B3A AB48        ; 	pha.w
-0B3C ABE20500    ; 	psh.w	#5
+0B3C ABE20500    ; 	psh.w #5
 0B40 20FFFF      ; 	jsr _iwrite
 0B43 C204        ; 	adj #4
-0B45 ABE2334A    ; 	psh.w #S_119
+0B45 ABE2324A    ; 	psh.w #S_119
 0B49 ABE20000    ; 	psh.w #0
 0B4D ABE20E00    ; 	psh.w #14
 0B51 20FFFF      ; 	jsr _swrite
@@ -954,7 +954,7 @@
 0B65 CBF501      ; 	sbc.w 1,S
 0B68 C202        ; 	adj #2
 0B6A AB48        ; 	pha.w
-0B6C ABE20500    ; 	psh.w	#5
+0B6C ABE20500    ; 	psh.w #5
 0B70 20FFFF      ; 	jsr _iwrite
 0B73 C204        ; 	adj #4
 0B75 ABE21E4A    ; 	psh.w #S_120
@@ -965,7 +965,7 @@
 0B86 20FFFF      ; 	jsr _writeln
 0B89 ABFA        ; 	plx.w
 0B8B 60          ; 	rts
-0B8C 00000000    ; wordtable_007	.byt 12000
+0B8C 00000000    ; wordtable_007 .byt 12000
 0B90 0000000000000000000000000000000000000000000000000000000000000000
 0BB0 0000000000000000000000000000000000000000000000000000000000000000
 0BD0 0000000000000000000000000000000000000000000000000000000000000000
@@ -1341,7 +1341,7 @@
 3A10 0000000000000000000000000000000000000000000000000000000000000000
 3A30 0000000000000000000000000000000000000000000000000000000000000000
 3A50 00000000000000000000000000000000000000000000000000000000
-3A6C 00000000    ; numbertable_008	.byt 4004
+3A6C 00000000    ; numbertable_008 .byt 4004
 3A70 0000000000000000000000000000000000000000000000000000000000000000
 3A90 0000000000000000000000000000000000000000000000000000000000000000
 3AB0 0000000000000000000000000000000000000000000000000000000000000000
@@ -1467,27 +1467,26 @@
 49B0 0000000000000000000000000000000000000000000000000000000000000000
 49D0 0000000000000000000000000000000000000000000000000000000000000000
 49F0 0000000000000000000000000000000000000000000000000000000000000000
-4A10 0000        ; nextwordindex_009	.byt 2
-4A12 0000        ; nextnumberindex_010	.byt 2
-4A14 0000        ; linenumber_011	.byt 2
-4A16 0000        ; wordtablefull_012	.byt 2
-4A18 0000        ; numbertablefull_013	.byt 2
-4A1A 0000        ; newline_014	.byt 2
-4A1C 0000        ; gotword_015	.byt 2
-4A1E 206C696E    ; S_120	.str " line number entries."
-4A22 65206E756D62657220656E74726965732E
-4A33 20776F72    ; S_119	.str " word entries."
-4A37 6420656E74726965732E
-4A41 2A2A2A20    ; S_117	.str "*** The number table is not large enough. ***"
-4A45 546865206E756D626572207461626C65206973206E6F74206C6172676520656E
-4A65 6F7567682E202A2A2A
-4A6E 2A2A2A20    ; S_113	.str "*** The word table is not large enough. ***"
-4A72 54686520776F7264207461626C65206973206E6F74206C6172676520656E6F75
-4A92 67682E202A2A2A
-4A99 20202020    ; S_105	.str "    1 : "
-4A9D 31203A20
-4AA1 2D2D2D2D    ; S_101	.str "---------------"
-4AA5 2D2D2D2D2D2D2D2D2D2D2D
-4AB0 43726F73    ; S_100	.str "Cross-reference"
-4AB4 732D7265666572656E6365
-4ABF 203A20      ; S_020	.str " : "
+4A10 0000        ; nextwordindex_009 .byt 2
+4A12 0000        ; nextnumberindex_010 .byt 2
+4A14 0000        ; linenumber_011 .byt 2
+4A16 0000        ; wordtablefull_012 .byt 2
+4A18 0000        ; numbertablefull_013 .byt 2
+4A1A 0000        ; newline_014 .byt 2
+4A1C 0000        ; gotword_015 .byt 2
+4A1E 6C696E65    ; S_120 .str " line number entries."
+4A22 206E756D62657220656E74726965732E
+4A32 776F7264    ; S_119 .str " word entries."
+4A36 20656E74726965732E
+4A3F 2A2A2A20    ; S_117 .str "*** The number table is not large enough. ***"
+4A43 546865206E756D626572207461626C65206973206E6F74206C6172676520656E
+4A63 6F7567682E202A2A2A
+4A6C 2A2A2A20    ; S_113 .str "*** The word table is not large enough. ***"
+4A70 54686520776F7264207461626C65206973206E6F74206C6172676520656E6F75
+4A90 67682E202A2A2A
+4A97 31203A      ; S_105 .str "    1 : "
+4A9A 2D2D2D2D    ; S_101 .str "---------------"
+4A9E 2D2D2D2D2D2D2D2D2D2D2D
+4AA9 43726F73    ; S_100 .str "Cross-reference"
+4AAD 732D7265666572656E6365
+4AB8 3A          ; S_020 .str " : "

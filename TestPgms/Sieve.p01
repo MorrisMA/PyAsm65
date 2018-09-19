@@ -1,12 +1,12 @@
-   1    2 	.stk	1024
-   2    3 	.cod	512
-   3    4 STATIC_LINK			.equ	+5
-   4    5 RETURN_VALUE		.equ	-3
-   5    6 HIGH_RETURN_VALUE	.equ	-1
+   1    2 	.stk 1024
+   2    3 	.cod 512
+   3    4 STATIC_LINK .equ +5
+   4    5 RETURN_VALUE .equ -3
+   5    6 HIGH_RETURN_VALUE .equ -1
    6    7 _start
    7    8 	tsx.w
-   8    9 	lds.w	#16383
-   9   10 	jmp	_pc65_main
+   8    9 	lds.w #16383
+   9   10 	jmp _pc65_main
   10   20 _pc65_main	.sub
   11   21 	phx.w
   12   22 	tsx.w
@@ -178,7 +178,7 @@
  178  217 	lda.w 0,I++
  179  218 	cmp.w #1
  180  219 	beq L_027
- 181  220 	jmp  L_028
+ 181  220 	jmp L_028
  182  221 L_027
  183  223 	lda.w prime_006
  184  224 	pha.w
@@ -224,14 +224,14 @@
  224  271 L_023
  225  272 	plx.w
  226  273 	rts
- 227  274 	.end	_pc65_main
+ 227  274 	.end _pc65_main
  228  276 	.dat
- 229  278 sieve_002	.byt	2000
- 230  279 i_003	.byt	2
- 231  280 j_004	.byt	2
- 232  281 limit_005	.byt	2
- 233  282 prime_006	.byt	2
- 234  283 factor_007	.byt	2
- 235  284 S_030	.str	"   "
- 236  285 S_021	.str	"Sieve of Eratosthenes"
+ 229  278 sieve_002 .byt 2000
+ 230  279 i_003 .byt 2
+ 231  280 j_004 .byt 2
+ 232  281 limit_005 .byt 2
+ 233  282 prime_006 .byt 2
+ 234  283 factor_007 .byt 2
+ 235  284 S_030 .str "   "
+ 236  285 S_021 .str "Sieve of Eratosthenes"
  237  287 	.end

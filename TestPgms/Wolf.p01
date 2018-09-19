@@ -1,15 +1,15 @@
-   1    2 	.stk	1024
-   2    3 	.cod	512
-   3    4 STATIC_LINK			.equ	+5
-   4    5 RETURN_VALUE		.equ	-3
-   5    6 HIGH_RETURN_VALUE	.equ	-1
+   1    2 	.stk 1024
+   2    3 	.cod 512
+   3    4 STATIC_LINK .equ +5
+   4    5 RETURN_VALUE .equ -3
+   5    6 HIGH_RETURN_VALUE .equ -1
    6    7 _start
    7    8 	tsx.w
-   8    9 	lds.w	#16383
-   9   10 	jmp	_pc65_main
-  10  122 i_014	.equ	-1
-  11  123 row_015	.equ	-3
-  12  124 col_016	.equ	-5
+   8    9 	lds.w #16383
+   9   10 	jmp _pc65_main
+  10  122 i_014	.equ -1
+  11  123 row_015	.equ -3
+  12  124 col_016	.equ -5
   13  125 initialize_013	.sub
   14  126 	phx.w
   15  127 	tsx.w
@@ -390,8 +390,8 @@
  390  545 	txs.w
  391  546 	plx.w
  392  547 	rts
- 393  548 	.end	initialize_013
- 394  561 limit_036	.equ	+7
+ 393  548 	.end initialize_013
+ 394  561 limit_036	.equ +7
  395  562 random_035	.sub
  396  563 	phx.w
  397  564 	tsx.w
@@ -430,15 +430,15 @@
  430  600 	txs.w
  431  601 	plx.w
  432  602 	rts
- 433  603 	.end	random_035
- 434  620 creature_038	.equ	+15
- 435  621 oldrow_039	.equ	+13
- 436  622 oldcol_040	.equ	+11
- 437  623 newrow_041	.equ	+9
- 438  624 newcol_042	.equ	+7
- 439  625 adj_043	.equ	-1
- 440  626 what_044	.equ	-3
- 441  627 done_045	.equ	-5
+ 433  603 	.end random_035
+ 434  620 creature_038	.equ +15
+ 435  621 oldrow_039	.equ +13
+ 436  622 oldcol_040	.equ +11
+ 437  623 newrow_041	.equ +9
+ 438  624 newcol_042	.equ +7
+ 439  625 adj_043	.equ -1
+ 440  626 what_044	.equ -3
+ 441  627 done_045	.equ -5
  442  628 newlocation_037	.sub
  443  629 	phx.w
  444  630 	tsx.w
@@ -459,7 +459,7 @@
  459  650 L_048
  460  651 	cmp.w #1
  461  652 	beq L_046
- 462  653 	jmp  L_047
+ 462  653 	jmp L_047
  463  654 L_046
  464  656 	lda #0
  465  657 	sta.w adj_043,X
@@ -560,7 +560,7 @@
  560  763 	eor #1
  561  764 	cmp.w #1
  562  765 	beq L_053
- 563  766 	jmp  L_054
+ 563  766 	jmp L_054
  564  767 L_053
  565  769 L_055
  566  771 	lda #5
@@ -671,12 +671,12 @@
  671  883 	txs.w
  672  884 	plx.w
  673  885 	rts
- 674  886 	.end	newlocation_037
- 675  898 oldrow_061	.equ	+9
- 676  899 oldcol_062	.equ	+7
- 677  900 newrow_063	.equ	-1
- 678  901 newcol_064	.equ	-3
- 679  902 moved_065	.equ	-5
+ 674  886 	.end newlocation_037
+ 675  898 oldrow_061	.equ +9
+ 676  899 oldcol_062	.equ +7
+ 677  900 newrow_063	.equ -1
+ 678  901 newcol_064	.equ -3
+ 679  902 moved_065	.equ -5
  680  903 processwolf_060	.sub
  681  904 	phx.w
  682  905 	tsx.w
@@ -754,7 +754,7 @@
  754  982 L_068
  755  983 	cmp.w #1
  756  984 	beq L_066
- 757  985 	jmp  L_067
+ 757  985 	jmp L_067
  758  986 L_066
  759  990 	psh.w #island_002
  760  991 	lda.w oldrow_061,X
@@ -876,7 +876,7 @@
  876 1118 	lda.w moved_065,X
  877 1119 	cmp.w #1
  878 1120 	beq L_075
- 879 1121 	jmp  L_076
+ 879 1121 	jmp L_076
  880 1122 L_075
  881 1126 	psh.w #island_002
  882 1127 	lda.w newrow_063,X
@@ -907,7 +907,7 @@
  907 1152 L_079
  908 1153 	cmp.w #1
  909 1154 	beq L_077
- 910 1155 	jmp  L_078
+ 910 1155 	jmp L_078
  911 1156 L_077
  912 1158 	psh.w #foodunits_003
  913 1159 	lda.w oldrow_061,X
@@ -1145,7 +1145,7 @@
 1145 1407 	adj #2
 1146 1408 	cmp.w #1
 1147 1409 	beq L_081
-1148 1410 	jmp  L_082
+1148 1410 	jmp L_082
 1149 1411 L_081
 1150 1413 	psh.w #foodunits_003
 1151 1414 	lda.w newrow_063,X
@@ -1191,7 +1191,7 @@
 1191 1458 	lda.w moved_065,X
 1192 1459 	cmp.w #1
 1193 1460 	beq L_085
-1194 1461 	jmp  L_086
+1194 1461 	jmp L_086
 1195 1462 L_085
 1196 1464 	psh.w #island_002
 1197 1465 	lda.w oldrow_061,X
@@ -1303,12 +1303,12 @@
 1303 1580 	txs.w
 1304 1581 	plx.w
 1305 1582 	rts
-1306 1583 	.end	processwolf_060
-1307 1595 oldrow_089	.equ	+9
-1308 1596 oldcol_090	.equ	+7
-1309 1597 newrow_091	.equ	-1
-1310 1598 newcol_092	.equ	-3
-1311 1599 moved_093	.equ	-5
+1306 1583 	.end processwolf_060
+1307 1595 oldrow_089	.equ +9
+1308 1596 oldcol_090	.equ +7
+1309 1597 newrow_091	.equ -1
+1310 1598 newcol_092	.equ -3
+1311 1599 moved_093	.equ -5
 1312 1600 processrabbit_088	.sub
 1313 1601 	phx.w
 1314 1602 	tsx.w
@@ -1362,7 +1362,7 @@
 1362 1655 	lda.w moved_093,X
 1363 1656 	cmp.w #1
 1364 1657 	beq L_096
-1365 1658 	jmp  L_097
+1365 1658 	jmp L_097
 1366 1659 L_096
 1367 1661 	psh.w #island_002
 1368 1662 	lda.w newrow_091,X
@@ -1419,12 +1419,12 @@
 1419 1718 L_100
 1420 1719 	cmp.w #1
 1421 1720 	beq L_098
-1422 1721 	jmp  L_099
+1422 1721 	jmp L_099
 1423 1722 L_098
 1424 1726 	lda.w moved_093,X
 1425 1727 	cmp.w #1
 1426 1728 	beq L_101
-1427 1729 	jmp  L_102
+1427 1729 	jmp L_102
 1428 1730 L_101
 1429 1732 	psh.w #island_002
 1430 1733 	lda.w oldrow_089,X
@@ -1499,9 +1499,9 @@
 1499 1808 	txs.w
 1500 1809 	plx.w
 1501 1810 	rts
-1502 1811 	.end	processrabbit_088
-1503 1822 row_105	.equ	-1
-1504 1823 col_106	.equ	-3
+1502 1811 	.end processrabbit_088
+1503 1822 row_105	.equ -1
+1504 1823 col_106	.equ -3
 1505 1824 eventsoccur_104	.sub
 1506 1825 	phx.w
 1507 1826 	tsx.w
@@ -1551,7 +1551,7 @@
 1551 1875 L_115
 1552 1876 	cmp.w #1
 1553 1877 	beq L_113
-1554 1878 	jmp  L_114
+1554 1878 	jmp L_114
 1555 1879 L_113
 1556 1881 	lda.w row_105,X
 1557 1882 	pha.w
@@ -1615,7 +1615,7 @@
 1615 1949 L_124
 1616 1950 	cmp.w #1
 1617 1951 	beq L_122
-1618 1952 	jmp  L_123
+1618 1952 	jmp L_123
 1619 1953 L_122
 1620 1955 	lda.w row_105,X
 1621 1956 	pha.w
@@ -1637,10 +1637,10 @@
 1637 1976 	txs.w
 1638 1977 	plx.w
 1639 1978 	rts
-1640 1979 	.end	eventsoccur_104
-1641 1991 row_126	.equ	-1
-1642 1992 col_127	.equ	-3
-1643 1993 cnts_128	.equ	-5
+1640 1979 	.end eventsoccur_104
+1641 1991 row_126	.equ -1
+1642 1992 col_127	.equ -3
+1643 1993 cnts_128	.equ -5
 1644 1994 printisland_125	.sub
 1645 1995 	phx.w
 1646 1996 	tsx.w
@@ -1717,7 +1717,7 @@
 1717 2076 L_138
 1718 2077 	cmp.w #1
 1719 2078 	beq L_136
-1720 2079 	jmp  L_137
+1720 2079 	jmp L_137
 1721 2080 L_136
 1722 2081 	psh.w #S_139
 1723 2082 	psh.w #0
@@ -1740,7 +1740,7 @@
 1740 2100 L_143
 1741 2101 	cmp.w #1
 1742 2102 	beq L_141
-1743 2103 	jmp  L_142
+1743 2103 	jmp L_142
 1744 2104 L_141
 1745 2105 	psh.w #S_144
 1746 2106 	psh.w #0
@@ -1763,7 +1763,7 @@
 1763 2124 L_148
 1764 2125 	cmp.w #1
 1765 2126 	beq L_146
-1766 2127 	jmp  L_147
+1766 2127 	jmp L_147
 1767 2128 L_146
 1768 2129 	psh.w #S_149
 1769 2130 	psh.w #0
@@ -1785,9 +1785,9 @@
 1785 2150 	txs.w
 1786 2151 	plx.w
 1787 2152 	rts
-1788 2153 	.end	printisland_125
-1789 2165 row_151	.equ	-1
-1790 2166 col_152	.equ	-3
+1788 2153 	.end printisland_125
+1789 2165 row_151	.equ -1
+1790 2166 col_152	.equ -3
 1791 2167 resetisland_150	.sub
 1792 2168 	phx.w
 1793 2169 	tsx.w
@@ -1837,7 +1837,7 @@
 1837 2216 L_161
 1838 2217 	cmp.w #1
 1839 2218 	beq L_159
-1840 2219 	jmp  L_160
+1840 2219 	jmp L_160
 1841 2220 L_159
 1842 2222 	psh.w #island_002
 1843 2223 	lda.w row_151,X
@@ -1887,7 +1887,7 @@
 1887 2269 L_165
 1888 2270 	cmp.w #1
 1889 2271 	beq L_163
-1890 2272 	jmp  L_164
+1890 2272 	jmp L_164
 1891 2273 L_163
 1892 2275 	psh.w #island_002
 1893 2276 	lda.w row_151,X
@@ -1919,7 +1919,7 @@
 1919 2306 	txs.w
 1920 2307 	plx.w
 1921 2308 	rts
-1922 2309 	.end	resetisland_150
+1922 2309 	.end resetisland_150
 1923 2313 _pc65_main	.sub
 1924 2314 	phx.w
 1925 2315 	tsx.w
@@ -1974,7 +1974,7 @@
 1974 2383 L_170
 1975 2384 	cmp.w #1
 1976 2385 	beq L_168
-1977 2386 	jmp  L_169
+1977 2386 	jmp L_169
 1978 2387 L_168
 1979 2389 	phx.w
 1980 2390 	jsr printisland_125
@@ -2038,27 +2038,27 @@
 2038 2454 	adj #2
 2039 2457 	plx.w
 2040 2458 	rts
-2041 2459 	.end	_pc65_main
+2041 2459 	.end _pc65_main
 2042 2461 	.dat
-2043 2463 island_002	.byt	242
-2044 2464 foodunits_003	.byt	162
-2045 2465 printtimes_004	.byt	100
-2046 2466 numwolves_005	.byt	2
-2047 2467 numrabbits_006	.byt	2
-2048 2468 numprinttimes_007	.byt	2
-2049 2469 t_008	.byt	2
-2050 2470 xpt_009	.byt	2
-2051 2471 seed_010	.byt	2
-2052 2472 rowoffset_011	.byt	10
-2053 2473 coloffset_012	.byt	10
-2054 2474 S_149	.str	"r "
-2055 2475 S_144	.str	"W "
-2056 2476 S_139	.str	". "
-2057 2477 S_129	.str	" : Wolf Island"
-2058 2478 S_103	.str	" : Rabbit born at "
-2059 2479 S_087	.str	" : Wolf born at "
-2060 2480 S_080	.str	" : Rabbit eaten at "
-2061 2481 S_071	.str	", "
-2062 2482 S_070	.str	" : Wolf died at "
-2063 2483 S_069	.str	"t ="
+2043 2463 island_002 .byt 242
+2044 2464 foodunits_003 .byt 162
+2045 2465 printtimes_004 .byt 100
+2046 2466 numwolves_005 .byt 2
+2047 2467 numrabbits_006 .byt 2
+2048 2468 numprinttimes_007 .byt 2
+2049 2469 t_008 .byt 2
+2050 2470 xpt_009 .byt 2
+2051 2471 seed_010 .byt 2
+2052 2472 rowoffset_011 .byt 10
+2053 2473 coloffset_012 .byt 10
+2054 2474 S_149 .str "r "
+2055 2475 S_144 .str "W "
+2056 2476 S_139 .str ". "
+2057 2477 S_129 .str " : Wolf Island"
+2058 2478 S_103 .str " : Rabbit born at "
+2059 2479 S_087 .str " : Wolf born at "
+2060 2480 S_080 .str " : Rabbit eaten at "
+2061 2481 S_071 .str ", "
+2062 2482 S_070 .str " : Wolf died at "
+2063 2483 S_069 .str "t ="
 2064 2485 	.end
