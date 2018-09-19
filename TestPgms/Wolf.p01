@@ -7,9 +7,9 @@
    7    8 	tsx.w
    8    9 	lds.w #16383
    9   10 	jmp _pc65_main
-  10  122 i_014	.equ -1
-  11  123 row_015	.equ -3
-  12  124 col_016	.equ -5
+  10  122 i_014 .equ -1
+  11  123 row_015 .equ -3
+  12  124 col_016 .equ -5
   13  125 initialize_013	.sub
   14  126 	phx.w
   15  127 	tsx.w
@@ -391,7 +391,7 @@
  391  546 	plx.w
  392  547 	rts
  393  548 	.end initialize_013
- 394  561 limit_036	.equ +7
+ 394  561 limit_036 .equ +7
  395  562 random_035	.sub
  396  563 	phx.w
  397  564 	tsx.w
@@ -431,14 +431,14 @@
  431  601 	plx.w
  432  602 	rts
  433  603 	.end random_035
- 434  620 creature_038	.equ +15
- 435  621 oldrow_039	.equ +13
- 436  622 oldcol_040	.equ +11
- 437  623 newrow_041	.equ +9
- 438  624 newcol_042	.equ +7
- 439  625 adj_043	.equ -1
- 440  626 what_044	.equ -3
- 441  627 done_045	.equ -5
+ 434  620 creature_038 .equ +15
+ 435  621 oldrow_039 .equ +13
+ 436  622 oldcol_040 .equ +11
+ 437  623 newrow_041 .equ +9
+ 438  624 newcol_042 .equ +7
+ 439  625 adj_043 .equ -1
+ 440  626 what_044 .equ -3
+ 441  627 done_045 .equ -5
  442  628 newlocation_037	.sub
  443  629 	phx.w
  444  630 	tsx.w
@@ -672,11 +672,11 @@
  672  884 	plx.w
  673  885 	rts
  674  886 	.end newlocation_037
- 675  898 oldrow_061	.equ +9
- 676  899 oldcol_062	.equ +7
- 677  900 newrow_063	.equ -1
- 678  901 newcol_064	.equ -3
- 679  902 moved_065	.equ -5
+ 675  898 oldrow_061 .equ +9
+ 676  899 oldcol_062 .equ +7
+ 677  900 newrow_063 .equ -1
+ 678  901 newcol_064 .equ -3
+ 679  902 moved_065 .equ -5
  680  903 processwolf_060	.sub
  681  904 	phx.w
  682  905 	tsx.w
@@ -1304,11 +1304,11 @@
 1304 1581 	plx.w
 1305 1582 	rts
 1306 1583 	.end processwolf_060
-1307 1595 oldrow_089	.equ +9
-1308 1596 oldcol_090	.equ +7
-1309 1597 newrow_091	.equ -1
-1310 1598 newcol_092	.equ -3
-1311 1599 moved_093	.equ -5
+1307 1595 oldrow_089 .equ +9
+1308 1596 oldcol_090 .equ +7
+1309 1597 newrow_091 .equ -1
+1310 1598 newcol_092 .equ -3
+1311 1599 moved_093 .equ -5
 1312 1600 processrabbit_088	.sub
 1313 1601 	phx.w
 1314 1602 	tsx.w
@@ -1500,8 +1500,8 @@
 1500 1809 	plx.w
 1501 1810 	rts
 1502 1811 	.end processrabbit_088
-1503 1822 row_105	.equ -1
-1504 1823 col_106	.equ -3
+1503 1822 row_105 .equ -1
+1504 1823 col_106 .equ -3
 1505 1824 eventsoccur_104	.sub
 1506 1825 	phx.w
 1507 1826 	tsx.w
@@ -1638,9 +1638,9 @@
 1638 1977 	plx.w
 1639 1978 	rts
 1640 1979 	.end eventsoccur_104
-1641 1991 row_126	.equ -1
-1642 1992 col_127	.equ -3
-1643 1993 cnts_128	.equ -5
+1641 1991 row_126 .equ -1
+1642 1992 col_127 .equ -3
+1643 1993 cnts_128 .equ -5
 1644 1994 printisland_125	.sub
 1645 1995 	phx.w
 1646 1996 	tsx.w
@@ -1786,8 +1786,8 @@
 1786 2151 	plx.w
 1787 2152 	rts
 1788 2153 	.end printisland_125
-1789 2165 row_151	.equ -1
-1790 2166 col_152	.equ -3
+1789 2165 row_151 .equ -1
+1790 2166 col_152 .equ -3
 1791 2167 resetisland_150	.sub
 1792 2168 	phx.w
 1793 2169 	tsx.w

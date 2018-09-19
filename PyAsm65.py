@@ -88,9 +88,9 @@ for src in source:
         op  = src[1][1].lower()
         dt  = ''
     elif numFields == 3:
-        lbl = src[1][0].strip()
+        lbl = src[1][0]
         op  = src[1][1].lower()
-        dt  = src[1][2].strip()
+        dt  = src[1][2]
     else:
         print('Error. Unexpected number of fields: %d' % (numFields) \
               + ' in line #%d' % (srcLine))

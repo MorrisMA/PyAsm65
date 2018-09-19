@@ -25,7 +25,7 @@
 0243 ABE20500    ; 	psh.w #5
 0247 20FFFF      ; 	jsr _iwrite
 024A C204        ; 	adj #4
-024C ABE2B84A    ; 	psh.w #S_020
+024C ABE2BF4A    ; 	psh.w #S_020
 0250 ABE20000    ; 	psh.w #0
 0254 ABE20300    ; 	psh.w #3
 0258 20FFFF      ; 	jsr _swrite
@@ -772,13 +772,13 @@
 0968 C2FE        ; 	adj #-2
 096A 20FFFF      ; 	jsr _writeln
 096D 20FFFF      ; 	jsr _writeln
-0970 ABE2A94A    ; 	psh.w #S_100
+0970 ABE2B04A    ; 	psh.w #S_100
 0974 ABE20000    ; 	psh.w #0
 0978 ABE20F00    ; 	psh.w #15
 097C 20FFFF      ; 	jsr _swrite
 097F C206        ; 	adj #6
 0981 20FFFF      ; 	jsr _writeln
-0984 ABE29A4A    ; 	psh.w #S_101
+0984 ABE2A14A    ; 	psh.w #S_101
 0988 ABE20000    ; 	psh.w #0
 098C ABE20F00    ; 	psh.w #15
 0990 20FFFF      ; 	jsr _swrite
@@ -858,7 +858,7 @@
 0A4F AB8D124A    ; 	sta.w nextnumberindex_010
 0A53 A901        ; 	lda #1
 0A55 AB8D144A    ; 	sta.w linenumber_011
-0A59 ABE2974A    ; 	psh.w #S_105
+0A59 ABE2994A    ; 	psh.w #S_105
 0A5D ABE20000    ; 	psh.w #0
 0A61 ABE20800    ; 	psh.w #8
 0A65 20FFFF      ; 	jsr _swrite
@@ -906,7 +906,7 @@
 0AD9 F003        ; 	beq L_111
 0ADB 4CF80A      ; 	jmp L_112
 0ADE 20FFFF      ; 	jsr _writeln
-0AE1 ABE26C4A    ; 	psh.w #S_113
+0AE1 ABE26E4A    ; 	psh.w #S_113
 0AE5 ABE20000    ; 	psh.w #0
 0AE9 ABE22B00    ; 	psh.w #43
 0AED 20FFFF      ; 	jsr _swrite
@@ -918,7 +918,7 @@
 0B00 F003        ; 	beq L_115
 0B02 4C1F0B      ; 	jmp L_116
 0B05 20FFFF      ; 	jsr _writeln
-0B08 ABE23F4A    ; 	psh.w #S_117
+0B08 ABE2414A    ; 	psh.w #S_117
 0B0C ABE20000    ; 	psh.w #0
 0B10 ABE22D00    ; 	psh.w #45
 0B14 20FFFF      ; 	jsr _swrite
@@ -940,7 +940,7 @@
 0B3C ABE20500    ; 	psh.w #5
 0B40 20FFFF      ; 	jsr _iwrite
 0B43 C204        ; 	adj #4
-0B45 ABE2324A    ; 	psh.w #S_119
+0B45 ABE2334A    ; 	psh.w #S_119
 0B49 ABE20000    ; 	psh.w #0
 0B4D ABE20E00    ; 	psh.w #14
 0B51 20FFFF      ; 	jsr _swrite
@@ -1474,19 +1474,20 @@
 4A18 0000        ; numbertablefull_013 .byt 2
 4A1A 0000        ; newline_014 .byt 2
 4A1C 0000        ; gotword_015 .byt 2
-4A1E 6C696E65    ; S_120 .str " line number entries."
-4A22 206E756D62657220656E74726965732E
-4A32 776F7264    ; S_119 .str " word entries."
-4A36 20656E74726965732E
-4A3F 2A2A2A20    ; S_117 .str "*** The number table is not large enough. ***"
-4A43 546865206E756D626572207461626C65206973206E6F74206C6172676520656E
-4A63 6F7567682E202A2A2A
-4A6C 2A2A2A20    ; S_113 .str "*** The word table is not large enough. ***"
-4A70 54686520776F7264207461626C65206973206E6F74206C6172676520656E6F75
-4A90 67682E202A2A2A
-4A97 31203A      ; S_105 .str "    1 : "
-4A9A 2D2D2D2D    ; S_101 .str "---------------"
-4A9E 2D2D2D2D2D2D2D2D2D2D2D
-4AA9 43726F73    ; S_100 .str "Cross-reference"
-4AAD 732D7265666572656E6365
-4AB8 3A          ; S_020 .str " : "
+4A1E 206C696E    ; S_120 .str " line number entries."
+4A22 65206E756D62657220656E74726965732E
+4A33 20776F72    ; S_119 .str " word entries."
+4A37 6420656E74726965732E
+4A41 2A2A2A20    ; S_117 .str "*** The number table is not large enough. ***"
+4A45 546865206E756D626572207461626C65206973206E6F74206C6172676520656E
+4A65 6F7567682E202A2A2A
+4A6E 2A2A2A20    ; S_113 .str "*** The word table is not large enough. ***"
+4A72 54686520776F7264207461626C65206973206E6F74206C6172676520656E6F75
+4A92 67682E202A2A2A
+4A99 20202020    ; S_105 .str "    1 : "
+4A9D 31203A20
+4AA1 2D2D2D2D    ; S_101 .str "---------------"
+4AA5 2D2D2D2D2D2D2D2D2D2D2D
+4AB0 43726F73    ; S_100 .str "Cross-reference"
+4AB4 732D7265666572656E6365
+4ABF 203A20      ; S_020 .str " : "
