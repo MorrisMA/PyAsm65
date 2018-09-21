@@ -37,8 +37,7 @@
   52 	pha.w
   53 	swp a
   54 	pha.w
-  55 	lda #0
-  56 	pha.w
+  55 	psh.w #0
   57 	jsr _fconv
   58 	adj #2
   59 	swp a
@@ -65,10 +64,8 @@
   81 	pha.w
   82 	swp a
   83 	pha.w
-  84 	lda #12
-  85 	pha.w
-  86 	lda #6
-  87 	pha.w
+  84 	psh.w #12
+  86 	psh.w #6
   88 	jsr _fwrite
   89 	adj #8
   90 	lda.w F_011+2
@@ -78,10 +75,8 @@
   94 	pha.w
   95 	swp a
   96 	pha.w
-  97 	lda #12
-  98 	pha.w
-  99 	lda #6
- 100 	pha.w
+  97 	psh.w #12
+  99 	psh.w #6
  101 	jsr _fwrite
  102 	adj #8
  103 	jsr _writeln
@@ -94,8 +89,7 @@
  112 	pha.w
  113 	swp a
  114 	pha.w
- 115 	lda #0
- 116 	pha.w
+ 115 	psh.w #0
  117 	jsr _fconv
  118 	adj #2
  119 	swp a
@@ -142,10 +136,8 @@
  165 	pha.w
  166 	swp a
  167 	pha.w
- 168 	lda #12
- 169 	pha.w
- 170 	lda #6
- 171 	pha.w
+ 168 	psh.w #12
+ 170 	psh.w #6
  172 	jsr _fwrite
  173 	adj #8
  174 	lda.w sqroot_004+2
@@ -155,16 +147,13 @@
  178 	pha.w
  179 	swp a
  180 	pha.w
- 181 	lda #12
- 182 	pha.w
- 183 	lda #6
- 184 	pha.w
+ 181 	psh.w #12
+ 183 	psh.w #6
  185 	jsr _fwrite
  186 	adj #8
  187 	jsr _writeln
  189 	jsr _writeln
- 192 	lda #1
- 193 	pha.w
+ 192 	psh.w #1
  194 	jsr _fconv
  195 	adj #2
  196 	sta.w root_003
@@ -204,8 +193,7 @@
  232 	pha.w
  233 	swp a
  234 	pha.w
- 235 	lda #2
- 236 	pha.w
+ 235 	psh.w #2
  237 	jsr _fconv
  238 	adj #2
  239 	swp a
@@ -224,14 +212,11 @@
  253 	pha.w
  254 	swp a
  255 	pha.w
- 256 	lda #24
- 257 	pha.w
- 258 	lda #6
- 259 	pha.w
+ 256 	psh.w #24
+ 258 	psh.w #6
  260 	jsr _fwrite
  261 	adj #8
- 263 	lda #100
- 264 	pha.w
+ 263 	psh.w #100
  265 	lda.w root_003+2
  266 	swp a
  267 	lda.w root_003
@@ -297,14 +282,11 @@
  327 	pha.w
  328 	swp a
  329 	pha.w
- 330 	lda #12
- 331 	pha.w
- 332 	lda #2
- 333 	pha.w
+ 330 	psh.w #12
+ 332 	psh.w #2
  334 	jsr _fwrite
  335 	adj #8
- 337 	lda #37
- 338 	pha.w
+ 337 	psh.w #37
  339 	psh.w #0
  340 	jsr _cwrite
  341 	adj #4
@@ -339,8 +321,7 @@
  371 	pha.w
  372 	swp a
  373 	pha.w
- 374 	lda #1
- 375 	pha.w
+ 374 	psh.w #1
  376 	jsr _fconv
  377 	adj #2
  378 	swp a
@@ -388,8 +369,7 @@
  422 	pha.w
  423 	swp a
  424 	pha.w
- 425 	lda #0
- 427 	pha.w
+ 425 	psh.w #0
  428 	jsr _fconv
  429 	adj #2
  430 	swp a
@@ -424,4 +404,3 @@
  461 _bss_end .byt 1
  462 _stk .byt 1023
  463 _stk_top .byt 1
- 465 	.end

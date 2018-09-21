@@ -73,7 +73,7 @@ def readSource(filename):
             associates lines produced with non-blank input lines
     '''
     finp = open(filename+'.asm', 'rt')
-    inpLine = 1; srcLine = 1
+    inpLine = 1
     while True:
         ln = finp.readline()
         if ln == '':
@@ -85,16 +85,15 @@ def readSource(filename):
             if srcText == '' or srcText == '\n':
                 pass
             else:
-                curSrc = [srcLine, inpLine, srcText]
-                if '"' in curSrc[2]:
-                    ln   = curSrc[2].split('"')
+                curSrc = [inpLine, srcText]
+                if '"' in curSrc[1]:
+                    ln   = curSrc[1].split('"')
                     flds = re.split('\s', ln[0])[:2]
                     flds.append(ln[1])
                 else:
-                    flds = re.split('[ \t][\s]*', curSrc[2])
+                    flds = re.split('[ \t][\s]*', curSrc[1])
                     if len(flds) < 2:
                         flds.append(str())
-                srcLine += 1
                 yield [curSrc, flds]
             inpLine += 1
 
@@ -105,7 +104,7 @@ def pho_ldaImmPha_to_pshImm(source):
     i = 0
     while i < length:
         newLine = source[i]
-        srcLine, inpLine, *_ = newLine[0]
+        inpLine, *_ = newLine[0]
         try:
             lbl, op, dt = newLine[1]
         except:
@@ -122,7 +121,7 @@ def pho_ldaImmPha_to_pshImm(source):
                 nxtLbl, nxtOp = nxtLine[1]
             if nxtOp in ['pha', 'pha.w', 'pha.s', 'pha.sw'] and nxtLbl == '':
                 op = 'psh'+'.'+nxtOp.split('.')[1]
-                newLine = [[srcLine, inpLine, lbl+'\t'+op+' '+dt], \
+                newLine = [[inpLine, lbl+'\t'+op+' '+dt], \
                            [lbl, op, dt]]
                 i += 1
         newSrc.append(newLine)

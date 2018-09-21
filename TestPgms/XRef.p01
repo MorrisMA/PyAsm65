@@ -1090,21 +1090,23 @@
 1090 1377 	rts
 1091 1378 	.end _pc65_main
 1092 1380 	.dat
-1093 1382 wordtable_007 .byt 12000
-1094 1383 numbertable_008 .byt 4004
-1095 1384 nextwordindex_009 .byt 2
-1096 1385 nextnumberindex_010 .byt 2
-1097 1386 linenumber_011 .byt 2
-1098 1387 wordtablefull_012 .byt 2
-1099 1388 numbertablefull_013 .byt 2
-1100 1389 newline_014 .byt 2
-1101 1390 gotword_015 .byt 2
-1102 1391 S_120 .str " line number entries."
-1103 1392 S_119 .str " word entries."
-1104 1393 S_117 .str "*** The number table is not large enough. ***"
-1105 1394 S_113 .str "*** The word table is not large enough. ***"
-1106 1395 S_105 .str "    1 : "
-1107 1396 S_101 .str "---------------"
-1108 1397 S_100 .str "Cross-reference"
-1109 1398 S_020 .str " : "
-1110 1400 	.end
+1093 1382 S_120 .str " line number entries."
+1094 1383 S_119 .str " word entries."
+1095 1384 S_117 .str "*** The number table is not large enough. ***"
+1096 1385 S_113 .str "*** The word table is not large enough. ***"
+1097 1386 S_105 .str "    1 : "
+1098 1387 S_101 .str "---------------"
+1099 1388 S_100 .str "Cross-reference"
+1100 1389 S_020 .str " : "
+1101 1390 _bss_start .wrd 1
+1102 1391 wordtable_007 .byt 12000
+1103 1392 numbertable_008 .byt 4004
+1104 1393 nextwordindex_009 .wrd 1
+1105 1394 nextnumberindex_010 .wrd 1
+1106 1395 linenumber_011 .wrd 1
+1107 1396 wordtablefull_012 .wrd 1
+1108 1397 numbertablefull_013 .wrd 1
+1109 1398 newline_014 .wrd 1
+1110 1399 gotword_015 .wrd 1
+1111 1400 _bss_end .wrd 1
+1112 1402 	.end

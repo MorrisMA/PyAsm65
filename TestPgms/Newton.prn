@@ -1,3 +1,10 @@
+(   1)                  ; ;    1: PROGRAM newton (input, output);
+(   2)                  ; 	.stk 1024
+(   3)                  ; 	.cod 512
+(   4)                  ; STATIC_LINK .equ +5
+(   5)                  ; RETURN_VALUE .equ -3
+(   6)                  ; HIGH_RETURN_VALUE .equ -1
+(   7)                  ; _start
 (   8) 0200 ABBA        ; 	tsx.w
 (   9) 0202 CBA2A109    ; 	lds.w #_stk_top
 (  10) 0206 9C9405      ; 	stz _bss_start
@@ -8,20 +15,36 @@
 (  15) 0216 ABE99405    ; 	sbc.w #_bss_start
 (  16) 021A 540F        ; 	mov #15
 (  17) 021C 4C1F02      ; 	jmp _pc65_main
+(  18)                  ; ;    2: 
+(  19)                  ; ;    3: CONST
+(  20)                  ; ;    4:     epsilon = 1e-6;
+(  21)                  ; ;    5: 
+(  22)                  ; ;    6: VAR
+(  23)                  ; ;    7:     number, root, sqroot : real;
+(  24)                  ; ;    8: 
+(  25)                  ; ;    9: BEGIN
+(  26)                  ; _pc65_main .sub
 (  27) 021F ABDA        ; 	phx.w
 (  28) 0221 ABBA        ; 	tsx.w
+(  29)                  ; ;   10:     REPEAT
+(  30)                  ; L_005
+(  31)                  ; ;   11:     writeln;
 (  32) 0223 20FFFF      ; 	jsr _writeln
+(  33)                  ; ;   12:     write('Enter new number (0 to quit): ');
 (  34) 0226 ABE26E05    ; 	psh.w #S_007
 (  35) 022A ABE20000    ; 	psh.w #0
 (  36) 022E ABE21E00    ; 	psh.w #30
 (  37) 0232 20FFFF      ; 	jsr _swrite
 (  38) 0235 C206        ; 	adj #6
+(  39)                  ; ;   13:     read(number);
 (  40) 0237 ABE29505    ; 	psh.w #number_002
 (  41) 023B 20FFFF      ; 	jsr _fread
 (  42) 023E 6B          ; 	pli
 (  43) 023F AB8300      ; 	sta.w 0,I++
 (  44) 0242 1B          ; 	swp a
 (  45) 0243 AB8300      ; 	sta.w 0,I++
+(  46)                  ; ;   14: 
+(  47)                  ; ;   15:     IF number = 0 THEN BEGIN
 (  48) 0246 ABAD9705    ; 	lda.w number_002+2
 (  49) 024A 1B          ; 	swp a
 (  50) 024B ABAD9505    ; 	lda.w number_002
@@ -30,6 +53,7 @@
 (  53) 0252 1B          ; 	swp a
 (  54) 0253 AB48        ; 	pha.w
 (  55) 0255 ABE20000    ; 	psh.w #0
+(  56)                  ; 	pha.w
 (  57) 0259 20FFFF      ; 	jsr _fconv
 (  58) 025C C202        ; 	adj #2
 (  59) 025E 1B          ; 	swp a
@@ -44,9 +68,12 @@
 (  68) 0270 28          ; 	plp
 (  69) 0271 F002        ; 	beq L_010
 (  70) 0273 A900        ; 	lda #0
+(  71)                  ; L_010
 (  72) 0275 ABC90100    ; 	cmp.w #1
 (  73) 0279 F003        ; 	beq L_008
 (  74) 027B 4CBC02      ; 	jmp L_009
+(  75)                  ; L_008
+(  76)                  ; ;   16:         writeln(number:12:6, 0.0:12:6);
 (  77) 027E ABAD9705    ; 	lda.w number_002+2
 (  78) 0282 1B          ; 	swp a
 (  79) 0283 ABAD9505    ; 	lda.w number_002
@@ -55,7 +82,9 @@
 (  82) 028A 1B          ; 	swp a
 (  83) 028B AB48        ; 	pha.w
 (  84) 028D ABE20C00    ; 	psh.w #12
+(  85)                  ; 	pha.w
 (  86) 0291 ABE20600    ; 	psh.w #6
+(  87)                  ; 	pha.w
 (  88) 0295 20FFFF      ; 	jsr _fwrite
 (  89) 0298 C208        ; 	adj #8
 (  90) 029A ABAD9205    ; 	lda.w F_011+2
@@ -66,11 +95,16 @@
 (  95) 02A6 1B          ; 	swp a
 (  96) 02A7 AB48        ; 	pha.w
 (  97) 02A9 ABE20C00    ; 	psh.w #12
+(  98)                  ; 	pha.w
 (  99) 02AD ABE20600    ; 	psh.w #6
+( 100)                  ; 	pha.w
 ( 101) 02B1 20FFFF      ; 	jsr _fwrite
 ( 102) 02B4 C208        ; 	adj #8
 ( 103) 02B6 20FFFF      ; 	jsr _writeln
+( 104)                  ; ;   17:     END
+( 105)                  ; ;   18:     ELSE IF number < 0 THEN BEGIN
 ( 106) 02B9 4C1D05      ; 	jmp L_012
+( 107)                  ; L_009
 ( 108) 02BC ABAD9705    ; 	lda.w number_002+2
 ( 109) 02C0 1B          ; 	swp a
 ( 110) 02C1 ABAD9505    ; 	lda.w number_002
@@ -79,6 +113,7 @@
 ( 113) 02C8 1B          ; 	swp a
 ( 114) 02C9 AB48        ; 	pha.w
 ( 115) 02CB ABE20000    ; 	psh.w #0
+( 116)                  ; 	pha.w
 ( 117) 02CF 20FFFF      ; 	jsr _fconv
 ( 118) 02D2 C202        ; 	adj #2
 ( 119) 02D4 1B          ; 	swp a
@@ -93,16 +128,23 @@
 ( 128) 02E6 28          ; 	plp
 ( 129) 02E7 AB7002      ; 	blt L_015
 ( 130) 02EA A900        ; 	lda #0
+( 131)                  ; L_015
 ( 132) 02EC ABC90100    ; 	cmp.w #1
 ( 133) 02F0 F003        ; 	beq L_013
 ( 134) 02F2 4C0C03      ; 	jmp L_014
+( 135)                  ; L_013
+( 136)                  ; ;   19:         writeln('*** ERROR:  number < 0');
 ( 137) 02F5 ABE25805    ; 	psh.w #S_016
 ( 138) 02F9 ABE20000    ; 	psh.w #0
 ( 139) 02FD ABE21600    ; 	psh.w #22
 ( 140) 0301 20FFFF      ; 	jsr _swrite
 ( 141) 0304 C206        ; 	adj #6
 ( 142) 0306 20FFFF      ; 	jsr _writeln
+( 143)                  ; ;   20:     END
+( 144)                  ; ;   21:     ELSE BEGIN
 ( 145) 0309 4C1D05      ; 	jmp L_017
+( 146)                  ; L_014
+( 147)                  ; ;   22:         sqroot := sqrt(number);
 ( 148) 030C ABAD9705    ; 	lda.w number_002+2
 ( 149) 0310 1B          ; 	swp a
 ( 150) 0311 ABAD9505    ; 	lda.w number_002
@@ -115,6 +157,7 @@
 ( 157) 0320 AB8D9D05    ; 	sta.w sqroot_004
 ( 158) 0324 1B          ; 	swp a
 ( 159) 0325 AB8D9F05    ; 	sta.w sqroot_004+2
+( 160)                  ; ;   23:         writeln(number:12:6, sqroot:12:6);
 ( 161) 0329 ABAD9705    ; 	lda.w number_002+2
 ( 162) 032D 1B          ; 	swp a
 ( 163) 032E ABAD9505    ; 	lda.w number_002
@@ -123,7 +166,9 @@
 ( 166) 0335 1B          ; 	swp a
 ( 167) 0336 AB48        ; 	pha.w
 ( 168) 0338 ABE20C00    ; 	psh.w #12
+( 169)                  ; 	pha.w
 ( 170) 033C ABE20600    ; 	psh.w #6
+( 171)                  ; 	pha.w
 ( 172) 0340 20FFFF      ; 	jsr _fwrite
 ( 173) 0343 C208        ; 	adj #8
 ( 174) 0345 ABAD9F05    ; 	lda.w sqroot_004+2
@@ -134,17 +179,26 @@
 ( 179) 0351 1B          ; 	swp a
 ( 180) 0352 AB48        ; 	pha.w
 ( 181) 0354 ABE20C00    ; 	psh.w #12
+( 182)                  ; 	pha.w
 ( 183) 0358 ABE20600    ; 	psh.w #6
+( 184)                  ; 	pha.w
 ( 185) 035C 20FFFF      ; 	jsr _fwrite
 ( 186) 035F C208        ; 	adj #8
 ( 187) 0361 20FFFF      ; 	jsr _writeln
+( 188)                  ; ;   24:         writeln;
 ( 189) 0364 20FFFF      ; 	jsr _writeln
+( 190)                  ; ;   25: 
+( 191)                  ; ;   26:         root := 1;
 ( 192) 0367 ABE20100    ; 	psh.w #1
+( 193)                  ; 	pha.w
 ( 194) 036B 20FFFF      ; 	jsr _fconv
 ( 195) 036E C202        ; 	adj #2
 ( 196) 0370 AB8D9905    ; 	sta.w root_003
 ( 197) 0374 1B          ; 	swp a
 ( 198) 0375 AB8D9B05    ; 	sta.w root_003+2
+( 199)                  ; ;   27:         REPEAT
+( 200)                  ; L_018
+( 201)                  ; ;   28:         root := (number/root + root)/2;
 ( 202) 0379 ABAD9705    ; 	lda.w number_002+2
 ( 203) 037D 1B          ; 	swp a
 ( 204) 037E ABAD9505    ; 	lda.w number_002
@@ -179,6 +233,7 @@
 ( 233) 03B9 1B          ; 	swp a
 ( 234) 03BA AB48        ; 	pha.w
 ( 235) 03BC ABE20200    ; 	psh.w #2
+( 236)                  ; 	pha.w
 ( 237) 03C0 20FFFF      ; 	jsr _fconv
 ( 238) 03C3 C202        ; 	adj #2
 ( 239) 03C5 1B          ; 	swp a
@@ -190,6 +245,7 @@
 ( 245) 03D0 AB8D9905    ; 	sta.w root_003
 ( 246) 03D4 1B          ; 	swp a
 ( 247) 03D5 AB8D9B05    ; 	sta.w root_003+2
+( 248)                  ; ;   29:         writeln(root:24:6,
 ( 249) 03D9 ABAD9B05    ; 	lda.w root_003+2
 ( 250) 03DD 1B          ; 	swp a
 ( 251) 03DE ABAD9905    ; 	lda.w root_003
@@ -198,10 +254,14 @@
 ( 254) 03E5 1B          ; 	swp a
 ( 255) 03E6 AB48        ; 	pha.w
 ( 256) 03E8 ABE21800    ; 	psh.w #24
+( 257)                  ; 	pha.w
 ( 258) 03EC ABE20600    ; 	psh.w #6
+( 259)                  ; 	pha.w
 ( 260) 03F0 20FFFF      ; 	jsr _fwrite
 ( 261) 03F3 C208        ; 	adj #8
+( 262)                  ; ;   30:             100*abs(root - sqroot)/sqroot:12:2,
 ( 263) 03F5 ABE26400    ; 	psh.w #100
+( 264)                  ; 	pha.w
 ( 265) 03F9 ABAD9B05    ; 	lda.w root_003+2
 ( 266) 03FD 1B          ; 	swp a
 ( 267) 03FE ABAD9905    ; 	lda.w root_003
@@ -268,13 +328,18 @@
 ( 328) 0474 1B          ; 	swp a
 ( 329) 0475 AB48        ; 	pha.w
 ( 330) 0477 ABE20C00    ; 	psh.w #12
+( 331)                  ; 	pha.w
 ( 332) 047B ABE20200    ; 	psh.w #2
+( 333)                  ; 	pha.w
 ( 334) 047F 20FFFF      ; 	jsr _fwrite
 ( 335) 0482 C208        ; 	adj #8
+( 336)                  ; ;   31:             '%')
 ( 337) 0484 ABE22500    ; 	psh.w #37
+( 338)                  ; 	pha.w
 ( 339) 0488 ABE20000    ; 	psh.w #0
 ( 340) 048C 20FFFF      ; 	jsr _cwrite
 ( 341) 048F C204        ; 	adj #4
+( 342)                  ; ;   32:         UNTIL abs(number/sqr(root) - 1) < epsilon;
 ( 343) 0491 20FFFF      ; 	jsr _writeln
 ( 344) 0494 ABAD9705    ; 	lda.w number_002+2
 ( 345) 0498 1B          ; 	swp a
@@ -307,6 +372,7 @@
 ( 372) 04CB 1B          ; 	swp a
 ( 373) 04CC AB48        ; 	pha.w
 ( 374) 04CE ABE20100    ; 	psh.w #1
+( 375)                  ; 	pha.w
 ( 376) 04D2 20FFFF      ; 	jsr _fconv
 ( 377) 04D5 C202        ; 	adj #2
 ( 378) 04D7 1B          ; 	swp a
@@ -340,9 +406,15 @@
 ( 406) 050E 28          ; 	plp
 ( 407) 050F AB7002      ; 	blt L_021
 ( 408) 0512 A900        ; 	lda #0
+( 409)                  ; L_021
 ( 410) 0514 ABC90100    ; 	cmp.w #1
 ( 411) 0518 F003        ; 	beq L_019
 ( 412) 051A 4C7903      ; 	jmp L_018
+( 413)                  ; L_019
+( 414)                  ; ;   33:     END
+( 415)                  ; ;   34:     UNTIL number = 0
+( 416)                  ; L_017
+( 417)                  ; L_012
 ( 418) 051D ABAD9705    ; 	lda.w number_002+2
 ( 419) 0521 1B          ; 	swp a
 ( 420) 0522 ABAD9505    ; 	lda.w number_002
@@ -351,6 +423,8 @@
 ( 423) 0529 1B          ; 	swp a
 ( 424) 052A AB48        ; 	pha.w
 ( 425) 052C ABE20000    ; 	psh.w #0
+( 426)                  ; ;   35: END.
+( 427)                  ; 	pha.w
 ( 428) 0530 20FFFF      ; 	jsr _fconv
 ( 429) 0533 C202        ; 	adj #2
 ( 430) 0535 1B          ; 	swp a
@@ -365,11 +439,17 @@
 ( 439) 0547 28          ; 	plp
 ( 440) 0548 F002        ; 	beq L_022
 ( 441) 054A A900        ; 	lda #0
+( 442)                  ; L_022
 ( 443) 054C ABC90100    ; 	cmp.w #1
 ( 444) 0550 F003        ; 	beq L_006
 ( 445) 0552 4C2302      ; 	jmp L_005
+( 446)                  ; L_006
 ( 447) 0555 ABFA        ; 	plx.w
 ( 448) 0557 60          ; 	rts
+( 449)                  ; 	.end _pc65_main
+( 450)                  ; 
+( 451)                  ; 	.dat
+( 452)                  ; 
 ( 453) 0558 2A2A2A20    ; S_016 .str "*** ERROR:  number < 0"
        055C 4552524F523A20206E756D626572203C2030
 ( 454) 056E 456E7465    ; S_007 .str "Enter new number (0 to quit): "
@@ -415,3 +495,5 @@
        0966 0000000000000000000000000000000000000000000000000000000000000000
        0986 000000000000000000000000000000000000000000000000000000
 ( 463) 09A1 00          ; _stk_top .byt 1
+( 464)                  ; 
+( 465)                  ; 	.end

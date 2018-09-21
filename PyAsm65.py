@@ -52,16 +52,16 @@ inpLine = 1
 srcLine = 1
 source  = []    # fields in the input line
 
-fout = open(filename+'.p01', 'wt')
+'''
+    Output intermediate file #1
+'''
 
-for ln in readSource(filename):
-    srcLine = ln[0][0]
-    inpLine = ln[0][1]
-    srcText = ln[0][2]
-    print('%4d %4d' % (srcLine, inpLine), srcText, file=fout)
-    source.append(ln)
-
-fout.close()
+with open(filename+'.p01', 'wt') as fout:
+    for ln in readSource(filename):
+        inpLine = ln[0][0]
+        srcText = ln[0][1]
+        print('%4d' % (inpLine), srcText, file=fout)
+        source.append(ln)
 
 '''
     Insert Peephole Optimizations here
@@ -70,13 +70,23 @@ fout.close()
 source = pho_ldaImmPha_to_pshImm(source)
 
 '''
+    Output intermediate file #2
+'''
+
+with open(filename+'.p02', 'wt') as fout:
+    for ln in source:
+        inpLine = ln[0][0]
+        srcText = ln[0][1]
+        print('%4d' % (inpLine), srcText, file=fout)
+
+'''
     Assembler Pass 1
 '''
 
 print('\tPass 1')
 
 for src in source:
-    *_, srcLine, srcText = src[0]
+    srcLine, srcText = src[0]
     opcode = ''
     numFields = len(src[1])
     if numFields == 1:
@@ -173,7 +183,7 @@ for src in source:
                     asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
                     bufLen = 15 - len(asmText)
                     cod.append([code, op, addrsMode, operand, \
-                                opLen, dtLen, opDat, \
+                                opLen, dtLen, opDat, srcLine, \
                                 ' '*bufLen + ' ; ' + srcText])
                     code += opLen + dtLen
                 else:
@@ -216,7 +226,7 @@ for src in source:
 
                     asmText = '%04X %s' % (data, val[:8])
                     bufLen = 15 - len(asmText)
-                    dat.append([data, lbl, 'db', dt, siz, 0, val, \
+                    dat.append([data, lbl, 'db', dt, siz, 0, val, srcLine, \
                                 ' '*bufLen + ' ; ' + srcText])
                     data += siz
                 elif op == '.dw' or op == '.wrd':
@@ -226,7 +236,7 @@ for src in source:
 
                     asmText = '%04X %s' % (data, val[:8])
                     bufLen = 15 - len(asmText)
-                    dat.append([data, lbl, 'db', dt, siz, 0, val, \
+                    dat.append([data, lbl, 'db', dt, siz, 0, val, srcLine, \
                                 ' '*bufLen + ' ; ' + srcText])
                     data += siz
                 elif op == '.dl' or op == '.lng' or op == '.flt':
@@ -236,7 +246,7 @@ for src in source:
 
                     asmText = '%04X %s' % (data, val[:8])
                     bufLen = 15 - len(asmText)
-                    dat.append([data, lbl, 'db', dt, siz, 0, val, \
+                    dat.append([data, lbl, 'db', dt, siz, 0, val, srcLine, \
                                 ' '*bufLen + ' ; ' + srcText])
                     data += siz
                 elif op == '.ds' or op == '.str':
@@ -250,7 +260,7 @@ for src in source:
 
                     asmText = '%04X %s' % (data, strVal[:8])
                     bufLen = 15 - len(asmText)
-                    dat.append([data, lbl, 'ds', dt, siz, 0, strVal, \
+                    dat.append([data, lbl, 'ds', dt, siz, 0, strVal, srcLine, \
                                 ' '*bufLen + ' ; ' + srcText])
                     data += siz
                 else:
@@ -310,7 +320,7 @@ for src in source:
                     asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
                     bufLen = 15 - len(asmText)
                     cod.append([code, op, addrsMode, operand, \
-                                opLen, dtLen, opDat, \
+                                opLen, dtLen, opDat, srcLine, \
                                 ' '*bufLen + ' ; ' + srcText])
                     code += opLen + dtLen
                 else:
@@ -329,8 +339,8 @@ for src in source:
 '''
 
 for ln in dat:
-    data, lbl, op, dt, siz, zerVal, val, srcText = ln
-    cod.append([code + data, lbl, op, dt, siz, zerVal, val, srcText])
+    data, lbl, op, dt, siz, zerVal, val, srcLine, srcText = ln
+    cod.append([code + data, lbl, op, dt, siz, zerVal, val, srcLine, srcText])
 
 '''
     Adjust addresses of variables{}
@@ -374,10 +384,11 @@ for ln in cod:
     opLen = ln[4]
     dtLen = ln[5]
     opStr = ln[6]
-    srcTxt = ln[7]
+    srcLine = ln[7]
+    srcTxt  = ln[8]
 
     if md == 'imp' or md == 'a' or md == 'x' or md == 'y':
-        out[addrs] = [opLen, opStr, srcTxt]
+        out[addrs] = [opLen, opStr, srcTxt, srcLine]
     elif md == 'imm':
         try:
             val = eval(str(dt), vlc)
@@ -388,12 +399,14 @@ for ln in cod:
         if dtLen == 1:
             loStr = '%02X' % (val & 255)
             out[addrs] = [opLen + dtLen, \
-                          ''.join([opStr, loStr]), srcTxt]
+                          ''.join([opStr, loStr]), \
+                          srcTxt, srcLine]
         else:
             loStr = '%02X' % (val & 255)
             hiStr = '%02X' % ((val >> 8) & 255)
             out[addrs] = [opLen + dtLen, \
-                          ''.join([opStr, loStr, hiStr]), srcTxt]
+                          ''.join([opStr, loStr, hiStr]), \
+                          srcTxt, srcLine]
     elif md == 'rel':
         if dt in labels:
             delta = eval(str(dt), vlc) - (addrs + opLen + dtLen)
@@ -403,7 +416,8 @@ for ln in cod:
                 else:
                     loStr = '%02X' % (delta & 255)
                     out[addrs] = [opLen + dtLen, \
-                                  ''.join([opStr, loStr]), srcTxt]
+                                  ''.join([opStr, loStr]), \
+                                  srcTxt, srcLine]
             elif dtLen == 2:
                 if delta < -32768 or delta > 32767:
                     print('Error. Target address out of range.')
@@ -411,7 +425,8 @@ for ln in cod:
                     loStr = '%02X' % (delta & 255)
                     hiStr = '%02X' % ((delta >> 8) & 255)
                     out[addrs] = [opLen + dtLen, \
-                                  ''.join([opStr, loStr, hiStr]), srcTxt]
+                                  ''.join([opStr, loStr, hiStr]), \
+                                  srcTxt, srcLine]
         else:
             print('Error. Destination not found in symbol table.')
     elif md in ['zpS', 'zpSI', 'zpSIY', 'zpX', 'zpXI', 'ipp', 'ippI',]:
@@ -425,12 +440,14 @@ for ln in cod:
         if dtLen == 1:
             loStr = '%02X' % (val & 255)
             out[addrs] = [opLen + dtLen, \
-                          ''.join([opStr, loStr]), srcTxt]
+                          ''.join([opStr, loStr]), \
+                          srcTxt, srcLine]
         else:
             loStr = '%02X' % (val & 255)
             hiStr = '%02X' % ((val >> 8) & 255)
             out[addrs] = [opLen + dtLen, \
-                          ''.join([opStr, loStr, hiStr]), srcTxt]
+                          ''.join([opStr, loStr, hiStr]), \
+                          srcTxt, srcLine]
     elif md in ['abs', 'absI', 'absX', 'absXI', 'absY', 'absIY',]:
         try:
             val = eval(str(dt), vlc)
@@ -441,15 +458,17 @@ for ln in cod:
         if dtLen == 1:
             loStr = '%02X' % (val & 255)
             out[addrs] = [opLen + dtLen, \
-                          ''.join([opStr, loStr]), srcTxt]
+                          ''.join([opStr, loStr]), \
+                          srcTxt, srcLine]
         else:
             loStr = '%02X' % (val & 255)
             hiStr = '%02X' % ((val >> 8) & 255)
             out[addrs] = [opLen + dtLen, \
-                          ''.join([opStr, loStr, hiStr]), srcTxt]
+                          ''.join([opStr, loStr, hiStr]), \
+                          srcTxt, srcLine]
     elif md in ('db', 'byt', 'ds', 'str'):
         val, siz, strVal = variables[op]
-        out[addrs] = [siz, opStr, srcTxt]
+        out[addrs] = [siz, opStr, srcTxt, srcLine]
 
 '''
     Print results of Pass 2
@@ -473,15 +492,55 @@ with open(filename+'.lst', 'wt') as fout:
             prevAddrs = i
             prevLen = out[i][0]
             start = True
-        length, outTxt, srcTxt = tuple(out[i])
-        print('%04X' % (i), outTxt[:8], srcTxt, file=fout)
+        length, outTxt, srcTxt, srcLine = tuple(out[i])
+        print('(%4d) %04X' % (srcLine, i), outTxt[:8], srcTxt, file=fout)
         if len(outTxt) > 8:
             outTxt = outTxt[8:]
             addrs = i + 4
             while True:
-                print('%04X' % (addrs), outTxt[:64], file=fout)
+                print(' '*6, '%04X' % (addrs), outTxt[:64], file=fout)
                 if len(outTxt) > 64:
                     outTxt = outTxt[64:]
                 else:
                     break
                 addrs += 32
+
+'''
+    Generate Print File -- Interleave Input File and Output File
+'''
+srcLine = 0
+with open(filename+'.lst', 'rt') as lst:
+    with open(filename+'.asm', 'rt') as asm:
+        with open(filename+'.prn', 'wt') as prn:
+            asmInp = asm.readline(); srcLine += 1
+            lstInp = lst.readline()
+            while True:
+                if lstInp[0:1] == '(':
+                    lstLine = lstInp.split(';')
+                    lstFlds = lstLine[0].split(')')
+                    inpLine = int(lstFlds[0][1:])
+                    if inpLine == srcLine:
+                        print(lstInp[:-1], file=prn)
+                        lstInp = lst.readline()
+                        if lstInp == '': lstInp = '(0)\n'
+                    else:
+                        print('(%4d)' % (srcLine), ' '*16,
+                              ';', asmInp[:-1], file=prn)
+                else:
+                    while True:
+                        print(lstInp[:-1], file=prn)
+                        lstInp = lst.readline()
+                        if lstInp[0:1] == '(':
+                            lstLine = lstInp.split(';')
+                            lstFlds = lstLine[0].split(')')
+                            inpLine = int(lstFlds[0][1:])
+                            if inpLine == srcLine:
+                                print(lstInp[:-1], file=prn)
+                                lstInp = lst.readline()
+                                if lstInp == '': lstInp = '(0)\n'
+                            else:
+                                print('(%4d)' % (srcLine), ' '*16,
+                                      ';', asmInp[:-1], file=prn)
+                            break
+                asmInp = asm.readline(); srcLine += 1
+                if asmInp == '': break

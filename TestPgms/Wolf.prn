@@ -1,17 +1,146 @@
+(   1)                  ; ;    1: PROGRAM WolfIsland (input, output);
+(   2)                  ; 	.stk 1024
+(   3)                  ; 	.cod 512
+(   4)                  ; STATIC_LINK .equ +5
+(   5)                  ; RETURN_VALUE .equ -3
+(   6)                  ; HIGH_RETURN_VALUE .equ -1
+(   7)                  ; _start
 (   8) 0200 ABBA        ; 	tsx.w
 (   9) 0202 CBA2AF1A    ; 	lds.w #_stk_top
 (  10) 0206 4C3113      ; 	jmp _pc65_main
+(  11)                  ; ;    2: 
+(  12)                  ; ;    3: {   Wolf Island is a simulation of a 9 x 9 island of wolves and rabbits.
+(  13)                  ; ;    4:     The wolves eat rabbits, and the rabbits eat grass.  Their initial
+(  14)                  ; ;    5:     locations are:
+(  15)                  ; ;    6: 
+(  16)                  ; ;    7:             . . . . . . . . .
+(  17)                  ; ;    8:             . W . . . . . W .
+(  18)                  ; ;    9:             . . . . . . . . .
+(  19)                  ; ;   10:             . . . r r r . . .
+(  20)                  ; ;   11:             . . . r r r . . .
+(  21)                  ; ;   12:             . . . r r r . . .
+(  22)                  ; ;   13:             . . . . . . . . .
+(  23)                  ; ;   14:             . W . . . . . W .
+(  24)                  ; ;   15:             . . . . . . . . .
+(  25)                  ; ;   16: 
+(  26)                  ; ;   17:     A wolf or rabbit can move up, down, left, or right into an adjacent
+(  27)                  ; ;   18:     location.  Diagonal moves are not allowed.
+(  28)                  ; ;   19: 
+(  29)                  ; ;   20:     Time is measured in discrete time units.  Wolves reproduce every
+(  30)                  ; ;   21:     12 time units, and rabbits every 5 units.  An animal reproduces
+(  31)                  ; ;   22:     by splitting into two.
+(  32)                  ; ;   23: 
+(  33)                  ; ;   24:     Each wolf starts out with 6 food units and loses 1 every time unit.
+(  34)                  ; ;   25:     A wolf gains 6 food units by eating a rabbit.  It starves to death
+(  35)                  ; ;   26:     if it reaches 0 food units.  Since there's always enough grass to
+(  36)                  ; ;   27:     eat, rabbits don't worry about food units.
+(  37)                  ; ;   28: 
+(  38)                  ; ;   29:     The order of events from time unit T-1 to T is:
+(  39)                  ; ;   30: 
+(  40)                  ; ;   31:     (1) For each wolf:
+(  41)                  ; ;   32: 
+(  42)                  ; ;   33:     Lose a food unit.  Die if 0 food units and remove.
+(  43)                  ; ;   34: 
+(  44)                  ; ;   35:     Eat a rabbit if there is one in an adjacent location by moving
+(  45)                  ; ;   36:     into the rabbit's location.  Increase the wolf's food units
+(  46)                  ; ;   37:     by 6 and remove the rabbit.
+(  47)                  ; ;   38: 
+(  48)                  ; ;   39:     Otherwise, randomly choose to move into an adjacent empty
+(  49)                  ; ;   40:     location, or stay put.
+(  50)                  ; ;   41: 
+(  51)                  ; ;   42:     If wolf reproduction time (T = 12,24,36,...), split and leave
+(  52)                  ; ;   43:     behind an offspring in the previous location.  Each split wolf
+(  53)                  ; ;   44:     has half (DIV 2) the food units.  If there was no move, the
+(  54)                  ; ;   45:     baby was stillborn, but the food units are still halved.
+(  55)                  ; ;   46: 
+(  56)                  ; ;   47:     (2) For each rabbit:
+(  57)                  ; ;   48: 
+(  58)                  ; ;   49:     Randomly choose to move into an adjacent empty, or stay put.
+(  59)                  ; ;   50: 
+(  60)                  ; ;   51:     If rabbit reproduction time (T = 5,10,15,...), split and leave
+(  61)                  ; ;   52:     behind an offspring in the previous location.  If there was no
+(  62)                  ; ;   53:     move, the baby was stillborn.
+(  63)                  ; ;   54: 
+(  64)                  ; ;   55:     The simulation ends when all the wolves are dead or all the
+(  65)                  ; ;   56:     rabbits are eaten.
+(  66)                  ; ;   57: 
+(  67)                  ; ;   58:     The island is printed at times T = 0,1,2,3,4,5,6,7,8,9,10,
+(  68)                  ; ;   59:     15,20,25,30,...,80.  A message is printed whenever a wolf is
+(  69)                  ; ;   60:     born or dies, and whenever a rabbit is born or is eaten.
+(  70)                  ; ;   61: }
+(  71)                  ; ;   62: 
+(  72)                  ; ;   63: CONST
+(  73)                  ; ;   64:     size            = 9;    {size of island}
+(  74)                  ; ;   65:     max             = 10;       {size plus border}
+(  75)                  ; ;   66:     wolfreprotime   = 12;       {wolf reproduction period}
+(  76)                  ; ;   67:     rabbitreprotime = 5;        {rabbit reproduction period}
+(  77)                  ; ;   68:     rabbitfoodunits = 6;        {rabbit food unit worth to wolf}
+(  78)                  ; ;   69:     initfoodunits   = 6;        {wolf's initial food units}
+(  79)                  ; ;   70:     maxprinttimes   = 50;       {max. no. times to print island}
+(  80)                  ; ;   71: 
+(  81)                  ; ;   72: TYPE
+(  82)                  ; ;   73:     posint   = 0..32767;
+(  83)                  ; ;   74:     index    = 0..max;          {index range of island matrix}
+(  84)                  ; ;   75: 
+(  85)                  ; ;   76:     contents = (wolf, rabbit, newwolf, newrabbit, empty, border);
+(  86)                  ; ;   77:     {Contents each each island location.  Each time a wolf or
+(  87)                  ; ;   78:      rabbit moves, newwolf or newrabbit is initially placed in
+(  88)                  ; ;   79:      the new location.  This prevents a wolf or rabbit from
+(  89)                  ; ;   80:      being processed again in its new location during the same
+(  90)                  ; ;   81:      time period.}
+(  91)                  ; ;   82: 
+(  92)                  ; ;   83: VAR
+(  93)                  ; ;   84:     island     : ARRAY [index, index] OF contents;
+(  94)                  ; ;   85:                 {Wolf Island with border}
+(  95)                  ; ;   86:     foodunits  : ARRAY [1..size, 1..size] OF posint;
+(  96)                  ; ;   87:                 {wolves' food unit matrix}
+(  97)                  ; ;   88:     printtimes : ARRAY [1..maxprinttimes] OF posint;
+(  98)                  ; ;   89:                 {times to print island}
+(  99)                  ; ;   90: 
+( 100)                  ; ;   91:     numwolves, numrabbits : posint; {no. of wolves and rabbits}
+( 101)                  ; ;   92:     numprinttimes         : posint;     {no. of print times}
+( 102)                  ; ;   93:     t                 : posint;     {time}
+( 103)                  ; ;   94:     xpt  : 1..maxprinttimes;        {print times index}
+( 104)                  ; ;   95:     seed : posint;                  {random number seed}
+( 105)                  ; ;   96: 
+( 106)                  ; ;   97:     rowoffset : ARRAY [0..4] OF -1..+1;
+( 107)                  ; ;   98:     coloffset : ARRAY [0..4] OF -1..+1;
+( 108)                  ; ;   99:     {Row and column offsets.  When added to the current row and
+( 109)                  ; ;  100:      column of a wolf's or rabbit's location, gives the row and
+( 110)                  ; ;  101:      column of the same or an adjacent location.}
+( 111)                  ; ;  102: 
+( 112)                  ; ;  103: 
+( 113)                  ; ;  104: PROCEDURE Initialize;
+( 114)                  ; ;  105: 
+( 115)                  ; ;  106:     {Initialize all arrays.}
+( 116)                  ; ;  107: 
+( 117)                  ; ;  108:     VAR
+( 118)                  ; ;  109:     i        : posint;
+( 119)                  ; ;  110:     row, col : index;
+( 120)                  ; ;  111: 
+( 121)                  ; ;  112:     BEGIN
+( 122)                  ; i_014 .equ -1
+( 123)                  ; row_015 .equ -3
+( 124)                  ; col_016 .equ -5
+( 125)                  ; initialize_013	.sub
 ( 126) 0209 ABDA        ; 	phx.w
 ( 127) 020B ABBA        ; 	tsx.w
 ( 128) 020D C2FA        ; 	adj #-6
+( 129)                  ; ;  113: 
+( 130)                  ; ;  114:     {Initialize the island and wolf food matrices.}
+( 131)                  ; ;  115:     FOR i := 0 TO max DO BEGIN
 ( 132) 020F A900        ; 	lda #0
 ( 133) 0211 AB95FF      ; 	sta.w i_014,X
+( 134)                  ; L_017
 ( 135) 0214 A90A        ; 	lda #10
 ( 136) 0216 ABD5FF      ; 	cmp.w i_014,X
 ( 137) 0219 AB5003      ; 	bge L_018
 ( 138) 021C 4CCD02      ; 	jmp L_019
+( 139)                  ; L_018
+( 140)                  ; ;  116:         island[0,   i] := border;
 ( 141) 021F ABE29714    ; 	psh.w #island_002
 ( 142) 0223 ABE20000    ; 	psh.w #0
+( 143)                  ; 	pha.w
 ( 144) 0227 ABE21600    ; 	psh.w #22
 ( 145) 022B 20FFFF      ; 	jsr _imul
 ( 146) 022E C204        ; 	adj #4
@@ -26,8 +155,10 @@
 ( 155) 0243 A905        ; 	lda #5
 ( 156) 0245 6B          ; 	pli
 ( 157) 0246 AB8300      ; 	sta.w 0,I++
+( 158)                  ; ;  117:         island[max, i] := border;
 ( 159) 0249 ABE29714    ; 	psh.w #island_002
 ( 160) 024D ABE20A00    ; 	psh.w #10
+( 161)                  ; 	pha.w
 ( 162) 0251 ABE21600    ; 	psh.w #22
 ( 163) 0255 20FFFF      ; 	jsr _imul
 ( 164) 0258 C204        ; 	adj #4
@@ -42,6 +173,7 @@
 ( 173) 026D A905        ; 	lda #5
 ( 174) 026F 6B          ; 	pli
 ( 175) 0270 AB8300      ; 	sta.w 0,I++
+( 176)                  ; ;  118:         island[i, 0]   := border;
 ( 177) 0273 ABE29714    ; 	psh.w #island_002
 ( 178) 0277 ABB5FF      ; 	lda.w i_014,X
 ( 179) 027A AB48        ; 	pha.w
@@ -59,6 +191,7 @@
 ( 191) 0297 A905        ; 	lda #5
 ( 192) 0299 6B          ; 	pli
 ( 193) 029A AB8300      ; 	sta.w 0,I++
+( 194)                  ; ;  119:         island[i, max] := border;
 ( 195) 029D ABE29714    ; 	psh.w #island_002
 ( 196) 02A1 ABB5FF      ; 	lda.w i_014,X
 ( 197) 02A4 AB48        ; 	pha.w
@@ -76,21 +209,30 @@
 ( 209) 02C1 A905        ; 	lda #5
 ( 210) 02C3 6B          ; 	pli
 ( 211) 02C4 AB8300      ; 	sta.w 0,I++
+( 212)                  ; ;  120:     END;
 ( 213) 02C7 ABF6FF      ; 	inc.w i_014,X
 ( 214) 02CA 4C1402      ; 	jmp L_017
+( 215)                  ; L_019
 ( 216) 02CD ABD6FF      ; 	dec.w i_014,X
+( 217)                  ; ;  121:     FOR row := 1 TO size DO BEGIN
 ( 218) 02D0 A901        ; 	lda #1
 ( 219) 02D2 AB95FD      ; 	sta.w row_015,X
+( 220)                  ; L_020
 ( 221) 02D5 A909        ; 	lda #9
 ( 222) 02D7 ABD5FD      ; 	cmp.w row_015,X
 ( 223) 02DA AB5003      ; 	bge L_021
 ( 224) 02DD 4C5903      ; 	jmp L_022
+( 225)                  ; L_021
+( 226)                  ; ;  122:         FOR col := 1 TO size DO BEGIN
 ( 227) 02E0 A901        ; 	lda #1
 ( 228) 02E2 AB95FB      ; 	sta.w col_016,X
+( 229)                  ; L_023
 ( 230) 02E5 A909        ; 	lda #9
 ( 231) 02E7 ABD5FB      ; 	cmp.w col_016,X
 ( 232) 02EA AB5003      ; 	bge L_024
 ( 233) 02ED 4C5003      ; 	jmp L_025
+( 234)                  ; L_024
+( 235)                  ; ;  123:         island[row, col]    := empty;
 ( 236) 02F0 ABE29714    ; 	psh.w #island_002
 ( 237) 02F4 ABB5FD      ; 	lda.w row_015,X
 ( 238) 02F7 AB48        ; 	pha.w
@@ -108,6 +250,7 @@
 ( 250) 0315 A904        ; 	lda #4
 ( 251) 0317 6B          ; 	pli
 ( 252) 0318 AB8300      ; 	sta.w 0,I++
+( 253)                  ; ;  124:         foodunits[row, col] := 0;
 ( 254) 031B ABE28915    ; 	psh.w #foodunits_003
 ( 255) 031F ABB5FD      ; 	lda.w row_015,X
 ( 256) 0322 AB3A        ; 	dec.w a
@@ -127,22 +270,33 @@
 ( 270) 0344 A900        ; 	lda #0
 ( 271) 0346 6B          ; 	pli
 ( 272) 0347 AB8300      ; 	sta.w 0,I++
+( 273)                  ; ;  125:         END;
 ( 274) 034A ABF6FB      ; 	inc.w col_016,X
 ( 275) 034D 4CE502      ; 	jmp L_023
+( 276)                  ; L_025
 ( 277) 0350 ABD6FB      ; 	dec.w col_016,X
+( 278)                  ; ;  126:     END;
 ( 279) 0353 ABF6FD      ; 	inc.w row_015,X
 ( 280) 0356 4CD502      ; 	jmp L_020
+( 281)                  ; L_022
 ( 282) 0359 ABD6FD      ; 	dec.w row_015,X
+( 283)                  ; ;  127: 
+( 284)                  ; ;  128:     {Place wolves on the island.}
+( 285)                  ; ;  129:     read(numwolves);
 ( 286) 035C ABE28F16    ; 	psh.w #numwolves_005
 ( 287) 0360 20FFFF      ; 	jsr _iread
 ( 288) 0363 6B          ; 	pli
 ( 289) 0364 AB8300      ; 	sta.w 0,I++
+( 290)                  ; ;  130:     FOR i := 1 TO numwolves DO BEGIN
 ( 291) 0367 A901        ; 	lda #1
 ( 292) 0369 AB95FF      ; 	sta.w i_014,X
+( 293)                  ; L_026
 ( 294) 036C ABAD8F16    ; 	lda.w numwolves_005
 ( 295) 0370 ABD5FF      ; 	cmp.w i_014,X
 ( 296) 0373 AB5003      ; 	bge L_027
 ( 297) 0376 4CF903      ; 	jmp L_028
+( 298)                  ; L_027
+( 299)                  ; ;  131:         read(row, col);
 ( 300) 0379 AB8A        ; 	txa.w
 ( 301) 037B 18          ; 	clc
 ( 302) 037C AB69FDFF    ; 	adc.w #row_015
@@ -157,6 +311,7 @@
 ( 311) 0392 20FFFF      ; 	jsr _iread
 ( 312) 0395 6B          ; 	pli
 ( 313) 0396 AB8300      ; 	sta.w 0,I++
+( 314)                  ; ;  132:         island[row, col]    := wolf;
 ( 315) 0399 ABE29714    ; 	psh.w #island_002
 ( 316) 039D ABB5FD      ; 	lda.w row_015,X
 ( 317) 03A0 AB48        ; 	pha.w
@@ -174,6 +329,7 @@
 ( 329) 03BE A900        ; 	lda #0
 ( 330) 03C0 6B          ; 	pli
 ( 331) 03C1 AB8300      ; 	sta.w 0,I++
+( 332)                  ; ;  133:         foodunits[row, col] := initfoodunits;
 ( 333) 03C4 ABE28915    ; 	psh.w #foodunits_003
 ( 334) 03C8 ABB5FD      ; 	lda.w row_015,X
 ( 335) 03CB AB3A        ; 	dec.w a
@@ -193,19 +349,28 @@
 ( 349) 03ED A906        ; 	lda #6
 ( 350) 03EF 6B          ; 	pli
 ( 351) 03F0 AB8300      ; 	sta.w 0,I++
+( 352)                  ; ;  134:     END;
 ( 353) 03F3 ABF6FF      ; 	inc.w i_014,X
 ( 354) 03F6 4C6C03      ; 	jmp L_026
+( 355)                  ; L_028
 ( 356) 03F9 ABD6FF      ; 	dec.w i_014,X
+( 357)                  ; ;  135: 
+( 358)                  ; ;  136:     {Place rabbits on the island.}
+( 359)                  ; ;  137:     read(numrabbits);
 ( 360) 03FC ABE29116    ; 	psh.w #numrabbits_006
 ( 361) 0400 20FFFF      ; 	jsr _iread
 ( 362) 0403 6B          ; 	pli
 ( 363) 0404 AB8300      ; 	sta.w 0,I++
+( 364)                  ; ;  138:     FOR i := 1 TO numrabbits DO BEGIN
 ( 365) 0407 A901        ; 	lda #1
 ( 366) 0409 AB95FF      ; 	sta.w i_014,X
+( 367)                  ; L_029
 ( 368) 040C ABAD9116    ; 	lda.w numrabbits_006
 ( 369) 0410 ABD5FF      ; 	cmp.w i_014,X
 ( 370) 0413 AB5003      ; 	bge L_030
 ( 371) 0416 4C6A04      ; 	jmp L_031
+( 372)                  ; L_030
+( 373)                  ; ;  139:         read(row, col);
 ( 374) 0419 AB8A        ; 	txa.w
 ( 375) 041B 18          ; 	clc
 ( 376) 041C AB69FDFF    ; 	adc.w #row_015
@@ -220,6 +385,7 @@
 ( 385) 0432 20FFFF      ; 	jsr _iread
 ( 386) 0435 6B          ; 	pli
 ( 387) 0436 AB8300      ; 	sta.w 0,I++
+( 388)                  ; ;  140:         island[row, col] := rabbit;
 ( 389) 0439 ABE29714    ; 	psh.w #island_002
 ( 390) 043D ABB5FD      ; 	lda.w row_015,X
 ( 391) 0440 AB48        ; 	pha.w
@@ -237,19 +403,28 @@
 ( 403) 045E A901        ; 	lda #1
 ( 404) 0460 6B          ; 	pli
 ( 405) 0461 AB8300      ; 	sta.w 0,I++
+( 406)                  ; ;  141:     END;
 ( 407) 0464 ABF6FF      ; 	inc.w i_014,X
 ( 408) 0467 4C0C04      ; 	jmp L_029
+( 409)                  ; L_031
 ( 410) 046A ABD6FF      ; 	dec.w i_014,X
+( 411)                  ; ;  142: 
+( 412)                  ; ;  143:     {Read print times.}
+( 413)                  ; ;  144:     read(numprinttimes);
 ( 414) 046D ABE29316    ; 	psh.w #numprinttimes_007
 ( 415) 0471 20FFFF      ; 	jsr _iread
 ( 416) 0474 6B          ; 	pli
 ( 417) 0475 AB8300      ; 	sta.w 0,I++
+( 418)                  ; ;  145:     FOR i := 1 TO numprinttimes DO BEGIN
 ( 419) 0478 A901        ; 	lda #1
 ( 420) 047A AB95FF      ; 	sta.w i_014,X
+( 421)                  ; L_032
 ( 422) 047D ABAD9316    ; 	lda.w numprinttimes_007
 ( 423) 0481 ABD5FF      ; 	cmp.w i_014,X
 ( 424) 0484 AB5003      ; 	bge L_033
 ( 425) 0487 4CA904      ; 	jmp L_034
+( 426)                  ; L_033
+( 427)                  ; ;  146:         read(printtimes[i]);
 ( 428) 048A ABE22B16    ; 	psh.w #printtimes_004
 ( 429) 048E ABB5FF      ; 	lda.w i_014,X
 ( 430) 0491 AB3A        ; 	dec.w a
@@ -260,9 +435,14 @@
 ( 435) 049C 20FFFF      ; 	jsr _iread
 ( 436) 049F 6B          ; 	pli
 ( 437) 04A0 AB8300      ; 	sta.w 0,I++
+( 438)                  ; ;  147:     END;
 ( 439) 04A3 ABF6FF      ; 	inc.w i_014,X
 ( 440) 04A6 4C7D04      ; 	jmp L_032
+( 441)                  ; L_034
 ( 442) 04A9 ABD6FF      ; 	dec.w i_014,X
+( 443)                  ; ;  148: 
+( 444)                  ; ;  149:     {Initialize the row and column offsets for moves.}
+( 445)                  ; ;  150:     rowoffset[0] :=  0; coloffset[0] :=  0; {stay put}
 ( 446) 04AC ABE29B16    ; 	psh.w #rowoffset_011
 ( 447) 04B0 A900        ; 	lda #0
 ( 448) 04B2 AB0A        ; 	asl.w a
@@ -281,6 +461,7 @@
 ( 461) 04D0 A900        ; 	lda #0
 ( 462) 04D2 6B          ; 	pli
 ( 463) 04D3 AB8300      ; 	sta.w 0,I++
+( 464)                  ; ;  151:     rowoffset[1] := -1; coloffset[1] :=  0; {up}
 ( 465) 04D6 ABE29B16    ; 	psh.w #rowoffset_011
 ( 466) 04DA A901        ; 	lda #1
 ( 467) 04DC AB0A        ; 	asl.w a
@@ -301,6 +482,7 @@
 ( 482) 0500 A900        ; 	lda #0
 ( 483) 0502 6B          ; 	pli
 ( 484) 0503 AB8300      ; 	sta.w 0,I++
+( 485)                  ; ;  152:     rowoffset[2] :=  0; coloffset[2] := -1; {left}
 ( 486) 0506 ABE29B16    ; 	psh.w #rowoffset_011
 ( 487) 050A A902        ; 	lda #2
 ( 488) 050C AB0A        ; 	asl.w a
@@ -321,6 +503,7 @@
 ( 503) 0530 AB1A        ; 	inc.w a
 ( 504) 0532 6B          ; 	pli
 ( 505) 0533 AB8300      ; 	sta.w 0,I++
+( 506)                  ; ;  153:     rowoffset[3] :=  0; coloffset[3] := +1; {right}
 ( 507) 0536 ABE29B16    ; 	psh.w #rowoffset_011
 ( 508) 053A A903        ; 	lda #3
 ( 509) 053C AB0A        ; 	asl.w a
@@ -339,6 +522,7 @@
 ( 522) 055A A901        ; 	lda #1
 ( 523) 055C 6B          ; 	pli
 ( 524) 055D AB8300      ; 	sta.w 0,I++
+( 525)                  ; ;  154:     rowoffset[4] := +1; coloffset[4] :=  0; {down}
 ( 526) 0560 ABE29B16    ; 	psh.w #rowoffset_011
 ( 527) 0564 A904        ; 	lda #4
 ( 528) 0566 AB0A        ; 	asl.w a
@@ -357,15 +541,33 @@
 ( 541) 0584 A900        ; 	lda #0
 ( 542) 0586 6B          ; 	pli
 ( 543) 0587 AB8300      ; 	sta.w 0,I++
+( 544)                  ; ;  155:     END {Initialize};
 ( 545) 058A AB9A        ; 	txs.w
 ( 546) 058C ABFA        ; 	plx.w
 ( 547) 058E 60          ; 	rts
+( 548)                  ; 	.end initialize_013
+( 549)                  ; ;  156: 
+( 550)                  ; ;  157: 
+( 551)                  ; ;  158: FUNCTION random (limit : posint) : posint;
+( 552)                  ; ;  159: 
+( 553)                  ; ;  160:     {Return a random integer from 0..limit-1.}
+( 554)                  ; ;  161: 
+( 555)                  ; ;  162:     CONST
+( 556)                  ; ;  163:     multiplier = 21;
+( 557)                  ; ;  164:     increment  = 77;
+( 558)                  ; ;  165:     divisor    = 1024;
+( 559)                  ; ;  166: 
+( 560)                  ; ;  167:     BEGIN
+( 561)                  ; limit_036 .equ +7
+( 562)                  ; random_035	.sub
 ( 563) 058F ABDA        ; 	phx.w
 ( 564) 0591 ABBA        ; 	tsx.w
 ( 565) 0593 C2FC        ; 	adj #-4
+( 566)                  ; ;  168:     seed   := (seed*multiplier + increment) MOD divisor;
 ( 567) 0595 ABAD9916    ; 	lda.w seed_010
 ( 568) 0599 AB48        ; 	pha.w
 ( 569) 059B ABE21500    ; 	psh.w #21
+( 570)                  ; 	pha.w
 ( 571) 059F 20FFFF      ; 	jsr _imul
 ( 572) 05A2 C204        ; 	adj #4
 ( 573) 05A4 AB48        ; 	pha.w
@@ -375,10 +577,12 @@
 ( 577) 05AC C202        ; 	adj #2
 ( 578) 05AE AB48        ; 	pha.w
 ( 579) 05B0 ABE20004    ; 	psh.w #1024
+( 580)                  ; 	pha.w
 ( 581) 05B4 20FFFF      ; 	jsr _idiv
 ( 582) 05B7 C204        ; 	adj #4
 ( 583) 05B9 1B          ; 	swp a
 ( 584) 05BA AB8D9916    ; 	sta.w seed_010
+( 585)                  ; ;  169:     random := (seed*limit) DIV divisor;
 ( 586) 05BE ABAD9916    ; 	lda.w seed_010
 ( 587) 05C2 AB48        ; 	pha.w
 ( 588) 05C4 ABB507      ; 	lda.w limit_036,X
@@ -387,18 +591,51 @@
 ( 591) 05CC C204        ; 	adj #4
 ( 592) 05CE AB48        ; 	pha.w
 ( 593) 05D0 ABE20004    ; 	psh.w #1024
+( 594)                  ; 	pha.w
 ( 595) 05D4 20FFFF      ; 	jsr _idiv
 ( 596) 05D7 C204        ; 	adj #4
 ( 597) 05D9 AB95FD      ; 	sta.w RETURN_VALUE,X
+( 598)                  ; ;  170:     END {random};
 ( 599) 05DC ABB5FD      ; 	lda.w RETURN_VALUE,X
 ( 600) 05DF AB9A        ; 	txs.w
 ( 601) 05E1 ABFA        ; 	plx.w
 ( 602) 05E3 60          ; 	rts
+( 603)                  ; 	.end random_035
+( 604)                  ; ;  171: 
+( 605)                  ; ;  172: 
+( 606)                  ; ;  173: PROCEDURE NewLocation (creature : contents;
+( 607)                  ; ;  174:                oldrow, oldcol : index;
+( 608)                  ; ;  175:                VAR newrow, newcol : index);
+( 609)                  ; ;  176: 
+( 610)                  ; ;  177:     {Find a new location for the creature currently at
+( 611)                  ; ;  178:      island[oldrow, oldcol].}
+( 612)                  ; ;  179: 
+( 613)                  ; ;  180: 
+( 614)                  ; ;  181:     VAR
+( 615)                  ; ;  182:     adj  : 0..4;        {adjacent locations index}
+( 616)                  ; ;  183:     what : contents;    {contents of location}
+( 617)                  ; ;  184:     done : boolean;
+( 618)                  ; ;  185: 
+( 619)                  ; ;  186:     BEGIN
+( 620)                  ; creature_038 .equ +15
+( 621)                  ; oldrow_039 .equ +13
+( 622)                  ; oldcol_040 .equ +11
+( 623)                  ; newrow_041 .equ +9
+( 624)                  ; newcol_042 .equ +7
+( 625)                  ; adj_043 .equ -1
+( 626)                  ; what_044 .equ -3
+( 627)                  ; done_045 .equ -5
+( 628)                  ; newlocation_037	.sub
 ( 629) 05E4 ABDA        ; 	phx.w
 ( 630) 05E6 ABBA        ; 	tsx.w
 ( 631) 05E8 C2FA        ; 	adj #-6
+( 632)                  ; ;  187:     done := false;
 ( 633) 05EA A900        ; 	lda #0
 ( 634) 05EC AB95FB      ; 	sta.w done_045,X
+( 635)                  ; ;  188: 
+( 636)                  ; ;  189:     {A wolf first tries to eat a rabbit.
+( 637)                  ; ;  190:      Check adjacent locations.}
+( 638)                  ; ;  191:     IF creature = wolf THEN BEGIN
 ( 639) 05EF ABB50F      ; 	lda.w creature_038,X
 ( 640) 05F2 AB48        ; 	pha.w
 ( 641) 05F4 A900        ; 	lda #0
@@ -410,11 +647,17 @@
 ( 647) 0601 28          ; 	plp
 ( 648) 0602 F002        ; 	beq L_048
 ( 649) 0604 A900        ; 	lda #0
+( 650)                  ; L_048
 ( 651) 0606 ABC90100    ; 	cmp.w #1
 ( 652) 060A F003        ; 	beq L_046
 ( 653) 060C 4CE406      ; 	jmp L_047
+( 654)                  ; L_046
+( 655)                  ; ;  192:         adj := 0;
 ( 656) 060F A900        ; 	lda #0
 ( 657) 0611 AB95FF      ; 	sta.w adj_043,X
+( 658)                  ; ;  193:         REPEAT
+( 659)                  ; L_049
+( 660)                  ; ;  194:         adj := adj + 1;
 ( 661) 0614 ABB5FF      ; 	lda.w adj_043,X
 ( 662) 0617 AB48        ; 	pha.w
 ( 663) 0619 A901        ; 	lda #1
@@ -422,6 +665,7 @@
 ( 665) 061C CB7501      ; 	adc.w 1,S
 ( 666) 061F C202        ; 	adj #2
 ( 667) 0621 AB95FF      ; 	sta.w adj_043,X
+( 668)                  ; ;  195:         newrow := oldrow + rowoffset[adj];
 ( 669) 0624 ABB509      ; 	lda.w newrow_041,X
 ( 670) 0627 AB48        ; 	pha.w
 ( 671) 0629 ABB50D      ; 	lda.w oldrow_039,X
@@ -439,6 +683,7 @@
 ( 683) 0646 C202        ; 	adj #2
 ( 684) 0648 6B          ; 	pli
 ( 685) 0649 AB8300      ; 	sta.w 0,I++
+( 686)                  ; ;  196:         newcol := oldcol + coloffset[adj];
 ( 687) 064C ABB507      ; 	lda.w newcol_042,X
 ( 688) 064F AB48        ; 	pha.w
 ( 689) 0651 ABB50B      ; 	lda.w oldcol_040,X
@@ -456,6 +701,7 @@
 ( 701) 066E C202        ; 	adj #2
 ( 702) 0670 6B          ; 	pli
 ( 703) 0671 AB8300      ; 	sta.w 0,I++
+( 704)                  ; ;  197:         what   := island[newrow, newcol];
 ( 705) 0674 ABE29714    ; 	psh.w #island_002
 ( 706) 0678 ABA109      ; 	lda.w (newrow_041,X)
 ( 707) 067B AB48        ; 	pha.w
@@ -473,6 +719,7 @@
 ( 719) 0699 6B          ; 	pli
 ( 720) 069A ABA300      ; 	lda.w 0,I++
 ( 721) 069D AB95FD      ; 	sta.w what_044,X
+( 722)                  ; ;  198:         done   := what = rabbit;
 ( 723) 06A0 ABB5FD      ; 	lda.w what_044,X
 ( 724) 06A3 AB48        ; 	pha.w
 ( 725) 06A5 A901        ; 	lda #1
@@ -484,7 +731,9 @@
 ( 731) 06B2 28          ; 	plp
 ( 732) 06B3 F002        ; 	beq L_051
 ( 733) 06B5 A900        ; 	lda #0
+( 734)                  ; L_051
 ( 735) 06B7 AB95FB      ; 	sta.w done_045,X
+( 736)                  ; ;  199:         UNTIL done OR (adj = 4);
 ( 737) 06BA ABB5FB      ; 	lda.w done_045,X
 ( 738) 06BD AB48        ; 	pha.w
 ( 739) 06BF ABB5FF      ; 	lda.w adj_043,X
@@ -498,22 +747,35 @@
 ( 747) 06D1 28          ; 	plp
 ( 748) 06D2 F002        ; 	beq L_052
 ( 749) 06D4 A900        ; 	lda #0
+( 750)                  ; L_052
 ( 751) 06D6 CB1501      ; 	ora.w 1,S
 ( 752) 06D9 C202        ; 	adj #2
 ( 753) 06DB ABC90100    ; 	cmp.w #1
 ( 754) 06DF F003        ; 	beq L_050
 ( 755) 06E1 4C1406      ; 	jmp L_049
+( 756)                  ; L_050
+( 757)                  ; ;  200:     END;
+( 758)                  ; L_047
+( 759)                  ; ;  201: 
+( 760)                  ; ;  202:     {Move randomly into an adjacent location or stay put.}
+( 761)                  ; ;  203:     IF NOT done THEN BEGIN
 ( 762) 06E4 ABB5FB      ; 	lda.w done_045,X
 ( 763) 06E7 4901        ; 	eor #1
 ( 764) 06E9 ABC90100    ; 	cmp.w #1
 ( 765) 06ED F003        ; 	beq L_053
 ( 766) 06EF 4CDD07      ; 	jmp L_054
+( 767)                  ; L_053
+( 768)                  ; ;  204:         REPEAT
+( 769)                  ; L_055
+( 770)                  ; ;  205:         adj := random(5);
 ( 771) 06F2 ABE20500    ; 	psh.w #5
+( 772)                  ; 	pha.w
 ( 773) 06F6 ABB505      ; 	lda.w STATIC_LINK,X
 ( 774) 06F9 AB48        ; 	pha.w
 ( 775) 06FB 208F05      ; 	jsr random_035
 ( 776) 06FE C204        ; 	adj #4
 ( 777) 0700 AB95FF      ; 	sta.w adj_043,X
+( 778)                  ; ;  206:         newrow := oldrow + rowoffset[adj];
 ( 779) 0703 ABB509      ; 	lda.w newrow_041,X
 ( 780) 0706 AB48        ; 	pha.w
 ( 781) 0708 ABB50D      ; 	lda.w oldrow_039,X
@@ -531,6 +793,7 @@
 ( 793) 0725 C202        ; 	adj #2
 ( 794) 0727 6B          ; 	pli
 ( 795) 0728 AB8300      ; 	sta.w 0,I++
+( 796)                  ; ;  207:         newcol := oldcol + coloffset[adj];
 ( 797) 072B ABB507      ; 	lda.w newcol_042,X
 ( 798) 072E AB48        ; 	pha.w
 ( 799) 0730 ABB50B      ; 	lda.w oldcol_040,X
@@ -548,6 +811,7 @@
 ( 811) 074D C202        ; 	adj #2
 ( 812) 074F 6B          ; 	pli
 ( 813) 0750 AB8300      ; 	sta.w 0,I++
+( 814)                  ; ;  208:         what   := island[newrow, newcol];
 ( 815) 0753 ABE29714    ; 	psh.w #island_002
 ( 816) 0757 ABA109      ; 	lda.w (newrow_041,X)
 ( 817) 075A AB48        ; 	pha.w
@@ -565,6 +829,7 @@
 ( 829) 0778 6B          ; 	pli
 ( 830) 0779 ABA300      ; 	lda.w 0,I++
 ( 831) 077C AB95FD      ; 	sta.w what_044,X
+( 832)                  ; ;  209:         UNTIL    (what = empty)
 ( 833) 077F ABB5FD      ; 	lda.w what_044,X
 ( 834) 0782 AB48        ; 	pha.w
 ( 835) 0784 A904        ; 	lda #4
@@ -576,6 +841,8 @@
 ( 841) 0791 28          ; 	plp
 ( 842) 0792 F002        ; 	beq L_057
 ( 843) 0794 A900        ; 	lda #0
+( 844)                  ; L_057
+( 845)                  ; ;  210:           OR ((newrow = oldrow) AND (newcol = oldcol));
 ( 846) 0796 AB48        ; 	pha.w
 ( 847) 0798 ABA109      ; 	lda.w (newrow_041,X)
 ( 848) 079B AB48        ; 	pha.w
@@ -588,6 +855,7 @@
 ( 855) 07AB 28          ; 	plp
 ( 856) 07AC F002        ; 	beq L_058
 ( 857) 07AE A900        ; 	lda #0
+( 858)                  ; L_058
 ( 859) 07B0 AB48        ; 	pha.w
 ( 860) 07B2 ABA107      ; 	lda.w (newcol_042,X)
 ( 861) 07B5 AB48        ; 	pha.w
@@ -600,6 +868,7 @@
 ( 868) 07C5 28          ; 	plp
 ( 869) 07C6 F002        ; 	beq L_059
 ( 870) 07C8 A900        ; 	lda #0
+( 871)                  ; L_059
 ( 872) 07CA CB3501      ; 	and.w 1,S
 ( 873) 07CD C202        ; 	adj #2
 ( 874) 07CF CB1501      ; 	ora.w 1,S
@@ -607,12 +876,37 @@
 ( 876) 07D4 ABC90100    ; 	cmp.w #1
 ( 877) 07D8 F003        ; 	beq L_056
 ( 878) 07DA 4CF206      ; 	jmp L_055
+( 879)                  ; L_056
+( 880)                  ; ;  211:     END;
+( 881)                  ; L_054
+( 882)                  ; ;  212:     END {NewLocation};
 ( 883) 07DD AB9A        ; 	txs.w
 ( 884) 07DF ABFA        ; 	plx.w
 ( 885) 07E1 60          ; 	rts
+( 886)                  ; 	.end newlocation_037
+( 887)                  ; ;  213: 
+( 888)                  ; ;  214: 
+( 889)                  ; ;  215: PROCEDURE ProcessWolf (oldrow, oldcol : index);
+( 890)                  ; ;  216: 
+( 891)                  ; ;  217:     {Process the wolf located at island[oldrow, oldcol].}
+( 892)                  ; ;  218: 
+( 893)                  ; ;  219:     VAR
+( 894)                  ; ;  220:     newrow, newcol : index;     {new row and column}
+( 895)                  ; ;  221:     moved : boolean;            {true iff wolf moved}
+( 896)                  ; ;  222: 
+( 897)                  ; ;  223:     BEGIN
+( 898)                  ; oldrow_061 .equ +9
+( 899)                  ; oldcol_062 .equ +7
+( 900)                  ; newrow_063 .equ -1
+( 901)                  ; newcol_064 .equ -3
+( 902)                  ; moved_065 .equ -5
+( 903)                  ; processwolf_060	.sub
 ( 904) 07E2 ABDA        ; 	phx.w
 ( 905) 07E4 ABBA        ; 	tsx.w
 ( 906) 07E6 C2FA        ; 	adj #-6
+( 907)                  ; ;  224: 
+( 908)                  ; ;  225:     {Lose a food unit.}
+( 909)                  ; ;  226:     foodunits[oldrow, oldcol] := foodunits[oldrow, oldcol] - 1;
 ( 910) 07E8 ABE28915    ; 	psh.w #foodunits_003
 ( 911) 07EC ABB509      ; 	lda.w oldrow_061,X
 ( 912) 07EF AB3A        ; 	dec.w a
@@ -655,6 +949,8 @@
 ( 949) 0849 C202        ; 	adj #2
 ( 950) 084B 6B          ; 	pli
 ( 951) 084C AB8300      ; 	sta.w 0,I++
+( 952)                  ; ;  227: 
+( 953)                  ; ;  228:     IF foodunits[oldrow, oldcol] = 0 THEN BEGIN
 ( 954) 084F ABE28915    ; 	psh.w #foodunits_003
 ( 955) 0853 ABB509      ; 	lda.w oldrow_061,X
 ( 956) 0856 AB3A        ; 	dec.w a
@@ -683,9 +979,14 @@
 ( 979) 088B 28          ; 	plp
 ( 980) 088C F002        ; 	beq L_068
 ( 981) 088E A900        ; 	lda #0
+( 982)                  ; L_068
 ( 983) 0890 ABC90100    ; 	cmp.w #1
 ( 984) 0894 F003        ; 	beq L_066
 ( 985) 0896 4C5709      ; 	jmp L_067
+( 986)                  ; L_066
+( 987)                  ; ;  229: 
+( 988)                  ; ;  230:         {Die of starvation.}
+( 989)                  ; ;  231:         island[oldrow, oldcol] := empty;
 ( 990) 0899 ABE29714    ; 	psh.w #island_002
 ( 991) 089D ABB509      ; 	lda.w oldrow_061,X
 ( 992) 08A0 AB48        ; 	pha.w
@@ -703,6 +1004,7 @@
 (1004) 08BE A904        ; 	lda #4
 (1005) 08C0 6B          ; 	pli
 (1006) 08C1 AB8300      ; 	sta.w 0,I++
+(1007)                  ; ;  232:         numwolves := numwolves - 1;
 (1008) 08C4 ABAD8F16    ; 	lda.w numwolves_005
 (1009) 08C8 AB48        ; 	pha.w
 (1010) 08CA A901        ; 	lda #1
@@ -711,6 +1013,7 @@
 (1013) 08D0 CBF501      ; 	sbc.w 1,S
 (1014) 08D3 C202        ; 	adj #2
 (1015) 08D5 AB8D8F16    ; 	sta.w numwolves_005
+(1016)                  ; ;  233:         writeln('t =', t:4, ' : Wolf died at ',
 (1017) 08D9 ABE29314    ; 	psh.w #S_069
 (1018) 08DD ABE20000    ; 	psh.w #0
 (1019) 08E1 ABE20300    ; 	psh.w #3
@@ -719,6 +1022,7 @@
 (1022) 08EA ABAD9516    ; 	lda.w t_008
 (1023) 08EE AB48        ; 	pha.w
 (1024) 08F0 ABE20400    ; 	psh.w #4
+(1025)                  ; 	pha.w
 (1026) 08F4 20FFFF      ; 	jsr _iwrite
 (1027) 08F7 C204        ; 	adj #4
 (1028) 08F9 ABE28314    ; 	psh.w #S_070
@@ -726,13 +1030,16 @@
 (1030) 0901 ABE21000    ; 	psh.w #16
 (1031) 0905 20FFFF      ; 	jsr _swrite
 (1032) 0908 C206        ; 	adj #6
+(1033)                  ; ;  234:             '[', oldrow:1, ', ', oldcol:1, ']');
 (1034) 090A ABE25B00    ; 	psh.w #91
+(1035)                  ; 	pha.w
 (1036) 090E ABE20000    ; 	psh.w #0
 (1037) 0912 20FFFF      ; 	jsr _cwrite
 (1038) 0915 C204        ; 	adj #4
 (1039) 0917 ABB509      ; 	lda.w oldrow_061,X
 (1040) 091A AB48        ; 	pha.w
 (1041) 091C ABE20100    ; 	psh.w #1
+(1042)                  ; 	pha.w
 (1043) 0920 20FFFF      ; 	jsr _iwrite
 (1044) 0923 C204        ; 	adj #4
 (1045) 0925 ABE28114    ; 	psh.w #S_071
@@ -743,15 +1050,24 @@
 (1050) 0936 ABB507      ; 	lda.w oldcol_062,X
 (1051) 0939 AB48        ; 	pha.w
 (1052) 093B ABE20100    ; 	psh.w #1
+(1053)                  ; 	pha.w
 (1054) 093F 20FFFF      ; 	jsr _iwrite
 (1055) 0942 C204        ; 	adj #4
 (1056) 0944 ABE25D00    ; 	psh.w #93
+(1057)                  ; 	pha.w
 (1058) 0948 ABE20000    ; 	psh.w #0
 (1059) 094C 20FFFF      ; 	jsr _cwrite
 (1060) 094F C204        ; 	adj #4
 (1061) 0951 20FFFF      ; 	jsr _writeln
+(1062)                  ; ;  235:     END
+(1063)                  ; ;  236:     ELSE BEGIN
 (1064) 0954 4CD90D      ; 	jmp L_072
+(1065)                  ; L_067
+(1066)                  ; ;  237: 
+(1067)                  ; ;  238:         {Move to adjacent location, or stay put.}
+(1068)                  ; ;  239:         NewLocation(wolf, oldrow, oldcol, newrow, newcol);
 (1069) 0957 ABE20000    ; 	psh.w #0
+(1070)                  ; 	pha.w
 (1071) 095B ABB509      ; 	lda.w oldrow_061,X
 (1072) 095E AB48        ; 	pha.w
 (1073) 0960 ABB507      ; 	lda.w oldcol_062,X
@@ -768,6 +1084,7 @@
 (1084) 097A AB48        ; 	pha.w
 (1085) 097C 20E405      ; 	jsr newlocation_037
 (1086) 097F C20C        ; 	adj #12
+(1087)                  ; ;  240:         moved := (newrow <> oldrow) OR (newcol <> oldcol);
 (1088) 0981 ABB5FF      ; 	lda.w newrow_063,X
 (1089) 0984 AB48        ; 	pha.w
 (1090) 0986 ABB509      ; 	lda.w oldrow_061,X
@@ -779,6 +1096,7 @@
 (1096) 0994 28          ; 	plp
 (1097) 0995 D002        ; 	bne L_073
 (1098) 0997 A900        ; 	lda #0
+(1099)                  ; L_073
 (1100) 0999 AB48        ; 	pha.w
 (1101) 099B ABB5FD      ; 	lda.w newcol_064,X
 (1102) 099E AB48        ; 	pha.w
@@ -791,13 +1109,20 @@
 (1109) 09AE 28          ; 	plp
 (1110) 09AF D002        ; 	bne L_074
 (1111) 09B1 A900        ; 	lda #0
+(1112)                  ; L_074
 (1113) 09B3 CB1501      ; 	ora.w 1,S
 (1114) 09B6 C202        ; 	adj #2
 (1115) 09B8 AB95FB      ; 	sta.w moved_065,X
+(1116)                  ; ;  241: 
+(1117)                  ; ;  242:         IF moved THEN BEGIN
 (1118) 09BB ABB5FB      ; 	lda.w moved_065,X
 (1119) 09BE ABC90100    ; 	cmp.w #1
 (1120) 09C2 F003        ; 	beq L_075
 (1121) 09C4 4CE00B      ; 	jmp L_076
+(1122)                  ; L_075
+(1123)                  ; ;  243: 
+(1124)                  ; ;  244:         {If there's a rabbit there, eat it.}
+(1125)                  ; ;  245:         IF island[newrow, newcol] = rabbit THEN BEGIN
 (1126) 09C7 ABE29714    ; 	psh.w #island_002
 (1127) 09CB ABB5FF      ; 	lda.w newrow_063,X
 (1128) 09CE AB48        ; 	pha.w
@@ -824,9 +1149,12 @@
 (1149) 09FF 28          ; 	plp
 (1150) 0A00 F002        ; 	beq L_079
 (1151) 0A02 A900        ; 	lda #0
+(1152)                  ; L_079
 (1153) 0A04 ABC90100    ; 	cmp.w #1
 (1154) 0A08 F003        ; 	beq L_077
 (1155) 0A0A 4C010B      ; 	jmp L_078
+(1156)                  ; L_077
+(1157)                  ; ;  246:             foodunits[oldrow, oldcol] :=
 (1158) 0A0D ABE28915    ; 	psh.w #foodunits_003
 (1159) 0A11 ABB509      ; 	lda.w oldrow_061,X
 (1160) 0A14 AB3A        ; 	dec.w a
@@ -843,6 +1171,7 @@
 (1171) 0A2F 18          ; 	clc
 (1172) 0A30 CB7501      ; 	adc.w 1,S
 (1173) 0A33 CB9501      ; 	sta.w 1,S
+(1174)                  ; ;  247:             foodunits[oldrow, oldcol] + rabbitfoodunits;
 (1175) 0A36 ABE28915    ; 	psh.w #foodunits_003
 (1176) 0A3A ABB509      ; 	lda.w oldrow_061,X
 (1177) 0A3D AB3A        ; 	dec.w a
@@ -868,6 +1197,7 @@
 (1197) 0A6B C202        ; 	adj #2
 (1198) 0A6D 6B          ; 	pli
 (1199) 0A6E AB8300      ; 	sta.w 0,I++
+(1200)                  ; ;  248:             numrabbits := numrabbits - 1;
 (1201) 0A71 ABAD9116    ; 	lda.w numrabbits_006
 (1202) 0A75 AB48        ; 	pha.w
 (1203) 0A77 A901        ; 	lda #1
@@ -876,6 +1206,7 @@
 (1206) 0A7D CBF501      ; 	sbc.w 1,S
 (1207) 0A80 C202        ; 	adj #2
 (1208) 0A82 AB8D9116    ; 	sta.w numrabbits_006
+(1209)                  ; ;  249:             writeln('t =', t:4, ' : Rabbit eaten at ',
 (1210) 0A86 ABE29314    ; 	psh.w #S_069
 (1211) 0A8A ABE20000    ; 	psh.w #0
 (1212) 0A8E ABE20300    ; 	psh.w #3
@@ -884,6 +1215,7 @@
 (1215) 0A97 ABAD9516    ; 	lda.w t_008
 (1216) 0A9B AB48        ; 	pha.w
 (1217) 0A9D ABE20400    ; 	psh.w #4
+(1218)                  ; 	pha.w
 (1219) 0AA1 20FFFF      ; 	jsr _iwrite
 (1220) 0AA4 C204        ; 	adj #4
 (1221) 0AA6 ABE26E14    ; 	psh.w #S_080
@@ -891,13 +1223,16 @@
 (1223) 0AAE ABE21300    ; 	psh.w #19
 (1224) 0AB2 20FFFF      ; 	jsr _swrite
 (1225) 0AB5 C206        ; 	adj #6
+(1226)                  ; ;  250:                 '[', newrow:1, ', ', newcol:1, ']');
 (1227) 0AB7 ABE25B00    ; 	psh.w #91
+(1228)                  ; 	pha.w
 (1229) 0ABB ABE20000    ; 	psh.w #0
 (1230) 0ABF 20FFFF      ; 	jsr _cwrite
 (1231) 0AC2 C204        ; 	adj #4
 (1232) 0AC4 ABB5FF      ; 	lda.w newrow_063,X
 (1233) 0AC7 AB48        ; 	pha.w
 (1234) 0AC9 ABE20100    ; 	psh.w #1
+(1235)                  ; 	pha.w
 (1236) 0ACD 20FFFF      ; 	jsr _iwrite
 (1237) 0AD0 C204        ; 	adj #4
 (1238) 0AD2 ABE28114    ; 	psh.w #S_071
@@ -908,13 +1243,20 @@
 (1243) 0AE3 ABB5FD      ; 	lda.w newcol_064,X
 (1244) 0AE6 AB48        ; 	pha.w
 (1245) 0AE8 ABE20100    ; 	psh.w #1
+(1246)                  ; 	pha.w
 (1247) 0AEC 20FFFF      ; 	jsr _iwrite
 (1248) 0AEF C204        ; 	adj #4
 (1249) 0AF1 ABE25D00    ; 	psh.w #93
+(1250)                  ; 	pha.w
 (1251) 0AF5 ABE20000    ; 	psh.w #0
 (1252) 0AF9 20FFFF      ; 	jsr _cwrite
 (1253) 0AFC C204        ; 	adj #4
 (1254) 0AFE 20FFFF      ; 	jsr _writeln
+(1255)                  ; ;  251:         END;
+(1256)                  ; L_078
+(1257)                  ; ;  252: 
+(1258)                  ; ;  253:         {Set new (or same) location.}
+(1259)                  ; ;  254:         island[newrow, newcol] := newwolf;
 (1260) 0B01 ABE29714    ; 	psh.w #island_002
 (1261) 0B05 ABB5FF      ; 	lda.w newrow_063,X
 (1262) 0B08 AB48        ; 	pha.w
@@ -932,6 +1274,7 @@
 (1274) 0B26 A902        ; 	lda #2
 (1275) 0B28 6B          ; 	pli
 (1276) 0B29 AB8300      ; 	sta.w 0,I++
+(1277)                  ; ;  255:         island[oldrow, oldcol] := empty;
 (1278) 0B2C ABE29714    ; 	psh.w #island_002
 (1279) 0B30 ABB509      ; 	lda.w oldrow_061,X
 (1280) 0B33 AB48        ; 	pha.w
@@ -949,6 +1292,7 @@
 (1292) 0B51 A904        ; 	lda #4
 (1293) 0B53 6B          ; 	pli
 (1294) 0B54 AB8300      ; 	sta.w 0,I++
+(1295)                  ; ;  256:         foodunits[newrow, newcol] := foodunits[oldrow, oldcol];
 (1296) 0B57 ABE28915    ; 	psh.w #foodunits_003
 (1297) 0B5B ABB5FF      ; 	lda.w newrow_063,X
 (1298) 0B5E AB3A        ; 	dec.w a
@@ -985,6 +1329,7 @@
 (1329) 0BAA ABA300      ; 	lda.w 0,I++
 (1330) 0BAD 6B          ; 	pli
 (1331) 0BAE AB8300      ; 	sta.w 0,I++
+(1332)                  ; ;  257:         foodunits[oldrow, oldcol] := 0;
 (1333) 0BB1 ABE28915    ; 	psh.w #foodunits_003
 (1334) 0BB5 ABB509      ; 	lda.w oldrow_061,X
 (1335) 0BB8 AB3A        ; 	dec.w a
@@ -1004,9 +1349,15 @@
 (1349) 0BDA A900        ; 	lda #0
 (1350) 0BDC 6B          ; 	pli
 (1351) 0BDD AB8300      ; 	sta.w 0,I++
+(1352)                  ; ;  258:         END;
+(1353)                  ; L_076
+(1354)                  ; ;  259: 
+(1355)                  ; ;  260:         {Wolf reproduction time?}
+(1356)                  ; ;  261:         IF     ((t MOD wolfreprotime) = 0)
 (1357) 0BE0 ABAD9516    ; 	lda.w t_008
 (1358) 0BE4 AB48        ; 	pha.w
 (1359) 0BE6 ABE20C00    ; 	psh.w #12
+(1360)                  ; 	pha.w
 (1361) 0BEA 20FFFF      ; 	jsr _idiv
 (1362) 0BED C204        ; 	adj #4
 (1363) 0BEF 1B          ; 	swp a
@@ -1020,6 +1371,8 @@
 (1371) 0BFF 28          ; 	plp
 (1372) 0C00 F002        ; 	beq L_083
 (1373) 0C02 A900        ; 	lda #0
+(1374)                  ; L_083
+(1375)                  ; ;  262:            AND (foodunits[newrow, newcol] > 1) THEN BEGIN
 (1376) 0C04 AB48        ; 	pha.w
 (1377) 0C06 ABE28915    ; 	psh.w #foodunits_003
 (1378) 0C0A ABB5FF      ; 	lda.w newrow_063,X
@@ -1049,11 +1402,14 @@
 (1402) 0C42 28          ; 	plp
 (1403) 0C43 AB1002      ; 	bgt L_084
 (1404) 0C46 A900        ; 	lda #0
+(1405)                  ; L_084
 (1406) 0C48 CB3501      ; 	and.w 1,S
 (1407) 0C4B C202        ; 	adj #2
 (1408) 0C4D ABC90100    ; 	cmp.w #1
 (1409) 0C51 F003        ; 	beq L_081
 (1410) 0C53 4CD90D      ; 	jmp L_082
+(1411)                  ; L_081
+(1412)                  ; ;  263:         foodunits[newrow, newcol] :=
 (1413) 0C56 ABE28915    ; 	psh.w #foodunits_003
 (1414) 0C5A ABB5FF      ; 	lda.w newrow_063,X
 (1415) 0C5D AB3A        ; 	dec.w a
@@ -1070,6 +1426,7 @@
 (1426) 0C78 18          ; 	clc
 (1427) 0C79 CB7501      ; 	adc.w 1,S
 (1428) 0C7C CB9501      ; 	sta.w 1,S
+(1429)                  ; ;  264:             foodunits[newrow, newcol] DIV 2;
 (1430) 0C7F ABE28915    ; 	psh.w #foodunits_003
 (1431) 0C83 ABB5FF      ; 	lda.w newrow_063,X
 (1432) 0C86 AB3A        ; 	dec.w a
@@ -1090,14 +1447,20 @@
 (1447) 0CA9 ABA300      ; 	lda.w 0,I++
 (1448) 0CAC AB48        ; 	pha.w
 (1449) 0CAE ABE20200    ; 	psh.w #2
+(1450)                  ; 	pha.w
 (1451) 0CB2 20FFFF      ; 	jsr _idiv
 (1452) 0CB5 C204        ; 	adj #4
 (1453) 0CB7 6B          ; 	pli
 (1454) 0CB8 AB8300      ; 	sta.w 0,I++
+(1455)                  ; ;  265: 
+(1456)                  ; ;  266:         {If moved, then leave behind an offspring.}
+(1457)                  ; ;  267:         IF moved THEN BEGIN
 (1458) 0CBB ABB5FB      ; 	lda.w moved_065,X
 (1459) 0CBE ABC90100    ; 	cmp.w #1
 (1460) 0CC2 F003        ; 	beq L_085
 (1461) 0CC4 4CD90D      ; 	jmp L_086
+(1462)                  ; L_085
+(1463)                  ; ;  268:             island[oldrow, oldcol] := newwolf;
 (1464) 0CC7 ABE29714    ; 	psh.w #island_002
 (1465) 0CCB ABB509      ; 	lda.w oldrow_061,X
 (1466) 0CCE AB48        ; 	pha.w
@@ -1115,6 +1478,7 @@
 (1478) 0CEC A902        ; 	lda #2
 (1479) 0CEE 6B          ; 	pli
 (1480) 0CEF AB8300      ; 	sta.w 0,I++
+(1481)                  ; ;  269:             foodunits[oldrow, oldcol] :=
 (1482) 0CF2 ABE28915    ; 	psh.w #foodunits_003
 (1483) 0CF6 ABB509      ; 	lda.w oldrow_061,X
 (1484) 0CF9 AB3A        ; 	dec.w a
@@ -1131,6 +1495,7 @@
 (1495) 0D14 18          ; 	clc
 (1496) 0D15 CB7501      ; 	adc.w 1,S
 (1497) 0D18 CB9501      ; 	sta.w 1,S
+(1498)                  ; ;  270:             foodunits[newrow, newcol];
 (1499) 0D1B ABE28915    ; 	psh.w #foodunits_003
 (1500) 0D1F ABB5FF      ; 	lda.w newrow_063,X
 (1501) 0D22 AB3A        ; 	dec.w a
@@ -1151,6 +1516,7 @@
 (1516) 0D45 ABA300      ; 	lda.w 0,I++
 (1517) 0D48 6B          ; 	pli
 (1518) 0D49 AB8300      ; 	sta.w 0,I++
+(1519)                  ; ;  271:             numwolves := numwolves + 1;
 (1520) 0D4C ABAD8F16    ; 	lda.w numwolves_005
 (1521) 0D50 AB48        ; 	pha.w
 (1522) 0D52 A901        ; 	lda #1
@@ -1158,6 +1524,7 @@
 (1524) 0D55 CB7501      ; 	adc.w 1,S
 (1525) 0D58 C202        ; 	adj #2
 (1526) 0D5A AB8D8F16    ; 	sta.w numwolves_005
+(1527)                  ; ;  272:             writeln('t =', t:4, ' : Wolf born at ',
 (1528) 0D5E ABE29314    ; 	psh.w #S_069
 (1529) 0D62 ABE20000    ; 	psh.w #0
 (1530) 0D66 ABE20300    ; 	psh.w #3
@@ -1166,6 +1533,7 @@
 (1533) 0D6F ABAD9516    ; 	lda.w t_008
 (1534) 0D73 AB48        ; 	pha.w
 (1535) 0D75 ABE20400    ; 	psh.w #4
+(1536)                  ; 	pha.w
 (1537) 0D79 20FFFF      ; 	jsr _iwrite
 (1538) 0D7C C204        ; 	adj #4
 (1539) 0D7E ABE25E14    ; 	psh.w #S_087
@@ -1173,13 +1541,16 @@
 (1541) 0D86 ABE21000    ; 	psh.w #16
 (1542) 0D8A 20FFFF      ; 	jsr _swrite
 (1543) 0D8D C206        ; 	adj #6
+(1544)                  ; ;  273:                 '[', oldrow:1, ', ', oldcol:1, ']');
 (1545) 0D8F ABE25B00    ; 	psh.w #91
+(1546)                  ; 	pha.w
 (1547) 0D93 ABE20000    ; 	psh.w #0
 (1548) 0D97 20FFFF      ; 	jsr _cwrite
 (1549) 0D9A C204        ; 	adj #4
 (1550) 0D9C ABB509      ; 	lda.w oldrow_061,X
 (1551) 0D9F AB48        ; 	pha.w
 (1552) 0DA1 ABE20100    ; 	psh.w #1
+(1553)                  ; 	pha.w
 (1554) 0DA5 20FFFF      ; 	jsr _iwrite
 (1555) 0DA8 C204        ; 	adj #4
 (1556) 0DAA ABE28114    ; 	psh.w #S_071
@@ -1190,20 +1561,51 @@
 (1561) 0DBB ABB507      ; 	lda.w oldcol_062,X
 (1562) 0DBE AB48        ; 	pha.w
 (1563) 0DC0 ABE20100    ; 	psh.w #1
+(1564)                  ; 	pha.w
 (1565) 0DC4 20FFFF      ; 	jsr _iwrite
 (1566) 0DC7 C204        ; 	adj #4
 (1567) 0DC9 ABE25D00    ; 	psh.w #93
+(1568)                  ; 	pha.w
 (1569) 0DCD ABE20000    ; 	psh.w #0
 (1570) 0DD1 20FFFF      ; 	jsr _cwrite
 (1571) 0DD4 C204        ; 	adj #4
 (1572) 0DD6 20FFFF      ; 	jsr _writeln
+(1573)                  ; ;  274:         END;
+(1574)                  ; L_086
+(1575)                  ; ;  275:         END;
+(1576)                  ; L_082
+(1577)                  ; ;  276:     END;
+(1578)                  ; L_072
+(1579)                  ; ;  277:     END {ProcessWolf};
 (1580) 0DD9 AB9A        ; 	txs.w
 (1581) 0DDB ABFA        ; 	plx.w
 (1582) 0DDD 60          ; 	rts
+(1583)                  ; 	.end processwolf_060
+(1584)                  ; ;  278: 
+(1585)                  ; ;  279: 
+(1586)                  ; ;  280: PROCEDURE ProcessRabbit (oldrow, oldcol : index);
+(1587)                  ; ;  281: 
+(1588)                  ; ;  282:     {Process the rabbit located at island[oldrow, oldcol].}
+(1589)                  ; ;  283: 
+(1590)                  ; ;  284:     VAR
+(1591)                  ; ;  285:     newrow, newcol : index;     {new row and column}
+(1592)                  ; ;  286:     moved : boolean;            {true iff rabbit moved}
+(1593)                  ; ;  287: 
+(1594)                  ; ;  288:     BEGIN
+(1595)                  ; oldrow_089 .equ +9
+(1596)                  ; oldcol_090 .equ +7
+(1597)                  ; newrow_091 .equ -1
+(1598)                  ; newcol_092 .equ -3
+(1599)                  ; moved_093 .equ -5
+(1600)                  ; processrabbit_088	.sub
 (1601) 0DDE ABDA        ; 	phx.w
 (1602) 0DE0 ABBA        ; 	tsx.w
 (1603) 0DE2 C2FA        ; 	adj #-6
+(1604)                  ; ;  289: 
+(1605)                  ; ;  290:     {Move to adjacent location, or stay put.}
+(1606)                  ; ;  291:     NewLocation(rabbit, oldrow, oldcol, newrow, newcol);
 (1607) 0DE4 ABE20100    ; 	psh.w #1
+(1608)                  ; 	pha.w
 (1609) 0DE8 ABB509      ; 	lda.w oldrow_089,X
 (1610) 0DEB AB48        ; 	pha.w
 (1611) 0DED ABB507      ; 	lda.w oldcol_090,X
@@ -1220,6 +1622,7 @@
 (1622) 0E07 AB48        ; 	pha.w
 (1623) 0E09 20E405      ; 	jsr newlocation_037
 (1624) 0E0C C20C        ; 	adj #12
+(1625)                  ; ;  292:     moved := (newrow <> oldrow) OR (newcol <> oldcol);
 (1626) 0E0E ABB5FF      ; 	lda.w newrow_091,X
 (1627) 0E11 AB48        ; 	pha.w
 (1628) 0E13 ABB509      ; 	lda.w oldrow_089,X
@@ -1231,6 +1634,7 @@
 (1634) 0E21 28          ; 	plp
 (1635) 0E22 D002        ; 	bne L_094
 (1636) 0E24 A900        ; 	lda #0
+(1637)                  ; L_094
 (1638) 0E26 AB48        ; 	pha.w
 (1639) 0E28 ABB5FD      ; 	lda.w newcol_092,X
 (1640) 0E2B AB48        ; 	pha.w
@@ -1243,13 +1647,17 @@
 (1647) 0E3B 28          ; 	plp
 (1648) 0E3C D002        ; 	bne L_095
 (1649) 0E3E A900        ; 	lda #0
+(1650)                  ; L_095
 (1651) 0E40 CB1501      ; 	ora.w 1,S
 (1652) 0E43 C202        ; 	adj #2
 (1653) 0E45 AB95FB      ; 	sta.w moved_093,X
+(1654)                  ; ;  293:     IF moved THEN BEGIN
 (1655) 0E48 ABB5FB      ; 	lda.w moved_093,X
 (1656) 0E4B ABC90100    ; 	cmp.w #1
 (1657) 0E4F F003        ; 	beq L_096
 (1658) 0E51 4CAA0E      ; 	jmp L_097
+(1659)                  ; L_096
+(1660)                  ; ;  294:         island[newrow, newcol] := newrabbit;
 (1661) 0E54 ABE29714    ; 	psh.w #island_002
 (1662) 0E58 ABB5FF      ; 	lda.w newrow_091,X
 (1663) 0E5B AB48        ; 	pha.w
@@ -1267,6 +1675,7 @@
 (1675) 0E79 A903        ; 	lda #3
 (1676) 0E7B 6B          ; 	pli
 (1677) 0E7C AB8300      ; 	sta.w 0,I++
+(1678)                  ; ;  295:         island[oldrow, oldcol] := empty;
 (1679) 0E7F ABE29714    ; 	psh.w #island_002
 (1680) 0E83 ABB509      ; 	lda.w oldrow_089,X
 (1681) 0E86 AB48        ; 	pha.w
@@ -1284,9 +1693,15 @@
 (1693) 0EA4 A904        ; 	lda #4
 (1694) 0EA6 6B          ; 	pli
 (1695) 0EA7 AB8300      ; 	sta.w 0,I++
+(1696)                  ; ;  296:     END;
+(1697)                  ; L_097
+(1698)                  ; ;  297: 
+(1699)                  ; ;  298:     {Rabbit reproduction time?}
+(1700)                  ; ;  299:     IF (t MOD rabbitreprotime) = 0 THEN BEGIN
 (1701) 0EAA ABAD9516    ; 	lda.w t_008
 (1702) 0EAE AB48        ; 	pha.w
 (1703) 0EB0 ABE20500    ; 	psh.w #5
+(1704)                  ; 	pha.w
 (1705) 0EB4 20FFFF      ; 	jsr _idiv
 (1706) 0EB7 C204        ; 	adj #4
 (1707) 0EB9 1B          ; 	swp a
@@ -1300,13 +1715,20 @@
 (1715) 0EC9 28          ; 	plp
 (1716) 0ECA F002        ; 	beq L_100
 (1717) 0ECC A900        ; 	lda #0
+(1718)                  ; L_100
 (1719) 0ECE ABC90100    ; 	cmp.w #1
 (1720) 0ED2 F003        ; 	beq L_098
 (1721) 0ED4 4C9B0F      ; 	jmp L_099
+(1722)                  ; L_098
+(1723)                  ; ;  300: 
+(1724)                  ; ;  301:         {If moved, then leave behind an offspring.}
+(1725)                  ; ;  302:         IF moved THEN BEGIN
 (1726) 0ED7 ABB5FB      ; 	lda.w moved_093,X
 (1727) 0EDA ABC90100    ; 	cmp.w #1
 (1728) 0EDE F003        ; 	beq L_101
 (1729) 0EE0 4C9B0F      ; 	jmp L_102
+(1730)                  ; L_101
+(1731)                  ; ;  303:         island[oldrow, oldcol] := newrabbit;
 (1732) 0EE3 ABE29714    ; 	psh.w #island_002
 (1733) 0EE7 ABB509      ; 	lda.w oldrow_089,X
 (1734) 0EEA AB48        ; 	pha.w
@@ -1324,6 +1746,7 @@
 (1746) 0F08 A903        ; 	lda #3
 (1747) 0F0A 6B          ; 	pli
 (1748) 0F0B AB8300      ; 	sta.w 0,I++
+(1749)                  ; ;  304:         numrabbits := numrabbits + 1;
 (1750) 0F0E ABAD9116    ; 	lda.w numrabbits_006
 (1751) 0F12 AB48        ; 	pha.w
 (1752) 0F14 A901        ; 	lda #1
@@ -1331,6 +1754,7 @@
 (1754) 0F17 CB7501      ; 	adc.w 1,S
 (1755) 0F1A C202        ; 	adj #2
 (1756) 0F1C AB8D9116    ; 	sta.w numrabbits_006
+(1757)                  ; ;  305:         writeln('t =', t:4, ' : Rabbit born at ',
 (1758) 0F20 ABE29314    ; 	psh.w #S_069
 (1759) 0F24 ABE20000    ; 	psh.w #0
 (1760) 0F28 ABE20300    ; 	psh.w #3
@@ -1339,6 +1763,7 @@
 (1763) 0F31 ABAD9516    ; 	lda.w t_008
 (1764) 0F35 AB48        ; 	pha.w
 (1765) 0F37 ABE20400    ; 	psh.w #4
+(1766)                  ; 	pha.w
 (1767) 0F3B 20FFFF      ; 	jsr _iwrite
 (1768) 0F3E C204        ; 	adj #4
 (1769) 0F40 ABE24C14    ; 	psh.w #S_103
@@ -1346,13 +1771,16 @@
 (1771) 0F48 ABE21200    ; 	psh.w #18
 (1772) 0F4C 20FFFF      ; 	jsr _swrite
 (1773) 0F4F C206        ; 	adj #6
+(1774)                  ; ;  306:             '[', oldrow:1, ', ', oldcol:1, ']');
 (1775) 0F51 ABE25B00    ; 	psh.w #91
+(1776)                  ; 	pha.w
 (1777) 0F55 ABE20000    ; 	psh.w #0
 (1778) 0F59 20FFFF      ; 	jsr _cwrite
 (1779) 0F5C C204        ; 	adj #4
 (1780) 0F5E ABB509      ; 	lda.w oldrow_089,X
 (1781) 0F61 AB48        ; 	pha.w
 (1782) 0F63 ABE20100    ; 	psh.w #1
+(1783)                  ; 	pha.w
 (1784) 0F67 20FFFF      ; 	jsr _iwrite
 (1785) 0F6A C204        ; 	adj #4
 (1786) 0F6C ABE28114    ; 	psh.w #S_071
@@ -1363,31 +1791,61 @@
 (1791) 0F7D ABB507      ; 	lda.w oldcol_090,X
 (1792) 0F80 AB48        ; 	pha.w
 (1793) 0F82 ABE20100    ; 	psh.w #1
+(1794)                  ; 	pha.w
 (1795) 0F86 20FFFF      ; 	jsr _iwrite
 (1796) 0F89 C204        ; 	adj #4
 (1797) 0F8B ABE25D00    ; 	psh.w #93
+(1798)                  ; 	pha.w
 (1799) 0F8F ABE20000    ; 	psh.w #0
 (1800) 0F93 20FFFF      ; 	jsr _cwrite
 (1801) 0F96 C204        ; 	adj #4
 (1802) 0F98 20FFFF      ; 	jsr _writeln
+(1803)                  ; ;  307:         END;
+(1804)                  ; L_102
+(1805)                  ; ;  308:     END;
+(1806)                  ; L_099
+(1807)                  ; ;  309:     END {ProcessRabbit};
 (1808) 0F9B AB9A        ; 	txs.w
 (1809) 0F9D ABFA        ; 	plx.w
 (1810) 0F9F 60          ; 	rts
+(1811)                  ; 	.end processrabbit_088
+(1812)                  ; ;  310: 
+(1813)                  ; ;  311: 
+(1814)                  ; ;  312: PROCEDURE EventsOccur;
+(1815)                  ; ;  313: 
+(1816)                  ; ;  314:     {Perform the events that occur for each time unit.}
+(1817)                  ; ;  315: 
+(1818)                  ; ;  316:     VAR
+(1819)                  ; ;  317:     row, col : index;
+(1820)                  ; ;  318: 
+(1821)                  ; ;  319:     BEGIN
+(1822)                  ; row_105 .equ -1
+(1823)                  ; col_106 .equ -3
+(1824)                  ; eventsoccur_104	.sub
 (1825) 0FA0 ABDA        ; 	phx.w
 (1826) 0FA2 ABBA        ; 	tsx.w
 (1827) 0FA4 C2FC        ; 	adj #-4
+(1828)                  ; ;  320: 
+(1829)                  ; ;  321:     {Scan for wolves and process each one in turn.}
+(1830)                  ; ;  322:     FOR row := 1 TO size DO BEGIN
 (1831) 0FA6 A901        ; 	lda #1
 (1832) 0FA8 AB95FF      ; 	sta.w row_105,X
+(1833)                  ; L_107
 (1834) 0FAB A909        ; 	lda #9
 (1835) 0FAD ABD5FF      ; 	cmp.w row_105,X
 (1836) 0FB0 AB5003      ; 	bge L_108
 (1837) 0FB3 4C2F10      ; 	jmp L_109
+(1838)                  ; L_108
+(1839)                  ; ;  323:         FOR col := 1 TO size DO BEGIN
 (1840) 0FB6 A901        ; 	lda #1
 (1841) 0FB8 AB95FD      ; 	sta.w col_106,X
+(1842)                  ; L_110
 (1843) 0FBB A909        ; 	lda #9
 (1844) 0FBD ABD5FD      ; 	cmp.w col_106,X
 (1845) 0FC0 AB5003      ; 	bge L_111
 (1846) 0FC3 4C2610      ; 	jmp L_112
+(1847)                  ; L_111
+(1848)                  ; ;  324:         IF island[row, col] = wolf THEN BEGIN
 (1849) 0FC6 ABE29714    ; 	psh.w #island_002
 (1850) 0FCA ABB5FF      ; 	lda.w row_105,X
 (1851) 0FCD AB48        ; 	pha.w
@@ -1414,9 +1872,12 @@
 (1872) 0FFE 28          ; 	plp
 (1873) 0FFF F002        ; 	beq L_115
 (1874) 1001 A900        ; 	lda #0
+(1875)                  ; L_115
 (1876) 1003 ABC90100    ; 	cmp.w #1
 (1877) 1007 F003        ; 	beq L_113
 (1878) 1009 4C2010      ; 	jmp L_114
+(1879)                  ; L_113
+(1880)                  ; ;  325:             ProcessWolf(row, col);
 (1881) 100C ABB5FF      ; 	lda.w row_105,X
 (1882) 100F AB48        ; 	pha.w
 (1883) 1011 ABB5FD      ; 	lda.w col_106,X
@@ -1425,24 +1886,40 @@
 (1886) 1019 AB48        ; 	pha.w
 (1887) 101B 20E207      ; 	jsr processwolf_060
 (1888) 101E C206        ; 	adj #6
+(1889)                  ; ;  326:         END;
+(1890)                  ; L_114
+(1891)                  ; ;  327:         END;
 (1892) 1020 ABF6FD      ; 	inc.w col_106,X
 (1893) 1023 4CBB0F      ; 	jmp L_110
+(1894)                  ; L_112
 (1895) 1026 ABD6FD      ; 	dec.w col_106,X
+(1896)                  ; ;  328:     END;
 (1897) 1029 ABF6FF      ; 	inc.w row_105,X
 (1898) 102C 4CAB0F      ; 	jmp L_107
+(1899)                  ; L_109
 (1900) 102F ABD6FF      ; 	dec.w row_105,X
+(1901)                  ; ;  329: 
+(1902)                  ; ;  330: 
+(1903)                  ; ;  331:     {Scan for rabbits and process each one in turn.}
+(1904)                  ; ;  332:     FOR row := 1 TO size DO BEGIN
 (1905) 1032 A901        ; 	lda #1
 (1906) 1034 AB95FF      ; 	sta.w row_105,X
+(1907)                  ; L_116
 (1908) 1037 A909        ; 	lda #9
 (1909) 1039 ABD5FF      ; 	cmp.w row_105,X
 (1910) 103C AB5003      ; 	bge L_117
 (1911) 103F 4CBB10      ; 	jmp L_118
+(1912)                  ; L_117
+(1913)                  ; ;  333:         FOR col := 1 TO size DO BEGIN
 (1914) 1042 A901        ; 	lda #1
 (1915) 1044 AB95FD      ; 	sta.w col_106,X
+(1916)                  ; L_119
 (1917) 1047 A909        ; 	lda #9
 (1918) 1049 ABD5FD      ; 	cmp.w col_106,X
 (1919) 104C AB5003      ; 	bge L_120
 (1920) 104F 4CB210      ; 	jmp L_121
+(1921)                  ; L_120
+(1922)                  ; ;  334:         IF island[row, col] = rabbit THEN BEGIN
 (1923) 1052 ABE29714    ; 	psh.w #island_002
 (1924) 1056 ABB5FF      ; 	lda.w row_105,X
 (1925) 1059 AB48        ; 	pha.w
@@ -1469,9 +1946,12 @@
 (1946) 108A 28          ; 	plp
 (1947) 108B F002        ; 	beq L_124
 (1948) 108D A900        ; 	lda #0
+(1949)                  ; L_124
 (1950) 108F ABC90100    ; 	cmp.w #1
 (1951) 1093 F003        ; 	beq L_122
 (1952) 1095 4CAC10      ; 	jmp L_123
+(1953)                  ; L_122
+(1954)                  ; ;  335:             ProcessRabbit(row, col);
 (1955) 1098 ABB5FF      ; 	lda.w row_105,X
 (1956) 109B AB48        ; 	pha.w
 (1957) 109D ABB5FD      ; 	lda.w col_106,X
@@ -1480,19 +1960,44 @@
 (1960) 10A5 AB48        ; 	pha.w
 (1961) 10A7 20DE0D      ; 	jsr processrabbit_088
 (1962) 10AA C206        ; 	adj #6
+(1963)                  ; ;  336:         END;
+(1964)                  ; L_123
+(1965)                  ; ;  337:         END;
 (1966) 10AC ABF6FD      ; 	inc.w col_106,X
 (1967) 10AF 4C4710      ; 	jmp L_119
+(1968)                  ; L_121
 (1969) 10B2 ABD6FD      ; 	dec.w col_106,X
+(1970)                  ; ;  338:     END;
 (1971) 10B5 ABF6FF      ; 	inc.w row_105,X
 (1972) 10B8 4C3710      ; 	jmp L_116
+(1973)                  ; L_118
 (1974) 10BB ABD6FF      ; 	dec.w row_105,X
+(1975)                  ; ;  339:     END {EventsOccur};
 (1976) 10BE AB9A        ; 	txs.w
 (1977) 10C0 ABFA        ; 	plx.w
 (1978) 10C2 60          ; 	rts
+(1979)                  ; 	.end eventsoccur_104
+(1980)                  ; ;  340: 
+(1981)                  ; ;  341: 
+(1982)                  ; ;  342: PROCEDURE PrintIsland;
+(1983)                  ; ;  343: 
+(1984)                  ; ;  344:     {Print the island.}
+(1985)                  ; ;  345: 
+(1986)                  ; ;  346:     VAR
+(1987)                  ; ;  347:     row, col : index;
+(1988)                  ; ;  348:     cnts     : contents;
+(1989)                  ; ;  349: 
+(1990)                  ; ;  350:     BEGIN
+(1991)                  ; row_126 .equ -1
+(1992)                  ; col_127 .equ -3
+(1993)                  ; cnts_128 .equ -5
+(1994)                  ; printisland_125	.sub
 (1995) 10C3 ABDA        ; 	phx.w
 (1996) 10C5 ABBA        ; 	tsx.w
 (1997) 10C7 C2FA        ; 	adj #-6
+(1998)                  ; ;  351:     writeln;
 (1999) 10C9 20FFFF      ; 	jsr _writeln
+(2000)                  ; ;  352:     writeln('t =', t:4, ' : Wolf Island');
 (2001) 10CC ABE29314    ; 	psh.w #S_069
 (2002) 10D0 ABE20000    ; 	psh.w #0
 (2003) 10D4 ABE20300    ; 	psh.w #3
@@ -1501,6 +2006,7 @@
 (2006) 10DD ABAD9516    ; 	lda.w t_008
 (2007) 10E1 AB48        ; 	pha.w
 (2008) 10E3 ABE20400    ; 	psh.w #4
+(2009)                  ; 	pha.w
 (2010) 10E7 20FFFF      ; 	jsr _iwrite
 (2011) 10EA C204        ; 	adj #4
 (2012) 10EC ABE23E14    ; 	psh.w #S_129
@@ -1509,23 +2015,35 @@
 (2015) 10F8 20FFFF      ; 	jsr _swrite
 (2016) 10FB C206        ; 	adj #6
 (2017) 10FD 20FFFF      ; 	jsr _writeln
+(2018)                  ; ;  353:     writeln;
 (2019) 1100 20FFFF      ; 	jsr _writeln
+(2020)                  ; ;  354: 
+(2021)                  ; ;  355:     FOR row := 1 TO size DO BEGIN
 (2022) 1103 A901        ; 	lda #1
 (2023) 1105 AB95FF      ; 	sta.w row_126,X
+(2024)                  ; L_130
 (2025) 1108 A909        ; 	lda #9
 (2026) 110A ABD5FF      ; 	cmp.w row_126,X
 (2027) 110D AB5003      ; 	bge L_131
 (2028) 1110 4C0712      ; 	jmp L_132
+(2029)                  ; L_131
+(2030)                  ; ;  356:         write(' ':10);
 (2031) 1113 ABE22000    ; 	psh.w #32
+(2032)                  ; 	pha.w
 (2033) 1117 ABE20A00    ; 	psh.w #10
+(2034)                  ; 	pha.w
 (2035) 111B 20FFFF      ; 	jsr _cwrite
 (2036) 111E C204        ; 	adj #4
+(2037)                  ; ;  357:         FOR col := 1 TO size DO BEGIN
 (2038) 1120 A901        ; 	lda #1
 (2039) 1122 AB95FD      ; 	sta.w col_127,X
+(2040)                  ; L_133
 (2041) 1125 A909        ; 	lda #9
 (2042) 1127 ABD5FD      ; 	cmp.w col_127,X
 (2043) 112A AB5003      ; 	bge L_134
 (2044) 112D 4CFB11      ; 	jmp L_135
+(2045)                  ; L_134
+(2046)                  ; ;  358:         cnts := island[row, col];
 (2047) 1130 ABE29714    ; 	psh.w #island_002
 (2048) 1134 ABB5FF      ; 	lda.w row_126,X
 (2049) 1137 AB48        ; 	pha.w
@@ -1543,6 +2061,7 @@
 (2061) 1155 6B          ; 	pli
 (2062) 1156 ABA300      ; 	lda.w 0,I++
 (2063) 1159 AB95FB      ; 	sta.w cnts_128,X
+(2064)                  ; ;  359:         IF      cnts = empty  THEN write('. ')
 (2065) 115C ABB5FB      ; 	lda.w cnts_128,X
 (2066) 115F AB48        ; 	pha.w
 (2067) 1161 A904        ; 	lda #4
@@ -1554,15 +2073,19 @@
 (2073) 116E 28          ; 	plp
 (2074) 116F F002        ; 	beq L_138
 (2075) 1171 A900        ; 	lda #0
+(2076)                  ; L_138
 (2077) 1173 ABC90100    ; 	cmp.w #1
 (2078) 1177 F003        ; 	beq L_136
 (2079) 1179 4C9011      ; 	jmp L_137
+(2080)                  ; L_136
 (2081) 117C ABE23C14    ; 	psh.w #S_139
 (2082) 1180 ABE20000    ; 	psh.w #0
 (2083) 1184 ABE20200    ; 	psh.w #2
 (2084) 1188 20FFFF      ; 	jsr _swrite
 (2085) 118B C206        ; 	adj #6
+(2086)                  ; ;  360:         ELSE IF cnts = wolf   THEN write('W ')
 (2087) 118D 4CF511      ; 	jmp L_140
+(2088)                  ; L_137
 (2089) 1190 ABB5FB      ; 	lda.w cnts_128,X
 (2090) 1193 AB48        ; 	pha.w
 (2091) 1195 A900        ; 	lda #0
@@ -1574,15 +2097,19 @@
 (2097) 11A2 28          ; 	plp
 (2098) 11A3 F002        ; 	beq L_143
 (2099) 11A5 A900        ; 	lda #0
+(2100)                  ; L_143
 (2101) 11A7 ABC90100    ; 	cmp.w #1
 (2102) 11AB F003        ; 	beq L_141
 (2103) 11AD 4CC411      ; 	jmp L_142
+(2104)                  ; L_141
 (2105) 11B0 ABE23A14    ; 	psh.w #S_144
 (2106) 11B4 ABE20000    ; 	psh.w #0
 (2107) 11B8 ABE20200    ; 	psh.w #2
 (2108) 11BC 20FFFF      ; 	jsr _swrite
 (2109) 11BF C206        ; 	adj #6
+(2110)                  ; ;  361:         ELSE IF cnts = rabbit THEN write('r ')
 (2111) 11C1 4CF511      ; 	jmp L_145
+(2112)                  ; L_142
 (2113) 11C4 ABB5FB      ; 	lda.w cnts_128,X
 (2114) 11C7 AB48        ; 	pha.w
 (2115) 11C9 A901        ; 	lda #1
@@ -1594,39 +2121,72 @@
 (2121) 11D6 28          ; 	plp
 (2122) 11D7 F002        ; 	beq L_148
 (2123) 11D9 A900        ; 	lda #0
+(2124)                  ; L_148
 (2125) 11DB ABC90100    ; 	cmp.w #1
 (2126) 11DF F003        ; 	beq L_146
 (2127) 11E1 4CF511      ; 	jmp L_147
+(2128)                  ; L_146
 (2129) 11E4 ABE23814    ; 	psh.w #S_149
 (2130) 11E8 ABE20000    ; 	psh.w #0
 (2131) 11EC ABE20200    ; 	psh.w #2
 (2132) 11F0 20FFFF      ; 	jsr _swrite
 (2133) 11F3 C206        ; 	adj #6
+(2134)                  ; ;  362:         END;
+(2135)                  ; L_147
+(2136)                  ; L_145
+(2137)                  ; L_140
 (2138) 11F5 ABF6FD      ; 	inc.w col_127,X
 (2139) 11F8 4C2511      ; 	jmp L_133
+(2140)                  ; L_135
 (2141) 11FB ABD6FD      ; 	dec.w col_127,X
+(2142)                  ; ;  363:         writeln;
 (2143) 11FE 20FFFF      ; 	jsr _writeln
+(2144)                  ; ;  364:     END;
 (2145) 1201 ABF6FF      ; 	inc.w row_126,X
 (2146) 1204 4C0811      ; 	jmp L_130
+(2147)                  ; L_132
 (2148) 1207 ABD6FF      ; 	dec.w row_126,X
+(2149)                  ; ;  365:     END {PrintIsland};
 (2150) 120A AB9A        ; 	txs.w
 (2151) 120C ABFA        ; 	plx.w
 (2152) 120E 60          ; 	rts
+(2153)                  ; 	.end printisland_125
+(2154)                  ; ;  366: 
+(2155)                  ; ;  367: 
+(2156)                  ; ;  368: PROCEDURE ResetIsland;
+(2157)                  ; ;  369: 
+(2158)                  ; ;  370:     {Reset the island by setting each newwolf to wolf
+(2159)                  ; ;  371:      and each newrabbit to rabbit.}
+(2160)                  ; ;  372: 
+(2161)                  ; ;  373:     VAR
+(2162)                  ; ;  374:     row, col : index;
+(2163)                  ; ;  375: 
+(2164)                  ; ;  376:     BEGIN
+(2165)                  ; row_151 .equ -1
+(2166)                  ; col_152 .equ -3
+(2167)                  ; resetisland_150	.sub
 (2168) 120F ABDA        ; 	phx.w
 (2169) 1211 ABBA        ; 	tsx.w
 (2170) 1213 C2FC        ; 	adj #-4
+(2171)                  ; ;  377:     FOR row := 1 TO size DO BEGIN
 (2172) 1215 A901        ; 	lda #1
 (2173) 1217 AB95FF      ; 	sta.w row_151,X
+(2174)                  ; L_153
 (2175) 121A A909        ; 	lda #9
 (2176) 121C ABD5FF      ; 	cmp.w row_151,X
 (2177) 121F AB5003      ; 	bge L_154
 (2178) 1222 4C2913      ; 	jmp L_155
+(2179)                  ; L_154
+(2180)                  ; ;  378:         FOR col := 1 TO size DO BEGIN
 (2181) 1225 A901        ; 	lda #1
 (2182) 1227 AB95FD      ; 	sta.w col_152,X
+(2183)                  ; L_156
 (2184) 122A A909        ; 	lda #9
 (2185) 122C ABD5FD      ; 	cmp.w col_152,X
 (2186) 122F AB5003      ; 	bge L_157
 (2187) 1232 4C2013      ; 	jmp L_158
+(2188)                  ; L_157
+(2189)                  ; ;  379:         IF island[row, col] = newwolf THEN BEGIN
 (2190) 1235 ABE29714    ; 	psh.w #island_002
 (2191) 1239 ABB5FF      ; 	lda.w row_151,X
 (2192) 123C AB48        ; 	pha.w
@@ -1653,9 +2213,12 @@
 (2213) 126D 28          ; 	plp
 (2214) 126E F002        ; 	beq L_161
 (2215) 1270 A900        ; 	lda #0
+(2216)                  ; L_161
 (2217) 1272 ABC90100    ; 	cmp.w #1
 (2218) 1276 F003        ; 	beq L_159
 (2219) 1278 4CA912      ; 	jmp L_160
+(2220)                  ; L_159
+(2221)                  ; ;  380:             island[row, col] := wolf;
 (2222) 127B ABE29714    ; 	psh.w #island_002
 (2223) 127F ABB5FF      ; 	lda.w row_151,X
 (2224) 1282 AB48        ; 	pha.w
@@ -1673,7 +2236,10 @@
 (2236) 12A0 A900        ; 	lda #0
 (2237) 12A2 6B          ; 	pli
 (2238) 12A3 AB8300      ; 	sta.w 0,I++
+(2239)                  ; ;  381:         END
+(2240)                  ; ;  382:         ELSE IF island[row, col] = newrabbit THEN BEGIN
 (2241) 12A6 4C1A13      ; 	jmp L_162
+(2242)                  ; L_160
 (2243) 12A9 ABE29714    ; 	psh.w #island_002
 (2244) 12AD ABB5FF      ; 	lda.w row_151,X
 (2245) 12B0 AB48        ; 	pha.w
@@ -1700,9 +2266,12 @@
 (2266) 12E1 28          ; 	plp
 (2267) 12E2 F002        ; 	beq L_165
 (2268) 12E4 A900        ; 	lda #0
+(2269)                  ; L_165
 (2270) 12E6 ABC90100    ; 	cmp.w #1
 (2271) 12EA F003        ; 	beq L_163
 (2272) 12EC 4C1A13      ; 	jmp L_164
+(2273)                  ; L_163
+(2274)                  ; ;  383:             island[row, col] := rabbit;
 (2275) 12EF ABE29714    ; 	psh.w #island_002
 (2276) 12F3 ABB5FF      ; 	lda.w row_151,X
 (2277) 12F6 AB48        ; 	pha.w
@@ -1720,32 +2289,60 @@
 (2289) 1314 A901        ; 	lda #1
 (2290) 1316 6B          ; 	pli
 (2291) 1317 AB8300      ; 	sta.w 0,I++
+(2292)                  ; ;  384:         END;
+(2293)                  ; L_164
+(2294)                  ; L_162
+(2295)                  ; ;  385:         END;
 (2296) 131A ABF6FD      ; 	inc.w col_152,X
 (2297) 131D 4C2A12      ; 	jmp L_156
+(2298)                  ; L_158
 (2299) 1320 ABD6FD      ; 	dec.w col_152,X
+(2300)                  ; ;  386:     END;
 (2301) 1323 ABF6FF      ; 	inc.w row_151,X
 (2302) 1326 4C1A12      ; 	jmp L_153
+(2303)                  ; L_155
 (2304) 1329 ABD6FF      ; 	dec.w row_151,X
+(2305)                  ; ;  387:     END {ResetIsland};
 (2306) 132C AB9A        ; 	txs.w
 (2307) 132E ABFA        ; 	plx.w
 (2308) 1330 60          ; 	rts
+(2309)                  ; 	.end resetisland_150
+(2310)                  ; ;  388: 
+(2311)                  ; ;  389: 
+(2312)                  ; ;  390: BEGIN {WolfIsland}
+(2313)                  ; _pc65_main .sub
 (2314) 1331 ABDA        ; 	phx.w
 (2315) 1333 ABBA        ; 	tsx.w
+(2316)                  ; ;  391: 
+(2317)                  ; ;  392:     Initialize;
 (2318) 1335 ABDA        ; 	phx.w
 (2319) 1337 200902      ; 	jsr initialize_013
 (2320) 133A C202        ; 	adj #2
+(2321)                  ; ;  393: 
+(2322)                  ; ;  394:     t   := 0;
 (2323) 133C A900        ; 	lda #0
 (2324) 133E AB8D9516    ; 	sta.w t_008
+(2325)                  ; ;  395:     xpt := 1;
 (2326) 1342 A901        ; 	lda #1
 (2327) 1344 AB8D9716    ; 	sta.w xpt_009
+(2328)                  ; ;  396:     read(seed);
 (2329) 1348 ABE29916    ; 	psh.w #seed_010
 (2330) 134C 20FFFF      ; 	jsr _iread
 (2331) 134F 6B          ; 	pli
 (2332) 1350 AB8300      ; 	sta.w 0,I++
+(2333)                  ; ;  397: 
+(2334)                  ; ;  398:     PrintIsland;
 (2335) 1353 ABDA        ; 	phx.w
 (2336) 1355 20C310      ; 	jsr printisland_125
 (2337) 1358 C202        ; 	adj #2
+(2338)                  ; ;  399: 
+(2339)                  ; ;  400:     {Loop once per time period.}
+(2340)                  ; ;  401:     REPEAT
+(2341)                  ; L_166
+(2342)                  ; ;  402:     writeln;
 (2343) 135A 20FFFF      ; 	jsr _writeln
+(2344)                  ; ;  403: 
+(2345)                  ; ;  404:     t := t + 1;
 (2346) 135D ABAD9516    ; 	lda.w t_008
 (2347) 1361 AB48        ; 	pha.w
 (2348) 1363 A901        ; 	lda #1
@@ -1753,12 +2350,17 @@
 (2350) 1366 CB7501      ; 	adc.w 1,S
 (2351) 1369 C202        ; 	adj #2
 (2352) 136B AB8D9516    ; 	sta.w t_008
+(2353)                  ; ;  405:     EventsOccur;
 (2354) 136F ABDA        ; 	phx.w
 (2355) 1371 20A00F      ; 	jsr eventsoccur_104
 (2356) 1374 C202        ; 	adj #2
+(2357)                  ; ;  406:     ResetIsland;
 (2358) 1376 ABDA        ; 	phx.w
 (2359) 1378 200F12      ; 	jsr resetisland_150
 (2360) 137B C202        ; 	adj #2
+(2361)                  ; ;  407: 
+(2362)                  ; ;  408:     {Time to print the island?}
+(2363)                  ; ;  409:     IF t = printtimes[xpt] THEN BEGIN
 (2364) 137D ABAD9516    ; 	lda.w t_008
 (2365) 1381 AB48        ; 	pha.w
 (2366) 1383 ABE22B16    ; 	psh.w #printtimes_004
@@ -1778,12 +2380,16 @@
 (2380) 13A5 28          ; 	plp
 (2381) 13A6 F002        ; 	beq L_170
 (2382) 13A8 A900        ; 	lda #0
+(2383)                  ; L_170
 (2384) 13AA ABC90100    ; 	cmp.w #1
 (2385) 13AE F003        ; 	beq L_168
 (2386) 13B0 4CCC13      ; 	jmp L_169
+(2387)                  ; L_168
+(2388)                  ; ;  410:         PrintIsland;
 (2389) 13B3 ABDA        ; 	phx.w
 (2390) 13B5 20C310      ; 	jsr printisland_125
 (2391) 13B8 C202        ; 	adj #2
+(2392)                  ; ;  411:         xpt := xpt + 1;
 (2393) 13BA ABAD9716    ; 	lda.w xpt_009
 (2394) 13BE AB48        ; 	pha.w
 (2395) 13C0 A901        ; 	lda #1
@@ -1791,6 +2397,9 @@
 (2397) 13C3 CB7501      ; 	adc.w 1,S
 (2398) 13C6 C202        ; 	adj #2
 (2399) 13C8 AB8D9716    ; 	sta.w xpt_009
+(2400)                  ; ;  412:     END;
+(2401)                  ; L_169
+(2402)                  ; ;  413:     UNTIL (numwolves = 0) OR (numrabbits = 0)
 (2403) 13CC ABAD8F16    ; 	lda.w numwolves_005
 (2404) 13D0 AB48        ; 	pha.w
 (2405) 13D2 A900        ; 	lda #0
@@ -1802,6 +2411,7 @@
 (2411) 13DF 28          ; 	plp
 (2412) 13E0 F002        ; 	beq L_171
 (2413) 13E2 A900        ; 	lda #0
+(2414)                  ; L_171
 (2415) 13E4 AB48        ; 	pha.w
 (2416) 13E6 ABAD9116    ; 	lda.w numrabbits_006
 (2417) 13EA AB48        ; 	pha.w
@@ -1814,6 +2424,8 @@
 (2424) 13F9 28          ; 	plp
 (2425) 13FA F002        ; 	beq L_172
 (2426) 13FC A900        ; 	lda #0
+(2427)                  ; L_172
+(2428)                  ; ;  414:       OR (xpt > numprinttimes);
 (2429) 13FE CB1501      ; 	ora.w 1,S
 (2430) 1401 C202        ; 	adj #2
 (2431) 1403 AB48        ; 	pha.w
@@ -1828,16 +2440,26 @@
 (2440) 141A 28          ; 	plp
 (2441) 141B AB1002      ; 	bgt L_173
 (2442) 141E A900        ; 	lda #0
+(2443)                  ; L_173
 (2444) 1420 CB1501      ; 	ora.w 1,S
 (2445) 1423 C202        ; 	adj #2
 (2446) 1425 ABC90100    ; 	cmp.w #1
 (2447) 1429 F003        ; 	beq L_167
 (2448) 142B 4C5A13      ; 	jmp L_166
+(2449)                  ; L_167
+(2450)                  ; ;  415: 
+(2451)                  ; ;  416:     PrintIsland;
 (2452) 142E ABDA        ; 	phx.w
 (2453) 1430 20C310      ; 	jsr printisland_125
 (2454) 1433 C202        ; 	adj #2
+(2455)                  ; ;  417: 
+(2456)                  ; ;  418: END {WolfIsland}.
 (2457) 1435 ABFA        ; 	plx.w
 (2458) 1437 60          ; 	rts
+(2459)                  ; 	.end _pc65_main
+(2460)                  ; 
+(2461)                  ; 	.dat
+(2462)                  ; 
 (2463) 1438 7220        ; S_149 .str "r "
 (2464) 143A 5720        ; S_144 .str "W "
 (2465) 143C 2E20        ; S_139 .str ". "
@@ -1918,3 +2540,5 @@
        1A74 0000000000000000000000000000000000000000000000000000000000000000
        1A94 000000000000000000000000000000000000000000000000000000
 (2487) 1AAF 00          ; _stk_top .byt 1
+(2488)                  ; 
+(2489)                  ; 	.end

@@ -23,8 +23,7 @@
  138 	jmp L_019
  139 L_018
  141 	psh.w #island_002
- 142 	lda #0
- 143 	pha.w
+ 142 	psh.w #0
  144 	psh.w #22
  145 	jsr _imul
  146 	adj #4
@@ -40,8 +39,7 @@
  156 	pli
  157 	sta.w 0,I++
  159 	psh.w #island_002
- 160 	lda #10
- 161 	pha.w
+ 160 	psh.w #10
  162 	psh.w #22
  163 	jsr _imul
  164 	adj #4
@@ -398,8 +396,7 @@
  565 	adj #-4
  567 	lda.w seed_010
  568 	pha.w
- 569 	lda #21
- 570 	pha.w
+ 569 	psh.w #21
  571 	jsr _imul
  572 	adj #4
  573 	pha.w
@@ -408,8 +405,7 @@
  576 	adc.w 1,S
  577 	adj #2
  578 	pha.w
- 579 	lda.w #1024
- 580 	pha.w
+ 579 	psh.w #1024
  581 	jsr _idiv
  582 	adj #4
  583 	swp a
@@ -421,8 +417,7 @@
  590 	jsr _imul
  591 	adj #4
  592 	pha.w
- 593 	lda.w #1024
- 594 	pha.w
+ 593 	psh.w #1024
  595 	jsr _idiv
  596 	adj #4
  597 	sta.w RETURN_VALUE,X
@@ -563,8 +558,7 @@
  766 	jmp L_054
  767 L_053
  769 L_055
- 771 	lda #5
- 772 	pha.w
+ 771 	psh.w #5
  773 	lda.w STATIC_LINK,X
  774 	pha.w
  775 	jsr random_035
@@ -788,8 +782,7 @@
 1021 	adj #6
 1022 	lda.w t_008
 1023 	pha.w
-1024 	lda #4
-1025 	pha.w
+1024 	psh.w #4
 1026 	jsr _iwrite
 1027 	adj #4
 1028 	psh.w #S_070
@@ -797,15 +790,13 @@
 1030 	psh.w #16
 1031 	jsr _swrite
 1032 	adj #6
-1034 	lda #91
-1035 	pha.w
+1034 	psh.w #91
 1036 	psh.w #0
 1037 	jsr _cwrite
 1038 	adj #4
 1039 	lda.w oldrow_061,X
 1040 	pha.w
-1041 	lda #1
-1042 	pha.w
+1041 	psh.w #1
 1043 	jsr _iwrite
 1044 	adj #4
 1045 	psh.w #S_071
@@ -815,20 +806,17 @@
 1049 	adj #6
 1050 	lda.w oldcol_062,X
 1051 	pha.w
-1052 	lda #1
-1053 	pha.w
+1052 	psh.w #1
 1054 	jsr _iwrite
 1055 	adj #4
-1056 	lda #93
-1057 	pha.w
+1056 	psh.w #93
 1058 	psh.w #0
 1059 	jsr _cwrite
 1060 	adj #4
 1061 	jsr _writeln
 1064 	jmp L_072
 1065 L_067
-1069 	lda #0
-1070 	pha.w
+1069 	psh.w #0
 1071 	lda.w oldrow_061,X
 1072 	pha.w
 1073 	lda.w oldcol_062,X
@@ -965,8 +953,7 @@
 1214 	adj #6
 1215 	lda.w t_008
 1216 	pha.w
-1217 	lda #4
-1218 	pha.w
+1217 	psh.w #4
 1219 	jsr _iwrite
 1220 	adj #4
 1221 	psh.w #S_080
@@ -974,15 +961,13 @@
 1223 	psh.w #19
 1224 	jsr _swrite
 1225 	adj #6
-1227 	lda #91
-1228 	pha.w
+1227 	psh.w #91
 1229 	psh.w #0
 1230 	jsr _cwrite
 1231 	adj #4
 1232 	lda.w newrow_063,X
 1233 	pha.w
-1234 	lda #1
-1235 	pha.w
+1234 	psh.w #1
 1236 	jsr _iwrite
 1237 	adj #4
 1238 	psh.w #S_071
@@ -992,12 +977,10 @@
 1242 	adj #6
 1243 	lda.w newcol_064,X
 1244 	pha.w
-1245 	lda #1
-1246 	pha.w
+1245 	psh.w #1
 1247 	jsr _iwrite
 1248 	adj #4
-1249 	lda #93
-1250 	pha.w
+1249 	psh.w #93
 1251 	psh.w #0
 1252 	jsr _cwrite
 1253 	adj #4
@@ -1095,8 +1078,7 @@
 1353 L_076
 1357 	lda.w t_008
 1358 	pha.w
-1359 	lda #12
-1360 	pha.w
+1359 	psh.w #12
 1361 	jsr _idiv
 1362 	adj #4
 1363 	swp a
@@ -1182,8 +1164,7 @@
 1446 	pli
 1447 	lda.w 0,I++
 1448 	pha.w
-1449 	lda #2
-1450 	pha.w
+1449 	psh.w #2
 1451 	jsr _idiv
 1452 	adj #4
 1453 	pli
@@ -1260,8 +1241,7 @@
 1532 	adj #6
 1533 	lda.w t_008
 1534 	pha.w
-1535 	lda #4
-1536 	pha.w
+1535 	psh.w #4
 1537 	jsr _iwrite
 1538 	adj #4
 1539 	psh.w #S_087
@@ -1269,15 +1249,13 @@
 1541 	psh.w #16
 1542 	jsr _swrite
 1543 	adj #6
-1545 	lda #91
-1546 	pha.w
+1545 	psh.w #91
 1547 	psh.w #0
 1548 	jsr _cwrite
 1549 	adj #4
 1550 	lda.w oldrow_061,X
 1551 	pha.w
-1552 	lda #1
-1553 	pha.w
+1552 	psh.w #1
 1554 	jsr _iwrite
 1555 	adj #4
 1556 	psh.w #S_071
@@ -1287,12 +1265,10 @@
 1560 	adj #6
 1561 	lda.w oldcol_062,X
 1562 	pha.w
-1563 	lda #1
-1564 	pha.w
+1563 	psh.w #1
 1565 	jsr _iwrite
 1566 	adj #4
-1567 	lda #93
-1568 	pha.w
+1567 	psh.w #93
 1569 	psh.w #0
 1570 	jsr _cwrite
 1571 	adj #4
@@ -1313,8 +1289,7 @@
 1601 	phx.w
 1602 	tsx.w
 1603 	adj #-6
-1607 	lda #1
-1608 	pha.w
+1607 	psh.w #1
 1609 	lda.w oldrow_089,X
 1610 	pha.w
 1611 	lda.w oldcol_090,X
@@ -1401,8 +1376,7 @@
 1697 L_097
 1701 	lda.w t_008
 1702 	pha.w
-1703 	lda #5
-1704 	pha.w
+1703 	psh.w #5
 1705 	jsr _idiv
 1706 	adj #4
 1707 	swp a
@@ -1457,8 +1431,7 @@
 1762 	adj #6
 1763 	lda.w t_008
 1764 	pha.w
-1765 	lda #4
-1766 	pha.w
+1765 	psh.w #4
 1767 	jsr _iwrite
 1768 	adj #4
 1769 	psh.w #S_103
@@ -1466,15 +1439,13 @@
 1771 	psh.w #18
 1772 	jsr _swrite
 1773 	adj #6
-1775 	lda #91
-1776 	pha.w
+1775 	psh.w #91
 1777 	psh.w #0
 1778 	jsr _cwrite
 1779 	adj #4
 1780 	lda.w oldrow_089,X
 1781 	pha.w
-1782 	lda #1
-1783 	pha.w
+1782 	psh.w #1
 1784 	jsr _iwrite
 1785 	adj #4
 1786 	psh.w #S_071
@@ -1484,12 +1455,10 @@
 1790 	adj #6
 1791 	lda.w oldcol_090,X
 1792 	pha.w
-1793 	lda #1
-1794 	pha.w
+1793 	psh.w #1
 1795 	jsr _iwrite
 1796 	adj #4
-1797 	lda #93
-1798 	pha.w
+1797 	psh.w #93
 1799 	psh.w #0
 1800 	jsr _cwrite
 1801 	adj #4
@@ -1653,8 +1622,7 @@
 2005 	adj #6
 2006 	lda.w t_008
 2007 	pha.w
-2008 	lda #4
-2009 	pha.w
+2008 	psh.w #4
 2010 	jsr _iwrite
 2011 	adj #4
 2012 	psh.w #S_129
@@ -1672,10 +1640,8 @@
 2027 	bge L_131
 2028 	jmp L_132
 2029 L_131
-2031 	lda #32
-2032 	pha.w
-2033 	lda #10
-2034 	pha.w
+2031 	psh.w #32
+2033 	psh.w #10
 2035 	jsr _cwrite
 2036 	adj #4
 2038 	lda #1
@@ -2065,4 +2031,3 @@
 2485 _bss_end .byt 1
 2486 _stk .byt 1023
 2487 _stk_top .byt 1
-2489 	.end
