@@ -1,5 +1,6 @@
 import re
 import os
+import array
 
 from PyAsm65Utilities import *
 
@@ -27,6 +28,24 @@ relative   = ('bpl', 'bmi', 'bvc', 'bvs', 'bcc', 'bcs', 'bne', 'beq', \
               'jge', 'jgt', 'jle', 'jlt', 'jhs', 'jhi', 'jls', 'jlo', \
               'jra', \
               'phr', 'csr', )
+
+zeroPage = {'zp'   : 'zp',   'zpI'    : 'zpI',   'zpII'   : 'zpII',
+            'zpX'  : 'zpX',  'zpXI'   : 'zpXI',  'zpXII'  : 'zpXII',
+            'zpY'  : 'zpY',  'zpIY'   : 'zpIY',  'zpIIY'  : 'zpIIY',
+            'zpS'  : 'zpS',  'zpSI'   : 'zpSI',  'zpSII'  : 'zpSII',
+                             'zpSIY'  : 'zpSIY', 'zpSIIY' : 'zpSIIY',
+            'zpA'  : 'zpA',  'zpAI'   : 'zpAI',  'zpAII'  : 'zpAII',
+                             'zpIA'   : 'zpIA',  'zpIIA'  : 'zpIIA',
+                             'zpSIA'  : 'zpSIA', 'zpSIIA' : 'zpSIIA',
+            'ipp' : 'ipp',   'ippI'   : 'ippI', }
+
+absolute = {'abs'  : 'abs',  'absI'   : 'absI',  'absII'  : 'absII',
+            'absX' : 'absX', 'absXI'  : 'absXI', 'absXII' : 'absXII',
+            'absY' : 'absY', 'absIY'  : 'absIY',
+            'absS' : 'absS', 'absSI'  : 'absSI', 'absSII' : 'absSII',
+                             'absSIY' : 'absSIY',
+            'absA' : 'absA', 'absAI'  : 'absAI', 'absAII' : 'absAII',
+                             'absSIA' : 'absSIA', }
 
 opcodes = dict()
 
@@ -104,7 +123,6 @@ for src in source:
     else:
         print('Error. Unexpected number of fields: %d' % (numFields) \
               + ' in line #%d' % (srcLine))
-
     if lbl == '':
         if op in directives:
             if op == directives['.stack'] or op == directives['.stk']:
@@ -160,11 +178,15 @@ for src in source:
                 elif re.match('^\(.*,[iI][+]{2}\)$', dt):
                     addrsMode = 'ippI'
                     operand = dt.split(',')[0][1:]
+                elif re.match('^[(]{2}.*,[sS][)]{2},[aA]$', dt):
+                    addrsMode = 'zpSIIA'
+                    operand = dt.split(',')[0][2:]
                 elif re.match('^\w*$', dt):
                     if op in relative:
                         addrsMode = 'rel'
                     else:
                         addrsMode = 'abs'
+                        
                     operand = dt
                     if re.match('^_\w*$', dt):
                         if dt not in library:
@@ -297,6 +319,9 @@ for src in source:
                 elif re.match('^\(.*,[iI][+]{2}\)$', dt):
                     addrsMode = 'ippI'
                     operand = dt.split(',')[0][1:]
+                elif re.match('^[(]{2}.*,[sS][)]{2},[aA]$', dt):
+                    addrsMode = 'zpSIIA'
+                    operand = dt.split(',')[0][2:]
                 elif re.match('^\w*$', dt):
                     if op in relative:
                         addrsMode = 'rel'
@@ -317,6 +342,7 @@ for src in source:
                 if opcode in opcodes:
                     opLen = opcodes[opcode][0]
                     dtLen = opcodes[opcode][1]
+                    opDat = opcodes[opcode][2]
                     asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
                     bufLen = 15 - len(asmText)
                     cod.append([code, op, addrsMode, operand, \
@@ -332,7 +358,7 @@ for src in source:
     Insert Loop(s) to add library functions
 '''
 
-
+## TODO: Recursively read and append runtime library to end of code space
 
 '''
     Merge cod[] and dat[]; adjust address of each entry.
@@ -393,8 +419,8 @@ for ln in cod:
         try:
             val = eval(str(dt), vlc)
         except:
-            print('--- Error: eval(%s) failed' % dt)
-            val = 0
+            print('\tError: eval(%s) failed' % dt)
+            val = -1
 
         if dtLen == 1:
             loStr = '%02X' % (val & 255)
@@ -409,7 +435,12 @@ for ln in cod:
                           srcTxt, srcLine]
     elif md == 'rel':
         if dt in labels:
-            delta = eval(str(dt), vlc) - (addrs + opLen + dtLen)
+            try:
+                val = eval(str(dt), vlc)
+                delta = val - (addrs + opLen + dtLen)
+            except:
+                print('\tError: eval(%s) failed' % dt)
+                delta = 65536
             if dtLen == 1:
                 if delta < -128 or delta > 127:
                     print('Error. Target address out of range.')
@@ -428,14 +459,13 @@ for ln in cod:
                                   ''.join([opStr, loStr, hiStr]), \
                                   srcTxt, srcLine]
         else:
-            print('Error. Destination not found in symbol table.')
+            print('\tError. Destination not found in symbol table.')
     elif md in ['zpS', 'zpSI', 'zpSIY', 'zpX', 'zpXI', 'ipp', 'ippI',]:
         try:
             val = eval(str(dt), vlc)
         except:
+            print('\tError: eval(%s) failed' % dt)
             val = -1
-            print('Error. Missing constant or number: 0x%04X, %s %s %s' \
-                  % (addrs, op, md, dt))
 
         if dtLen == 1:
             loStr = '%02X' % (val & 255)
@@ -443,29 +473,52 @@ for ln in cod:
                           ''.join([opStr, loStr]), \
                           srcTxt, srcLine]
         else:
-            loStr = '%02X' % (val & 255)
-            hiStr = '%02X' % ((val >> 8) & 255)
+            loStr = '%02X' % (-1 & 255)
             out[addrs] = [opLen + dtLen, \
-                          ''.join([opStr, loStr, hiStr]), \
+                          ''.join([opStr, loStr]), \
                           srcTxt, srcLine]
+            print('Error. Invalid Operand Length: 0x%04X, %s %s %s' \
+                  % (addrs, op, md, dt))
     elif md in ['abs', 'absI', 'absX', 'absXI', 'absY', 'absIY',]:
         try:
             val = eval(str(dt), vlc)
         except:
+            print('\tError: eval(%s) failed' % dt)
             val = -1
-            print('\tMissing symbol: 0x%04X, %s, %s' % (addrs, dt, md))
         
         if dtLen == 1:
-            loStr = '%02X' % (val & 255)
+            loStr = '%02X' % (-1 & 255)
+            hiStr = '%02X' % (-1 & 255)
             out[addrs] = [opLen + dtLen, \
-                          ''.join([opStr, loStr]), \
+                          ''.join([opStr, loStr, hiStr]), \
                           srcTxt, srcLine]
+            print('Error. Invalid Operand Length: 0x%04X, %s %s %s' \
+                  % (addrs, op, md, dt))
         else:
             loStr = '%02X' % (val & 255)
             hiStr = '%02X' % ((val >> 8) & 255)
             out[addrs] = [opLen + dtLen, \
                           ''.join([opStr, loStr, hiStr]), \
                           srcTxt, srcLine]
+    elif md in ['zpSIIA',]:
+        try:
+            val = eval(str(dt), vlc)
+        except:
+            print('\tError: eval(%s) failed' % dt)
+            val = -1
+
+        if dtLen == 1:
+            loStr = '%02X' % (val & 255)
+            out[addrs] = [opLen + dtLen, \
+                          ''.join([opStr, loStr]), \
+                          srcTxt, srcLine]
+        else:
+            loStr = '%02X' % (-1 & 255)
+            out[addrs] = [opLen + dtLen, \
+                          ''.join([opStr, loStr]), \
+                          srcTxt, srcLine]
+            print('Error. Invalid Operand Length: 0x%04X, %s %s %s' \
+                  % (addrs, op, md, dt))
     elif md in ('db', 'byt', 'ds', 'str'):
         val, siz, strVal = variables[op]
         out[addrs] = [siz, opStr, srcTxt, srcLine]
@@ -473,6 +526,8 @@ for ln in cod:
 '''
     Print results of Pass 2
 '''
+
+pgm = array.array('B', [])
 
 with open(filename+'.lst', 'wt') as fout:
     start = False
@@ -494,6 +549,14 @@ with open(filename+'.lst', 'wt') as fout:
             start = True
         length, outTxt, srcTxt, srcLine = tuple(out[i])
         print('(%4d) %04X' % (srcLine, i), outTxt[:8], srcTxt, file=fout)
+        for j in range(length):
+            beg = 2*j; end = beg + 2
+            try:
+                binVal = int(outTxt[beg:end], 16)
+            except:
+                print('\tError: %s' % outTxt[beg:end], 'Line: %d' % srcLine)
+                binVal = 255
+            pgm.append(binVal)
         if len(outTxt) > 8:
             outTxt = outTxt[8:]
             addrs = i + 4
@@ -506,8 +569,16 @@ with open(filename+'.lst', 'wt') as fout:
                 addrs += 32
 
 '''
+    Write Binary Progam Image
+'''
+
+with open(filename+'.bin', 'wb') as fout:
+    fout.write(bytes(pgm))
+    
+'''
     Generate Print File -- Interleave Input File and Output File
 '''
+
 srcLine = 0
 with open(filename+'.lst', 'rt') as lst:
     with open(filename+'.asm', 'rt') as asm:
