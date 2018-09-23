@@ -29,24 +29,6 @@ relative   = ('bpl', 'bmi', 'bvc', 'bvs', 'bcc', 'bcs', 'bne', 'beq', \
               'jra', \
               'phr', 'csr', )
 
-zeroPage = {'zp'   : 'zp',   'zpI'    : 'zpI',   'zpII'   : 'zpII',
-            'zpX'  : 'zpX',  'zpXI'   : 'zpXI',  'zpXII'  : 'zpXII',
-            'zpY'  : 'zpY',  'zpIY'   : 'zpIY',  'zpIIY'  : 'zpIIY',
-            'zpS'  : 'zpS',  'zpSI'   : 'zpSI',  'zpSII'  : 'zpSII',
-                             'zpSIY'  : 'zpSIY', 'zpSIIY' : 'zpSIIY',
-            'zpA'  : 'zpA',  'zpAI'   : 'zpAI',  'zpAII'  : 'zpAII',
-                             'zpIA'   : 'zpIA',  'zpIIA'  : 'zpIIA',
-                             'zpSIA'  : 'zpSIA', 'zpSIIA' : 'zpSIIA',
-            'ipp' : 'ipp',   'ippI'   : 'ippI', }
-
-absolute = {'abs'  : 'abs',  'absI'   : 'absI',  'absII'  : 'absII',
-            'absX' : 'absX', 'absXI'  : 'absXI', 'absXII' : 'absXII',
-            'absY' : 'absY', 'absIY'  : 'absIY',
-            'absS' : 'absS', 'absSI'  : 'absSI', 'absSII' : 'absSII',
-                             'absSIY' : 'absSIY',
-            'absA' : 'absA', 'absAI'  : 'absAI', 'absAII' : 'absAII',
-                             'absSIA' : 'absSIA', }
-
 opcodes = dict()
 
 opcodes = loadOpcodeTable(opcodes,genOpcodeLst=True) # Load default opcode table
@@ -548,15 +530,15 @@ with open(filename+'.lst', 'wt') as fout:
             prevLen = out[i][0]
             start = True
         length, outTxt, srcTxt, srcLine = tuple(out[i])
-        print('(%4d) %04X' % (srcLine, i), outTxt[:8], srcTxt, file=fout)
         for j in range(length):
-            beg = 2*j; end = beg + 2
+            beg = 2 * j; end = beg + 2
             try:
                 binVal = int(outTxt[beg:end], 16)
             except:
                 print('\tError: %s' % outTxt[beg:end], 'Line: %d' % srcLine)
                 binVal = 255
             pgm.append(binVal)
+        print('(%4d) %04X' % (srcLine, i), outTxt[:8], srcTxt, file=fout)
         if len(outTxt) > 8:
             outTxt = outTxt[8:]
             addrs = i + 4

@@ -9,8 +9,6 @@ maxOpDataLen = int(0)
 with open(filename, 'rt') as finp:
     opcodeTbl = finp.readlines()
     
-print(len(opcodeTbl))
-
 for line in opcodeTbl:
     fld = line.split()
     opcode = fld[0]
@@ -19,7 +17,7 @@ for line in opcodeTbl:
     opDat  = fld[3]
     
     addrMd = fld[0].split('_')[1]
-    entry  = list([fld[0], fld[1], fld[2], fld[3]])
+    entry  = list([opcode, opLen, dtLen, opDat])
     
     if addrMd in addrMdTbl:
         addrMdTbl[addrMd].append(entry)
@@ -34,9 +32,34 @@ for line in opcodeTbl:
     lenOpData = len(opDat)
     if maxOpDataLen < lenOpData: maxOpDataLen = lenOpData
 
-print(len(addrMdTbl.keys()))
+#with open('OpcodeTblByAddrModeKeys.txt', 'wt') as fout:
+#    for key in addrMdTbl.keys():
+#        print(key, file=fout)
 
-for key in addrMdTbl:
-    print('%*s' % (maxAddrMdLen, key), ':', len(addrMdTbl[key]))
-    for i in range(len(addrMdTbl[key])):
-        print(' '*maxAddrMdLen, ':', '%3d' % i, addrMdTbl[key][i])
+keys = list()
+with open('SortedAddrModeKeys.txt', 'rt') as finp:
+    while True:
+        line = finp.readline()
+        if line == '':
+            break
+        else: keys.append(line[:-1])
+
+print('-'*80)
+print(len(addrMdTbl.keys()), len(opcodeTbl), len(keys))
+print('-'*80)
+
+numInstructions = int()
+for key in keys:
+    print('%-*s' % (maxAddrMdLen, key), ':', '%-3d' % len(addrMdTbl[key]))
+    addrsModeListLen = len(addrMdTbl[key])
+    numInstructions += addrsModeListLen
+    for i in range(addrsModeListLen):
+        opcode, opLen, dtLen, opDat = addrMdTbl[key][i]
+        print(' '*maxAddrMdLen, ':', 
+              '%-3d' % i, 
+              '[%-*s, %d, %d, %*s]' % (maxOpcodeLen, opcode,
+                                       int(opLen),
+                                       int(dtLen),
+                                       maxOpDataLen, opDat))
+    print('-'*80)
+print(numInstructions)
