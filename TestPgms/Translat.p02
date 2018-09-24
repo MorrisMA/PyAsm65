@@ -328,15 +328,13 @@
  427 	adj #-8
  431 	lda.w part_008,X
  432 	pha.w
- 433 	lda #100
- 434 	pha.w
+ 433 	psh.w #100
  435 	jsr _idiv
  436 	adj #4
  437 	sta.w hundredsdigit_009,X
  439 	lda.w part_008,X
  440 	pha.w
- 441 	lda #100
- 442 	pha.w
+ 441 	psh.w #100
  443 	jsr _idiv
  444 	adj #4
  445 	swp a
@@ -408,15 +406,13 @@
  523 L_108
  525 	lda.w tenspart_010,X
  526 	pha.w
- 527 	lda #10
- 528 	pha.w
+ 527 	psh.w #10
  529 	jsr _idiv
  530 	adj #4
  531 	sta.w tensdigit_011,X
  533 	lda.w tenspart_010,X
  534 	pha.w
- 535 	lda #10
- 536 	pha.w
+ 535 	psh.w #10
  537 	jsr _idiv
  538 	adj #4
  539 	swp a
@@ -476,15 +472,13 @@
  600 	adj #-4
  604 	lda.w n_004,X
  605 	pha.w
- 606 	lda.w #1000
- 607 	pha.w
+ 606 	psh.w #1000
  608 	jsr _idiv
  609 	adj #4
  610 	sta.w partbefore_005,X
  612 	lda.w n_004,X
  613 	pha.w
- 614 	lda.w #1000
- 615 	pha.w
+ 614 	psh.w #1000
  616 	jsr _idiv
  617 	adj #4
  618 	swp a
@@ -552,8 +546,7 @@
  695 	sta.w 0,I++
  697 	lda.w number_002
  698 	pha.w
- 699 	lda #6
- 700 	pha.w
+ 699 	psh.w #6
  701 	jsr _iwrite
  702 	adj #4
  703 	psh.w #S_127
@@ -605,10 +598,8 @@
  755 	psh.w #25
  756 	jsr _swrite
  757 	adj #6
- 758 	lda.w #30000
- 759 	pha.w
- 760 	lda #1
- 761 	pha.w
+ 758 	psh.w #30000
+ 760 	psh.w #1
  762 	jsr _iwrite
  763 	adj #4
  766 	jmp L_137
@@ -703,4 +694,3 @@
  866 _bss_end .byt 1
  867 _stk .byt 1023
  868 _stk_top .byt 1
- 870 	.end

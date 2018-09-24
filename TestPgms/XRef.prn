@@ -1,3 +1,10 @@
+(   1)                  ; ;    1: PROGRAM xref (input, output);
+(   2)                  ; 	.stk 1024
+(   3)                  ; 	.cod 512
+(   4)                  ; STATIC_LINK .equ +5
+(   5)                  ; RETURN_VALUE .equ -3
+(   6)                  ; HIGH_RETURN_VALUE .equ -1
+(   7)                  ; _start
 (   8) 0200 ABBA        ; 	tsx.w
 (   9) 0202 CBA2D94E    ; 	lds.w #_stk_top
 (  10) 0206 9C460C      ; 	stz _bss_start
@@ -8,18 +15,87 @@
 (  15) 0216 ABE9460C    ; 	sbc.w #_bss_start
 (  16) 021A 540F        ; 	mov #15
 (  17) 021C 4C4D0A      ; 	jmp _pc65_main
+(  18)                  ; ;    2: 
+(  19)                  ; ;    3:     {Generate a cross-reference listing from a text file.}
+(  20)                  ; ;    4: 
+(  21)                  ; ;    5: CONST
+(  22)                  ; ;    6:     maxwordlen       =   20;
+(  23)                  ; ;    7:     wordtablesize    =  500;
+(  24)                  ; ;    8:     numbertablesize  = 1000;
+(  25)                  ; ;    9:     maxlinenumber    =  999;
+(  26)                  ; ;   10: 
+(  27)                  ; ;   11: TYPE
+(  28)                  ; ;   12:     charindex        = 1..maxwordlen;
+(  29)                  ; ;   13:     wordtableindex   = 1..wordtablesize;
+(  30)                  ; ;   14:     numbertableindex = 0..numbertablesize;
+(  31)                  ; ;   15:     linenumbertype   = 1..maxlinenumber;
+(  32)                  ; ;   16: 
+(  33)                  ; ;   17:     wordtype         = ARRAY [charindex] OF char;  {string type}
+(  34)                  ; ;   18: 
+(  35)                  ; ;   19:     wordentrytype    = RECORD  {entry in word table}
+(  36)                  ; ;   20:                word : wordtype; {word string}
+(  37)                  ; word_002	.equ +0
+(  38)                  ; ;   21:                firstnumberindex,    {head and tail of    }
+(  39)                  ; ;   22:                lastnumberindex      {  linked number list}
+(  40)                  ; ;   23:                    : numbertableindex;
+(  41)                  ; firstnumberindex_003	.equ +20
+(  42)                  ; lastnumberindex_004	.equ +22
+(  43)                  ; ;   24:                END;
+(  44)                  ; ;   25: 
+(  45)                  ; ;   26:     numberentrytype  = RECORD  {entry in number table}
+(  46)                  ; ;   27:                number                   {line number}
+(  47)                  ; ;   28:                    : linenumbertype;
+(  48)                  ; number_005	.equ +0
+(  49)                  ; ;   29:                nextindex                {index of next   }
+(  50)                  ; ;   30:                    : numbertableindex;  {  in linked list}
+(  51)                  ; nextindex_006	.equ +2
+(  52)                  ; ;   31:                END;
+(  53)                  ; ;   32: 
+(  54)                  ; ;   33:     wordtabletype    = ARRAY [wordtableindex]   OF wordentrytype;
+(  55)                  ; ;   34:     numbertabletype  = ARRAY [numbertableindex] OF numberentrytype;
+(  56)                  ; ;   35: 
+(  57)                  ; ;   36: VAR
+(  58)                  ; ;   37:     wordtable                      : wordtabletype;
+(  59)                  ; ;   38:     numbertable                    : numbertabletype;
+(  60)                  ; ;   39:     nextwordindex              : wordtableindex;
+(  61)                  ; ;   40:     nextnumberindex                : numbertableindex;
+(  62)                  ; ;   41:     linenumber                     : linenumbertype;
+(  63)                  ; ;   42:     wordtablefull, numbertablefull : boolean;
+(  64)                  ; ;   43:     newline, gotword               : boolean;
+(  65)                  ; ;   44: 
+(  66)                  ; ;   45: 
+(  67)                  ; ;   46: FUNCTION nextchar : char;
+(  68)                  ; ;   47: 
+(  69)                  ; ;   48:     {Fetch and echo the next character.
+(  70)                  ; ;   49:      Print the line number before each new line.}
+(  71)                  ; ;   50: 
+(  72)                  ; ;   51:     CONST
+(  73)                  ; ;   52:     blank = ' ';
+(  74)                  ; ;   53: 
+(  75)                  ; ;   54:     VAR
+(  76)                  ; ;   55:     ch : char;
+(  77)                  ; ;   56: 
+(  78)                  ; ;   57:     BEGIN
+(  79)                  ; ch_017 .equ -5
+(  80)                  ; nextchar_016 .sub
 (  81) 021F ABDA        ; 	phx.w
 (  82) 0221 ABBA        ; 	tsx.w
 (  83) 0223 C2FC        ; 	adj #-4
 (  84) 0225 C2FE        ; 	adj #-2
+(  85)                  ; ;   58:     newline := eoln;
 (  86) 0227 20FFFF      ; 	jsr _eol
 (  87) 022A AB8DD54A    ; 	sta.w newline_014
+(  88)                  ; ;   59:     IF newline THEN BEGIN
 (  89) 022E ABADD54A    ; 	lda.w newline_014
 (  90) 0232 ABC90100    ; 	cmp.w #1
 (  91) 0236 F003        ; 	beq L_018
 (  92) 0238 4C7302      ; 	jmp L_019
+(  93)                  ; L_018
+(  94)                  ; ;   60:         readln;
 (  95) 023B 20FFFF      ; 	jsr _readln
+(  96)                  ; ;   61:         writeln;
 (  97) 023E 20FFFF      ; 	jsr _writeln
+(  98)                  ; ;   62:         linenumber := linenumber + 1;
 (  99) 0241 ABADCF4A    ; 	lda.w linenumber_011
 ( 100) 0245 AB48        ; 	pha.w
 ( 101) 0247 A901        ; 	lda #1
@@ -27,9 +103,11 @@
 ( 103) 024A CB7501      ; 	adc.w 1,S
 ( 104) 024D C202        ; 	adj #2
 ( 105) 024F AB8DCF4A    ; 	sta.w linenumber_011
+( 106)                  ; ;   63:         write(linenumber:5, ' : ');
 ( 107) 0253 ABADCF4A    ; 	lda.w linenumber_011
 ( 108) 0257 AB48        ; 	pha.w
 ( 109) 0259 ABE20500    ; 	psh.w #5
+( 110)                  ; 	pha.w
 ( 111) 025D 20FFFF      ; 	jsr _iwrite
 ( 112) 0260 C204        ; 	adj #4
 ( 113) 0262 ABE2430C    ; 	psh.w #S_020
@@ -37,6 +115,9 @@
 ( 115) 026A ABE20300    ; 	psh.w #3
 ( 116) 026E 20FFFF      ; 	jsr _swrite
 ( 117) 0271 C206        ; 	adj #6
+( 118)                  ; ;   64:     END;
+( 119)                  ; L_019
+( 120)                  ; ;   65:     IF newline OR eof THEN BEGIN
 ( 121) 0273 ABADD54A    ; 	lda.w newline_014
 ( 122) 0277 AB48        ; 	pha.w
 ( 123) 0279 20FFFF      ; 	jsr _eof
@@ -45,9 +126,15 @@
 ( 126) 0281 ABC90100    ; 	cmp.w #1
 ( 127) 0285 F003        ; 	beq L_021
 ( 128) 0287 4C9202      ; 	jmp L_022
+( 129)                  ; L_021
+( 130)                  ; ;   66:         ch := blank;
 ( 131) 028A A920        ; 	lda #32
 ( 132) 028C 8DFBFF      ; 	sta ch_017
+( 133)                  ; ;   67:     END
+( 134)                  ; ;   68:     ELSE BEGIN
 ( 135) 028F 4CAE02      ; 	jmp L_023
+( 136)                  ; L_022
+( 137)                  ; ;   69:         read(ch);
 ( 138) 0292 AB8A        ; 	txa.w
 ( 139) 0294 18          ; 	clc
 ( 140) 0295 AB69FBFF    ; 	adc.w #ch_017
@@ -55,22 +142,38 @@
 ( 142) 029B 20FFFF      ; 	jsr _cread
 ( 143) 029E 6B          ; 	pli
 ( 144) 029F 8300        ; 	sta 0,I++
+( 145)                  ; ;   70:         write(ch);
 ( 146) 02A1 B5FB        ; 	lda ch_017,X
 ( 147) 02A3 AB48        ; 	pha.w
 ( 148) 02A5 ABE20000    ; 	psh.w #0
 ( 149) 02A9 20FFFF      ; 	jsr _cwrite
 ( 150) 02AC C204        ; 	adj #4
+( 151)                  ; ;   71:     END;
+( 152)                  ; L_023
+( 153)                  ; ;   72:     nextchar := ch;
 ( 154) 02AE B5FB        ; 	lda ch_017,X
 ( 155) 02B0 A8          ; 	tay
 ( 156) 02B1 98          ; 	tya
 ( 157) 02B2 AB95FD      ; 	sta.w RETURN_VALUE,X
+( 158)                  ; ;   73:     END;
 ( 159) 02B5 ABB5FD      ; 	lda.w RETURN_VALUE,X
 ( 160) 02B8 AB9A        ; 	txs.w
 ( 161) 02BA ABFA        ; 	plx.w
 ( 162) 02BC 60          ; 	rts
+( 163)                  ; 	.end nextchar_016
+( 164)                  ; ;   74: 
+( 165)                  ; ;   75: 
+( 166)                  ; ;   76: FUNCTION isletter (ch : char) : boolean;
+( 167)                  ; ;   77: 
+( 168)                  ; ;   78:     {Return true if the character is a letter, false otherwise.}
+( 169)                  ; ;   79: 
+( 170)                  ; ;   80:     BEGIN
+( 171)                  ; ch_025 .equ +7
+( 172)                  ; isletter_024 .sub
 ( 173) 02BD ABDA        ; 	phx.w
 ( 174) 02BF ABBA        ; 	tsx.w
 ( 175) 02C1 C2FC        ; 	adj #-4
+( 176)                  ; ;   81:     isletter :=    ((ch >= 'a') AND (ch <= 'z'))
 ( 177) 02C3 B507        ; 	lda ch_025,X
 ( 178) 02C5 AB48        ; 	pha.w
 ( 179) 02C7 A961        ; 	lda #97
@@ -82,6 +185,7 @@
 ( 185) 02D4 28          ; 	plp
 ( 186) 02D5 AB5002      ; 	bge L_026
 ( 187) 02D8 A900        ; 	lda #0
+( 188)                  ; L_026
 ( 189) 02DA AB48        ; 	pha.w
 ( 190) 02DC B507        ; 	lda ch_025,X
 ( 191) 02DE AB48        ; 	pha.w
@@ -94,8 +198,10 @@
 ( 198) 02ED 28          ; 	plp
 ( 199) 02EE AB3002      ; 	ble L_027
 ( 200) 02F1 A900        ; 	lda #0
+( 201)                  ; L_027
 ( 202) 02F3 CB3501      ; 	and.w 1,S
 ( 203) 02F6 C202        ; 	adj #2
+( 204)                  ; ;   82:             OR ((ch >= 'A') AND (ch <= 'Z'));
 ( 205) 02F8 AB48        ; 	pha.w
 ( 206) 02FA B507        ; 	lda ch_025,X
 ( 207) 02FC AB48        ; 	pha.w
@@ -108,6 +214,7 @@
 ( 214) 030B 28          ; 	plp
 ( 215) 030C AB5002      ; 	bge L_028
 ( 216) 030F A900        ; 	lda #0
+( 217)                  ; L_028
 ( 218) 0311 AB48        ; 	pha.w
 ( 219) 0313 B507        ; 	lda ch_025,X
 ( 220) 0315 AB48        ; 	pha.w
@@ -120,30 +227,60 @@
 ( 227) 0324 28          ; 	plp
 ( 228) 0325 AB3002      ; 	ble L_029
 ( 229) 0328 A900        ; 	lda #0
+( 230)                  ; L_029
 ( 231) 032A CB3501      ; 	and.w 1,S
 ( 232) 032D C202        ; 	adj #2
 ( 233) 032F CB1501      ; 	ora.w 1,S
 ( 234) 0332 C202        ; 	adj #2
 ( 235) 0334 AB95FD      ; 	sta.w RETURN_VALUE,X
+( 236)                  ; ;   83:     END;
 ( 237) 0337 ABB5FD      ; 	lda.w RETURN_VALUE,X
 ( 238) 033A AB9A        ; 	txs.w
 ( 239) 033C ABFA        ; 	plx.w
 ( 240) 033E 60          ; 	rts
+( 241)                  ; 	.end isletter_024
+( 242)                  ; ;   84: 
+( 243)                  ; ;   85: 
+( 244)                  ; ;   86: PROCEDURE readword (VAR buffer : wordtype);
+( 245)                  ; ;   87: 
+( 246)                  ; ;   88:     {Extract the next word and place it into the buffer.}
+( 247)                  ; ;   89: 
+( 248)                  ; ;   90:     CONST
+( 249)                  ; ;   91:     blank = ' ';
+( 250)                  ; ;   92: 
+( 251)                  ; ;   93:     VAR
+( 252)                  ; ;   94:     charcount : 0..maxwordlen;
+( 253)                  ; ;   95:     ch : char;
+( 254)                  ; ;   96: 
+( 255)                  ; ;   97:     BEGIN
+( 256)                  ; buffer_031 .equ +7
+( 257)                  ; charcount_032 .equ -1
+( 258)                  ; ch_033 .equ -3
+( 259)                  ; readword_030 .sub
 ( 260) 033F ABDA        ; 	phx.w
 ( 261) 0341 ABBA        ; 	tsx.w
 ( 262) 0343 C2FC        ; 	adj #-4
+( 263)                  ; ;   98:     gotword := false;
 ( 264) 0345 A900        ; 	lda #0
 ( 265) 0347 AB8DD74A    ; 	sta.w gotword_015
+( 266)                  ; ;   99: 
+( 267)                  ; ;  100:     {Skip over any preceding non-letters.}
+( 268)                  ; ;  101:     IF NOT eof THEN BEGIN
 ( 269) 034B 20FFFF      ; 	jsr _eof
 ( 270) 034E 4901        ; 	eor #1
 ( 271) 0350 ABC90100    ; 	cmp.w #1
 ( 272) 0354 F003        ; 	beq L_034
 ( 273) 0356 4C8703      ; 	jmp L_035
+( 274)                  ; L_034
+( 275)                  ; ;  102:         REPEAT
+( 276)                  ; L_036
+( 277)                  ; ;  103:         ch := nextchar;
 ( 278) 0359 ABB505      ; 	lda.w STATIC_LINK,X
 ( 279) 035C AB48        ; 	pha.w
 ( 280) 035E 201F02      ; 	jsr nextchar_016
 ( 281) 0361 C202        ; 	adj #2
 ( 282) 0363 8DFDFF      ; 	sta ch_033
+( 283)                  ; ;  104:         UNTIL eof OR isletter(ch);
 ( 284) 0366 20FFFF      ; 	jsr _eof
 ( 285) 0369 AB48        ; 	pha.w
 ( 286) 036B B5FD        ; 	lda ch_033,X
@@ -157,13 +294,26 @@
 ( 294) 037E ABC90100    ; 	cmp.w #1
 ( 295) 0382 F003        ; 	beq L_037
 ( 296) 0384 4C5903      ; 	jmp L_036
+( 297)                  ; L_037
+( 298)                  ; ;  105:     END;
+( 299)                  ; L_035
+( 300)                  ; ;  106: 
+( 301)                  ; ;  107:     {Find a letter?}
+( 302)                  ; ;  108:     IF NOT eof THEN BEGIN
 ( 303) 0387 20FFFF      ; 	jsr _eof
 ( 304) 038A 4901        ; 	eor #1
 ( 305) 038C ABC90100    ; 	cmp.w #1
 ( 306) 0390 F003        ; 	beq L_038
 ( 307) 0392 4CA204      ; 	jmp L_039
+( 308)                  ; L_038
+( 309)                  ; ;  109:         charcount := 0;
 ( 310) 0395 A900        ; 	lda #0
 ( 311) 0397 AB95FF      ; 	sta.w charcount_032,X
+( 312)                  ; ;  110: 
+( 313)                  ; ;  111:         {Place the word's letters into the buffer.
+( 314)                  ; ;  112:          Downshift uppercase letters.}
+( 315)                  ; ;  113:         WHILE isletter(ch) DO BEGIN
+( 316)                  ; L_040
 ( 317) 039A B5FD        ; 	lda ch_033,X
 ( 318) 039C AB48        ; 	pha.w
 ( 319) 039E ABB505      ; 	lda.w STATIC_LINK,X
@@ -173,6 +323,8 @@
 ( 323) 03A8 ABC90100    ; 	cmp.w #1
 ( 324) 03AC F003        ; 	beq L_041
 ( 325) 03AE 4C6204      ; 	jmp L_042
+( 326)                  ; L_041
+( 327)                  ; ;  114:         IF charcount < maxwordlen THEN BEGIN
 ( 328) 03B1 ABB5FF      ; 	lda.w charcount_032,X
 ( 329) 03B4 AB48        ; 	pha.w
 ( 330) 03B6 A914        ; 	lda #20
@@ -184,9 +336,12 @@
 ( 336) 03C3 28          ; 	plp
 ( 337) 03C4 AB7002      ; 	blt L_045
 ( 338) 03C7 A900        ; 	lda #0
+( 339)                  ; L_045
 ( 340) 03C9 ABC90100    ; 	cmp.w #1
 ( 341) 03CD F003        ; 	beq L_043
 ( 342) 03CF 4C5204      ; 	jmp L_044
+( 343)                  ; L_043
+( 344)                  ; ;  115:             IF (ch >= 'A') AND (ch <= 'Z') THEN BEGIN
 ( 345) 03D2 B5FD        ; 	lda ch_033,X
 ( 346) 03D4 AB48        ; 	pha.w
 ( 347) 03D6 A941        ; 	lda #65
@@ -198,6 +353,7 @@
 ( 353) 03E3 28          ; 	plp
 ( 354) 03E4 AB5002      ; 	bge L_048
 ( 355) 03E7 A900        ; 	lda #0
+( 356)                  ; L_048
 ( 357) 03E9 AB48        ; 	pha.w
 ( 358) 03EB B5FD        ; 	lda ch_033,X
 ( 359) 03ED AB48        ; 	pha.w
@@ -210,14 +366,18 @@
 ( 366) 03FC 28          ; 	plp
 ( 367) 03FD AB3002      ; 	ble L_049
 ( 368) 0400 A900        ; 	lda #0
+( 369)                  ; L_049
 ( 370) 0402 CB3501      ; 	and.w 1,S
 ( 371) 0405 C202        ; 	adj #2
 ( 372) 0407 ABC90100    ; 	cmp.w #1
 ( 373) 040B F003        ; 	beq L_046
 ( 374) 040D 4C2C04      ; 	jmp L_047
+( 375)                  ; L_046
+( 376)                  ; ;  116:             ch := chr(ord(ch) + (ord('a') - ord('A')));
 ( 377) 0410 B5FD        ; 	lda ch_033,X
 ( 378) 0412 AB48        ; 	pha.w
 ( 379) 0414 ABE26100    ; 	psh.w #97
+( 380)                  ; 	pha.w
 ( 381) 0418 A941        ; 	lda #65
 ( 382) 041A CB4401      ; 	xma.w 1,S
 ( 383) 041D 38          ; 	sec
@@ -227,6 +387,9 @@
 ( 387) 0424 CB7501      ; 	adc.w 1,S
 ( 388) 0427 C202        ; 	adj #2
 ( 389) 0429 8DFDFF      ; 	sta ch_033
+( 390)                  ; ;  117:             END;
+( 391)                  ; L_047
+( 392)                  ; ;  118:             charcount := charcount + 1;
 ( 393) 042C ABB5FF      ; 	lda.w charcount_032,X
 ( 394) 042F AB48        ; 	pha.w
 ( 395) 0431 A901        ; 	lda #1
@@ -234,6 +397,7 @@
 ( 397) 0434 CB7501      ; 	adc.w 1,S
 ( 398) 0437 C202        ; 	adj #2
 ( 399) 0439 AB95FF      ; 	sta.w charcount_032,X
+( 400)                  ; ;  119:             buffer[charcount] := ch;
 ( 401) 043C ABB507      ; 	lda.w buffer_031,X
 ( 402) 043F AB48        ; 	pha.w
 ( 403) 0441 ABB5FF      ; 	lda.w charcount_032,X
@@ -244,12 +408,20 @@
 ( 408) 044D B5FD        ; 	lda ch_033,X
 ( 409) 044F 6B          ; 	pli
 ( 410) 0450 8300        ; 	sta 0,I++
+( 411)                  ; ;  120:         END;
+( 412)                  ; L_044
+( 413)                  ; ;  121:         ch := nextchar;
 ( 414) 0452 ABB505      ; 	lda.w STATIC_LINK,X
 ( 415) 0455 AB48        ; 	pha.w
 ( 416) 0457 201F02      ; 	jsr nextchar_016
 ( 417) 045A C202        ; 	adj #2
 ( 418) 045C 8DFDFF      ; 	sta ch_033
+( 419)                  ; ;  122:         END;
 ( 420) 045F 4C9A03      ; 	jmp L_040
+( 421)                  ; L_042
+( 422)                  ; ;  123: 
+( 423)                  ; ;  124:         {Pad the rest of the buffer with blanks.}
+( 424)                  ; ;  125:         FOR charcount := charcount + 1 TO maxwordlen DO BEGIN
 ( 425) 0462 ABB5FF      ; 	lda.w charcount_032,X
 ( 426) 0465 AB48        ; 	pha.w
 ( 427) 0467 A901        ; 	lda #1
@@ -257,10 +429,13 @@
 ( 429) 046A CB7501      ; 	adc.w 1,S
 ( 430) 046D C202        ; 	adj #2
 ( 431) 046F AB95FF      ; 	sta.w charcount_032,X
+( 432)                  ; L_050
 ( 433) 0472 A914        ; 	lda #20
 ( 434) 0474 ABD5FF      ; 	cmp.w charcount_032,X
 ( 435) 0477 AB5003      ; 	bge L_051
 ( 436) 047A 4C9904      ; 	jmp L_052
+( 437)                  ; L_051
+( 438)                  ; ;  126:         buffer[charcount] := blank;
 ( 439) 047D ABB507      ; 	lda.w buffer_031,X
 ( 440) 0480 AB48        ; 	pha.w
 ( 441) 0482 ABB5FF      ; 	lda.w charcount_032,X
@@ -271,17 +446,38 @@
 ( 446) 048E A920        ; 	lda #32
 ( 447) 0490 6B          ; 	pli
 ( 448) 0491 8300        ; 	sta 0,I++
+( 449)                  ; ;  127:         END;
 ( 450) 0493 ABF6FF      ; 	inc.w charcount_032,X
 ( 451) 0496 4C7204      ; 	jmp L_050
+( 452)                  ; L_052
 ( 453) 0499 ABD6FF      ; 	dec.w charcount_032,X
+( 454)                  ; ;  128: 
+( 455)                  ; ;  129:         gotword := true;
 ( 456) 049C A901        ; 	lda #1
 ( 457) 049E AB8DD74A    ; 	sta.w gotword_015
+( 458)                  ; ;  130:     END;
+( 459)                  ; L_039
+( 460)                  ; ;  131:     END;
 ( 461) 04A2 AB9A        ; 	txs.w
 ( 462) 04A4 ABFA        ; 	plx.w
 ( 463) 04A6 60          ; 	rts
+( 464)                  ; 	.end readword_030
+( 465)                  ; ;  132: 
+( 466)                  ; ;  133: 
+( 467)                  ; ;  134: FUNCTION appendlinenumber(lastnumberindex : numbertableindex)
+( 468)                  ; ;  135:          : numbertableindex;
+( 469)                  ; ;  136: 
+( 470)                  ; ;  137:     {Append the current line number to the end of the current word's
+( 471)                  ; ;  138:      linked list.  Lastnumberindex is 0 if this is the word's first
+( 472)                  ; ;  139:      number; else, it is the index of the last number in the list.}
+( 473)                  ; ;  140: 
+( 474)                  ; ;  141:     BEGIN
+( 475)                  ; lastnumberindex_054 .equ +7
+( 476)                  ; appendlinenumber_053 .sub
 ( 477) 04A7 ABDA        ; 	phx.w
 ( 478) 04A9 ABBA        ; 	tsx.w
 ( 479) 04AB C2FC        ; 	adj #-4
+( 480)                  ; ;  142:         IF nextnumberindex < numbertablesize THEN BEGIN
 ( 481) 04AD ABADCD4A    ; 	lda.w nextnumberindex_010
 ( 482) 04B1 AB48        ; 	pha.w
 ( 483) 04B3 ABA9E803    ; 	lda.w #1000
@@ -293,9 +489,12 @@
 ( 489) 04C2 28          ; 	plp
 ( 490) 04C3 AB7002      ; 	blt L_057
 ( 491) 04C6 A900        ; 	lda #0
+( 492)                  ; L_057
 ( 493) 04C8 ABC90100    ; 	cmp.w #1
 ( 494) 04CC F003        ; 	beq L_055
 ( 495) 04CE 4C7605      ; 	jmp L_056
+( 496)                  ; L_055
+( 497)                  ; ;  143:         IF lastnumberindex <> 0 THEN BEGIN
 ( 498) 04D1 ABB507      ; 	lda.w lastnumberindex_054,X
 ( 499) 04D4 AB48        ; 	pha.w
 ( 500) 04D6 A900        ; 	lda #0
@@ -307,9 +506,12 @@
 ( 506) 04E3 28          ; 	plp
 ( 507) 04E4 D002        ; 	bne L_060
 ( 508) 04E6 A900        ; 	lda #0
+( 509)                  ; L_060
 ( 510) 04E8 ABC90100    ; 	cmp.w #1
 ( 511) 04EC F003        ; 	beq L_058
 ( 512) 04EE 4C1405      ; 	jmp L_059
+( 513)                  ; L_058
+( 514)                  ; ;  144:             numbertable[lastnumberindex].nextindex := nextnumberindex;
 ( 515) 04F1 ABE2273B    ; 	psh.w #numbertable_008
 ( 516) 04F5 ABB507      ; 	lda.w lastnumberindex_054,X
 ( 517) 04F8 AB0A        ; 	asl.w a
@@ -324,6 +526,9 @@
 ( 526) 050C ABADCD4A    ; 	lda.w nextnumberindex_010
 ( 527) 0510 6B          ; 	pli
 ( 528) 0511 AB8300      ; 	sta.w 0,I++
+( 529)                  ; ;  145:         END;
+( 530)                  ; L_059
+( 531)                  ; ;  146:         numbertable[nextnumberindex].number    := linenumber;
 ( 532) 0514 ABE2273B    ; 	psh.w #numbertable_008
 ( 533) 0518 ABADCD4A    ; 	lda.w nextnumberindex_010
 ( 534) 051C AB0A        ; 	asl.w a
@@ -338,6 +543,7 @@
 ( 543) 0530 ABADCF4A    ; 	lda.w linenumber_011
 ( 544) 0534 6B          ; 	pli
 ( 545) 0535 AB8300      ; 	sta.w 0,I++
+( 546)                  ; ;  147:         numbertable[nextnumberindex].nextindex := 0;
 ( 547) 0538 ABE2273B    ; 	psh.w #numbertable_008
 ( 548) 053C ABADCD4A    ; 	lda.w nextnumberindex_010
 ( 549) 0540 AB0A        ; 	asl.w a
@@ -352,8 +558,10 @@
 ( 558) 0554 A900        ; 	lda #0
 ( 559) 0556 6B          ; 	pli
 ( 560) 0557 AB8300      ; 	sta.w 0,I++
+( 561)                  ; ;  148:         appendlinenumber := nextnumberindex;
 ( 562) 055A ABADCD4A    ; 	lda.w nextnumberindex_010
 ( 563) 055E AB95FD      ; 	sta.w RETURN_VALUE,X
+( 564)                  ; ;  149:         nextnumberindex  := nextnumberindex + 1;
 ( 565) 0561 ABADCD4A    ; 	lda.w nextnumberindex_010
 ( 566) 0565 AB48        ; 	pha.w
 ( 567) 0567 A901        ; 	lda #1
@@ -361,22 +569,49 @@
 ( 569) 056A CB7501      ; 	adc.w 1,S
 ( 570) 056D C202        ; 	adj #2
 ( 571) 056F AB8DCD4A    ; 	sta.w nextnumberindex_010
+( 572)                  ; ;  150:         END
+( 573)                  ; ;  151:         ELSE BEGIN
 ( 574) 0573 4C8105      ; 	jmp L_061
+( 575)                  ; L_056
+( 576)                  ; ;  152:             numbertablefull  := true;
 ( 577) 0576 A901        ; 	lda #1
 ( 578) 0578 AB8DD34A    ; 	sta.w numbertablefull_013
+( 579)                  ; ;  153:             appendlinenumber := 0;
 ( 580) 057C A900        ; 	lda #0
 ( 581) 057E AB95FD      ; 	sta.w RETURN_VALUE,X
+( 582)                  ; ;  154:         END;
+( 583)                  ; L_061
+( 584)                  ; ;  155:     END;
 ( 585) 0581 ABB5FD      ; 	lda.w RETURN_VALUE,X
 ( 586) 0584 AB9A        ; 	txs.w
 ( 587) 0586 ABFA        ; 	plx.w
 ( 588) 0588 60          ; 	rts
+( 589)                  ; 	.end appendlinenumber_053
+( 590)                  ; ;  156: 
+( 591)                  ; ;  157: 
+( 592)                  ; ;  158: PROCEDURE enterword;
+( 593)                  ; ;  159: 
+( 594)                  ; ;  160:     {Enter the current word into the word table.  Each word is first
+( 595)                  ; ;  161:      read into the end of the table.}
+( 596)                  ; ;  162: 
+( 597)                  ; ;  163:     VAR
+( 598)                  ; ;  164:     i : wordtableindex;
+( 599)                  ; ;  165: 
+( 600)                  ; ;  166:     BEGIN
+( 601)                  ; i_063 .equ -1
+( 602)                  ; enterword_062 .sub
 ( 603) 0589 ABDA        ; 	phx.w
 ( 604) 058B ABBA        ; 	tsx.w
 ( 605) 058D C2FE        ; 	adj #-2
+( 606)                  ; ;  167:     {By the time we process a word at the end of an input line,
+( 607)                  ; ;  168:      linenumber has already been incremented, so temporarily
+( 608)                  ; ;  169:      decrement it.}
+( 609)                  ; ;  170:     IF newline THEN linenumber := linenumber - 1;
 ( 610) 058F ABADD54A    ; 	lda.w newline_014
 ( 611) 0593 ABC90100    ; 	cmp.w #1
 ( 612) 0597 F003        ; 	beq L_064
 ( 613) 0599 4CB105      ; 	jmp L_065
+( 614)                  ; L_064
 ( 615) 059C ABADCF4A    ; 	lda.w linenumber_011
 ( 616) 05A0 AB48        ; 	pha.w
 ( 617) 05A2 A901        ; 	lda #1
@@ -385,8 +620,14 @@
 ( 620) 05A8 CBF501      ; 	sbc.w 1,S
 ( 621) 05AB C202        ; 	adj #2
 ( 622) 05AD AB8DCF4A    ; 	sta.w linenumber_011
+( 623)                  ; L_065
+( 624)                  ; ;  171: 
+( 625)                  ; ;  172:     {Search to see if the word has previously been entered.}
+( 626)                  ; ;  173:     i := 1;
 ( 627) 05B1 A901        ; 	lda #1
 ( 628) 05B3 AB95FF      ; 	sta.w i_063,X
+( 629)                  ; ;  174:     WHILE    wordtable[i].word
+( 630)                  ; L_066
 ( 631) 05B6 ABE2470C    ; 	psh.w #wordtable_007
 ( 632) 05BA ABB5FF      ; 	lda.w i_063,X
 ( 633) 05BD AB3A        ; 	dec.w a
@@ -397,6 +638,7 @@
 ( 638) 05CA 18          ; 	clc
 ( 639) 05CB CB7501      ; 	adc.w 1,S
 ( 640) 05CE CB9501      ; 	sta.w 1,S
+( 641)                  ; ;  175:           <> wordtable[nextwordindex].word DO BEGIN
 ( 642) 05D1 AB68        ; 	pla.w
 ( 643) 05D3 18          ; 	clc
 ( 644) 05D4 AB690000    ; 	adc.w #word_002
@@ -423,9 +665,12 @@
 ( 665) 060B 28          ; 	plp
 ( 666) 060C D002        ; 	bne L_069
 ( 667) 060E A900        ; 	lda #0
+( 668)                  ; L_069
 ( 669) 0610 ABC90100    ; 	cmp.w #1
 ( 670) 0614 F003        ; 	beq L_067
 ( 671) 0616 4C2C06      ; 	jmp L_068
+( 672)                  ; L_067
+( 673)                  ; ;  176:         i := i + 1;
 ( 674) 0619 ABB5FF      ; 	lda.w i_063,X
 ( 675) 061C AB48        ; 	pha.w
 ( 676) 061E A901        ; 	lda #1
@@ -433,7 +678,12 @@
 ( 678) 0621 CB7501      ; 	adc.w 1,S
 ( 679) 0624 C202        ; 	adj #2
 ( 680) 0626 AB95FF      ; 	sta.w i_063,X
+( 681)                  ; ;  177:     END;
 ( 682) 0629 4CB605      ; 	jmp L_066
+( 683)                  ; L_068
+( 684)                  ; ;  178: 
+( 685)                  ; ;  179:     {Yes.  Update the previous entry.}
+( 686)                  ; ;  180:     IF i < nextwordindex THEN BEGIN
 ( 687) 062C ABB5FF      ; 	lda.w i_063,X
 ( 688) 062F AB48        ; 	pha.w
 ( 689) 0631 ABADCB4A    ; 	lda.w nextwordindex_009
@@ -445,9 +695,12 @@
 ( 695) 0640 28          ; 	plp
 ( 696) 0641 AB7002      ; 	blt L_072
 ( 697) 0644 A900        ; 	lda #0
+( 698)                  ; L_072
 ( 699) 0646 ABC90100    ; 	cmp.w #1
 ( 700) 064A F003        ; 	beq L_070
 ( 701) 064C 4CAE06      ; 	jmp L_071
+( 702)                  ; L_070
+( 703)                  ; ;  181:         wordtable[i].lastnumberindex :=
 ( 704) 064F ABE2470C    ; 	psh.w #wordtable_007
 ( 705) 0653 ABB5FF      ; 	lda.w i_063,X
 ( 706) 0656 AB3A        ; 	dec.w a
@@ -462,6 +715,7 @@
 ( 715) 066C 18          ; 	clc
 ( 716) 066D AB691600    ; 	adc.w #lastnumberindex_004
 ( 717) 0671 AB48        ; 	pha.w
+( 718)                  ; ;  182:         appendlinenumber(wordtable[i].lastnumberindex);
 ( 719) 0673 ABE2470C    ; 	psh.w #wordtable_007
 ( 720) 0677 ABB5FF      ; 	lda.w i_063,X
 ( 721) 067A AB3A        ; 	dec.w a
@@ -485,7 +739,12 @@
 ( 739) 06A5 C204        ; 	adj #4
 ( 740) 06A7 6B          ; 	pli
 ( 741) 06A8 AB8300      ; 	sta.w 0,I++
+( 742)                  ; ;  183:     END
+( 743)                  ; ;  184: 
+( 744)                  ; ;  185:     {No.  Initialize the entry at the end of the table.}
+( 745)                  ; ;  186:     ELSE IF nextwordindex < wordtablesize THEN BEGIN
 ( 746) 06AB 4C7307      ; 	jmp L_073
+( 747)                  ; L_071
 ( 748) 06AE ABADCB4A    ; 	lda.w nextwordindex_009
 ( 749) 06B2 AB48        ; 	pha.w
 ( 750) 06B4 ABA9F401    ; 	lda.w #500
@@ -497,9 +756,12 @@
 ( 756) 06C3 28          ; 	plp
 ( 757) 06C4 AB7002      ; 	blt L_076
 ( 758) 06C7 A900        ; 	lda #0
+( 759)                  ; L_076
 ( 760) 06C9 ABC90100    ; 	cmp.w #1
 ( 761) 06CD F003        ; 	beq L_074
 ( 762) 06CF 4C6D07      ; 	jmp L_075
+( 763)                  ; L_074
+( 764)                  ; ;  187:         nextwordindex := nextwordindex + 1;
 ( 765) 06D2 ABADCB4A    ; 	lda.w nextwordindex_009
 ( 766) 06D6 AB48        ; 	pha.w
 ( 767) 06D8 A901        ; 	lda #1
@@ -507,6 +769,7 @@
 ( 769) 06DB CB7501      ; 	adc.w 1,S
 ( 770) 06DE C202        ; 	adj #2
 ( 771) 06E0 AB8DCB4A    ; 	sta.w nextwordindex_009
+( 772)                  ; ;  188:         wordtable[i].firstnumberindex := appendlinenumber(0);
 ( 773) 06E4 ABE2470C    ; 	psh.w #wordtable_007
 ( 774) 06E8 ABB5FF      ; 	lda.w i_063,X
 ( 775) 06EB AB3A        ; 	dec.w a
@@ -522,12 +785,14 @@
 ( 785) 0702 AB691400    ; 	adc.w #firstnumberindex_003
 ( 786) 0706 AB48        ; 	pha.w
 ( 787) 0708 ABE20000    ; 	psh.w #0
+( 788)                  ; 	pha.w
 ( 789) 070C ABB505      ; 	lda.w STATIC_LINK,X
 ( 790) 070F AB48        ; 	pha.w
 ( 791) 0711 20A704      ; 	jsr appendlinenumber_053
 ( 792) 0714 C204        ; 	adj #4
 ( 793) 0716 6B          ; 	pli
 ( 794) 0717 AB8300      ; 	sta.w 0,I++
+( 795)                  ; ;  189:         wordtable[i].lastnumberindex :=
 ( 796) 071A ABE2470C    ; 	psh.w #wordtable_007
 ( 797) 071E ABB5FF      ; 	lda.w i_063,X
 ( 798) 0721 AB3A        ; 	dec.w a
@@ -542,6 +807,7 @@
 ( 807) 0737 18          ; 	clc
 ( 808) 0738 AB691600    ; 	adc.w #lastnumberindex_004
 ( 809) 073C AB48        ; 	pha.w
+( 810)                  ; ;  190:         wordtable[i].firstnumberindex;
 ( 811) 073E ABE2470C    ; 	psh.w #wordtable_007
 ( 812) 0742 ABB5FF      ; 	lda.w i_063,X
 ( 813) 0745 AB3A        ; 	dec.w a
@@ -560,13 +826,23 @@
 ( 826) 0763 ABA300      ; 	lda.w 0,I++
 ( 827) 0766 6B          ; 	pli
 ( 828) 0767 AB8300      ; 	sta.w 0,I++
+( 829)                  ; ;  191:     END
+( 830)                  ; ;  192: 
+( 831)                  ; ;  193:     {Oops.  Table overflow!}
+( 832)                  ; ;  194:     ELSE wordtablefull := true;
 ( 833) 076A 4C7307      ; 	jmp L_077
+( 834)                  ; L_075
 ( 835) 076D A901        ; 	lda #1
 ( 836) 076F AB8DD14A    ; 	sta.w wordtablefull_012
+( 837)                  ; L_077
+( 838)                  ; L_073
+( 839)                  ; ;  195: 
+( 840)                  ; ;  196:     IF newline THEN linenumber := linenumber + 1;
 ( 841) 0773 ABADD54A    ; 	lda.w newline_014
 ( 842) 0777 ABC90100    ; 	cmp.w #1
 ( 843) 077B F003        ; 	beq L_078
 ( 844) 077D 4C9207      ; 	jmp L_079
+( 845)                  ; L_078
 ( 846) 0780 ABADCF4A    ; 	lda.w linenumber_011
 ( 847) 0784 AB48        ; 	pha.w
 ( 848) 0786 A901        ; 	lda #1
@@ -574,14 +850,34 @@
 ( 850) 0789 CB7501      ; 	adc.w 1,S
 ( 851) 078C C202        ; 	adj #2
 ( 852) 078E AB8DCF4A    ; 	sta.w linenumber_011
+( 853)                  ; L_079
+( 854)                  ; ;  197:     END;
 ( 855) 0792 AB9A        ; 	txs.w
 ( 856) 0794 ABFA        ; 	plx.w
 ( 857) 0796 60          ; 	rts
+( 858)                  ; 	.end enterword_062
+( 859)                  ; ;  198: 
+( 860)                  ; ;  199: 
+( 861)                  ; ;  200: PROCEDURE sortwords;
+( 862)                  ; ;  201: 
+( 863)                  ; ;  202:     {Sort the words alphabetically.}
+( 864)                  ; ;  203: 
+( 865)                  ; ;  204:     VAR
+( 866)                  ; ;  205:     i, j : wordtableindex;
+( 867)                  ; ;  206:     temp : wordentrytype;
+( 868)                  ; ;  207: 
+( 869)                  ; ;  208:     BEGIN
+( 870)                  ; i_081 .equ -1
+( 871)                  ; j_082 .equ -3
+( 872)                  ; temp_083 .equ -27
+( 873)                  ; sortwords_080 .sub
 ( 874) 0797 ABDA        ; 	phx.w
 ( 875) 0799 ABBA        ; 	tsx.w
 ( 876) 079B C2E4        ; 	adj #-28
+( 877)                  ; ;  209:     FOR i := 1 TO nextwordindex - 2 DO BEGIN
 ( 878) 079D A901        ; 	lda #1
 ( 879) 079F AB95FF      ; 	sta.w i_081,X
+( 880)                  ; L_084
 ( 881) 07A2 ABADCB4A    ; 	lda.w nextwordindex_009
 ( 882) 07A6 AB48        ; 	pha.w
 ( 883) 07A8 A902        ; 	lda #2
@@ -592,6 +888,8 @@
 ( 888) 07B3 ABD5FF      ; 	cmp.w i_081,X
 ( 889) 07B6 AB5003      ; 	bge L_085
 ( 890) 07B9 4CFA08      ; 	jmp L_086
+( 891)                  ; L_085
+( 892)                  ; ;  210:         FOR j := i + 1 TO nextwordindex - 1 DO BEGIN
 ( 893) 07BC ABB5FF      ; 	lda.w i_081,X
 ( 894) 07BF AB48        ; 	pha.w
 ( 895) 07C1 A901        ; 	lda #1
@@ -599,6 +897,7 @@
 ( 897) 07C4 CB7501      ; 	adc.w 1,S
 ( 898) 07C7 C202        ; 	adj #2
 ( 899) 07C9 AB95FD      ; 	sta.w j_082,X
+( 900)                  ; L_087
 ( 901) 07CC ABADCB4A    ; 	lda.w nextwordindex_009
 ( 902) 07D0 AB48        ; 	pha.w
 ( 903) 07D2 A901        ; 	lda #1
@@ -609,6 +908,8 @@
 ( 908) 07DD ABD5FD      ; 	cmp.w j_082,X
 ( 909) 07E0 AB5003      ; 	bge L_088
 ( 910) 07E3 4CF108      ; 	jmp L_089
+( 911)                  ; L_088
+( 912)                  ; ;  211:         IF wordtable[i].word > wordtable[j].word THEN BEGIN
 ( 913) 07E6 ABE2470C    ; 	psh.w #wordtable_007
 ( 914) 07EA ABB5FF      ; 	lda.w i_081,X
 ( 915) 07ED AB3A        ; 	dec.w a
@@ -645,9 +946,12 @@
 ( 946) 083A 28          ; 	plp
 ( 947) 083B AB1002      ; 	bgt L_092
 ( 948) 083E A900        ; 	lda #0
+( 949)                  ; L_092
 ( 950) 0840 ABC90100    ; 	cmp.w #1
 ( 951) 0844 F003        ; 	beq L_090
 ( 952) 0846 4CEB08      ; 	jmp L_091
+( 953)                  ; L_090
+( 954)                  ; ;  212:             temp := wordtable[i];
 ( 955) 0849 AB8A        ; 	txa.w
 ( 956) 084B 18          ; 	clc
 ( 957) 084C AB69E5FF    ; 	adc.w #temp_083
@@ -668,6 +972,7 @@
 ( 972) 0873 AB7A        ; 	ply.w
 ( 973) 0875 540F        ; 	mov #15
 ( 974) 0877 EB1B        ; 	swp x
+( 975)                  ; ;  213:             wordtable[i] := wordtable[j];
 ( 976) 0879 ABE2470C    ; 	psh.w #wordtable_007
 ( 977) 087D ABB5FF      ; 	lda.w i_081,X
 ( 978) 0880 AB3A        ; 	dec.w a
@@ -694,6 +999,7 @@
 ( 999) 08B5 AB7A        ; 	ply.w
 (1000) 08B7 540F        ; 	mov #15
 (1001) 08B9 EB1B        ; 	swp x
+(1002)                  ; ;  214:             wordtable[j] := temp;
 (1003) 08BB ABE2470C    ; 	psh.w #wordtable_007
 (1004) 08BF ABB5FD      ; 	lda.w j_082,X
 (1005) 08C2 AB3A        ; 	dec.w a
@@ -714,17 +1020,37 @@
 (1020) 08E5 AB7A        ; 	ply.w
 (1021) 08E7 540F        ; 	mov #15
 (1022) 08E9 EB1B        ; 	swp x
+(1023)                  ; ;  215:         END;
+(1024)                  ; L_091
+(1025)                  ; ;  216:         END;
 (1026) 08EB ABF6FD      ; 	inc.w j_082,X
 (1027) 08EE 4CCC07      ; 	jmp L_087
+(1028)                  ; L_089
 (1029) 08F1 ABD6FD      ; 	dec.w j_082,X
+(1030)                  ; ;  217:     END;
 (1031) 08F4 ABF6FF      ; 	inc.w i_081,X
 (1032) 08F7 4CA207      ; 	jmp L_084
+(1033)                  ; L_086
 (1034) 08FA ABD6FF      ; 	dec.w i_081,X
+(1035)                  ; ;  218:     END;
 (1036) 08FD AB9A        ; 	txs.w
 (1037) 08FF ABFA        ; 	plx.w
 (1038) 0901 60          ; 	rts
+(1039)                  ; 	.end sortwords_080
+(1040)                  ; ;  219: 
+(1041)                  ; ;  220: 
+(1042)                  ; ;  221: PROCEDURE printnumbers (i : numbertableindex);
+(1043)                  ; ;  222: 
+(1044)                  ; ;  223:     {Print a word's linked list of line numbers.}
+(1045)                  ; ;  224: 
+(1046)                  ; ;  225:     BEGIN
+(1047)                  ; i_094 .equ +7
+(1048)                  ; printnumbers_093 .sub
 (1049) 0902 ABDA        ; 	phx.w
 (1050) 0904 ABBA        ; 	tsx.w
+(1051)                  ; ;  226:     REPEAT
+(1052)                  ; L_095
+(1053)                  ; ;  227:         write(numbertable[i].number:4);
 (1054) 0906 ABE2273B    ; 	psh.w #numbertable_008
 (1055) 090A ABB507      ; 	lda.w i_094,X
 (1056) 090D AB0A        ; 	asl.w a
@@ -740,8 +1066,10 @@
 (1066) 0922 ABA300      ; 	lda.w 0,I++
 (1067) 0925 AB48        ; 	pha.w
 (1068) 0927 ABE20400    ; 	psh.w #4
+(1069)                  ; 	pha.w
 (1070) 092B 20FFFF      ; 	jsr _iwrite
 (1071) 092E C204        ; 	adj #4
+(1072)                  ; ;  228:         i := numbertable[i].nextindex;
 (1073) 0930 ABE2273B    ; 	psh.w #numbertable_008
 (1074) 0934 ABB507      ; 	lda.w i_094,X
 (1075) 0937 AB0A        ; 	asl.w a
@@ -756,6 +1084,7 @@
 (1084) 094B 6B          ; 	pli
 (1085) 094C ABA300      ; 	lda.w 0,I++
 (1086) 094F AB9507      ; 	sta.w i_094,X
+(1087)                  ; ;  229:     UNTIL i = 0;
 (1088) 0952 ABB507      ; 	lda.w i_094,X
 (1089) 0955 AB48        ; 	pha.w
 (1090) 0957 A900        ; 	lda #0
@@ -767,37 +1096,62 @@
 (1096) 0964 28          ; 	plp
 (1097) 0965 F002        ; 	beq L_097
 (1098) 0967 A900        ; 	lda #0
+(1099)                  ; L_097
 (1100) 0969 ABC90100    ; 	cmp.w #1
 (1101) 096D F003        ; 	beq L_096
 (1102) 096F 4C0609      ; 	jmp L_095
+(1103)                  ; L_096
+(1104)                  ; ;  230:     writeln;
 (1105) 0972 20FFFF      ; 	jsr _writeln
+(1106)                  ; ;  231:     END;
 (1107) 0975 AB9A        ; 	txs.w
 (1108) 0977 ABFA        ; 	plx.w
 (1109) 0979 60          ; 	rts
+(1110)                  ; 	.end printnumbers_093
+(1111)                  ; ;  232: 
+(1112)                  ; ;  233: 
+(1113)                  ; ;  234: PROCEDURE printxref;
+(1114)                  ; ;  235: 
+(1115)                  ; ;  236:     {Print the cross reference listing.}
+(1116)                  ; ;  237: 
+(1117)                  ; ;  238:     VAR
+(1118)                  ; ;  239:     i : wordtableindex;
+(1119)                  ; ;  240: 
+(1120)                  ; ;  241:     BEGIN
+(1121)                  ; i_099 .equ -1
+(1122)                  ; printxref_098 .sub
 (1123) 097A ABDA        ; 	phx.w
 (1124) 097C ABBA        ; 	tsx.w
 (1125) 097E C2FE        ; 	adj #-2
+(1126)                  ; ;  242:     writeln;
 (1127) 0980 20FFFF      ; 	jsr _writeln
+(1128)                  ; ;  243:     writeln;
 (1129) 0983 20FFFF      ; 	jsr _writeln
+(1130)                  ; ;  244:     writeln('Cross-reference');
 (1131) 0986 ABE2340C    ; 	psh.w #S_100
 (1132) 098A ABE20000    ; 	psh.w #0
 (1133) 098E ABE20F00    ; 	psh.w #15
 (1134) 0992 20FFFF      ; 	jsr _swrite
 (1135) 0995 C206        ; 	adj #6
 (1136) 0997 20FFFF      ; 	jsr _writeln
+(1137)                  ; ;  245:     writeln('---------------');
 (1138) 099A ABE2250C    ; 	psh.w #S_101
 (1139) 099E ABE20000    ; 	psh.w #0
 (1140) 09A2 ABE20F00    ; 	psh.w #15
 (1141) 09A6 20FFFF      ; 	jsr _swrite
 (1142) 09A9 C206        ; 	adj #6
 (1143) 09AB 20FFFF      ; 	jsr _writeln
+(1144)                  ; ;  246:     writeln;
 (1145) 09AE 20FFFF      ; 	jsr _writeln
+(1146)                  ; ;  247:     sortwords;
 (1147) 09B1 ABB505      ; 	lda.w STATIC_LINK,X
 (1148) 09B4 AB48        ; 	pha.w
 (1149) 09B6 209707      ; 	jsr sortwords_080
 (1150) 09B9 C202        ; 	adj #2
+(1151)                  ; ;  248:     FOR i := 1 TO nextwordindex - 1 DO BEGIN
 (1152) 09BB A901        ; 	lda #1
 (1153) 09BD AB95FF      ; 	sta.w i_099,X
+(1154)                  ; L_102
 (1155) 09C0 ABADCB4A    ; 	lda.w nextwordindex_009
 (1156) 09C4 AB48        ; 	pha.w
 (1157) 09C6 A901        ; 	lda #1
@@ -808,6 +1162,8 @@
 (1162) 09D1 ABD5FF      ; 	cmp.w i_099,X
 (1163) 09D4 AB5003      ; 	bge L_103
 (1164) 09D7 4C450A      ; 	jmp L_104
+(1165)                  ; L_103
+(1166)                  ; ;  249:         write(wordtable[i].word);
 (1167) 09DA ABE2470C    ; 	psh.w #wordtable_007
 (1168) 09DE ABB5FF      ; 	lda.w i_099,X
 (1169) 09E1 AB3A        ; 	dec.w a
@@ -826,6 +1182,7 @@
 (1182) 0A02 ABE21400    ; 	psh.w #20
 (1183) 0A06 20FFFF      ; 	jsr _swrite
 (1184) 0A09 C206        ; 	adj #6
+(1185)                  ; ;  250:         printnumbers(wordtable[i].firstnumberindex);
 (1186) 0A0B ABE2470C    ; 	psh.w #wordtable_007
 (1187) 0A0F ABB5FF      ; 	lda.w i_099,X
 (1188) 0A12 AB3A        ; 	dec.w a
@@ -847,29 +1204,47 @@
 (1204) 0A38 AB48        ; 	pha.w
 (1205) 0A3A 200209      ; 	jsr printnumbers_093
 (1206) 0A3D C204        ; 	adj #4
+(1207)                  ; ;  251:     END;
 (1208) 0A3F ABF6FF      ; 	inc.w i_099,X
 (1209) 0A42 4CC009      ; 	jmp L_102
+(1210)                  ; L_104
 (1211) 0A45 ABD6FF      ; 	dec.w i_099,X
+(1212)                  ; ;  252:     END;
 (1213) 0A48 AB9A        ; 	txs.w
 (1214) 0A4A ABFA        ; 	plx.w
 (1215) 0A4C 60          ; 	rts
+(1216)                  ; 	.end printxref_098
+(1217)                  ; ;  253: 
+(1218)                  ; ;  254: 
+(1219)                  ; ;  255: BEGIN {xref}
+(1220)                  ; _pc65_main .sub
 (1221) 0A4D ABDA        ; 	phx.w
 (1222) 0A4F ABBA        ; 	tsx.w
+(1223)                  ; ;  256:     wordtablefull   := false;
 (1224) 0A51 A900        ; 	lda #0
 (1225) 0A53 AB8DD14A    ; 	sta.w wordtablefull_012
+(1226)                  ; ;  257:     numbertablefull := false;
 (1227) 0A57 A900        ; 	lda #0
 (1228) 0A59 AB8DD34A    ; 	sta.w numbertablefull_013
+(1229)                  ; ;  258:     nextwordindex   := 1;
 (1230) 0A5D A901        ; 	lda #1
 (1231) 0A5F AB8DCB4A    ; 	sta.w nextwordindex_009
+(1232)                  ; ;  259:     nextnumberindex := 1;
 (1233) 0A63 A901        ; 	lda #1
 (1234) 0A65 AB8DCD4A    ; 	sta.w nextnumberindex_010
+(1235)                  ; ;  260:     linenumber      := 1;
 (1236) 0A69 A901        ; 	lda #1
 (1237) 0A6B AB8DCF4A    ; 	sta.w linenumber_011
+(1238)                  ; ;  261:     write('    1 : ');
 (1239) 0A6F ABE21D0C    ; 	psh.w #S_105
 (1240) 0A73 ABE20000    ; 	psh.w #0
 (1241) 0A77 ABE20800    ; 	psh.w #8
 (1242) 0A7B 20FFFF      ; 	jsr _swrite
 (1243) 0A7E C206        ; 	adj #6
+(1244)                  ; ;  262: 
+(1245)                  ; ;  263:     {First read the words.}
+(1246)                  ; ;  264:     WHILE NOT (eof OR wordtablefull OR numbertablefull) DO BEGIN
+(1247)                  ; L_106
 (1248) 0A80 20FFFF      ; 	jsr _eof
 (1249) 0A83 AB48        ; 	pha.w
 (1250) 0A85 ABADD14A    ; 	lda.w wordtablefull_012
@@ -883,6 +1258,8 @@
 (1258) 0A9B ABC90100    ; 	cmp.w #1
 (1259) 0A9F F003        ; 	beq L_107
 (1260) 0AA1 4CE70A      ; 	jmp L_108
+(1261)                  ; L_107
+(1262)                  ; ;  265:     readword(wordtable[nextwordindex].word);
 (1263) 0AA4 ABE2470C    ; 	psh.w #wordtable_007
 (1264) 0AA8 ABADCB4A    ; 	lda.w nextwordindex_009
 (1265) 0AAC AB3A        ; 	dec.w a
@@ -900,42 +1277,70 @@
 (1277) 0AC9 ABDA        ; 	phx.w
 (1278) 0ACB 203F03      ; 	jsr readword_030
 (1279) 0ACE C204        ; 	adj #4
+(1280)                  ; ;  266:     IF gotword THEN enterword;
 (1281) 0AD0 ABADD74A    ; 	lda.w gotword_015
 (1282) 0AD4 ABC90100    ; 	cmp.w #1
 (1283) 0AD8 F003        ; 	beq L_109
 (1284) 0ADA 4CE40A      ; 	jmp L_110
+(1285)                  ; L_109
 (1286) 0ADD ABDA        ; 	phx.w
 (1287) 0ADF 208905      ; 	jsr enterword_062
 (1288) 0AE2 C202        ; 	adj #2
+(1289)                  ; L_110
+(1290)                  ; ;  267:     END;
 (1291) 0AE4 4C800A      ; 	jmp L_106
+(1292)                  ; L_108
+(1293)                  ; ;  268: 
+(1294)                  ; ;  269:     {Then print the cross reference listing if all went well.}
+(1295)                  ; ;  270:     IF wordtablefull THEN BEGIN
 (1296) 0AE7 ABADD14A    ; 	lda.w wordtablefull_012
 (1297) 0AEB ABC90100    ; 	cmp.w #1
 (1298) 0AEF F003        ; 	beq L_111
 (1299) 0AF1 4C0E0B      ; 	jmp L_112
+(1300)                  ; L_111
+(1301)                  ; ;  271:         writeln;
 (1302) 0AF4 20FFFF      ; 	jsr _writeln
+(1303)                  ; ;  272:     writeln('*** The word table is not large enough. ***');
 (1304) 0AF7 ABE2F20B    ; 	psh.w #S_113
 (1305) 0AFB ABE20000    ; 	psh.w #0
 (1306) 0AFF ABE22B00    ; 	psh.w #43
 (1307) 0B03 20FFFF      ; 	jsr _swrite
 (1308) 0B06 C206        ; 	adj #6
 (1309) 0B08 20FFFF      ; 	jsr _writeln
+(1310)                  ; ;  273:     END
+(1311)                  ; ;  274:     ELSE IF numbertablefull THEN BEGIN
 (1312) 0B0B 4C3C0B      ; 	jmp L_114
+(1313)                  ; L_112
 (1314) 0B0E ABADD34A    ; 	lda.w numbertablefull_013
 (1315) 0B12 ABC90100    ; 	cmp.w #1
 (1316) 0B16 F003        ; 	beq L_115
 (1317) 0B18 4C350B      ; 	jmp L_116
+(1318)                  ; L_115
+(1319)                  ; ;  275:         writeln;
 (1320) 0B1B 20FFFF      ; 	jsr _writeln
+(1321)                  ; ;  276:     writeln('*** The number table is not large enough. ***');
 (1322) 0B1E ABE2C50B    ; 	psh.w #S_117
 (1323) 0B22 ABE20000    ; 	psh.w #0
 (1324) 0B26 ABE22D00    ; 	psh.w #45
 (1325) 0B2A 20FFFF      ; 	jsr _swrite
 (1326) 0B2D C206        ; 	adj #6
 (1327) 0B2F 20FFFF      ; 	jsr _writeln
+(1328)                  ; ;  277:     END
+(1329)                  ; ;  278:     ELSE BEGIN
 (1330) 0B32 4C3C0B      ; 	jmp L_118
+(1331)                  ; L_116
+(1332)                  ; ;  279:     printxref;
 (1333) 0B35 ABDA        ; 	phx.w
 (1334) 0B37 207A09      ; 	jsr printxref_098
 (1335) 0B3A C202        ; 	adj #2
+(1336)                  ; ;  280:     END;
+(1337)                  ; L_118
+(1338)                  ; L_114
+(1339)                  ; ;  281: 
+(1340)                  ; ;  282:     {Print final stats.}
+(1341)                  ; ;  283:     writeln;
 (1342) 0B3C 20FFFF      ; 	jsr _writeln
+(1343)                  ; ;  284:     writeln((nextwordindex - 1):5,   ' word entries.');
 (1344) 0B3F ABADCB4A    ; 	lda.w nextwordindex_009
 (1345) 0B43 AB48        ; 	pha.w
 (1346) 0B45 A901        ; 	lda #1
@@ -945,6 +1350,7 @@
 (1350) 0B4E C202        ; 	adj #2
 (1351) 0B50 AB48        ; 	pha.w
 (1352) 0B52 ABE20500    ; 	psh.w #5
+(1353)                  ; 	pha.w
 (1354) 0B56 20FFFF      ; 	jsr _iwrite
 (1355) 0B59 C204        ; 	adj #4
 (1356) 0B5B ABE2B70B    ; 	psh.w #S_119
@@ -953,6 +1359,7 @@
 (1359) 0B67 20FFFF      ; 	jsr _swrite
 (1360) 0B6A C206        ; 	adj #6
 (1361) 0B6C 20FFFF      ; 	jsr _writeln
+(1362)                  ; ;  285:     writeln((nextnumberindex - 1):5, ' line number entries.');
 (1363) 0B6F ABADCD4A    ; 	lda.w nextnumberindex_010
 (1364) 0B73 AB48        ; 	pha.w
 (1365) 0B75 A901        ; 	lda #1
@@ -962,6 +1369,7 @@
 (1369) 0B7E C202        ; 	adj #2
 (1370) 0B80 AB48        ; 	pha.w
 (1371) 0B82 ABE20500    ; 	psh.w #5
+(1372)                  ; 	pha.w
 (1373) 0B86 20FFFF      ; 	jsr _iwrite
 (1374) 0B89 C204        ; 	adj #4
 (1375) 0B8B ABE2A20B    ; 	psh.w #S_120
@@ -970,8 +1378,14 @@
 (1378) 0B97 20FFFF      ; 	jsr _swrite
 (1379) 0B9A C206        ; 	adj #6
 (1380) 0B9C 20FFFF      ; 	jsr _writeln
+(1381)                  ; ;  286: END {xref}.
+(1382)                  ; ;  287: 
 (1383) 0B9F ABFA        ; 	plx.w
 (1384) 0BA1 60          ; 	rts
+(1385)                  ; 	.end _pc65_main
+(1386)                  ; 
+(1387)                  ; 	.dat
+(1388)                  ; 
 (1389) 0BA2 206C696E    ; S_120 .str " line number entries."
        0BA6 65206E756D62657220656E74726965732E
 (1390) 0BB7 20776F72    ; S_119 .str " word entries."
@@ -1534,3 +1948,5 @@
        4E9E 0000000000000000000000000000000000000000000000000000000000000000
        4EBE 000000000000000000000000000000000000000000000000000000
 (1409) 4ED9 00          ; _stk_top .byt 1
+(1410)                  ; 
+(1411)                  ; 	.end

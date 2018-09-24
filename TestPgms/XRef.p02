@@ -43,8 +43,7 @@
  105 	sta.w linenumber_011
  107 	lda.w linenumber_011
  108 	pha.w
- 109 	lda #5
- 110 	pha.w
+ 109 	psh.w #5
  111 	jsr _iwrite
  112 	adj #4
  113 	psh.w #S_020
@@ -260,8 +259,7 @@
  375 L_046
  377 	lda ch_033,X
  378 	pha.w
- 379 	lda #97
- 380 	pha.w
+ 379 	psh.w #97
  381 	lda #65
  382 	xma.w 1,S
  383 	sec
@@ -596,8 +594,7 @@
  784 	clc
  785 	adc.w #firstnumberindex_003
  786 	pha.w
- 787 	lda #0
- 788 	pha.w
+ 787 	psh.w #0
  789 	lda.w STATIC_LINK,X
  790 	pha.w
  791 	jsr appendlinenumber_053
@@ -838,8 +835,7 @@
 1065 	pli
 1066 	lda.w 0,I++
 1067 	pha.w
-1068 	lda #4
-1069 	pha.w
+1068 	psh.w #4
 1070 	jsr _iwrite
 1071 	adj #4
 1073 	psh.w #numbertable_008
@@ -1065,8 +1061,7 @@
 1349 	sbc.w 1,S
 1350 	adj #2
 1351 	pha.w
-1352 	lda #5
-1353 	pha.w
+1352 	psh.w #5
 1354 	jsr _iwrite
 1355 	adj #4
 1356 	psh.w #S_119
@@ -1083,8 +1078,7 @@
 1368 	sbc.w 1,S
 1369 	adj #2
 1370 	pha.w
-1371 	lda #5
-1372 	pha.w
+1371 	psh.w #5
 1373 	jsr _iwrite
 1374 	adj #4
 1375 	psh.w #S_120
@@ -1118,4 +1112,3 @@
 1407 _bss_end .byt 1
 1408 _stk .byt 1023
 1409 _stk_top .byt 1
-1411 	.end
