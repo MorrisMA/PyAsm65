@@ -830,8 +830,6 @@ ply.s_imp 2 0 8B7A
 tsa_imp 2 0 8B8A
 tas_imp 2 0 8BAA
 des_imp 2 0 8BCA
-phx.s_imp 2 0 8BDA
-plx.s_imp 2 0 8BFA
 nxt.s_imp 2 0 8B3B
 phi.s_imp 2 0 8B4B
 pli.s_imp 2 0 8B6B
@@ -863,6 +861,7 @@ lsr_absS 2 2 8B5E
 ror_absS 2 2 8B7E
 sts_abs 2 2 8B8E
 lds_abs 2 2 8BAE
+lds_absY 2 2 8BBE
 dec_absS 2 2 8BDE
 inc_absS 2 2 8BFE
 bbr0_zpSrel 2 2 8B0F
@@ -938,8 +937,6 @@ ply.sw_imp 2 0 CB7A
 tsa.w_imp 2 0 CB8A
 tas.w_imp 2 0 CBAA
 des.w_imp 2 0 CBCA
-phx.sw_imp 2 0 CBDA
-plx.sw_imp 2 0 CBFA
 tsb.w_absS 2 2 CB0C
 trb.w_absS 2 2 CB1C
 bit.w_absS 2 2 CB3C

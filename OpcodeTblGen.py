@@ -583,11 +583,16 @@ for fld in flds:
             print(opcode, opLen, dtLen, code)
             print(opcode, opLen, dtLen, code, file=fout)
         else:
-            if mode == 'absY':
-                continue
+            if mode in ['absY']:
+                if opcode in ['ldx', 'stx']:
+                    pass
+                else:
+                    continue
             opcode = '_'.join([''.join([opcode, '.s']), mode])
             if opcode in osxMap:
                 opcode, opLen, dtLen, code = osxMap[opcode]
+            if opcode in ['phx.s_imp', 'plx.s_imp']:
+                continue
             if opcode in opcodeDict:
                 continue
             opcodeList.append(opcode)
@@ -650,6 +655,8 @@ for fld in flds:
             opcode = '_'.join([''.join([opcode, '.sw']), mode])
             if opcode in osxMap:
                 opcode, opLen, dtLen, code = osxMap[opcode]
+            if opcode in ['phx.sw_imp', 'plx.sw_imp']:
+                continue
             if opcode in opcodeDict:
                 continue
             opcodeList.append(opcode)

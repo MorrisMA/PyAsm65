@@ -44,7 +44,7 @@
  160 	adc.w 1,S
  161 	sta.w 1,S
  162 	lda #5
- 163 	pli
+ 163 	pli.s
  164 	sta.w 0,I++
  166 	psh.w #island_002
  167 	lda #10
@@ -61,7 +61,7 @@
  178 	adc.w 1,S
  179 	sta.w 1,S
  180 	lda #5
- 181 	pli
+ 181 	pli.s
  182 	sta.w 0,I++
  184 	psh.w #island_002
  185 	lda.w i_014,X
@@ -78,7 +78,7 @@
  196 	adc.w 1,S
  197 	sta.w 1,S
  198 	lda #5
- 199 	pli
+ 199 	pli.s
  200 	sta.w 0,I++
  202 	psh.w #island_002
  203 	lda.w i_014,X
@@ -95,7 +95,7 @@
  214 	adc.w 1,S
  215 	sta.w 1,S
  216 	lda #5
- 217 	pli
+ 217 	pli.s
  218 	sta.w 0,I++
  220 	inc.w i_014,X
  221 	jmp L_017
@@ -132,7 +132,7 @@
  255 	adc.w 1,S
  256 	sta.w 1,S
  257 	lda #4
- 258 	pli
+ 258 	pli.s
  259 	sta.w 0,I++
  261 	psh.w #foodunits_003
  262 	lda.w row_015,X
@@ -151,7 +151,7 @@
  275 	adc.w 1,S
  276 	sta.w 1,S
  277 	lda #0
- 278 	pli
+ 278 	pli.s
  279 	sta.w 0,I++
  281 	inc.w col_016,X
  282 	jmp L_023
@@ -163,7 +163,7 @@
  289 	dec.w row_015,X
  293 	psh.w #numwolves_005
  294 	jsr _iread
- 295 	pli
+ 295 	pli.s
  296 	sta.w 0,I++
  298 	lda #1
  299 	sta.w i_014,X
@@ -178,14 +178,14 @@
  309 	adc.w #row_015
  310 	pha.w
  311 	jsr _iread
- 312 	pli
+ 312 	pli.s
  313 	sta.w 0,I++
  314 	txa.w
  315 	clc
  316 	adc.w #col_016
  317 	pha.w
  318 	jsr _iread
- 319 	pli
+ 319 	pli.s
  320 	sta.w 0,I++
  322 	psh.w #island_002
  323 	lda.w row_015,X
@@ -202,7 +202,7 @@
  334 	adc.w 1,S
  335 	sta.w 1,S
  336 	lda #0
- 337 	pli
+ 337 	pli.s
  338 	sta.w 0,I++
  340 	psh.w #foodunits_003
  341 	lda.w row_015,X
@@ -221,7 +221,7 @@
  354 	adc.w 1,S
  355 	sta.w 1,S
  356 	lda #6
- 357 	pli
+ 357 	pli.s
  358 	sta.w 0,I++
  360 	inc.w i_014,X
  361 	jmp L_026
@@ -229,7 +229,7 @@
  363 	dec.w i_014,X
  367 	psh.w #numrabbits_006
  368 	jsr _iread
- 369 	pli
+ 369 	pli.s
  370 	sta.w 0,I++
  372 	lda #1
  373 	sta.w i_014,X
@@ -244,14 +244,14 @@
  383 	adc.w #row_015
  384 	pha.w
  385 	jsr _iread
- 386 	pli
+ 386 	pli.s
  387 	sta.w 0,I++
  388 	txa.w
  389 	clc
  390 	adc.w #col_016
  391 	pha.w
  392 	jsr _iread
- 393 	pli
+ 393 	pli.s
  394 	sta.w 0,I++
  396 	psh.w #island_002
  397 	lda.w row_015,X
@@ -268,7 +268,7 @@
  408 	adc.w 1,S
  409 	sta.w 1,S
  410 	lda #1
- 411 	pli
+ 411 	pli.s
  412 	sta.w 0,I++
  414 	inc.w i_014,X
  415 	jmp L_029
@@ -276,7 +276,7 @@
  417 	dec.w i_014,X
  421 	psh.w #numprinttimes_007
  422 	jsr _iread
- 423 	pli
+ 423 	pli.s
  424 	sta.w 0,I++
  426 	lda #1
  427 	sta.w i_014,X
@@ -294,7 +294,7 @@
  440 	adc.w 1,S
  441 	sta.w 1,S
  442 	jsr _iread
- 443 	pli
+ 443 	pli.s
  444 	sta.w 0,I++
  446 	inc.w i_014,X
  447 	jmp L_032
@@ -307,7 +307,7 @@
  457 	adc.w 1,S
  458 	sta.w 1,S
  459 	lda #0
- 460 	pli
+ 460 	pli.s
  461 	sta.w 0,I++
  462 	psh.w #coloffset_012
  463 	lda #0
@@ -316,7 +316,7 @@
  466 	adc.w 1,S
  467 	sta.w 1,S
  468 	lda #0
- 469 	pli
+ 469 	pli.s
  470 	sta.w 0,I++
  472 	psh.w #rowoffset_011
  473 	lda #1
@@ -327,7 +327,7 @@
  478 	lda #1
  479 	eor.w #-1
  480 	inc.w a
- 481 	pli
+ 481 	pli.s
  482 	sta.w 0,I++
  483 	psh.w #coloffset_012
  484 	lda #1
@@ -336,7 +336,7 @@
  487 	adc.w 1,S
  488 	sta.w 1,S
  489 	lda #0
- 490 	pli
+ 490 	pli.s
  491 	sta.w 0,I++
  493 	psh.w #rowoffset_011
  494 	lda #2
@@ -345,7 +345,7 @@
  497 	adc.w 1,S
  498 	sta.w 1,S
  499 	lda #0
- 500 	pli
+ 500 	pli.s
  501 	sta.w 0,I++
  502 	psh.w #coloffset_012
  503 	lda #2
@@ -356,7 +356,7 @@
  508 	lda #1
  509 	eor.w #-1
  510 	inc.w a
- 511 	pli
+ 511 	pli.s
  512 	sta.w 0,I++
  514 	psh.w #rowoffset_011
  515 	lda #3
@@ -365,7 +365,7 @@
  518 	adc.w 1,S
  519 	sta.w 1,S
  520 	lda #0
- 521 	pli
+ 521 	pli.s
  522 	sta.w 0,I++
  523 	psh.w #coloffset_012
  524 	lda #3
@@ -374,7 +374,7 @@
  527 	adc.w 1,S
  528 	sta.w 1,S
  529 	lda #1
- 530 	pli
+ 530 	pli.s
  531 	sta.w 0,I++
  533 	psh.w #rowoffset_011
  534 	lda #4
@@ -383,7 +383,7 @@
  537 	adc.w 1,S
  538 	sta.w 1,S
  539 	lda #1
- 540 	pli
+ 540 	pli.s
  541 	sta.w 0,I++
  542 	psh.w #coloffset_012
  543 	lda #4
@@ -392,7 +392,7 @@
  546 	adc.w 1,S
  547 	sta.w 1,S
  548 	lda #0
- 549 	pli
+ 549 	pli.s
  550 	sta.w 0,I++
  552 	txs.w
  553 	plx.w
@@ -488,12 +488,12 @@
  683 	clc
  684 	adc.w 1,S
  685 	sta.w 1,S
- 686 	pli
+ 686 	pli.s
  687 	lda.w 0,I++
  688 	clc
  689 	adc.w 1,S
  690 	adj #2
- 691 	pli
+ 691 	pli.s
  692 	sta.w 0,I++
  694 	lda.w newcol_042,X
  695 	pha.w
@@ -505,12 +505,12 @@
  701 	clc
  702 	adc.w 1,S
  703 	sta.w 1,S
- 704 	pli
+ 704 	pli.s
  705 	lda.w 0,I++
  706 	clc
  707 	adc.w 1,S
  708 	adj #2
- 709 	pli
+ 709 	pli.s
  710 	sta.w 0,I++
  712 	psh.w #island_002
  713 	lda.w (newrow_041,X)
@@ -526,7 +526,7 @@
  723 	clc
  724 	adc.w 1,S
  725 	sta.w 1,S
- 726 	pli
+ 726 	pli.s
  727 	lda.w 0,I++
  728 	sta.w what_044,X
  730 	lda.w what_044,X
@@ -587,12 +587,12 @@
  793 	clc
  794 	adc.w 1,S
  795 	sta.w 1,S
- 796 	pli
+ 796 	pli.s
  797 	lda.w 0,I++
  798 	clc
  799 	adc.w 1,S
  800 	adj #2
- 801 	pli
+ 801 	pli.s
  802 	sta.w 0,I++
  804 	lda.w newcol_042,X
  805 	pha.w
@@ -604,12 +604,12 @@
  811 	clc
  812 	adc.w 1,S
  813 	sta.w 1,S
- 814 	pli
+ 814 	pli.s
  815 	lda.w 0,I++
  816 	clc
  817 	adc.w 1,S
  818 	adj #2
- 819 	pli
+ 819 	pli.s
  820 	sta.w 0,I++
  822 	psh.w #island_002
  823 	lda.w (newrow_041,X)
@@ -625,7 +625,7 @@
  833 	clc
  834 	adc.w 1,S
  835 	sta.w 1,S
- 836 	pli
+ 836 	pli.s
  837 	lda.w 0,I++
  838 	sta.w what_044,X
  840 	lda.w what_044,X
@@ -720,7 +720,7 @@
  946 	clc
  947 	adc.w 1,S
  948 	sta.w 1,S
- 949 	pli
+ 949 	pli.s
  950 	lda.w 0,I++
  951 	pha.w
  952 	lda #1
@@ -728,7 +728,7 @@
  954 	sec
  955 	sbc.w 1,S
  956 	adj #2
- 957 	pli
+ 957 	pli.s
  958 	sta.w 0,I++
  961 	psh.w #foodunits_003
  962 	lda.w oldrow_061,X
@@ -746,7 +746,7 @@
  974 	clc
  975 	adc.w 1,S
  976 	sta.w 1,S
- 977 	pli
+ 977 	pli.s
  978 	lda.w 0,I++
  979 	pha.w
  980 	lda #0
@@ -778,7 +778,7 @@
 1009 	adc.w 1,S
 1010 	sta.w 1,S
 1011 	lda #4
-1012 	pli
+1012 	pli.s
 1013 	sta.w 0,I++
 1015 	lda.w numwolves_005
 1016 	pha.w
@@ -899,7 +899,7 @@
 1144 	clc
 1145 	adc.w 1,S
 1146 	sta.w 1,S
-1147 	pli
+1147 	pli.s
 1148 	lda.w 0,I++
 1149 	pha.w
 1150 	lda #1
@@ -948,14 +948,14 @@
 1195 	clc
 1196 	adc.w 1,S
 1197 	sta.w 1,S
-1198 	pli
+1198 	pli.s
 1199 	lda.w 0,I++
 1200 	pha.w
 1201 	lda #6
 1202 	clc
 1203 	adc.w 1,S
 1204 	adj #2
-1205 	pli
+1205 	pli.s
 1206 	sta.w 0,I++
 1208 	lda.w numrabbits_006
 1209 	pha.w
@@ -1025,7 +1025,7 @@
 1279 	adc.w 1,S
 1280 	sta.w 1,S
 1281 	lda #2
-1282 	pli
+1282 	pli.s
 1283 	sta.w 0,I++
 1285 	psh.w #island_002
 1286 	lda.w oldrow_061,X
@@ -1042,7 +1042,7 @@
 1297 	adc.w 1,S
 1298 	sta.w 1,S
 1299 	lda #4
-1300 	pli
+1300 	pli.s
 1301 	sta.w 0,I++
 1303 	psh.w #foodunits_003
 1304 	lda.w newrow_063,X
@@ -1076,9 +1076,9 @@
 1332 	clc
 1333 	adc.w 1,S
 1334 	sta.w 1,S
-1335 	pli
+1335 	pli.s
 1336 	lda.w 0,I++
-1337 	pli
+1337 	pli.s
 1338 	sta.w 0,I++
 1340 	psh.w #foodunits_003
 1341 	lda.w oldrow_061,X
@@ -1097,7 +1097,7 @@
 1354 	adc.w 1,S
 1355 	sta.w 1,S
 1356 	lda #0
-1357 	pli
+1357 	pli.s
 1358 	sta.w 0,I++
 1360 L_076
 1364 	lda.w t_008
@@ -1135,7 +1135,7 @@
 1397 	clc
 1398 	adc.w 1,S
 1399 	sta.w 1,S
-1400 	pli
+1400 	pli.s
 1401 	lda.w 0,I++
 1402 	pha.w
 1403 	lda #1
@@ -1186,14 +1186,14 @@
 1450 	clc
 1451 	adc.w 1,S
 1452 	sta.w 1,S
-1453 	pli
+1453 	pli.s
 1454 	lda.w 0,I++
 1455 	pha.w
 1456 	lda #2
 1457 	pha.w
 1458 	jsr _idiv
 1459 	adj #4
-1460 	pli
+1460 	pli.s
 1461 	sta.w 0,I++
 1465 	lda.w moved_065,X
 1466 	cmp.w #1
@@ -1215,7 +1215,7 @@
 1483 	adc.w 1,S
 1484 	sta.w 1,S
 1485 	lda #2
-1486 	pli
+1486 	pli.s
 1487 	sta.w 0,I++
 1489 	psh.w #foodunits_003
 1490 	lda.w oldrow_061,X
@@ -1249,9 +1249,9 @@
 1519 	clc
 1520 	adc.w 1,S
 1521 	sta.w 1,S
-1522 	pli
+1522 	pli.s
 1523 	lda.w 0,I++
-1524 	pli
+1524 	pli.s
 1525 	sta.w 0,I++
 1527 	lda.w numwolves_005
 1528 	pha.w
@@ -1386,7 +1386,7 @@
 1680 	adc.w 1,S
 1681 	sta.w 1,S
 1682 	lda #3
-1683 	pli
+1683 	pli.s
 1684 	sta.w 0,I++
 1686 	psh.w #island_002
 1687 	lda.w oldrow_089,X
@@ -1403,7 +1403,7 @@
 1698 	adc.w 1,S
 1699 	sta.w 1,S
 1700 	lda #4
-1701 	pli
+1701 	pli.s
 1702 	sta.w 0,I++
 1704 L_097
 1708 	lda.w t_008
@@ -1448,7 +1448,7 @@
 1751 	adc.w 1,S
 1752 	sta.w 1,S
 1753 	lda #3
-1754 	pli
+1754 	pli.s
 1755 	sta.w 0,I++
 1757 	lda.w numrabbits_006
 1758 	pha.w
@@ -1543,7 +1543,7 @@
 1867 	clc
 1868 	adc.w 1,S
 1869 	sta.w 1,S
-1870 	pli
+1870 	pli.s
 1871 	lda.w 0,I++
 1872 	pha.w
 1873 	lda #0
@@ -1607,7 +1607,7 @@
 1941 	clc
 1942 	adc.w 1,S
 1943 	sta.w 1,S
-1944 	pli
+1944 	pli.s
 1945 	lda.w 0,I++
 1946 	pha.w
 1947 	lda #1
@@ -1707,7 +1707,7 @@
 2065 	clc
 2066 	adc.w 1,S
 2067 	sta.w 1,S
-2068 	pli
+2068 	pli.s
 2069 	lda.w 0,I++
 2070 	sta.w cnts_128,X
 2072 	lda.w cnts_128,X
@@ -1829,7 +1829,7 @@
 2208 	clc
 2209 	adc.w 1,S
 2210 	sta.w 1,S
-2211 	pli
+2211 	pli.s
 2212 	lda.w 0,I++
 2213 	pha.w
 2214 	lda #2
@@ -1861,7 +1861,7 @@
 2241 	adc.w 1,S
 2242 	sta.w 1,S
 2243 	lda #0
-2244 	pli
+2244 	pli.s
 2245 	sta.w 0,I++
 2248 	jmp L_162
 2249 L_160
@@ -1879,7 +1879,7 @@
 2261 	clc
 2262 	adc.w 1,S
 2263 	sta.w 1,S
-2264 	pli
+2264 	pli.s
 2265 	lda.w 0,I++
 2266 	pha.w
 2267 	lda #3
@@ -1911,7 +1911,7 @@
 2294 	adc.w 1,S
 2295 	sta.w 1,S
 2296 	lda #1
-2297 	pli
+2297 	pli.s
 2298 	sta.w 0,I++
 2300 L_164
 2301 L_162
@@ -1939,7 +1939,7 @@
 2334 	sta.w xpt_009
 2336 	psh.w #seed_010
 2337 	jsr _iread
-2338 	pli
+2338 	pli.s
 2339 	sta.w 0,I++
 2342 	phx.w
 2343 	jsr printisland_125
@@ -1968,7 +1968,7 @@
 2377 	clc
 2378 	adc.w 1,S
 2379 	sta.w 1,S
-2380 	pli
+2380 	pli.s
 2381 	lda.w 0,I++
 2382 	xma.w 1,S
 2383 	cmp.w 1,S

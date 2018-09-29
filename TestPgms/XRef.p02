@@ -70,7 +70,7 @@
  140 	adc.w #ch_017
  141 	pha.w
  142 	jsr _cread
- 143 	pli
+ 143 	pli.s
  144 	sta 0,I++
  146 	lda ch_017,X
  147 	pha.w
@@ -285,7 +285,7 @@
  406 	adc.w 1,S
  407 	sta.w 1,S
  408 	lda ch_033,X
- 409 	pli
+ 409 	pli.s
  410 	sta 0,I++
  412 L_044
  414 	lda.w STATIC_LINK,X
@@ -316,7 +316,7 @@
  444 	adc.w 1,S
  445 	sta.w 1,S
  446 	lda #32
- 447 	pli
+ 447 	pli.s
  448 	sta 0,I++
  450 	inc.w charcount_032,X
  451 	jmp L_050
@@ -378,7 +378,7 @@
  524 	adc.w #nextindex_006
  525 	pha.w
  526 	lda.w nextnumberindex_010
- 527 	pli
+ 527 	pli.s
  528 	sta.w 0,I++
  530 L_059
  532 	psh.w #numbertable_008
@@ -393,7 +393,7 @@
  541 	adc.w #number_005
  542 	pha.w
  543 	lda.w linenumber_011
- 544 	pli
+ 544 	pli.s
  545 	sta.w 0,I++
  547 	psh.w #numbertable_008
  548 	lda.w nextnumberindex_010
@@ -407,7 +407,7 @@
  556 	adc.w #nextindex_006
  557 	pha.w
  558 	lda #0
- 559 	pli
+ 559 	pli.s
  560 	sta.w 0,I++
  562 	lda.w nextnumberindex_010
  563 	sta.w RETURN_VALUE,X
@@ -546,14 +546,14 @@
  730 	clc
  731 	adc.w #lastnumberindex_004
  732 	pha.w
- 733 	pli
+ 733 	pli.s
  734 	lda.w 0,I++
  735 	pha.w
  736 	lda.w STATIC_LINK,X
  737 	pha.w
  738 	jsr appendlinenumber_053
  739 	adj #4
- 740 	pli
+ 740 	pli.s
  741 	sta.w 0,I++
  746 	jmp L_073
  747 L_071
@@ -599,7 +599,7 @@
  790 	pha.w
  791 	jsr appendlinenumber_053
  792 	adj #4
- 793 	pli
+ 793 	pli.s
  794 	sta.w 0,I++
  796 	psh.w #wordtable_007
  797 	lda.w i_063,X
@@ -629,9 +629,9 @@
  822 	clc
  823 	adc.w #firstnumberindex_003
  824 	pha.w
- 825 	pli
+ 825 	pli.s
  826 	lda.w 0,I++
- 827 	pli
+ 827 	pli.s
  828 	sta.w 0,I++
  833 	jmp L_077
  834 L_075
@@ -832,7 +832,7 @@
 1062 	clc
 1063 	adc.w #number_005
 1064 	pha.w
-1065 	pli
+1065 	pli.s
 1066 	lda.w 0,I++
 1067 	pha.w
 1068 	psh.w #4
@@ -849,7 +849,7 @@
 1081 	clc
 1082 	adc.w #nextindex_006
 1083 	pha.w
-1084 	pli
+1084 	pli.s
 1085 	lda.w 0,I++
 1086 	sta.w i_094,X
 1088 	lda.w i_094,X
@@ -943,7 +943,7 @@
 1197 	clc
 1198 	adc.w #firstnumberindex_003
 1199 	pha.w
-1200 	pli
+1200 	pli.s
 1201 	lda.w 0,I++
 1202 	pha.w
 1203 	lda.w STATIC_LINK,X

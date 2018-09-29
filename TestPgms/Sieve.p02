@@ -30,7 +30,7 @@
   44 	adc.w 1,S
   45 	sta.w 1,S
   46 	lda #0
-  47 	pli
+  47 	pli.s
   48 	sta.w 0,I++
   51 	lda #2
   52 	sta.w i_003
@@ -48,7 +48,7 @@
   65 	adc.w 1,S
   66 	sta.w 1,S
   67 	lda #1
-  68 	pli
+  68 	pli.s
   69 	sta.w 0,I++
   70 	inc.w i_003
   71 	jmp L_008
@@ -72,7 +72,7 @@
   95 	clc
   96 	adc.w 1,S
   97 	sta.w 1,S
-  98 	pli
+  98 	pli.s
   99 	lda.w 0,I++
  100 	eor #1
  101 	cmp.w #1
@@ -119,7 +119,7 @@
  149 	adc.w 1,S
  150 	sta.w 1,S
  151 	lda #0
- 152 	pli
+ 152 	pli.s
  153 	sta.w 0,I++
  155 	lda.w factor_007
  156 	pha.w
@@ -178,7 +178,7 @@
  220 	clc
  221 	adc.w 1,S
  222 	sta.w 1,S
- 223 	pli
+ 223 	pli.s
  224 	lda.w 0,I++
  225 	cmp.w #1
  226 	beq L_027

@@ -691,7 +691,7 @@ L_125
 ;  143:         read (number);
 	psh.w #number_002
 	jsr _iread
-	pli
+	pli.s
 	sta.w 0,I++
 ;  144:         write (number:6, ' :');
 	lda.w number_002

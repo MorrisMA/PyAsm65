@@ -548,7 +548,7 @@
  690 L_125
  692 	psh.w #number_002
  693 	jsr _iread
- 694 	pli
+ 694 	pli.s
  695 	sta.w 0,I++
  697 	lda.w number_002
  698 	pha.w
