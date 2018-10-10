@@ -6,2028 +6,2035 @@
    7 _start
    8 	tsx.w
    9 	lds.w #_stk_top
-  10 	jmp _pc65_main
- 122 i_014 .equ -1
- 123 row_015 .equ -3
- 124 col_016 .equ -5
- 125 initialize_013	.sub
- 126 	phx.w
- 127 	tsx.w
- 128 	adj #-6
- 132 	lda #0
- 133 	sta.w i_014,X
- 134 L_017
- 135 	lda #10
- 136 	cmp.w i_014,X
- 137 	bge L_018
- 138 	jmp L_019
- 139 L_018
- 141 	psh.w #island_002
- 142 	psh.w #0
- 144 	psh.w #22
- 145 	jsr _imul
- 146 	adj #4
- 147 	clc
- 148 	adc.w 1,S
- 149 	sta.w 1,S
- 150 	lda.w i_014,X
- 151 	asl.w a
- 152 	clc
- 153 	adc.w 1,S
- 154 	sta.w 1,S
- 155 	lda #5
- 156 	pli
- 157 	sta.w 0,I++
- 159 	psh.w #island_002
- 160 	psh.w #10
- 162 	psh.w #22
- 163 	jsr _imul
- 164 	adj #4
- 165 	clc
- 166 	adc.w 1,S
- 167 	sta.w 1,S
- 168 	lda.w i_014,X
- 169 	asl.w a
- 170 	clc
- 171 	adc.w 1,S
- 172 	sta.w 1,S
- 173 	lda #5
- 174 	pli
- 175 	sta.w 0,I++
- 177 	psh.w #island_002
- 178 	lda.w i_014,X
- 179 	pha.w
- 180 	psh.w #22
- 181 	jsr _imul
- 182 	adj #4
- 183 	clc
- 184 	adc.w 1,S
- 185 	sta.w 1,S
- 186 	lda #0
- 187 	asl.w a
- 188 	clc
- 189 	adc.w 1,S
- 190 	sta.w 1,S
- 191 	lda #5
- 192 	pli
- 193 	sta.w 0,I++
- 195 	psh.w #island_002
- 196 	lda.w i_014,X
- 197 	pha.w
- 198 	psh.w #22
- 199 	jsr _imul
- 200 	adj #4
- 201 	clc
- 202 	adc.w 1,S
- 203 	sta.w 1,S
- 204 	lda #10
- 205 	asl.w a
- 206 	clc
- 207 	adc.w 1,S
- 208 	sta.w 1,S
- 209 	lda #5
- 210 	pli
- 211 	sta.w 0,I++
- 213 	inc.w i_014,X
- 214 	jmp L_017
- 215 L_019
- 216 	dec.w i_014,X
- 218 	lda #1
- 219 	sta.w row_015,X
- 220 L_020
- 221 	lda #9
- 222 	cmp.w row_015,X
- 223 	bge L_021
- 224 	jmp L_022
- 225 L_021
- 227 	lda #1
- 228 	sta.w col_016,X
- 229 L_023
- 230 	lda #9
- 231 	cmp.w col_016,X
- 232 	bge L_024
- 233 	jmp L_025
- 234 L_024
- 236 	psh.w #island_002
- 237 	lda.w row_015,X
- 238 	pha.w
- 239 	psh.w #22
- 240 	jsr _imul
- 241 	adj #4
- 242 	clc
- 243 	adc.w 1,S
- 244 	sta.w 1,S
- 245 	lda.w col_016,X
- 246 	asl.w a
- 247 	clc
- 248 	adc.w 1,S
- 249 	sta.w 1,S
- 250 	lda #4
- 251 	pli
- 252 	sta.w 0,I++
- 254 	psh.w #foodunits_003
- 255 	lda.w row_015,X
- 256 	dec.w a
- 257 	pha.w
- 258 	psh.w #18
- 259 	jsr _imul
- 260 	adj #4
- 261 	clc
- 262 	adc.w 1,S
- 263 	sta.w 1,S
- 264 	lda.w col_016,X
- 265 	dec.w a
- 266 	asl.w a
- 267 	clc
- 268 	adc.w 1,S
- 269 	sta.w 1,S
- 270 	lda #0
- 271 	pli
- 272 	sta.w 0,I++
- 274 	inc.w col_016,X
- 275 	jmp L_023
- 276 L_025
- 277 	dec.w col_016,X
- 279 	inc.w row_015,X
- 280 	jmp L_020
- 281 L_022
- 282 	dec.w row_015,X
- 286 	psh.w #numwolves_005
- 287 	jsr _iread
- 288 	pli
- 289 	sta.w 0,I++
- 291 	lda #1
- 292 	sta.w i_014,X
- 293 L_026
- 294 	lda.w numwolves_005
- 295 	cmp.w i_014,X
- 296 	bge L_027
- 297 	jmp L_028
- 298 L_027
- 300 	txa.w
- 301 	clc
- 302 	adc.w #row_015
- 303 	pha.w
- 304 	jsr _iread
- 305 	pli
- 306 	sta.w 0,I++
+  10 	stz _bss_start
+  11 	ldx.w #_bss_start
+  12 	ldy.w #_bss_start+1
+  13 	lda.w #_stk_top
+  14 	sec
+  15 	sbc.w #_bss_start
+  16 	mov #15
+  17 	jmp _pc65_main
+ 129 i_014 .equ -1
+ 130 row_015 .equ -3
+ 131 col_016 .equ -5
+ 132 initialize_013 .sub
+ 133 	phx.w
+ 134 	tsx.w
+ 135 	adj #-6
+ 139 	lda #0
+ 140 	sta.w i_014,X
+ 141 L_017
+ 142 	lda #10
+ 143 	cmp.w i_014,X
+ 144 	bge L_018
+ 145 	jmp L_019
+ 146 L_018
+ 148 	psh.w #island_002
+ 149 	psh.w #0
+ 151 	psh.w #22
+ 152 	jsr _imul
+ 153 	adj #4
+ 154 	clc
+ 155 	adc.w 1,S
+ 156 	sta.w 1,S
+ 157 	lda.w i_014,X
+ 158 	asl.w a
+ 159 	clc
+ 160 	adc.w 1,S
+ 161 	sta.w 1,S
+ 162 	lda #5
+ 163 	pli.s
+ 164 	sta.w 0,I++
+ 166 	psh.w #island_002
+ 167 	psh.w #10
+ 169 	psh.w #22
+ 170 	jsr _imul
+ 171 	adj #4
+ 172 	clc
+ 173 	adc.w 1,S
+ 174 	sta.w 1,S
+ 175 	lda.w i_014,X
+ 176 	asl.w a
+ 177 	clc
+ 178 	adc.w 1,S
+ 179 	sta.w 1,S
+ 180 	lda #5
+ 181 	pli.s
+ 182 	sta.w 0,I++
+ 184 	psh.w #island_002
+ 185 	lda.w i_014,X
+ 186 	pha.w
+ 187 	psh.w #22
+ 188 	jsr _imul
+ 189 	adj #4
+ 190 	clc
+ 191 	adc.w 1,S
+ 192 	sta.w 1,S
+ 193 	lda #0
+ 194 	asl.w a
+ 195 	clc
+ 196 	adc.w 1,S
+ 197 	sta.w 1,S
+ 198 	lda #5
+ 199 	pli.s
+ 200 	sta.w 0,I++
+ 202 	psh.w #island_002
+ 203 	lda.w i_014,X
+ 204 	pha.w
+ 205 	psh.w #22
+ 206 	jsr _imul
+ 207 	adj #4
+ 208 	clc
+ 209 	adc.w 1,S
+ 210 	sta.w 1,S
+ 211 	lda #10
+ 212 	asl.w a
+ 213 	clc
+ 214 	adc.w 1,S
+ 215 	sta.w 1,S
+ 216 	lda #5
+ 217 	pli.s
+ 218 	sta.w 0,I++
+ 220 	inc.w i_014,X
+ 221 	jmp L_017
+ 222 L_019
+ 223 	dec.w i_014,X
+ 225 	lda #1
+ 226 	sta.w row_015,X
+ 227 L_020
+ 228 	lda #9
+ 229 	cmp.w row_015,X
+ 230 	bge L_021
+ 231 	jmp L_022
+ 232 L_021
+ 234 	lda #1
+ 235 	sta.w col_016,X
+ 236 L_023
+ 237 	lda #9
+ 238 	cmp.w col_016,X
+ 239 	bge L_024
+ 240 	jmp L_025
+ 241 L_024
+ 243 	psh.w #island_002
+ 244 	lda.w row_015,X
+ 245 	pha.w
+ 246 	psh.w #22
+ 247 	jsr _imul
+ 248 	adj #4
+ 249 	clc
+ 250 	adc.w 1,S
+ 251 	sta.w 1,S
+ 252 	lda.w col_016,X
+ 253 	asl.w a
+ 254 	clc
+ 255 	adc.w 1,S
+ 256 	sta.w 1,S
+ 257 	lda #4
+ 258 	pli.s
+ 259 	sta.w 0,I++
+ 261 	psh.w #foodunits_003
+ 262 	lda.w row_015,X
+ 263 	dec.w a
+ 264 	pha.w
+ 265 	psh.w #18
+ 266 	jsr _imul
+ 267 	adj #4
+ 268 	clc
+ 269 	adc.w 1,S
+ 270 	sta.w 1,S
+ 271 	lda.w col_016,X
+ 272 	dec.w a
+ 273 	asl.w a
+ 274 	clc
+ 275 	adc.w 1,S
+ 276 	sta.w 1,S
+ 277 	lda #0
+ 278 	pli.s
+ 279 	sta.w 0,I++
+ 281 	inc.w col_016,X
+ 282 	jmp L_023
+ 283 L_025
+ 284 	dec.w col_016,X
+ 286 	inc.w row_015,X
+ 287 	jmp L_020
+ 288 L_022
+ 289 	dec.w row_015,X
+ 293 	psh.w #numwolves_005
+ 294 	jsr _iread
+ 295 	pli.s
+ 296 	sta.w 0,I++
+ 298 	lda #1
+ 299 	sta.w i_014,X
+ 300 L_026
+ 301 	lda.w numwolves_005
+ 302 	cmp.w i_014,X
+ 303 	bge L_027
+ 304 	jmp L_028
+ 305 L_027
  307 	txa.w
  308 	clc
- 309 	adc.w #col_016
+ 309 	adc.w #row_015
  310 	pha.w
  311 	jsr _iread
- 312 	pli
+ 312 	pli.s
  313 	sta.w 0,I++
- 315 	psh.w #island_002
- 316 	lda.w row_015,X
+ 314 	txa.w
+ 315 	clc
+ 316 	adc.w #col_016
  317 	pha.w
- 318 	psh.w #22
- 319 	jsr _imul
- 320 	adj #4
- 321 	clc
- 322 	adc.w 1,S
- 323 	sta.w 1,S
- 324 	lda.w col_016,X
- 325 	asl.w a
- 326 	clc
- 327 	adc.w 1,S
- 328 	sta.w 1,S
- 329 	lda #0
- 330 	pli
- 331 	sta.w 0,I++
- 333 	psh.w #foodunits_003
- 334 	lda.w row_015,X
- 335 	dec.w a
- 336 	pha.w
- 337 	psh.w #18
- 338 	jsr _imul
- 339 	adj #4
- 340 	clc
- 341 	adc.w 1,S
- 342 	sta.w 1,S
- 343 	lda.w col_016,X
- 344 	dec.w a
- 345 	asl.w a
- 346 	clc
- 347 	adc.w 1,S
- 348 	sta.w 1,S
- 349 	lda #6
- 350 	pli
- 351 	sta.w 0,I++
- 353 	inc.w i_014,X
- 354 	jmp L_026
- 355 L_028
- 356 	dec.w i_014,X
- 360 	psh.w #numrabbits_006
- 361 	jsr _iread
- 362 	pli
- 363 	sta.w 0,I++
- 365 	lda #1
- 366 	sta.w i_014,X
- 367 L_029
- 368 	lda.w numrabbits_006
- 369 	cmp.w i_014,X
- 370 	bge L_030
- 371 	jmp L_031
- 372 L_030
- 374 	txa.w
- 375 	clc
- 376 	adc.w #row_015
- 377 	pha.w
- 378 	jsr _iread
- 379 	pli
- 380 	sta.w 0,I++
+ 318 	jsr _iread
+ 319 	pli.s
+ 320 	sta.w 0,I++
+ 322 	psh.w #island_002
+ 323 	lda.w row_015,X
+ 324 	pha.w
+ 325 	psh.w #22
+ 326 	jsr _imul
+ 327 	adj #4
+ 328 	clc
+ 329 	adc.w 1,S
+ 330 	sta.w 1,S
+ 331 	lda.w col_016,X
+ 332 	asl.w a
+ 333 	clc
+ 334 	adc.w 1,S
+ 335 	sta.w 1,S
+ 336 	lda #0
+ 337 	pli.s
+ 338 	sta.w 0,I++
+ 340 	psh.w #foodunits_003
+ 341 	lda.w row_015,X
+ 342 	dec.w a
+ 343 	pha.w
+ 344 	psh.w #18
+ 345 	jsr _imul
+ 346 	adj #4
+ 347 	clc
+ 348 	adc.w 1,S
+ 349 	sta.w 1,S
+ 350 	lda.w col_016,X
+ 351 	dec.w a
+ 352 	asl.w a
+ 353 	clc
+ 354 	adc.w 1,S
+ 355 	sta.w 1,S
+ 356 	lda #6
+ 357 	pli.s
+ 358 	sta.w 0,I++
+ 360 	inc.w i_014,X
+ 361 	jmp L_026
+ 362 L_028
+ 363 	dec.w i_014,X
+ 367 	psh.w #numrabbits_006
+ 368 	jsr _iread
+ 369 	pli.s
+ 370 	sta.w 0,I++
+ 372 	lda #1
+ 373 	sta.w i_014,X
+ 374 L_029
+ 375 	lda.w numrabbits_006
+ 376 	cmp.w i_014,X
+ 377 	bge L_030
+ 378 	jmp L_031
+ 379 L_030
  381 	txa.w
  382 	clc
- 383 	adc.w #col_016
+ 383 	adc.w #row_015
  384 	pha.w
  385 	jsr _iread
- 386 	pli
+ 386 	pli.s
  387 	sta.w 0,I++
- 389 	psh.w #island_002
- 390 	lda.w row_015,X
+ 388 	txa.w
+ 389 	clc
+ 390 	adc.w #col_016
  391 	pha.w
- 392 	psh.w #22
- 393 	jsr _imul
- 394 	adj #4
- 395 	clc
- 396 	adc.w 1,S
- 397 	sta.w 1,S
- 398 	lda.w col_016,X
- 399 	asl.w a
- 400 	clc
- 401 	adc.w 1,S
- 402 	sta.w 1,S
- 403 	lda #1
- 404 	pli
- 405 	sta.w 0,I++
- 407 	inc.w i_014,X
- 408 	jmp L_029
- 409 L_031
- 410 	dec.w i_014,X
- 414 	psh.w #numprinttimes_007
- 415 	jsr _iread
- 416 	pli
- 417 	sta.w 0,I++
- 419 	lda #1
- 420 	sta.w i_014,X
- 421 L_032
- 422 	lda.w numprinttimes_007
- 423 	cmp.w i_014,X
- 424 	bge L_033
- 425 	jmp L_034
- 426 L_033
- 428 	psh.w #printtimes_004
- 429 	lda.w i_014,X
- 430 	dec.w a
- 431 	asl.w a
- 432 	clc
- 433 	adc.w 1,S
- 434 	sta.w 1,S
- 435 	jsr _iread
- 436 	pli
- 437 	sta.w 0,I++
- 439 	inc.w i_014,X
- 440 	jmp L_032
- 441 L_034
- 442 	dec.w i_014,X
- 446 	psh.w #rowoffset_011
- 447 	lda #0
- 448 	asl.w a
- 449 	clc
- 450 	adc.w 1,S
- 451 	sta.w 1,S
- 452 	lda #0
- 453 	pli
- 454 	sta.w 0,I++
- 455 	psh.w #coloffset_012
- 456 	lda #0
- 457 	asl.w a
- 458 	clc
- 459 	adc.w 1,S
- 460 	sta.w 1,S
- 461 	lda #0
- 462 	pli
- 463 	sta.w 0,I++
- 465 	psh.w #rowoffset_011
- 466 	lda #1
- 467 	asl.w a
- 468 	clc
- 469 	adc.w 1,S
- 470 	sta.w 1,S
- 471 	lda #1
- 472 	eor.w #-1
- 473 	inc.w a
- 474 	pli
- 475 	sta.w 0,I++
- 476 	psh.w #coloffset_012
- 477 	lda #1
- 478 	asl.w a
- 479 	clc
- 480 	adc.w 1,S
- 481 	sta.w 1,S
- 482 	lda #0
- 483 	pli
- 484 	sta.w 0,I++
- 486 	psh.w #rowoffset_011
- 487 	lda #2
- 488 	asl.w a
- 489 	clc
- 490 	adc.w 1,S
- 491 	sta.w 1,S
- 492 	lda #0
- 493 	pli
- 494 	sta.w 0,I++
- 495 	psh.w #coloffset_012
- 496 	lda #2
- 497 	asl.w a
- 498 	clc
- 499 	adc.w 1,S
- 500 	sta.w 1,S
- 501 	lda #1
- 502 	eor.w #-1
- 503 	inc.w a
- 504 	pli
- 505 	sta.w 0,I++
- 507 	psh.w #rowoffset_011
- 508 	lda #3
- 509 	asl.w a
- 510 	clc
- 511 	adc.w 1,S
- 512 	sta.w 1,S
- 513 	lda #0
- 514 	pli
- 515 	sta.w 0,I++
- 516 	psh.w #coloffset_012
- 517 	lda #3
- 518 	asl.w a
- 519 	clc
- 520 	adc.w 1,S
- 521 	sta.w 1,S
- 522 	lda #1
- 523 	pli
- 524 	sta.w 0,I++
- 526 	psh.w #rowoffset_011
- 527 	lda #4
- 528 	asl.w a
- 529 	clc
- 530 	adc.w 1,S
- 531 	sta.w 1,S
- 532 	lda #1
- 533 	pli
- 534 	sta.w 0,I++
- 535 	psh.w #coloffset_012
- 536 	lda #4
- 537 	asl.w a
- 538 	clc
- 539 	adc.w 1,S
- 540 	sta.w 1,S
- 541 	lda #0
- 542 	pli
- 543 	sta.w 0,I++
- 545 	txs.w
- 546 	plx.w
- 547 	rts
- 548 	.end initialize_013
- 561 limit_036 .equ +7
- 562 random_035	.sub
- 563 	phx.w
- 564 	tsx.w
- 565 	adj #-4
- 567 	lda.w seed_010
- 568 	pha.w
- 569 	psh.w #21
- 571 	jsr _imul
- 572 	adj #4
- 573 	pha.w
- 574 	lda #77
- 575 	clc
- 576 	adc.w 1,S
- 577 	adj #2
- 578 	pha.w
- 579 	psh.w #1024
- 581 	jsr _idiv
- 582 	adj #4
- 583 	swp a
- 584 	sta.w seed_010
- 586 	lda.w seed_010
- 587 	pha.w
- 588 	lda.w limit_036,X
- 589 	pha.w
- 590 	jsr _imul
- 591 	adj #4
- 592 	pha.w
- 593 	psh.w #1024
- 595 	jsr _idiv
- 596 	adj #4
- 597 	sta.w RETURN_VALUE,X
- 599 	lda.w RETURN_VALUE,X
- 600 	txs.w
- 601 	plx.w
- 602 	rts
- 603 	.end random_035
- 620 creature_038 .equ +15
- 621 oldrow_039 .equ +13
- 622 oldcol_040 .equ +11
- 623 newrow_041 .equ +9
- 624 newcol_042 .equ +7
- 625 adj_043 .equ -1
- 626 what_044 .equ -3
- 627 done_045 .equ -5
- 628 newlocation_037	.sub
- 629 	phx.w
- 630 	tsx.w
- 631 	adj #-6
- 633 	lda #0
- 634 	sta.w done_045,X
- 639 	lda.w creature_038,X
- 640 	pha.w
- 641 	lda #0
- 642 	xma.w 1,S
- 643 	cmp.w 1,S
- 644 	adj #2
- 645 	php
- 646 	lda #1
- 647 	plp
- 648 	beq L_048
- 649 	lda #0
- 650 L_048
- 651 	cmp.w #1
- 652 	beq L_046
- 653 	jmp L_047
- 654 L_046
+ 392 	jsr _iread
+ 393 	pli.s
+ 394 	sta.w 0,I++
+ 396 	psh.w #island_002
+ 397 	lda.w row_015,X
+ 398 	pha.w
+ 399 	psh.w #22
+ 400 	jsr _imul
+ 401 	adj #4
+ 402 	clc
+ 403 	adc.w 1,S
+ 404 	sta.w 1,S
+ 405 	lda.w col_016,X
+ 406 	asl.w a
+ 407 	clc
+ 408 	adc.w 1,S
+ 409 	sta.w 1,S
+ 410 	lda #1
+ 411 	pli.s
+ 412 	sta.w 0,I++
+ 414 	inc.w i_014,X
+ 415 	jmp L_029
+ 416 L_031
+ 417 	dec.w i_014,X
+ 421 	psh.w #numprinttimes_007
+ 422 	jsr _iread
+ 423 	pli.s
+ 424 	sta.w 0,I++
+ 426 	lda #1
+ 427 	sta.w i_014,X
+ 428 L_032
+ 429 	lda.w numprinttimes_007
+ 430 	cmp.w i_014,X
+ 431 	bge L_033
+ 432 	jmp L_034
+ 433 L_033
+ 435 	psh.w #printtimes_004
+ 436 	lda.w i_014,X
+ 437 	dec.w a
+ 438 	asl.w a
+ 439 	clc
+ 440 	adc.w 1,S
+ 441 	sta.w 1,S
+ 442 	jsr _iread
+ 443 	pli.s
+ 444 	sta.w 0,I++
+ 446 	inc.w i_014,X
+ 447 	jmp L_032
+ 448 L_034
+ 449 	dec.w i_014,X
+ 453 	psh.w #rowoffset_011
+ 454 	lda #0
+ 455 	asl.w a
+ 456 	clc
+ 457 	adc.w 1,S
+ 458 	sta.w 1,S
+ 459 	lda #0
+ 460 	pli.s
+ 461 	sta.w 0,I++
+ 462 	psh.w #coloffset_012
+ 463 	lda #0
+ 464 	asl.w a
+ 465 	clc
+ 466 	adc.w 1,S
+ 467 	sta.w 1,S
+ 468 	lda #0
+ 469 	pli.s
+ 470 	sta.w 0,I++
+ 472 	psh.w #rowoffset_011
+ 473 	lda #1
+ 474 	asl.w a
+ 475 	clc
+ 476 	adc.w 1,S
+ 477 	sta.w 1,S
+ 478 	lda #1
+ 479 	eor.w #-1
+ 480 	inc.w a
+ 481 	pli.s
+ 482 	sta.w 0,I++
+ 483 	psh.w #coloffset_012
+ 484 	lda #1
+ 485 	asl.w a
+ 486 	clc
+ 487 	adc.w 1,S
+ 488 	sta.w 1,S
+ 489 	lda #0
+ 490 	pli.s
+ 491 	sta.w 0,I++
+ 493 	psh.w #rowoffset_011
+ 494 	lda #2
+ 495 	asl.w a
+ 496 	clc
+ 497 	adc.w 1,S
+ 498 	sta.w 1,S
+ 499 	lda #0
+ 500 	pli.s
+ 501 	sta.w 0,I++
+ 502 	psh.w #coloffset_012
+ 503 	lda #2
+ 504 	asl.w a
+ 505 	clc
+ 506 	adc.w 1,S
+ 507 	sta.w 1,S
+ 508 	lda #1
+ 509 	eor.w #-1
+ 510 	inc.w a
+ 511 	pli.s
+ 512 	sta.w 0,I++
+ 514 	psh.w #rowoffset_011
+ 515 	lda #3
+ 516 	asl.w a
+ 517 	clc
+ 518 	adc.w 1,S
+ 519 	sta.w 1,S
+ 520 	lda #0
+ 521 	pli.s
+ 522 	sta.w 0,I++
+ 523 	psh.w #coloffset_012
+ 524 	lda #3
+ 525 	asl.w a
+ 526 	clc
+ 527 	adc.w 1,S
+ 528 	sta.w 1,S
+ 529 	lda #1
+ 530 	pli.s
+ 531 	sta.w 0,I++
+ 533 	psh.w #rowoffset_011
+ 534 	lda #4
+ 535 	asl.w a
+ 536 	clc
+ 537 	adc.w 1,S
+ 538 	sta.w 1,S
+ 539 	lda #1
+ 540 	pli.s
+ 541 	sta.w 0,I++
+ 542 	psh.w #coloffset_012
+ 543 	lda #4
+ 544 	asl.w a
+ 545 	clc
+ 546 	adc.w 1,S
+ 547 	sta.w 1,S
+ 548 	lda #0
+ 549 	pli.s
+ 550 	sta.w 0,I++
+ 552 	txs.w
+ 553 	plx.w
+ 554 	rts
+ 555 	.end initialize_013
+ 568 limit_036 .equ +7
+ 569 random_035 .sub
+ 570 	phx.w
+ 571 	tsx.w
+ 572 	adj #-4
+ 574 	lda.w seed_010
+ 575 	pha.w
+ 576 	psh.w #21
+ 578 	jsr _imul
+ 579 	adj #4
+ 580 	pha.w
+ 581 	lda #77
+ 582 	clc
+ 583 	adc.w 1,S
+ 584 	adj #2
+ 585 	pha.w
+ 586 	psh.w #1024
+ 588 	jsr _idiv
+ 589 	adj #4
+ 590 	swp a
+ 591 	sta.w seed_010
+ 593 	lda.w seed_010
+ 594 	pha.w
+ 595 	lda.w limit_036,X
+ 596 	pha.w
+ 597 	jsr _imul
+ 598 	adj #4
+ 599 	pha.w
+ 600 	psh.w #1024
+ 602 	jsr _idiv
+ 603 	adj #4
+ 604 	sta.w RETURN_VALUE,X
+ 606 	lda.w RETURN_VALUE,X
+ 607 	txs.w
+ 608 	plx.w
+ 609 	rts
+ 610 	.end random_035
+ 627 creature_038 .equ +15
+ 628 oldrow_039 .equ +13
+ 629 oldcol_040 .equ +11
+ 630 newrow_041 .equ +9
+ 631 newcol_042 .equ +7
+ 632 adj_043 .equ -1
+ 633 what_044 .equ -3
+ 634 done_045 .equ -5
+ 635 newlocation_037 .sub
+ 636 	phx.w
+ 637 	tsx.w
+ 638 	adj #-6
+ 640 	lda #0
+ 641 	sta.w done_045,X
+ 646 	lda.w creature_038,X
+ 647 	pha.w
+ 648 	lda #0
+ 649 	xma.w 1,S
+ 650 	cmp.w 1,S
+ 651 	adj #2
+ 652 	php
+ 653 	lda #1
+ 654 	plp
+ 655 	beq L_048
  656 	lda #0
- 657 	sta.w adj_043,X
- 659 L_049
- 661 	lda.w adj_043,X
- 662 	pha.w
- 663 	lda #1
- 664 	clc
- 665 	adc.w 1,S
- 666 	adj #2
- 667 	sta.w adj_043,X
- 669 	lda.w newrow_041,X
- 670 	pha.w
- 671 	lda.w oldrow_039,X
- 672 	pha.w
- 673 	psh.w #rowoffset_011
- 674 	lda.w adj_043,X
- 675 	asl.w a
- 676 	clc
- 677 	adc.w 1,S
- 678 	sta.w 1,S
- 679 	pli
- 680 	lda.w 0,I++
- 681 	clc
- 682 	adc.w 1,S
- 683 	adj #2
- 684 	pli
- 685 	sta.w 0,I++
- 687 	lda.w newcol_042,X
- 688 	pha.w
- 689 	lda.w oldcol_040,X
- 690 	pha.w
- 691 	psh.w #coloffset_012
- 692 	lda.w adj_043,X
- 693 	asl.w a
- 694 	clc
- 695 	adc.w 1,S
- 696 	sta.w 1,S
- 697 	pli
- 698 	lda.w 0,I++
- 699 	clc
- 700 	adc.w 1,S
- 701 	adj #2
- 702 	pli
- 703 	sta.w 0,I++
- 705 	psh.w #island_002
- 706 	lda.w (newrow_041,X)
- 707 	pha.w
- 708 	psh.w #22
- 709 	jsr _imul
- 710 	adj #4
- 711 	clc
- 712 	adc.w 1,S
- 713 	sta.w 1,S
- 714 	lda.w (newcol_042,X)
- 715 	asl.w a
- 716 	clc
- 717 	adc.w 1,S
- 718 	sta.w 1,S
- 719 	pli
- 720 	lda.w 0,I++
- 721 	sta.w what_044,X
- 723 	lda.w what_044,X
- 724 	pha.w
- 725 	lda #1
- 726 	xma.w 1,S
- 727 	cmp.w 1,S
- 728 	adj #2
- 729 	php
- 730 	lda #1
- 731 	plp
- 732 	beq L_051
- 733 	lda #0
- 734 L_051
- 735 	sta.w done_045,X
- 737 	lda.w done_045,X
- 738 	pha.w
- 739 	lda.w adj_043,X
- 740 	pha.w
- 741 	lda #4
- 742 	xma.w 1,S
- 743 	cmp.w 1,S
- 744 	adj #2
- 745 	php
- 746 	lda #1
- 747 	plp
- 748 	beq L_052
- 749 	lda #0
- 750 L_052
- 751 	ora.w 1,S
- 752 	adj #2
- 753 	cmp.w #1
- 754 	beq L_050
- 755 	jmp L_049
- 756 L_050
- 758 L_047
- 762 	lda.w done_045,X
- 763 	eor #1
- 764 	cmp.w #1
- 765 	beq L_053
- 766 	jmp L_054
- 767 L_053
- 769 L_055
- 771 	psh.w #5
- 773 	lda.w STATIC_LINK,X
- 774 	pha.w
- 775 	jsr random_035
- 776 	adj #4
- 777 	sta.w adj_043,X
- 779 	lda.w newrow_041,X
- 780 	pha.w
- 781 	lda.w oldrow_039,X
- 782 	pha.w
- 783 	psh.w #rowoffset_011
- 784 	lda.w adj_043,X
- 785 	asl.w a
- 786 	clc
- 787 	adc.w 1,S
- 788 	sta.w 1,S
- 789 	pli
- 790 	lda.w 0,I++
- 791 	clc
- 792 	adc.w 1,S
- 793 	adj #2
- 794 	pli
- 795 	sta.w 0,I++
- 797 	lda.w newcol_042,X
- 798 	pha.w
- 799 	lda.w oldcol_040,X
- 800 	pha.w
- 801 	psh.w #coloffset_012
- 802 	lda.w adj_043,X
- 803 	asl.w a
- 804 	clc
- 805 	adc.w 1,S
- 806 	sta.w 1,S
- 807 	pli
- 808 	lda.w 0,I++
- 809 	clc
- 810 	adc.w 1,S
- 811 	adj #2
- 812 	pli
- 813 	sta.w 0,I++
- 815 	psh.w #island_002
- 816 	lda.w (newrow_041,X)
- 817 	pha.w
- 818 	psh.w #22
- 819 	jsr _imul
- 820 	adj #4
- 821 	clc
- 822 	adc.w 1,S
- 823 	sta.w 1,S
- 824 	lda.w (newcol_042,X)
- 825 	asl.w a
- 826 	clc
- 827 	adc.w 1,S
- 828 	sta.w 1,S
- 829 	pli
- 830 	lda.w 0,I++
- 831 	sta.w what_044,X
- 833 	lda.w what_044,X
- 834 	pha.w
- 835 	lda #4
- 836 	xma.w 1,S
- 837 	cmp.w 1,S
- 838 	adj #2
- 839 	php
- 840 	lda #1
- 841 	plp
- 842 	beq L_057
- 843 	lda #0
- 844 L_057
- 846 	pha.w
- 847 	lda.w (newrow_041,X)
- 848 	pha.w
- 849 	lda.w oldrow_039,X
- 850 	xma.w 1,S
- 851 	cmp.w 1,S
- 852 	adj #2
- 853 	php
- 854 	lda #1
- 855 	plp
- 856 	beq L_058
- 857 	lda #0
- 858 L_058
- 859 	pha.w
- 860 	lda.w (newcol_042,X)
- 861 	pha.w
- 862 	lda.w oldcol_040,X
- 863 	xma.w 1,S
- 864 	cmp.w 1,S
- 865 	adj #2
- 866 	php
- 867 	lda #1
- 868 	plp
- 869 	beq L_059
- 870 	lda #0
- 871 L_059
- 872 	and.w 1,S
- 873 	adj #2
- 874 	ora.w 1,S
- 875 	adj #2
- 876 	cmp.w #1
- 877 	beq L_056
- 878 	jmp L_055
- 879 L_056
- 881 L_054
- 883 	txs.w
- 884 	plx.w
- 885 	rts
- 886 	.end newlocation_037
- 898 oldrow_061 .equ +9
- 899 oldcol_062 .equ +7
- 900 newrow_063 .equ -1
- 901 newcol_064 .equ -3
- 902 moved_065 .equ -5
- 903 processwolf_060	.sub
- 904 	phx.w
- 905 	tsx.w
- 906 	adj #-6
- 910 	psh.w #foodunits_003
- 911 	lda.w oldrow_061,X
- 912 	dec.w a
- 913 	pha.w
- 914 	psh.w #18
- 915 	jsr _imul
- 916 	adj #4
- 917 	clc
- 918 	adc.w 1,S
- 919 	sta.w 1,S
- 920 	lda.w oldcol_062,X
- 921 	dec.w a
- 922 	asl.w a
- 923 	clc
- 924 	adc.w 1,S
- 925 	sta.w 1,S
- 926 	psh.w #foodunits_003
- 927 	lda.w oldrow_061,X
+ 657 L_048
+ 658 	cmp.w #1
+ 659 	beq L_046
+ 660 	jmp L_047
+ 661 L_046
+ 663 	lda #0
+ 664 	sta.w adj_043,X
+ 666 L_049
+ 668 	lda.w adj_043,X
+ 669 	pha.w
+ 670 	lda #1
+ 671 	clc
+ 672 	adc.w 1,S
+ 673 	adj #2
+ 674 	sta.w adj_043,X
+ 676 	lda.w newrow_041,X
+ 677 	pha.w
+ 678 	lda.w oldrow_039,X
+ 679 	pha.w
+ 680 	psh.w #rowoffset_011
+ 681 	lda.w adj_043,X
+ 682 	asl.w a
+ 683 	clc
+ 684 	adc.w 1,S
+ 685 	sta.w 1,S
+ 686 	pli.s
+ 687 	lda.w 0,I++
+ 688 	clc
+ 689 	adc.w 1,S
+ 690 	adj #2
+ 691 	pli.s
+ 692 	sta.w 0,I++
+ 694 	lda.w newcol_042,X
+ 695 	pha.w
+ 696 	lda.w oldcol_040,X
+ 697 	pha.w
+ 698 	psh.w #coloffset_012
+ 699 	lda.w adj_043,X
+ 700 	asl.w a
+ 701 	clc
+ 702 	adc.w 1,S
+ 703 	sta.w 1,S
+ 704 	pli.s
+ 705 	lda.w 0,I++
+ 706 	clc
+ 707 	adc.w 1,S
+ 708 	adj #2
+ 709 	pli.s
+ 710 	sta.w 0,I++
+ 712 	psh.w #island_002
+ 713 	lda.w (newrow_041,X)
+ 714 	pha.w
+ 715 	psh.w #22
+ 716 	jsr _imul
+ 717 	adj #4
+ 718 	clc
+ 719 	adc.w 1,S
+ 720 	sta.w 1,S
+ 721 	lda.w (newcol_042,X)
+ 722 	asl.w a
+ 723 	clc
+ 724 	adc.w 1,S
+ 725 	sta.w 1,S
+ 726 	pli.s
+ 727 	lda.w 0,I++
+ 728 	sta.w what_044,X
+ 730 	lda.w what_044,X
+ 731 	pha.w
+ 732 	lda #1
+ 733 	xma.w 1,S
+ 734 	cmp.w 1,S
+ 735 	adj #2
+ 736 	php
+ 737 	lda #1
+ 738 	plp
+ 739 	beq L_051
+ 740 	lda #0
+ 741 L_051
+ 742 	sta.w done_045,X
+ 744 	lda.w done_045,X
+ 745 	pha.w
+ 746 	lda.w adj_043,X
+ 747 	pha.w
+ 748 	lda #4
+ 749 	xma.w 1,S
+ 750 	cmp.w 1,S
+ 751 	adj #2
+ 752 	php
+ 753 	lda #1
+ 754 	plp
+ 755 	beq L_052
+ 756 	lda #0
+ 757 L_052
+ 758 	ora.w 1,S
+ 759 	adj #2
+ 760 	cmp.w #1
+ 761 	beq L_050
+ 762 	jmp L_049
+ 763 L_050
+ 765 L_047
+ 769 	lda.w done_045,X
+ 770 	eor #1
+ 771 	cmp.w #1
+ 772 	beq L_053
+ 773 	jmp L_054
+ 774 L_053
+ 776 L_055
+ 778 	psh.w #5
+ 780 	lda.w STATIC_LINK,X
+ 781 	pha.w
+ 782 	jsr random_035
+ 783 	adj #4
+ 784 	sta.w adj_043,X
+ 786 	lda.w newrow_041,X
+ 787 	pha.w
+ 788 	lda.w oldrow_039,X
+ 789 	pha.w
+ 790 	psh.w #rowoffset_011
+ 791 	lda.w adj_043,X
+ 792 	asl.w a
+ 793 	clc
+ 794 	adc.w 1,S
+ 795 	sta.w 1,S
+ 796 	pli.s
+ 797 	lda.w 0,I++
+ 798 	clc
+ 799 	adc.w 1,S
+ 800 	adj #2
+ 801 	pli.s
+ 802 	sta.w 0,I++
+ 804 	lda.w newcol_042,X
+ 805 	pha.w
+ 806 	lda.w oldcol_040,X
+ 807 	pha.w
+ 808 	psh.w #coloffset_012
+ 809 	lda.w adj_043,X
+ 810 	asl.w a
+ 811 	clc
+ 812 	adc.w 1,S
+ 813 	sta.w 1,S
+ 814 	pli.s
+ 815 	lda.w 0,I++
+ 816 	clc
+ 817 	adc.w 1,S
+ 818 	adj #2
+ 819 	pli.s
+ 820 	sta.w 0,I++
+ 822 	psh.w #island_002
+ 823 	lda.w (newrow_041,X)
+ 824 	pha.w
+ 825 	psh.w #22
+ 826 	jsr _imul
+ 827 	adj #4
+ 828 	clc
+ 829 	adc.w 1,S
+ 830 	sta.w 1,S
+ 831 	lda.w (newcol_042,X)
+ 832 	asl.w a
+ 833 	clc
+ 834 	adc.w 1,S
+ 835 	sta.w 1,S
+ 836 	pli.s
+ 837 	lda.w 0,I++
+ 838 	sta.w what_044,X
+ 840 	lda.w what_044,X
+ 841 	pha.w
+ 842 	lda #4
+ 843 	xma.w 1,S
+ 844 	cmp.w 1,S
+ 845 	adj #2
+ 846 	php
+ 847 	lda #1
+ 848 	plp
+ 849 	beq L_057
+ 850 	lda #0
+ 851 L_057
+ 853 	pha.w
+ 854 	lda.w (newrow_041,X)
+ 855 	pha.w
+ 856 	lda.w oldrow_039,X
+ 857 	xma.w 1,S
+ 858 	cmp.w 1,S
+ 859 	adj #2
+ 860 	php
+ 861 	lda #1
+ 862 	plp
+ 863 	beq L_058
+ 864 	lda #0
+ 865 L_058
+ 866 	pha.w
+ 867 	lda.w (newcol_042,X)
+ 868 	pha.w
+ 869 	lda.w oldcol_040,X
+ 870 	xma.w 1,S
+ 871 	cmp.w 1,S
+ 872 	adj #2
+ 873 	php
+ 874 	lda #1
+ 875 	plp
+ 876 	beq L_059
+ 877 	lda #0
+ 878 L_059
+ 879 	and.w 1,S
+ 880 	adj #2
+ 881 	ora.w 1,S
+ 882 	adj #2
+ 883 	cmp.w #1
+ 884 	beq L_056
+ 885 	jmp L_055
+ 886 L_056
+ 888 L_054
+ 890 	txs.w
+ 891 	plx.w
+ 892 	rts
+ 893 	.end newlocation_037
+ 905 oldrow_061 .equ +9
+ 906 oldcol_062 .equ +7
+ 907 newrow_063 .equ -1
+ 908 newcol_064 .equ -3
+ 909 moved_065 .equ -5
+ 910 processwolf_060 .sub
+ 911 	phx.w
+ 912 	tsx.w
+ 913 	adj #-6
+ 917 	psh.w #foodunits_003
+ 918 	lda.w oldrow_061,X
+ 919 	dec.w a
+ 920 	pha.w
+ 921 	psh.w #18
+ 922 	jsr _imul
+ 923 	adj #4
+ 924 	clc
+ 925 	adc.w 1,S
+ 926 	sta.w 1,S
+ 927 	lda.w oldcol_062,X
  928 	dec.w a
- 929 	pha.w
- 930 	psh.w #18
- 931 	jsr _imul
- 932 	adj #4
- 933 	clc
- 934 	adc.w 1,S
- 935 	sta.w 1,S
- 936 	lda.w oldcol_062,X
- 937 	dec.w a
- 938 	asl.w a
- 939 	clc
- 940 	adc.w 1,S
- 941 	sta.w 1,S
- 942 	pli
- 943 	lda.w 0,I++
- 944 	pha.w
- 945 	lda #1
- 946 	xma.w 1,S
- 947 	sec
- 948 	sbc.w 1,S
- 949 	adj #2
- 950 	pli
- 951 	sta.w 0,I++
- 954 	psh.w #foodunits_003
- 955 	lda.w oldrow_061,X
- 956 	dec.w a
- 957 	pha.w
- 958 	psh.w #18
- 959 	jsr _imul
- 960 	adj #4
- 961 	clc
- 962 	adc.w 1,S
- 963 	sta.w 1,S
- 964 	lda.w oldcol_062,X
- 965 	dec.w a
- 966 	asl.w a
- 967 	clc
- 968 	adc.w 1,S
- 969 	sta.w 1,S
- 970 	pli
- 971 	lda.w 0,I++
- 972 	pha.w
- 973 	lda #0
- 974 	xma.w 1,S
- 975 	cmp.w 1,S
- 976 	adj #2
- 977 	php
- 978 	lda #1
- 979 	plp
- 980 	beq L_068
- 981 	lda #0
- 982 L_068
- 983 	cmp.w #1
- 984 	beq L_066
- 985 	jmp L_067
- 986 L_066
- 990 	psh.w #island_002
- 991 	lda.w oldrow_061,X
- 992 	pha.w
- 993 	psh.w #22
- 994 	jsr _imul
- 995 	adj #4
- 996 	clc
- 997 	adc.w 1,S
- 998 	sta.w 1,S
- 999 	lda.w oldcol_062,X
-1000 	asl.w a
-1001 	clc
-1002 	adc.w 1,S
-1003 	sta.w 1,S
-1004 	lda #4
-1005 	pli
-1006 	sta.w 0,I++
-1008 	lda.w numwolves_005
-1009 	pha.w
-1010 	lda #1
-1011 	xma.w 1,S
-1012 	sec
-1013 	sbc.w 1,S
-1014 	adj #2
-1015 	sta.w numwolves_005
-1017 	psh.w #S_069
-1018 	psh.w #0
-1019 	psh.w #3
-1020 	jsr _swrite
-1021 	adj #6
-1022 	lda.w t_008
-1023 	pha.w
-1024 	psh.w #4
-1026 	jsr _iwrite
-1027 	adj #4
-1028 	psh.w #S_070
-1029 	psh.w #0
-1030 	psh.w #16
-1031 	jsr _swrite
-1032 	adj #6
-1034 	psh.w #91
+ 929 	asl.w a
+ 930 	clc
+ 931 	adc.w 1,S
+ 932 	sta.w 1,S
+ 933 	psh.w #foodunits_003
+ 934 	lda.w oldrow_061,X
+ 935 	dec.w a
+ 936 	pha.w
+ 937 	psh.w #18
+ 938 	jsr _imul
+ 939 	adj #4
+ 940 	clc
+ 941 	adc.w 1,S
+ 942 	sta.w 1,S
+ 943 	lda.w oldcol_062,X
+ 944 	dec.w a
+ 945 	asl.w a
+ 946 	clc
+ 947 	adc.w 1,S
+ 948 	sta.w 1,S
+ 949 	pli.s
+ 950 	lda.w 0,I++
+ 951 	pha.w
+ 952 	lda #1
+ 953 	xma.w 1,S
+ 954 	sec
+ 955 	sbc.w 1,S
+ 956 	adj #2
+ 957 	pli.s
+ 958 	sta.w 0,I++
+ 961 	psh.w #foodunits_003
+ 962 	lda.w oldrow_061,X
+ 963 	dec.w a
+ 964 	pha.w
+ 965 	psh.w #18
+ 966 	jsr _imul
+ 967 	adj #4
+ 968 	clc
+ 969 	adc.w 1,S
+ 970 	sta.w 1,S
+ 971 	lda.w oldcol_062,X
+ 972 	dec.w a
+ 973 	asl.w a
+ 974 	clc
+ 975 	adc.w 1,S
+ 976 	sta.w 1,S
+ 977 	pli.s
+ 978 	lda.w 0,I++
+ 979 	pha.w
+ 980 	lda #0
+ 981 	xma.w 1,S
+ 982 	cmp.w 1,S
+ 983 	adj #2
+ 984 	php
+ 985 	lda #1
+ 986 	plp
+ 987 	beq L_068
+ 988 	lda #0
+ 989 L_068
+ 990 	cmp.w #1
+ 991 	beq L_066
+ 992 	jmp L_067
+ 993 L_066
+ 997 	psh.w #island_002
+ 998 	lda.w oldrow_061,X
+ 999 	pha.w
+1000 	psh.w #22
+1001 	jsr _imul
+1002 	adj #4
+1003 	clc
+1004 	adc.w 1,S
+1005 	sta.w 1,S
+1006 	lda.w oldcol_062,X
+1007 	asl.w a
+1008 	clc
+1009 	adc.w 1,S
+1010 	sta.w 1,S
+1011 	lda #4
+1012 	pli.s
+1013 	sta.w 0,I++
+1015 	lda.w numwolves_005
+1016 	pha.w
+1017 	lda #1
+1018 	xma.w 1,S
+1019 	sec
+1020 	sbc.w 1,S
+1021 	adj #2
+1022 	sta.w numwolves_005
+1024 	psh.w #S_069
+1025 	psh.w #0
+1026 	psh.w #3
+1027 	jsr _swrite
+1028 	adj #6
+1029 	lda.w t_008
+1030 	pha.w
+1031 	psh.w #4
+1033 	jsr _iwrite
+1034 	adj #4
+1035 	psh.w #S_070
 1036 	psh.w #0
-1037 	jsr _cwrite
-1038 	adj #4
-1039 	lda.w oldrow_061,X
-1040 	pha.w
-1041 	psh.w #1
-1043 	jsr _iwrite
-1044 	adj #4
-1045 	psh.w #S_071
-1046 	psh.w #0
-1047 	psh.w #2
-1048 	jsr _swrite
-1049 	adj #6
-1050 	lda.w oldcol_062,X
-1051 	pha.w
-1052 	psh.w #1
-1054 	jsr _iwrite
-1055 	adj #4
-1056 	psh.w #93
-1058 	psh.w #0
-1059 	jsr _cwrite
-1060 	adj #4
-1061 	jsr _writeln
-1064 	jmp L_072
-1065 L_067
-1069 	psh.w #0
-1071 	lda.w oldrow_061,X
-1072 	pha.w
-1073 	lda.w oldcol_062,X
-1074 	pha.w
-1075 	txa.w
-1076 	clc
-1077 	adc.w #newrow_063
-1078 	pha.w
-1079 	txa.w
-1080 	clc
-1081 	adc.w #newcol_064
-1082 	pha.w
-1083 	lda.w STATIC_LINK,X
-1084 	pha.w
-1085 	jsr newlocation_037
-1086 	adj #12
-1088 	lda.w newrow_063,X
+1037 	psh.w #16
+1038 	jsr _swrite
+1039 	adj #6
+1041 	psh.w #91
+1043 	psh.w #0
+1044 	jsr _cwrite
+1045 	adj #4
+1046 	lda.w oldrow_061,X
+1047 	pha.w
+1048 	psh.w #1
+1050 	jsr _iwrite
+1051 	adj #4
+1052 	psh.w #S_071
+1053 	psh.w #0
+1054 	psh.w #2
+1055 	jsr _swrite
+1056 	adj #6
+1057 	lda.w oldcol_062,X
+1058 	pha.w
+1059 	psh.w #1
+1061 	jsr _iwrite
+1062 	adj #4
+1063 	psh.w #93
+1065 	psh.w #0
+1066 	jsr _cwrite
+1067 	adj #4
+1068 	jsr _writeln
+1071 	jmp L_072
+1072 L_067
+1076 	psh.w #0
+1078 	lda.w oldrow_061,X
+1079 	pha.w
+1080 	lda.w oldcol_062,X
+1081 	pha.w
+1082 	txa.w
+1083 	clc
+1084 	adc.w #newrow_063
+1085 	pha.w
+1086 	txa.w
+1087 	clc
+1088 	adc.w #newcol_064
 1089 	pha.w
-1090 	lda.w oldrow_061,X
-1091 	xma.w 1,S
-1092 	cmp.w 1,S
-1093 	adj #2
-1094 	php
-1095 	lda #1
-1096 	plp
-1097 	bne L_073
-1098 	lda #0
-1099 L_073
-1100 	pha.w
-1101 	lda.w newcol_064,X
-1102 	pha.w
-1103 	lda.w oldcol_062,X
-1104 	xma.w 1,S
-1105 	cmp.w 1,S
-1106 	adj #2
-1107 	php
-1108 	lda #1
-1109 	plp
-1110 	bne L_074
-1111 	lda #0
-1112 L_074
-1113 	ora.w 1,S
-1114 	adj #2
-1115 	sta.w moved_065,X
-1118 	lda.w moved_065,X
-1119 	cmp.w #1
-1120 	beq L_075
-1121 	jmp L_076
-1122 L_075
-1126 	psh.w #island_002
-1127 	lda.w newrow_063,X
-1128 	pha.w
-1129 	psh.w #22
-1130 	jsr _imul
-1131 	adj #4
-1132 	clc
-1133 	adc.w 1,S
-1134 	sta.w 1,S
-1135 	lda.w newcol_064,X
-1136 	asl.w a
-1137 	clc
-1138 	adc.w 1,S
-1139 	sta.w 1,S
-1140 	pli
-1141 	lda.w 0,I++
-1142 	pha.w
-1143 	lda #1
-1144 	xma.w 1,S
-1145 	cmp.w 1,S
-1146 	adj #2
-1147 	php
-1148 	lda #1
-1149 	plp
-1150 	beq L_079
-1151 	lda #0
-1152 L_079
-1153 	cmp.w #1
-1154 	beq L_077
-1155 	jmp L_078
-1156 L_077
-1158 	psh.w #foodunits_003
-1159 	lda.w oldrow_061,X
-1160 	dec.w a
-1161 	pha.w
-1162 	psh.w #18
-1163 	jsr _imul
-1164 	adj #4
-1165 	clc
-1166 	adc.w 1,S
-1167 	sta.w 1,S
-1168 	lda.w oldcol_062,X
-1169 	dec.w a
-1170 	asl.w a
-1171 	clc
-1172 	adc.w 1,S
-1173 	sta.w 1,S
-1175 	psh.w #foodunits_003
-1176 	lda.w oldrow_061,X
-1177 	dec.w a
-1178 	pha.w
-1179 	psh.w #18
-1180 	jsr _imul
-1181 	adj #4
-1182 	clc
-1183 	adc.w 1,S
-1184 	sta.w 1,S
-1185 	lda.w oldcol_062,X
-1186 	dec.w a
-1187 	asl.w a
-1188 	clc
-1189 	adc.w 1,S
-1190 	sta.w 1,S
-1191 	pli
-1192 	lda.w 0,I++
-1193 	pha.w
-1194 	lda #6
+1090 	lda.w STATIC_LINK,X
+1091 	pha.w
+1092 	jsr newlocation_037
+1093 	adj #12
+1095 	lda.w newrow_063,X
+1096 	pha.w
+1097 	lda.w oldrow_061,X
+1098 	xma.w 1,S
+1099 	cmp.w 1,S
+1100 	adj #2
+1101 	php
+1102 	lda #1
+1103 	plp
+1104 	bne L_073
+1105 	lda #0
+1106 L_073
+1107 	pha.w
+1108 	lda.w newcol_064,X
+1109 	pha.w
+1110 	lda.w oldcol_062,X
+1111 	xma.w 1,S
+1112 	cmp.w 1,S
+1113 	adj #2
+1114 	php
+1115 	lda #1
+1116 	plp
+1117 	bne L_074
+1118 	lda #0
+1119 L_074
+1120 	ora.w 1,S
+1121 	adj #2
+1122 	sta.w moved_065,X
+1125 	lda.w moved_065,X
+1126 	cmp.w #1
+1127 	beq L_075
+1128 	jmp L_076
+1129 L_075
+1133 	psh.w #island_002
+1134 	lda.w newrow_063,X
+1135 	pha.w
+1136 	psh.w #22
+1137 	jsr _imul
+1138 	adj #4
+1139 	clc
+1140 	adc.w 1,S
+1141 	sta.w 1,S
+1142 	lda.w newcol_064,X
+1143 	asl.w a
+1144 	clc
+1145 	adc.w 1,S
+1146 	sta.w 1,S
+1147 	pli.s
+1148 	lda.w 0,I++
+1149 	pha.w
+1150 	lda #1
+1151 	xma.w 1,S
+1152 	cmp.w 1,S
+1153 	adj #2
+1154 	php
+1155 	lda #1
+1156 	plp
+1157 	beq L_079
+1158 	lda #0
+1159 L_079
+1160 	cmp.w #1
+1161 	beq L_077
+1162 	jmp L_078
+1163 L_077
+1165 	psh.w #foodunits_003
+1166 	lda.w oldrow_061,X
+1167 	dec.w a
+1168 	pha.w
+1169 	psh.w #18
+1170 	jsr _imul
+1171 	adj #4
+1172 	clc
+1173 	adc.w 1,S
+1174 	sta.w 1,S
+1175 	lda.w oldcol_062,X
+1176 	dec.w a
+1177 	asl.w a
+1178 	clc
+1179 	adc.w 1,S
+1180 	sta.w 1,S
+1182 	psh.w #foodunits_003
+1183 	lda.w oldrow_061,X
+1184 	dec.w a
+1185 	pha.w
+1186 	psh.w #18
+1187 	jsr _imul
+1188 	adj #4
+1189 	clc
+1190 	adc.w 1,S
+1191 	sta.w 1,S
+1192 	lda.w oldcol_062,X
+1193 	dec.w a
+1194 	asl.w a
 1195 	clc
 1196 	adc.w 1,S
-1197 	adj #2
-1198 	pli
-1199 	sta.w 0,I++
-1201 	lda.w numrabbits_006
-1202 	pha.w
-1203 	lda #1
-1204 	xma.w 1,S
-1205 	sec
-1206 	sbc.w 1,S
-1207 	adj #2
-1208 	sta.w numrabbits_006
-1210 	psh.w #S_069
-1211 	psh.w #0
-1212 	psh.w #3
-1213 	jsr _swrite
-1214 	adj #6
-1215 	lda.w t_008
-1216 	pha.w
-1217 	psh.w #4
-1219 	jsr _iwrite
-1220 	adj #4
-1221 	psh.w #S_080
-1222 	psh.w #0
-1223 	psh.w #19
-1224 	jsr _swrite
-1225 	adj #6
-1227 	psh.w #91
+1197 	sta.w 1,S
+1198 	pli.s
+1199 	lda.w 0,I++
+1200 	pha.w
+1201 	lda #6
+1202 	clc
+1203 	adc.w 1,S
+1204 	adj #2
+1205 	pli.s
+1206 	sta.w 0,I++
+1208 	lda.w numrabbits_006
+1209 	pha.w
+1210 	lda #1
+1211 	xma.w 1,S
+1212 	sec
+1213 	sbc.w 1,S
+1214 	adj #2
+1215 	sta.w numrabbits_006
+1217 	psh.w #S_069
+1218 	psh.w #0
+1219 	psh.w #3
+1220 	jsr _swrite
+1221 	adj #6
+1222 	lda.w t_008
+1223 	pha.w
+1224 	psh.w #4
+1226 	jsr _iwrite
+1227 	adj #4
+1228 	psh.w #S_080
 1229 	psh.w #0
-1230 	jsr _cwrite
-1231 	adj #4
-1232 	lda.w newrow_063,X
-1233 	pha.w
-1234 	psh.w #1
-1236 	jsr _iwrite
-1237 	adj #4
-1238 	psh.w #S_071
-1239 	psh.w #0
-1240 	psh.w #2
-1241 	jsr _swrite
-1242 	adj #6
-1243 	lda.w newcol_064,X
-1244 	pha.w
-1245 	psh.w #1
-1247 	jsr _iwrite
-1248 	adj #4
-1249 	psh.w #93
-1251 	psh.w #0
-1252 	jsr _cwrite
-1253 	adj #4
-1254 	jsr _writeln
-1256 L_078
-1260 	psh.w #island_002
-1261 	lda.w newrow_063,X
-1262 	pha.w
-1263 	psh.w #22
-1264 	jsr _imul
-1265 	adj #4
-1266 	clc
-1267 	adc.w 1,S
-1268 	sta.w 1,S
-1269 	lda.w newcol_064,X
-1270 	asl.w a
-1271 	clc
-1272 	adc.w 1,S
-1273 	sta.w 1,S
-1274 	lda #2
-1275 	pli
-1276 	sta.w 0,I++
-1278 	psh.w #island_002
-1279 	lda.w oldrow_061,X
-1280 	pha.w
-1281 	psh.w #22
-1282 	jsr _imul
-1283 	adj #4
-1284 	clc
-1285 	adc.w 1,S
-1286 	sta.w 1,S
-1287 	lda.w oldcol_062,X
-1288 	asl.w a
-1289 	clc
-1290 	adc.w 1,S
-1291 	sta.w 1,S
-1292 	lda #4
-1293 	pli
-1294 	sta.w 0,I++
-1296 	psh.w #foodunits_003
-1297 	lda.w newrow_063,X
-1298 	dec.w a
-1299 	pha.w
-1300 	psh.w #18
-1301 	jsr _imul
-1302 	adj #4
-1303 	clc
-1304 	adc.w 1,S
-1305 	sta.w 1,S
-1306 	lda.w newcol_064,X
-1307 	dec.w a
-1308 	asl.w a
-1309 	clc
-1310 	adc.w 1,S
-1311 	sta.w 1,S
-1312 	psh.w #foodunits_003
-1313 	lda.w oldrow_061,X
+1230 	psh.w #19
+1231 	jsr _swrite
+1232 	adj #6
+1234 	psh.w #91
+1236 	psh.w #0
+1237 	jsr _cwrite
+1238 	adj #4
+1239 	lda.w newrow_063,X
+1240 	pha.w
+1241 	psh.w #1
+1243 	jsr _iwrite
+1244 	adj #4
+1245 	psh.w #S_071
+1246 	psh.w #0
+1247 	psh.w #2
+1248 	jsr _swrite
+1249 	adj #6
+1250 	lda.w newcol_064,X
+1251 	pha.w
+1252 	psh.w #1
+1254 	jsr _iwrite
+1255 	adj #4
+1256 	psh.w #93
+1258 	psh.w #0
+1259 	jsr _cwrite
+1260 	adj #4
+1261 	jsr _writeln
+1263 L_078
+1267 	psh.w #island_002
+1268 	lda.w newrow_063,X
+1269 	pha.w
+1270 	psh.w #22
+1271 	jsr _imul
+1272 	adj #4
+1273 	clc
+1274 	adc.w 1,S
+1275 	sta.w 1,S
+1276 	lda.w newcol_064,X
+1277 	asl.w a
+1278 	clc
+1279 	adc.w 1,S
+1280 	sta.w 1,S
+1281 	lda #2
+1282 	pli.s
+1283 	sta.w 0,I++
+1285 	psh.w #island_002
+1286 	lda.w oldrow_061,X
+1287 	pha.w
+1288 	psh.w #22
+1289 	jsr _imul
+1290 	adj #4
+1291 	clc
+1292 	adc.w 1,S
+1293 	sta.w 1,S
+1294 	lda.w oldcol_062,X
+1295 	asl.w a
+1296 	clc
+1297 	adc.w 1,S
+1298 	sta.w 1,S
+1299 	lda #4
+1300 	pli.s
+1301 	sta.w 0,I++
+1303 	psh.w #foodunits_003
+1304 	lda.w newrow_063,X
+1305 	dec.w a
+1306 	pha.w
+1307 	psh.w #18
+1308 	jsr _imul
+1309 	adj #4
+1310 	clc
+1311 	adc.w 1,S
+1312 	sta.w 1,S
+1313 	lda.w newcol_064,X
 1314 	dec.w a
-1315 	pha.w
-1316 	psh.w #18
-1317 	jsr _imul
-1318 	adj #4
-1319 	clc
-1320 	adc.w 1,S
-1321 	sta.w 1,S
-1322 	lda.w oldcol_062,X
-1323 	dec.w a
-1324 	asl.w a
-1325 	clc
-1326 	adc.w 1,S
-1327 	sta.w 1,S
-1328 	pli
-1329 	lda.w 0,I++
-1330 	pli
-1331 	sta.w 0,I++
-1333 	psh.w #foodunits_003
-1334 	lda.w oldrow_061,X
-1335 	dec.w a
-1336 	pha.w
-1337 	psh.w #18
-1338 	jsr _imul
-1339 	adj #4
-1340 	clc
-1341 	adc.w 1,S
-1342 	sta.w 1,S
-1343 	lda.w oldcol_062,X
-1344 	dec.w a
-1345 	asl.w a
-1346 	clc
-1347 	adc.w 1,S
-1348 	sta.w 1,S
-1349 	lda #0
-1350 	pli
-1351 	sta.w 0,I++
-1353 L_076
-1357 	lda.w t_008
-1358 	pha.w
-1359 	psh.w #12
-1361 	jsr _idiv
-1362 	adj #4
-1363 	swp a
-1364 	pha.w
-1365 	lda #0
-1366 	xma.w 1,S
-1367 	cmp.w 1,S
-1368 	adj #2
-1369 	php
-1370 	lda #1
-1371 	plp
-1372 	beq L_083
-1373 	lda #0
-1374 L_083
-1376 	pha.w
-1377 	psh.w #foodunits_003
-1378 	lda.w newrow_063,X
-1379 	dec.w a
-1380 	pha.w
-1381 	psh.w #18
-1382 	jsr _imul
-1383 	adj #4
-1384 	clc
-1385 	adc.w 1,S
-1386 	sta.w 1,S
-1387 	lda.w newcol_064,X
-1388 	dec.w a
-1389 	asl.w a
-1390 	clc
-1391 	adc.w 1,S
-1392 	sta.w 1,S
-1393 	pli
-1394 	lda.w 0,I++
-1395 	pha.w
-1396 	lda #1
-1397 	xma.w 1,S
-1398 	cmp.w 1,S
-1399 	adj #2
-1400 	php
-1401 	lda #1
-1402 	plp
-1403 	bgt L_084
-1404 	lda #0
-1405 L_084
-1406 	and.w 1,S
-1407 	adj #2
-1408 	cmp.w #1
-1409 	beq L_081
-1410 	jmp L_082
-1411 L_081
-1413 	psh.w #foodunits_003
-1414 	lda.w newrow_063,X
-1415 	dec.w a
-1416 	pha.w
-1417 	psh.w #18
-1418 	jsr _imul
-1419 	adj #4
-1420 	clc
-1421 	adc.w 1,S
-1422 	sta.w 1,S
-1423 	lda.w newcol_064,X
-1424 	dec.w a
-1425 	asl.w a
-1426 	clc
-1427 	adc.w 1,S
-1428 	sta.w 1,S
-1430 	psh.w #foodunits_003
-1431 	lda.w newrow_063,X
-1432 	dec.w a
-1433 	pha.w
-1434 	psh.w #18
-1435 	jsr _imul
-1436 	adj #4
-1437 	clc
-1438 	adc.w 1,S
-1439 	sta.w 1,S
-1440 	lda.w newcol_064,X
-1441 	dec.w a
-1442 	asl.w a
-1443 	clc
-1444 	adc.w 1,S
-1445 	sta.w 1,S
-1446 	pli
-1447 	lda.w 0,I++
-1448 	pha.w
-1449 	psh.w #2
-1451 	jsr _idiv
-1452 	adj #4
-1453 	pli
-1454 	sta.w 0,I++
-1458 	lda.w moved_065,X
-1459 	cmp.w #1
-1460 	beq L_085
-1461 	jmp L_086
-1462 L_085
-1464 	psh.w #island_002
-1465 	lda.w oldrow_061,X
-1466 	pha.w
-1467 	psh.w #22
-1468 	jsr _imul
-1469 	adj #4
-1470 	clc
-1471 	adc.w 1,S
-1472 	sta.w 1,S
-1473 	lda.w oldcol_062,X
-1474 	asl.w a
-1475 	clc
-1476 	adc.w 1,S
-1477 	sta.w 1,S
-1478 	lda #2
-1479 	pli
-1480 	sta.w 0,I++
-1482 	psh.w #foodunits_003
-1483 	lda.w oldrow_061,X
-1484 	dec.w a
-1485 	pha.w
-1486 	psh.w #18
-1487 	jsr _imul
-1488 	adj #4
-1489 	clc
-1490 	adc.w 1,S
-1491 	sta.w 1,S
-1492 	lda.w oldcol_062,X
-1493 	dec.w a
-1494 	asl.w a
-1495 	clc
-1496 	adc.w 1,S
-1497 	sta.w 1,S
-1499 	psh.w #foodunits_003
-1500 	lda.w newrow_063,X
-1501 	dec.w a
-1502 	pha.w
-1503 	psh.w #18
-1504 	jsr _imul
-1505 	adj #4
-1506 	clc
-1507 	adc.w 1,S
-1508 	sta.w 1,S
-1509 	lda.w newcol_064,X
-1510 	dec.w a
-1511 	asl.w a
-1512 	clc
-1513 	adc.w 1,S
-1514 	sta.w 1,S
-1515 	pli
-1516 	lda.w 0,I++
-1517 	pli
-1518 	sta.w 0,I++
-1520 	lda.w numwolves_005
-1521 	pha.w
-1522 	lda #1
-1523 	clc
-1524 	adc.w 1,S
-1525 	adj #2
-1526 	sta.w numwolves_005
-1528 	psh.w #S_069
-1529 	psh.w #0
-1530 	psh.w #3
-1531 	jsr _swrite
-1532 	adj #6
-1533 	lda.w t_008
-1534 	pha.w
-1535 	psh.w #4
-1537 	jsr _iwrite
-1538 	adj #4
-1539 	psh.w #S_087
-1540 	psh.w #0
-1541 	psh.w #16
-1542 	jsr _swrite
-1543 	adj #6
-1545 	psh.w #91
+1315 	asl.w a
+1316 	clc
+1317 	adc.w 1,S
+1318 	sta.w 1,S
+1319 	psh.w #foodunits_003
+1320 	lda.w oldrow_061,X
+1321 	dec.w a
+1322 	pha.w
+1323 	psh.w #18
+1324 	jsr _imul
+1325 	adj #4
+1326 	clc
+1327 	adc.w 1,S
+1328 	sta.w 1,S
+1329 	lda.w oldcol_062,X
+1330 	dec.w a
+1331 	asl.w a
+1332 	clc
+1333 	adc.w 1,S
+1334 	sta.w 1,S
+1335 	pli.s
+1336 	lda.w 0,I++
+1337 	pli.s
+1338 	sta.w 0,I++
+1340 	psh.w #foodunits_003
+1341 	lda.w oldrow_061,X
+1342 	dec.w a
+1343 	pha.w
+1344 	psh.w #18
+1345 	jsr _imul
+1346 	adj #4
+1347 	clc
+1348 	adc.w 1,S
+1349 	sta.w 1,S
+1350 	lda.w oldcol_062,X
+1351 	dec.w a
+1352 	asl.w a
+1353 	clc
+1354 	adc.w 1,S
+1355 	sta.w 1,S
+1356 	lda #0
+1357 	pli.s
+1358 	sta.w 0,I++
+1360 L_076
+1364 	lda.w t_008
+1365 	pha.w
+1366 	psh.w #12
+1368 	jsr _idiv
+1369 	adj #4
+1370 	swp a
+1371 	pha.w
+1372 	lda #0
+1373 	xma.w 1,S
+1374 	cmp.w 1,S
+1375 	adj #2
+1376 	php
+1377 	lda #1
+1378 	plp
+1379 	beq L_083
+1380 	lda #0
+1381 L_083
+1383 	pha.w
+1384 	psh.w #foodunits_003
+1385 	lda.w newrow_063,X
+1386 	dec.w a
+1387 	pha.w
+1388 	psh.w #18
+1389 	jsr _imul
+1390 	adj #4
+1391 	clc
+1392 	adc.w 1,S
+1393 	sta.w 1,S
+1394 	lda.w newcol_064,X
+1395 	dec.w a
+1396 	asl.w a
+1397 	clc
+1398 	adc.w 1,S
+1399 	sta.w 1,S
+1400 	pli.s
+1401 	lda.w 0,I++
+1402 	pha.w
+1403 	lda #1
+1404 	xma.w 1,S
+1405 	cmp.w 1,S
+1406 	adj #2
+1407 	php
+1408 	lda #1
+1409 	plp
+1410 	bgt L_084
+1411 	lda #0
+1412 L_084
+1413 	and.w 1,S
+1414 	adj #2
+1415 	cmp.w #1
+1416 	beq L_081
+1417 	jmp L_082
+1418 L_081
+1420 	psh.w #foodunits_003
+1421 	lda.w newrow_063,X
+1422 	dec.w a
+1423 	pha.w
+1424 	psh.w #18
+1425 	jsr _imul
+1426 	adj #4
+1427 	clc
+1428 	adc.w 1,S
+1429 	sta.w 1,S
+1430 	lda.w newcol_064,X
+1431 	dec.w a
+1432 	asl.w a
+1433 	clc
+1434 	adc.w 1,S
+1435 	sta.w 1,S
+1437 	psh.w #foodunits_003
+1438 	lda.w newrow_063,X
+1439 	dec.w a
+1440 	pha.w
+1441 	psh.w #18
+1442 	jsr _imul
+1443 	adj #4
+1444 	clc
+1445 	adc.w 1,S
+1446 	sta.w 1,S
+1447 	lda.w newcol_064,X
+1448 	dec.w a
+1449 	asl.w a
+1450 	clc
+1451 	adc.w 1,S
+1452 	sta.w 1,S
+1453 	pli.s
+1454 	lda.w 0,I++
+1455 	pha.w
+1456 	psh.w #2
+1458 	jsr _idiv
+1459 	adj #4
+1460 	pli.s
+1461 	sta.w 0,I++
+1465 	lda.w moved_065,X
+1466 	cmp.w #1
+1467 	beq L_085
+1468 	jmp L_086
+1469 L_085
+1471 	psh.w #island_002
+1472 	lda.w oldrow_061,X
+1473 	pha.w
+1474 	psh.w #22
+1475 	jsr _imul
+1476 	adj #4
+1477 	clc
+1478 	adc.w 1,S
+1479 	sta.w 1,S
+1480 	lda.w oldcol_062,X
+1481 	asl.w a
+1482 	clc
+1483 	adc.w 1,S
+1484 	sta.w 1,S
+1485 	lda #2
+1486 	pli.s
+1487 	sta.w 0,I++
+1489 	psh.w #foodunits_003
+1490 	lda.w oldrow_061,X
+1491 	dec.w a
+1492 	pha.w
+1493 	psh.w #18
+1494 	jsr _imul
+1495 	adj #4
+1496 	clc
+1497 	adc.w 1,S
+1498 	sta.w 1,S
+1499 	lda.w oldcol_062,X
+1500 	dec.w a
+1501 	asl.w a
+1502 	clc
+1503 	adc.w 1,S
+1504 	sta.w 1,S
+1506 	psh.w #foodunits_003
+1507 	lda.w newrow_063,X
+1508 	dec.w a
+1509 	pha.w
+1510 	psh.w #18
+1511 	jsr _imul
+1512 	adj #4
+1513 	clc
+1514 	adc.w 1,S
+1515 	sta.w 1,S
+1516 	lda.w newcol_064,X
+1517 	dec.w a
+1518 	asl.w a
+1519 	clc
+1520 	adc.w 1,S
+1521 	sta.w 1,S
+1522 	pli.s
+1523 	lda.w 0,I++
+1524 	pli.s
+1525 	sta.w 0,I++
+1527 	lda.w numwolves_005
+1528 	pha.w
+1529 	lda #1
+1530 	clc
+1531 	adc.w 1,S
+1532 	adj #2
+1533 	sta.w numwolves_005
+1535 	psh.w #S_069
+1536 	psh.w #0
+1537 	psh.w #3
+1538 	jsr _swrite
+1539 	adj #6
+1540 	lda.w t_008
+1541 	pha.w
+1542 	psh.w #4
+1544 	jsr _iwrite
+1545 	adj #4
+1546 	psh.w #S_087
 1547 	psh.w #0
-1548 	jsr _cwrite
-1549 	adj #4
-1550 	lda.w oldrow_061,X
-1551 	pha.w
-1552 	psh.w #1
-1554 	jsr _iwrite
-1555 	adj #4
-1556 	psh.w #S_071
-1557 	psh.w #0
-1558 	psh.w #2
-1559 	jsr _swrite
-1560 	adj #6
-1561 	lda.w oldcol_062,X
-1562 	pha.w
-1563 	psh.w #1
-1565 	jsr _iwrite
-1566 	adj #4
-1567 	psh.w #93
-1569 	psh.w #0
-1570 	jsr _cwrite
-1571 	adj #4
-1572 	jsr _writeln
-1574 L_086
-1576 L_082
-1578 L_072
-1580 	txs.w
-1581 	plx.w
-1582 	rts
-1583 	.end processwolf_060
-1595 oldrow_089 .equ +9
-1596 oldcol_090 .equ +7
-1597 newrow_091 .equ -1
-1598 newcol_092 .equ -3
-1599 moved_093 .equ -5
-1600 processrabbit_088	.sub
-1601 	phx.w
-1602 	tsx.w
-1603 	adj #-6
-1607 	psh.w #1
-1609 	lda.w oldrow_089,X
-1610 	pha.w
-1611 	lda.w oldcol_090,X
-1612 	pha.w
-1613 	txa.w
-1614 	clc
-1615 	adc.w #newrow_091
-1616 	pha.w
-1617 	txa.w
-1618 	clc
-1619 	adc.w #newcol_092
-1620 	pha.w
-1621 	lda.w STATIC_LINK,X
-1622 	pha.w
-1623 	jsr newlocation_037
-1624 	adj #12
-1626 	lda.w newrow_091,X
+1548 	psh.w #16
+1549 	jsr _swrite
+1550 	adj #6
+1552 	psh.w #91
+1554 	psh.w #0
+1555 	jsr _cwrite
+1556 	adj #4
+1557 	lda.w oldrow_061,X
+1558 	pha.w
+1559 	psh.w #1
+1561 	jsr _iwrite
+1562 	adj #4
+1563 	psh.w #S_071
+1564 	psh.w #0
+1565 	psh.w #2
+1566 	jsr _swrite
+1567 	adj #6
+1568 	lda.w oldcol_062,X
+1569 	pha.w
+1570 	psh.w #1
+1572 	jsr _iwrite
+1573 	adj #4
+1574 	psh.w #93
+1576 	psh.w #0
+1577 	jsr _cwrite
+1578 	adj #4
+1579 	jsr _writeln
+1581 L_086
+1583 L_082
+1585 L_072
+1587 	txs.w
+1588 	plx.w
+1589 	rts
+1590 	.end processwolf_060
+1602 oldrow_089 .equ +9
+1603 oldcol_090 .equ +7
+1604 newrow_091 .equ -1
+1605 newcol_092 .equ -3
+1606 moved_093 .equ -5
+1607 processrabbit_088 .sub
+1608 	phx.w
+1609 	tsx.w
+1610 	adj #-6
+1614 	psh.w #1
+1616 	lda.w oldrow_089,X
+1617 	pha.w
+1618 	lda.w oldcol_090,X
+1619 	pha.w
+1620 	txa.w
+1621 	clc
+1622 	adc.w #newrow_091
+1623 	pha.w
+1624 	txa.w
+1625 	clc
+1626 	adc.w #newcol_092
 1627 	pha.w
-1628 	lda.w oldrow_089,X
-1629 	xma.w 1,S
-1630 	cmp.w 1,S
-1631 	adj #2
-1632 	php
-1633 	lda #1
-1634 	plp
-1635 	bne L_094
-1636 	lda #0
-1637 L_094
-1638 	pha.w
-1639 	lda.w newcol_092,X
-1640 	pha.w
-1641 	lda.w oldcol_090,X
-1642 	xma.w 1,S
-1643 	cmp.w 1,S
-1644 	adj #2
-1645 	php
-1646 	lda #1
-1647 	plp
-1648 	bne L_095
-1649 	lda #0
-1650 L_095
-1651 	ora.w 1,S
-1652 	adj #2
-1653 	sta.w moved_093,X
-1655 	lda.w moved_093,X
-1656 	cmp.w #1
-1657 	beq L_096
-1658 	jmp L_097
-1659 L_096
-1661 	psh.w #island_002
-1662 	lda.w newrow_091,X
-1663 	pha.w
-1664 	psh.w #22
-1665 	jsr _imul
-1666 	adj #4
-1667 	clc
-1668 	adc.w 1,S
-1669 	sta.w 1,S
-1670 	lda.w newcol_092,X
-1671 	asl.w a
-1672 	clc
-1673 	adc.w 1,S
-1674 	sta.w 1,S
-1675 	lda #3
-1676 	pli
-1677 	sta.w 0,I++
-1679 	psh.w #island_002
-1680 	lda.w oldrow_089,X
-1681 	pha.w
-1682 	psh.w #22
-1683 	jsr _imul
-1684 	adj #4
-1685 	clc
-1686 	adc.w 1,S
-1687 	sta.w 1,S
-1688 	lda.w oldcol_090,X
-1689 	asl.w a
-1690 	clc
-1691 	adc.w 1,S
-1692 	sta.w 1,S
-1693 	lda #4
-1694 	pli
-1695 	sta.w 0,I++
-1697 L_097
-1701 	lda.w t_008
-1702 	pha.w
-1703 	psh.w #5
-1705 	jsr _idiv
-1706 	adj #4
-1707 	swp a
-1708 	pha.w
-1709 	lda #0
-1710 	xma.w 1,S
-1711 	cmp.w 1,S
-1712 	adj #2
-1713 	php
-1714 	lda #1
-1715 	plp
-1716 	beq L_100
-1717 	lda #0
-1718 L_100
-1719 	cmp.w #1
-1720 	beq L_098
-1721 	jmp L_099
-1722 L_098
-1726 	lda.w moved_093,X
-1727 	cmp.w #1
-1728 	beq L_101
-1729 	jmp L_102
-1730 L_101
-1732 	psh.w #island_002
-1733 	lda.w oldrow_089,X
-1734 	pha.w
-1735 	psh.w #22
-1736 	jsr _imul
-1737 	adj #4
-1738 	clc
-1739 	adc.w 1,S
-1740 	sta.w 1,S
-1741 	lda.w oldcol_090,X
-1742 	asl.w a
-1743 	clc
-1744 	adc.w 1,S
-1745 	sta.w 1,S
-1746 	lda #3
-1747 	pli
-1748 	sta.w 0,I++
-1750 	lda.w numrabbits_006
-1751 	pha.w
-1752 	lda #1
-1753 	clc
-1754 	adc.w 1,S
-1755 	adj #2
-1756 	sta.w numrabbits_006
-1758 	psh.w #S_069
-1759 	psh.w #0
-1760 	psh.w #3
-1761 	jsr _swrite
-1762 	adj #6
-1763 	lda.w t_008
-1764 	pha.w
-1765 	psh.w #4
-1767 	jsr _iwrite
-1768 	adj #4
-1769 	psh.w #S_103
-1770 	psh.w #0
-1771 	psh.w #18
-1772 	jsr _swrite
-1773 	adj #6
-1775 	psh.w #91
+1628 	lda.w STATIC_LINK,X
+1629 	pha.w
+1630 	jsr newlocation_037
+1631 	adj #12
+1633 	lda.w newrow_091,X
+1634 	pha.w
+1635 	lda.w oldrow_089,X
+1636 	xma.w 1,S
+1637 	cmp.w 1,S
+1638 	adj #2
+1639 	php
+1640 	lda #1
+1641 	plp
+1642 	bne L_094
+1643 	lda #0
+1644 L_094
+1645 	pha.w
+1646 	lda.w newcol_092,X
+1647 	pha.w
+1648 	lda.w oldcol_090,X
+1649 	xma.w 1,S
+1650 	cmp.w 1,S
+1651 	adj #2
+1652 	php
+1653 	lda #1
+1654 	plp
+1655 	bne L_095
+1656 	lda #0
+1657 L_095
+1658 	ora.w 1,S
+1659 	adj #2
+1660 	sta.w moved_093,X
+1662 	lda.w moved_093,X
+1663 	cmp.w #1
+1664 	beq L_096
+1665 	jmp L_097
+1666 L_096
+1668 	psh.w #island_002
+1669 	lda.w newrow_091,X
+1670 	pha.w
+1671 	psh.w #22
+1672 	jsr _imul
+1673 	adj #4
+1674 	clc
+1675 	adc.w 1,S
+1676 	sta.w 1,S
+1677 	lda.w newcol_092,X
+1678 	asl.w a
+1679 	clc
+1680 	adc.w 1,S
+1681 	sta.w 1,S
+1682 	lda #3
+1683 	pli.s
+1684 	sta.w 0,I++
+1686 	psh.w #island_002
+1687 	lda.w oldrow_089,X
+1688 	pha.w
+1689 	psh.w #22
+1690 	jsr _imul
+1691 	adj #4
+1692 	clc
+1693 	adc.w 1,S
+1694 	sta.w 1,S
+1695 	lda.w oldcol_090,X
+1696 	asl.w a
+1697 	clc
+1698 	adc.w 1,S
+1699 	sta.w 1,S
+1700 	lda #4
+1701 	pli.s
+1702 	sta.w 0,I++
+1704 L_097
+1708 	lda.w t_008
+1709 	pha.w
+1710 	psh.w #5
+1712 	jsr _idiv
+1713 	adj #4
+1714 	swp a
+1715 	pha.w
+1716 	lda #0
+1717 	xma.w 1,S
+1718 	cmp.w 1,S
+1719 	adj #2
+1720 	php
+1721 	lda #1
+1722 	plp
+1723 	beq L_100
+1724 	lda #0
+1725 L_100
+1726 	cmp.w #1
+1727 	beq L_098
+1728 	jmp L_099
+1729 L_098
+1733 	lda.w moved_093,X
+1734 	cmp.w #1
+1735 	beq L_101
+1736 	jmp L_102
+1737 L_101
+1739 	psh.w #island_002
+1740 	lda.w oldrow_089,X
+1741 	pha.w
+1742 	psh.w #22
+1743 	jsr _imul
+1744 	adj #4
+1745 	clc
+1746 	adc.w 1,S
+1747 	sta.w 1,S
+1748 	lda.w oldcol_090,X
+1749 	asl.w a
+1750 	clc
+1751 	adc.w 1,S
+1752 	sta.w 1,S
+1753 	lda #3
+1754 	pli.s
+1755 	sta.w 0,I++
+1757 	lda.w numrabbits_006
+1758 	pha.w
+1759 	lda #1
+1760 	clc
+1761 	adc.w 1,S
+1762 	adj #2
+1763 	sta.w numrabbits_006
+1765 	psh.w #S_069
+1766 	psh.w #0
+1767 	psh.w #3
+1768 	jsr _swrite
+1769 	adj #6
+1770 	lda.w t_008
+1771 	pha.w
+1772 	psh.w #4
+1774 	jsr _iwrite
+1775 	adj #4
+1776 	psh.w #S_103
 1777 	psh.w #0
-1778 	jsr _cwrite
-1779 	adj #4
-1780 	lda.w oldrow_089,X
-1781 	pha.w
-1782 	psh.w #1
-1784 	jsr _iwrite
-1785 	adj #4
-1786 	psh.w #S_071
-1787 	psh.w #0
-1788 	psh.w #2
-1789 	jsr _swrite
-1790 	adj #6
-1791 	lda.w oldcol_090,X
-1792 	pha.w
-1793 	psh.w #1
-1795 	jsr _iwrite
-1796 	adj #4
-1797 	psh.w #93
-1799 	psh.w #0
-1800 	jsr _cwrite
-1801 	adj #4
-1802 	jsr _writeln
-1804 L_102
-1806 L_099
-1808 	txs.w
-1809 	plx.w
-1810 	rts
-1811 	.end processrabbit_088
-1822 row_105 .equ -1
-1823 col_106 .equ -3
-1824 eventsoccur_104	.sub
-1825 	phx.w
-1826 	tsx.w
-1827 	adj #-4
-1831 	lda #1
-1832 	sta.w row_105,X
-1833 L_107
-1834 	lda #9
-1835 	cmp.w row_105,X
-1836 	bge L_108
-1837 	jmp L_109
-1838 L_108
-1840 	lda #1
-1841 	sta.w col_106,X
-1842 L_110
-1843 	lda #9
-1844 	cmp.w col_106,X
-1845 	bge L_111
-1846 	jmp L_112
-1847 L_111
-1849 	psh.w #island_002
-1850 	lda.w row_105,X
-1851 	pha.w
-1852 	psh.w #22
-1853 	jsr _imul
-1854 	adj #4
-1855 	clc
-1856 	adc.w 1,S
-1857 	sta.w 1,S
-1858 	lda.w col_106,X
-1859 	asl.w a
-1860 	clc
-1861 	adc.w 1,S
-1862 	sta.w 1,S
-1863 	pli
-1864 	lda.w 0,I++
-1865 	pha.w
-1866 	lda #0
-1867 	xma.w 1,S
-1868 	cmp.w 1,S
-1869 	adj #2
-1870 	php
-1871 	lda #1
-1872 	plp
-1873 	beq L_115
-1874 	lda #0
-1875 L_115
-1876 	cmp.w #1
-1877 	beq L_113
-1878 	jmp L_114
-1879 L_113
-1881 	lda.w row_105,X
-1882 	pha.w
-1883 	lda.w col_106,X
-1884 	pha.w
-1885 	lda.w STATIC_LINK,X
-1886 	pha.w
-1887 	jsr processwolf_060
-1888 	adj #6
-1890 L_114
-1892 	inc.w col_106,X
-1893 	jmp L_110
-1894 L_112
-1895 	dec.w col_106,X
-1897 	inc.w row_105,X
-1898 	jmp L_107
-1899 L_109
-1900 	dec.w row_105,X
-1905 	lda #1
-1906 	sta.w row_105,X
-1907 L_116
-1908 	lda #9
-1909 	cmp.w row_105,X
-1910 	bge L_117
-1911 	jmp L_118
-1912 L_117
-1914 	lda #1
-1915 	sta.w col_106,X
-1916 L_119
-1917 	lda #9
-1918 	cmp.w col_106,X
-1919 	bge L_120
-1920 	jmp L_121
-1921 L_120
-1923 	psh.w #island_002
-1924 	lda.w row_105,X
-1925 	pha.w
-1926 	psh.w #22
-1927 	jsr _imul
-1928 	adj #4
-1929 	clc
-1930 	adc.w 1,S
-1931 	sta.w 1,S
-1932 	lda.w col_106,X
-1933 	asl.w a
-1934 	clc
-1935 	adc.w 1,S
-1936 	sta.w 1,S
-1937 	pli
-1938 	lda.w 0,I++
-1939 	pha.w
-1940 	lda #1
-1941 	xma.w 1,S
-1942 	cmp.w 1,S
-1943 	adj #2
-1944 	php
-1945 	lda #1
-1946 	plp
-1947 	beq L_124
-1948 	lda #0
-1949 L_124
-1950 	cmp.w #1
-1951 	beq L_122
-1952 	jmp L_123
-1953 L_122
-1955 	lda.w row_105,X
-1956 	pha.w
-1957 	lda.w col_106,X
-1958 	pha.w
-1959 	lda.w STATIC_LINK,X
-1960 	pha.w
-1961 	jsr processrabbit_088
-1962 	adj #6
-1964 L_123
-1966 	inc.w col_106,X
-1967 	jmp L_119
-1968 L_121
-1969 	dec.w col_106,X
-1971 	inc.w row_105,X
-1972 	jmp L_116
-1973 L_118
-1974 	dec.w row_105,X
-1976 	txs.w
-1977 	plx.w
-1978 	rts
-1979 	.end eventsoccur_104
-1991 row_126 .equ -1
-1992 col_127 .equ -3
-1993 cnts_128 .equ -5
-1994 printisland_125	.sub
-1995 	phx.w
-1996 	tsx.w
-1997 	adj #-6
-1999 	jsr _writeln
-2001 	psh.w #S_069
-2002 	psh.w #0
-2003 	psh.w #3
-2004 	jsr _swrite
-2005 	adj #6
-2006 	lda.w t_008
-2007 	pha.w
-2008 	psh.w #4
-2010 	jsr _iwrite
-2011 	adj #4
-2012 	psh.w #S_129
-2013 	psh.w #0
-2014 	psh.w #14
-2015 	jsr _swrite
-2016 	adj #6
-2017 	jsr _writeln
-2019 	jsr _writeln
-2022 	lda #1
-2023 	sta.w row_126,X
-2024 L_130
-2025 	lda #9
-2026 	cmp.w row_126,X
-2027 	bge L_131
-2028 	jmp L_132
-2029 L_131
-2031 	psh.w #32
-2033 	psh.w #10
-2035 	jsr _cwrite
-2036 	adj #4
-2038 	lda #1
-2039 	sta.w col_127,X
-2040 L_133
-2041 	lda #9
-2042 	cmp.w col_127,X
-2043 	bge L_134
-2044 	jmp L_135
-2045 L_134
-2047 	psh.w #island_002
-2048 	lda.w row_126,X
-2049 	pha.w
-2050 	psh.w #22
-2051 	jsr _imul
-2052 	adj #4
-2053 	clc
-2054 	adc.w 1,S
-2055 	sta.w 1,S
-2056 	lda.w col_127,X
-2057 	asl.w a
-2058 	clc
-2059 	adc.w 1,S
-2060 	sta.w 1,S
-2061 	pli
-2062 	lda.w 0,I++
-2063 	sta.w cnts_128,X
-2065 	lda.w cnts_128,X
-2066 	pha.w
-2067 	lda #4
-2068 	xma.w 1,S
-2069 	cmp.w 1,S
-2070 	adj #2
-2071 	php
-2072 	lda #1
-2073 	plp
-2074 	beq L_138
-2075 	lda #0
-2076 L_138
-2077 	cmp.w #1
-2078 	beq L_136
-2079 	jmp L_137
-2080 L_136
-2081 	psh.w #S_139
-2082 	psh.w #0
-2083 	psh.w #2
-2084 	jsr _swrite
-2085 	adj #6
-2087 	jmp L_140
-2088 L_137
-2089 	lda.w cnts_128,X
-2090 	pha.w
-2091 	lda #0
-2092 	xma.w 1,S
-2093 	cmp.w 1,S
-2094 	adj #2
-2095 	php
-2096 	lda #1
-2097 	plp
-2098 	beq L_143
-2099 	lda #0
-2100 L_143
-2101 	cmp.w #1
-2102 	beq L_141
-2103 	jmp L_142
-2104 L_141
-2105 	psh.w #S_144
-2106 	psh.w #0
-2107 	psh.w #2
-2108 	jsr _swrite
-2109 	adj #6
-2111 	jmp L_145
-2112 L_142
-2113 	lda.w cnts_128,X
-2114 	pha.w
-2115 	lda #1
-2116 	xma.w 1,S
-2117 	cmp.w 1,S
-2118 	adj #2
-2119 	php
-2120 	lda #1
-2121 	plp
-2122 	beq L_148
-2123 	lda #0
-2124 L_148
-2125 	cmp.w #1
-2126 	beq L_146
-2127 	jmp L_147
-2128 L_146
-2129 	psh.w #S_149
-2130 	psh.w #0
-2131 	psh.w #2
-2132 	jsr _swrite
-2133 	adj #6
-2135 L_147
-2136 L_145
-2137 L_140
-2138 	inc.w col_127,X
-2139 	jmp L_133
-2140 L_135
-2141 	dec.w col_127,X
-2143 	jsr _writeln
-2145 	inc.w row_126,X
-2146 	jmp L_130
-2147 L_132
-2148 	dec.w row_126,X
-2150 	txs.w
-2151 	plx.w
-2152 	rts
-2153 	.end printisland_125
-2165 row_151 .equ -1
-2166 col_152 .equ -3
-2167 resetisland_150	.sub
-2168 	phx.w
-2169 	tsx.w
-2170 	adj #-4
-2172 	lda #1
-2173 	sta.w row_151,X
-2174 L_153
-2175 	lda #9
-2176 	cmp.w row_151,X
-2177 	bge L_154
-2178 	jmp L_155
-2179 L_154
-2181 	lda #1
-2182 	sta.w col_152,X
-2183 L_156
-2184 	lda #9
-2185 	cmp.w col_152,X
-2186 	bge L_157
-2187 	jmp L_158
-2188 L_157
-2190 	psh.w #island_002
-2191 	lda.w row_151,X
-2192 	pha.w
-2193 	psh.w #22
-2194 	jsr _imul
-2195 	adj #4
-2196 	clc
-2197 	adc.w 1,S
-2198 	sta.w 1,S
-2199 	lda.w col_152,X
-2200 	asl.w a
-2201 	clc
-2202 	adc.w 1,S
-2203 	sta.w 1,S
-2204 	pli
-2205 	lda.w 0,I++
-2206 	pha.w
-2207 	lda #2
-2208 	xma.w 1,S
-2209 	cmp.w 1,S
-2210 	adj #2
-2211 	php
-2212 	lda #1
-2213 	plp
-2214 	beq L_161
-2215 	lda #0
-2216 L_161
-2217 	cmp.w #1
-2218 	beq L_159
-2219 	jmp L_160
-2220 L_159
-2222 	psh.w #island_002
-2223 	lda.w row_151,X
-2224 	pha.w
-2225 	psh.w #22
-2226 	jsr _imul
-2227 	adj #4
-2228 	clc
-2229 	adc.w 1,S
-2230 	sta.w 1,S
-2231 	lda.w col_152,X
-2232 	asl.w a
-2233 	clc
-2234 	adc.w 1,S
-2235 	sta.w 1,S
-2236 	lda #0
-2237 	pli
-2238 	sta.w 0,I++
-2241 	jmp L_162
-2242 L_160
-2243 	psh.w #island_002
-2244 	lda.w row_151,X
-2245 	pha.w
-2246 	psh.w #22
-2247 	jsr _imul
-2248 	adj #4
-2249 	clc
-2250 	adc.w 1,S
-2251 	sta.w 1,S
-2252 	lda.w col_152,X
-2253 	asl.w a
-2254 	clc
-2255 	adc.w 1,S
-2256 	sta.w 1,S
-2257 	pli
-2258 	lda.w 0,I++
-2259 	pha.w
-2260 	lda #3
-2261 	xma.w 1,S
-2262 	cmp.w 1,S
-2263 	adj #2
-2264 	php
-2265 	lda #1
-2266 	plp
-2267 	beq L_165
-2268 	lda #0
-2269 L_165
-2270 	cmp.w #1
-2271 	beq L_163
-2272 	jmp L_164
-2273 L_163
-2275 	psh.w #island_002
-2276 	lda.w row_151,X
-2277 	pha.w
-2278 	psh.w #22
-2279 	jsr _imul
-2280 	adj #4
-2281 	clc
-2282 	adc.w 1,S
-2283 	sta.w 1,S
-2284 	lda.w col_152,X
-2285 	asl.w a
-2286 	clc
-2287 	adc.w 1,S
-2288 	sta.w 1,S
-2289 	lda #1
-2290 	pli
-2291 	sta.w 0,I++
-2293 L_164
-2294 L_162
-2296 	inc.w col_152,X
-2297 	jmp L_156
-2298 L_158
-2299 	dec.w col_152,X
-2301 	inc.w row_151,X
-2302 	jmp L_153
-2303 L_155
-2304 	dec.w row_151,X
-2306 	txs.w
-2307 	plx.w
-2308 	rts
-2309 	.end resetisland_150
-2313 _pc65_main .sub
-2314 	phx.w
-2315 	tsx.w
-2318 	phx.w
-2319 	jsr initialize_013
-2320 	adj #2
-2323 	lda #0
-2324 	sta.w t_008
-2326 	lda #1
-2327 	sta.w xpt_009
-2329 	psh.w #seed_010
-2330 	jsr _iread
-2331 	pli
-2332 	sta.w 0,I++
-2335 	phx.w
-2336 	jsr printisland_125
-2337 	adj #2
-2341 L_166
-2343 	jsr _writeln
-2346 	lda.w t_008
-2347 	pha.w
-2348 	lda #1
-2349 	clc
-2350 	adc.w 1,S
-2351 	adj #2
-2352 	sta.w t_008
-2354 	phx.w
-2355 	jsr eventsoccur_104
-2356 	adj #2
-2358 	phx.w
-2359 	jsr resetisland_150
-2360 	adj #2
-2364 	lda.w t_008
-2365 	pha.w
-2366 	psh.w #printtimes_004
-2367 	lda.w xpt_009
-2368 	dec.w a
-2369 	asl.w a
-2370 	clc
-2371 	adc.w 1,S
-2372 	sta.w 1,S
-2373 	pli
-2374 	lda.w 0,I++
-2375 	xma.w 1,S
-2376 	cmp.w 1,S
-2377 	adj #2
-2378 	php
-2379 	lda #1
-2380 	plp
-2381 	beq L_170
-2382 	lda #0
-2383 L_170
-2384 	cmp.w #1
-2385 	beq L_168
-2386 	jmp L_169
-2387 L_168
-2389 	phx.w
-2390 	jsr printisland_125
-2391 	adj #2
-2393 	lda.w xpt_009
-2394 	pha.w
-2395 	lda #1
-2396 	clc
-2397 	adc.w 1,S
+1778 	psh.w #18
+1779 	jsr _swrite
+1780 	adj #6
+1782 	psh.w #91
+1784 	psh.w #0
+1785 	jsr _cwrite
+1786 	adj #4
+1787 	lda.w oldrow_089,X
+1788 	pha.w
+1789 	psh.w #1
+1791 	jsr _iwrite
+1792 	adj #4
+1793 	psh.w #S_071
+1794 	psh.w #0
+1795 	psh.w #2
+1796 	jsr _swrite
+1797 	adj #6
+1798 	lda.w oldcol_090,X
+1799 	pha.w
+1800 	psh.w #1
+1802 	jsr _iwrite
+1803 	adj #4
+1804 	psh.w #93
+1806 	psh.w #0
+1807 	jsr _cwrite
+1808 	adj #4
+1809 	jsr _writeln
+1811 L_102
+1813 L_099
+1815 	txs.w
+1816 	plx.w
+1817 	rts
+1818 	.end processrabbit_088
+1829 row_105 .equ -1
+1830 col_106 .equ -3
+1831 eventsoccur_104 .sub
+1832 	phx.w
+1833 	tsx.w
+1834 	adj #-4
+1838 	lda #1
+1839 	sta.w row_105,X
+1840 L_107
+1841 	lda #9
+1842 	cmp.w row_105,X
+1843 	bge L_108
+1844 	jmp L_109
+1845 L_108
+1847 	lda #1
+1848 	sta.w col_106,X
+1849 L_110
+1850 	lda #9
+1851 	cmp.w col_106,X
+1852 	bge L_111
+1853 	jmp L_112
+1854 L_111
+1856 	psh.w #island_002
+1857 	lda.w row_105,X
+1858 	pha.w
+1859 	psh.w #22
+1860 	jsr _imul
+1861 	adj #4
+1862 	clc
+1863 	adc.w 1,S
+1864 	sta.w 1,S
+1865 	lda.w col_106,X
+1866 	asl.w a
+1867 	clc
+1868 	adc.w 1,S
+1869 	sta.w 1,S
+1870 	pli.s
+1871 	lda.w 0,I++
+1872 	pha.w
+1873 	lda #0
+1874 	xma.w 1,S
+1875 	cmp.w 1,S
+1876 	adj #2
+1877 	php
+1878 	lda #1
+1879 	plp
+1880 	beq L_115
+1881 	lda #0
+1882 L_115
+1883 	cmp.w #1
+1884 	beq L_113
+1885 	jmp L_114
+1886 L_113
+1888 	lda.w row_105,X
+1889 	pha.w
+1890 	lda.w col_106,X
+1891 	pha.w
+1892 	lda.w STATIC_LINK,X
+1893 	pha.w
+1894 	jsr processwolf_060
+1895 	adj #6
+1897 L_114
+1899 	inc.w col_106,X
+1900 	jmp L_110
+1901 L_112
+1902 	dec.w col_106,X
+1904 	inc.w row_105,X
+1905 	jmp L_107
+1906 L_109
+1907 	dec.w row_105,X
+1912 	lda #1
+1913 	sta.w row_105,X
+1914 L_116
+1915 	lda #9
+1916 	cmp.w row_105,X
+1917 	bge L_117
+1918 	jmp L_118
+1919 L_117
+1921 	lda #1
+1922 	sta.w col_106,X
+1923 L_119
+1924 	lda #9
+1925 	cmp.w col_106,X
+1926 	bge L_120
+1927 	jmp L_121
+1928 L_120
+1930 	psh.w #island_002
+1931 	lda.w row_105,X
+1932 	pha.w
+1933 	psh.w #22
+1934 	jsr _imul
+1935 	adj #4
+1936 	clc
+1937 	adc.w 1,S
+1938 	sta.w 1,S
+1939 	lda.w col_106,X
+1940 	asl.w a
+1941 	clc
+1942 	adc.w 1,S
+1943 	sta.w 1,S
+1944 	pli.s
+1945 	lda.w 0,I++
+1946 	pha.w
+1947 	lda #1
+1948 	xma.w 1,S
+1949 	cmp.w 1,S
+1950 	adj #2
+1951 	php
+1952 	lda #1
+1953 	plp
+1954 	beq L_124
+1955 	lda #0
+1956 L_124
+1957 	cmp.w #1
+1958 	beq L_122
+1959 	jmp L_123
+1960 L_122
+1962 	lda.w row_105,X
+1963 	pha.w
+1964 	lda.w col_106,X
+1965 	pha.w
+1966 	lda.w STATIC_LINK,X
+1967 	pha.w
+1968 	jsr processrabbit_088
+1969 	adj #6
+1971 L_123
+1973 	inc.w col_106,X
+1974 	jmp L_119
+1975 L_121
+1976 	dec.w col_106,X
+1978 	inc.w row_105,X
+1979 	jmp L_116
+1980 L_118
+1981 	dec.w row_105,X
+1983 	txs.w
+1984 	plx.w
+1985 	rts
+1986 	.end eventsoccur_104
+1998 row_126 .equ -1
+1999 col_127 .equ -3
+2000 cnts_128 .equ -5
+2001 printisland_125 .sub
+2002 	phx.w
+2003 	tsx.w
+2004 	adj #-6
+2006 	jsr _writeln
+2008 	psh.w #S_069
+2009 	psh.w #0
+2010 	psh.w #3
+2011 	jsr _swrite
+2012 	adj #6
+2013 	lda.w t_008
+2014 	pha.w
+2015 	psh.w #4
+2017 	jsr _iwrite
+2018 	adj #4
+2019 	psh.w #S_129
+2020 	psh.w #0
+2021 	psh.w #14
+2022 	jsr _swrite
+2023 	adj #6
+2024 	jsr _writeln
+2026 	jsr _writeln
+2029 	lda #1
+2030 	sta.w row_126,X
+2031 L_130
+2032 	lda #9
+2033 	cmp.w row_126,X
+2034 	bge L_131
+2035 	jmp L_132
+2036 L_131
+2038 	psh.w #32
+2040 	psh.w #10
+2042 	jsr _cwrite
+2043 	adj #4
+2045 	lda #1
+2046 	sta.w col_127,X
+2047 L_133
+2048 	lda #9
+2049 	cmp.w col_127,X
+2050 	bge L_134
+2051 	jmp L_135
+2052 L_134
+2054 	psh.w #island_002
+2055 	lda.w row_126,X
+2056 	pha.w
+2057 	psh.w #22
+2058 	jsr _imul
+2059 	adj #4
+2060 	clc
+2061 	adc.w 1,S
+2062 	sta.w 1,S
+2063 	lda.w col_127,X
+2064 	asl.w a
+2065 	clc
+2066 	adc.w 1,S
+2067 	sta.w 1,S
+2068 	pli.s
+2069 	lda.w 0,I++
+2070 	sta.w cnts_128,X
+2072 	lda.w cnts_128,X
+2073 	pha.w
+2074 	lda #4
+2075 	xma.w 1,S
+2076 	cmp.w 1,S
+2077 	adj #2
+2078 	php
+2079 	lda #1
+2080 	plp
+2081 	beq L_138
+2082 	lda #0
+2083 L_138
+2084 	cmp.w #1
+2085 	beq L_136
+2086 	jmp L_137
+2087 L_136
+2088 	psh.w #S_139
+2089 	psh.w #0
+2090 	psh.w #2
+2091 	jsr _swrite
+2092 	adj #6
+2094 	jmp L_140
+2095 L_137
+2096 	lda.w cnts_128,X
+2097 	pha.w
+2098 	lda #0
+2099 	xma.w 1,S
+2100 	cmp.w 1,S
+2101 	adj #2
+2102 	php
+2103 	lda #1
+2104 	plp
+2105 	beq L_143
+2106 	lda #0
+2107 L_143
+2108 	cmp.w #1
+2109 	beq L_141
+2110 	jmp L_142
+2111 L_141
+2112 	psh.w #S_144
+2113 	psh.w #0
+2114 	psh.w #2
+2115 	jsr _swrite
+2116 	adj #6
+2118 	jmp L_145
+2119 L_142
+2120 	lda.w cnts_128,X
+2121 	pha.w
+2122 	lda #1
+2123 	xma.w 1,S
+2124 	cmp.w 1,S
+2125 	adj #2
+2126 	php
+2127 	lda #1
+2128 	plp
+2129 	beq L_148
+2130 	lda #0
+2131 L_148
+2132 	cmp.w #1
+2133 	beq L_146
+2134 	jmp L_147
+2135 L_146
+2136 	psh.w #S_149
+2137 	psh.w #0
+2138 	psh.w #2
+2139 	jsr _swrite
+2140 	adj #6
+2142 L_147
+2143 L_145
+2144 L_140
+2145 	inc.w col_127,X
+2146 	jmp L_133
+2147 L_135
+2148 	dec.w col_127,X
+2150 	jsr _writeln
+2152 	inc.w row_126,X
+2153 	jmp L_130
+2154 L_132
+2155 	dec.w row_126,X
+2157 	txs.w
+2158 	plx.w
+2159 	rts
+2160 	.end printisland_125
+2172 row_151 .equ -1
+2173 col_152 .equ -3
+2174 resetisland_150 .sub
+2175 	phx.w
+2176 	tsx.w
+2177 	adj #-4
+2179 	lda #1
+2180 	sta.w row_151,X
+2181 L_153
+2182 	lda #9
+2183 	cmp.w row_151,X
+2184 	bge L_154
+2185 	jmp L_155
+2186 L_154
+2188 	lda #1
+2189 	sta.w col_152,X
+2190 L_156
+2191 	lda #9
+2192 	cmp.w col_152,X
+2193 	bge L_157
+2194 	jmp L_158
+2195 L_157
+2197 	psh.w #island_002
+2198 	lda.w row_151,X
+2199 	pha.w
+2200 	psh.w #22
+2201 	jsr _imul
+2202 	adj #4
+2203 	clc
+2204 	adc.w 1,S
+2205 	sta.w 1,S
+2206 	lda.w col_152,X
+2207 	asl.w a
+2208 	clc
+2209 	adc.w 1,S
+2210 	sta.w 1,S
+2211 	pli.s
+2212 	lda.w 0,I++
+2213 	pha.w
+2214 	lda #2
+2215 	xma.w 1,S
+2216 	cmp.w 1,S
+2217 	adj #2
+2218 	php
+2219 	lda #1
+2220 	plp
+2221 	beq L_161
+2222 	lda #0
+2223 L_161
+2224 	cmp.w #1
+2225 	beq L_159
+2226 	jmp L_160
+2227 L_159
+2229 	psh.w #island_002
+2230 	lda.w row_151,X
+2231 	pha.w
+2232 	psh.w #22
+2233 	jsr _imul
+2234 	adj #4
+2235 	clc
+2236 	adc.w 1,S
+2237 	sta.w 1,S
+2238 	lda.w col_152,X
+2239 	asl.w a
+2240 	clc
+2241 	adc.w 1,S
+2242 	sta.w 1,S
+2243 	lda #0
+2244 	pli.s
+2245 	sta.w 0,I++
+2248 	jmp L_162
+2249 L_160
+2250 	psh.w #island_002
+2251 	lda.w row_151,X
+2252 	pha.w
+2253 	psh.w #22
+2254 	jsr _imul
+2255 	adj #4
+2256 	clc
+2257 	adc.w 1,S
+2258 	sta.w 1,S
+2259 	lda.w col_152,X
+2260 	asl.w a
+2261 	clc
+2262 	adc.w 1,S
+2263 	sta.w 1,S
+2264 	pli.s
+2265 	lda.w 0,I++
+2266 	pha.w
+2267 	lda #3
+2268 	xma.w 1,S
+2269 	cmp.w 1,S
+2270 	adj #2
+2271 	php
+2272 	lda #1
+2273 	plp
+2274 	beq L_165
+2275 	lda #0
+2276 L_165
+2277 	cmp.w #1
+2278 	beq L_163
+2279 	jmp L_164
+2280 L_163
+2282 	psh.w #island_002
+2283 	lda.w row_151,X
+2284 	pha.w
+2285 	psh.w #22
+2286 	jsr _imul
+2287 	adj #4
+2288 	clc
+2289 	adc.w 1,S
+2290 	sta.w 1,S
+2291 	lda.w col_152,X
+2292 	asl.w a
+2293 	clc
+2294 	adc.w 1,S
+2295 	sta.w 1,S
+2296 	lda #1
+2297 	pli.s
+2298 	sta.w 0,I++
+2300 L_164
+2301 L_162
+2303 	inc.w col_152,X
+2304 	jmp L_156
+2305 L_158
+2306 	dec.w col_152,X
+2308 	inc.w row_151,X
+2309 	jmp L_153
+2310 L_155
+2311 	dec.w row_151,X
+2313 	txs.w
+2314 	plx.w
+2315 	rts
+2316 	.end resetisland_150
+2320 _pc65_main .sub
+2321 	phx.w
+2322 	tsx.w
+2325 	phx.w
+2326 	jsr initialize_013
+2327 	adj #2
+2330 	lda #0
+2331 	sta.w t_008
+2333 	lda #1
+2334 	sta.w xpt_009
+2336 	psh.w #seed_010
+2337 	jsr _iread
+2338 	pli.s
+2339 	sta.w 0,I++
+2342 	phx.w
+2343 	jsr printisland_125
+2344 	adj #2
+2348 L_166
+2350 	jsr _writeln
+2353 	lda.w t_008
+2354 	pha.w
+2355 	lda #1
+2356 	clc
+2357 	adc.w 1,S
+2358 	adj #2
+2359 	sta.w t_008
+2361 	phx.w
+2362 	jsr eventsoccur_104
+2363 	adj #2
+2365 	phx.w
+2366 	jsr resetisland_150
+2367 	adj #2
+2371 	lda.w t_008
+2372 	pha.w
+2373 	psh.w #printtimes_004
+2374 	lda.w xpt_009
+2375 	dec.w a
+2376 	asl.w a
+2377 	clc
+2378 	adc.w 1,S
+2379 	sta.w 1,S
+2380 	pli.s
+2381 	lda.w 0,I++
+2382 	xma.w 1,S
+2383 	cmp.w 1,S
+2384 	adj #2
+2385 	php
+2386 	lda #1
+2387 	plp
+2388 	beq L_170
+2389 	lda #0
+2390 L_170
+2391 	cmp.w #1
+2392 	beq L_168
+2393 	jmp L_169
+2394 L_168
+2396 	phx.w
+2397 	jsr printisland_125
 2398 	adj #2
-2399 	sta.w xpt_009
-2401 L_169
-2403 	lda.w numwolves_005
-2404 	pha.w
-2405 	lda #0
-2406 	xma.w 1,S
-2407 	cmp.w 1,S
-2408 	adj #2
-2409 	php
-2410 	lda #1
-2411 	plp
-2412 	beq L_171
-2413 	lda #0
-2414 L_171
-2415 	pha.w
-2416 	lda.w numrabbits_006
-2417 	pha.w
-2418 	lda #0
-2419 	xma.w 1,S
-2420 	cmp.w 1,S
-2421 	adj #2
-2422 	php
-2423 	lda #1
-2424 	plp
-2425 	beq L_172
-2426 	lda #0
-2427 L_172
-2429 	ora.w 1,S
-2430 	adj #2
-2431 	pha.w
-2432 	lda.w xpt_009
-2433 	pha.w
-2434 	lda.w numprinttimes_007
-2435 	xma.w 1,S
-2436 	cmp.w 1,S
+2400 	lda.w xpt_009
+2401 	pha.w
+2402 	lda #1
+2403 	clc
+2404 	adc.w 1,S
+2405 	adj #2
+2406 	sta.w xpt_009
+2408 L_169
+2410 	lda.w numwolves_005
+2411 	pha.w
+2412 	lda #0
+2413 	xma.w 1,S
+2414 	cmp.w 1,S
+2415 	adj #2
+2416 	php
+2417 	lda #1
+2418 	plp
+2419 	beq L_171
+2420 	lda #0
+2421 L_171
+2422 	pha.w
+2423 	lda.w numrabbits_006
+2424 	pha.w
+2425 	lda #0
+2426 	xma.w 1,S
+2427 	cmp.w 1,S
+2428 	adj #2
+2429 	php
+2430 	lda #1
+2431 	plp
+2432 	beq L_172
+2433 	lda #0
+2434 L_172
+2436 	ora.w 1,S
 2437 	adj #2
-2438 	php
-2439 	lda #1
-2440 	plp
-2441 	bgt L_173
-2442 	lda #0
-2443 L_173
-2444 	ora.w 1,S
-2445 	adj #2
-2446 	cmp.w #1
-2447 	beq L_167
-2448 	jmp L_166
-2449 L_167
-2452 	phx.w
-2453 	jsr printisland_125
-2454 	adj #2
-2457 	plx.w
-2458 	rts
-2459 	.end _pc65_main
-2461 	.dat
-2463 S_149 .str "r "
-2464 S_144 .str "W "
-2465 S_139 .str ". "
-2466 S_129 .str " : Wolf Island"
-2467 S_103 .str " : Rabbit born at "
-2468 S_087 .str " : Wolf born at "
-2469 S_080 .str " : Rabbit eaten at "
-2470 S_071 .str ", "
-2471 S_070 .str " : Wolf died at "
-2472 S_069 .str "t ="
-2473 _bss_start .byt 1
-2474 island_002 .byt 242
-2475 foodunits_003 .byt 162
-2476 printtimes_004 .byt 100
-2477 numwolves_005 .wrd 1
-2478 numrabbits_006 .wrd 1
-2479 numprinttimes_007 .wrd 1
-2480 t_008 .wrd 1
-2481 xpt_009 .wrd 1
-2482 seed_010 .wrd 1
-2483 rowoffset_011 .byt 10
-2484 coloffset_012 .byt 10
-2485 _bss_end .byt 1
-2486 _stk .byt 1023
-2487 _stk_top .byt 1
+2438 	pha.w
+2439 	lda.w xpt_009
+2440 	pha.w
+2441 	lda.w numprinttimes_007
+2442 	xma.w 1,S
+2443 	cmp.w 1,S
+2444 	adj #2
+2445 	php
+2446 	lda #1
+2447 	plp
+2448 	bgt L_173
+2449 	lda #0
+2450 L_173
+2451 	ora.w 1,S
+2452 	adj #2
+2453 	cmp.w #1
+2454 	beq L_167
+2455 	jmp L_166
+2456 L_167
+2459 	phx.w
+2460 	jsr printisland_125
+2461 	adj #2
+2464 	plx.w
+2465 	rts
+2466 	.end _pc65_main
+2468 	.dat
+2470 S_149 .str "r "
+2471 S_144 .str "W "
+2472 S_139 .str ". "
+2473 S_129 .str " : Wolf Island"
+2474 S_103 .str " : Rabbit born at "
+2475 S_087 .str " : Wolf born at "
+2476 S_080 .str " : Rabbit eaten at "
+2477 S_071 .str ", "
+2478 S_070 .str " : Wolf died at "
+2479 S_069 .str "t ="
+2480 _bss_start .byt 1
+2481 island_002 .byt 242
+2482 foodunits_003 .byt 162
+2483 printtimes_004 .byt 100
+2484 numwolves_005 .wrd 1
+2485 numrabbits_006 .wrd 1
+2486 numprinttimes_007 .wrd 1
+2487 t_008 .wrd 1
+2488 xpt_009 .wrd 1
+2489 seed_010 .wrd 1
+2490 rowoffset_011 .byt 10
+2491 coloffset_012 .byt 10
+2492 _bss_end .byt 1
+2493 _stk .byt 1023
+2494 _stk_top .byt 1

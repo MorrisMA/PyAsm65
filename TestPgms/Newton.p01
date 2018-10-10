@@ -26,7 +26,7 @@
   38 	adj #6
   40 	psh.w #number_002
   41 	jsr _fread
-  42 	pli
+  42 	pli.s
   43 	sta.w 0,I++
   44 	swp a
   45 	sta.w 0,I++

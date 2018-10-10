@@ -160,7 +160,7 @@ L_018
 	adc.w 1,S
 	sta.w 1,S
 	lda #5
-	pli
+	pli.s
 	sta.w 0,I++
 ;  117:         island[max, i] := border;
 	psh.w #island_002
@@ -178,7 +178,7 @@ L_018
 	adc.w 1,S
 	sta.w 1,S
 	lda #5
-	pli
+	pli.s
 	sta.w 0,I++
 ;  118:         island[i, 0]   := border;
 	psh.w #island_002
@@ -196,7 +196,7 @@ L_018
 	adc.w 1,S
 	sta.w 1,S
 	lda #5
-	pli
+	pli.s
 	sta.w 0,I++
 ;  119:         island[i, max] := border;
 	psh.w #island_002
@@ -214,7 +214,7 @@ L_018
 	adc.w 1,S
 	sta.w 1,S
 	lda #5
-	pli
+	pli.s
 	sta.w 0,I++
 ;  120:     END;
 	inc.w i_014,X
@@ -255,7 +255,7 @@ L_024
 	adc.w 1,S
 	sta.w 1,S
 	lda #4
-	pli
+	pli.s
 	sta.w 0,I++
 ;  124:         foodunits[row, col] := 0;
 	psh.w #foodunits_003
@@ -275,7 +275,7 @@ L_024
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 ;  125:         END;
 	inc.w col_016,X
@@ -292,7 +292,7 @@ L_022
 ;  129:     read(numwolves);
 	psh.w #numwolves_005
 	jsr _iread
-	pli
+	pli.s
 	sta.w 0,I++
 ;  130:     FOR i := 1 TO numwolves DO BEGIN
 	lda #1
@@ -309,14 +309,14 @@ L_027
 	adc.w #row_015
 	pha.w
 	jsr _iread
-	pli
+	pli.s
 	sta.w 0,I++
 	txa.w
 	clc
 	adc.w #col_016
 	pha.w
 	jsr _iread
-	pli
+	pli.s
 	sta.w 0,I++
 ;  132:         island[row, col]    := wolf;
 	psh.w #island_002
@@ -334,7 +334,7 @@ L_027
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 ;  133:         foodunits[row, col] := initfoodunits;
 	psh.w #foodunits_003
@@ -354,7 +354,7 @@ L_027
 	adc.w 1,S
 	sta.w 1,S
 	lda #6
-	pli
+	pli.s
 	sta.w 0,I++
 ;  134:     END;
 	inc.w i_014,X
@@ -366,7 +366,7 @@ L_028
 ;  137:     read(numrabbits);
 	psh.w #numrabbits_006
 	jsr _iread
-	pli
+	pli.s
 	sta.w 0,I++
 ;  138:     FOR i := 1 TO numrabbits DO BEGIN
 	lda #1
@@ -383,14 +383,14 @@ L_030
 	adc.w #row_015
 	pha.w
 	jsr _iread
-	pli
+	pli.s
 	sta.w 0,I++
 	txa.w
 	clc
 	adc.w #col_016
 	pha.w
 	jsr _iread
-	pli
+	pli.s
 	sta.w 0,I++
 ;  140:         island[row, col] := rabbit;
 	psh.w #island_002
@@ -408,7 +408,7 @@ L_030
 	adc.w 1,S
 	sta.w 1,S
 	lda #1
-	pli
+	pli.s
 	sta.w 0,I++
 ;  141:     END;
 	inc.w i_014,X
@@ -420,7 +420,7 @@ L_031
 ;  144:     read(numprinttimes);
 	psh.w #numprinttimes_007
 	jsr _iread
-	pli
+	pli.s
 	sta.w 0,I++
 ;  145:     FOR i := 1 TO numprinttimes DO BEGIN
 	lda #1
@@ -440,7 +440,7 @@ L_033
 	adc.w 1,S
 	sta.w 1,S
 	jsr _iread
-	pli
+	pli.s
 	sta.w 0,I++
 ;  147:     END;
 	inc.w i_014,X
@@ -457,7 +457,7 @@ L_034
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 	psh.w #coloffset_012
 	lda #0
@@ -466,7 +466,7 @@ L_034
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 ;  151:     rowoffset[1] := -1; coloffset[1] :=  0; {up}
 	psh.w #rowoffset_011
@@ -478,7 +478,7 @@ L_034
 	lda #1
 	eor.w #-1
 	inc.w a
-	pli
+	pli.s
 	sta.w 0,I++
 	psh.w #coloffset_012
 	lda #1
@@ -487,7 +487,7 @@ L_034
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 ;  152:     rowoffset[2] :=  0; coloffset[2] := -1; {left}
 	psh.w #rowoffset_011
@@ -497,7 +497,7 @@ L_034
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 	psh.w #coloffset_012
 	lda #2
@@ -508,7 +508,7 @@ L_034
 	lda #1
 	eor.w #-1
 	inc.w a
-	pli
+	pli.s
 	sta.w 0,I++
 ;  153:     rowoffset[3] :=  0; coloffset[3] := +1; {right}
 	psh.w #rowoffset_011
@@ -518,7 +518,7 @@ L_034
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 	psh.w #coloffset_012
 	lda #3
@@ -527,7 +527,7 @@ L_034
 	adc.w 1,S
 	sta.w 1,S
 	lda #1
-	pli
+	pli.s
 	sta.w 0,I++
 ;  154:     rowoffset[4] := +1; coloffset[4] :=  0; {down}
 	psh.w #rowoffset_011
@@ -537,7 +537,7 @@ L_034
 	adc.w 1,S
 	sta.w 1,S
 	lda #1
-	pli
+	pli.s
 	sta.w 0,I++
 	psh.w #coloffset_012
 	lda #4
@@ -546,7 +546,7 @@ L_034
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 ;  155:     END {Initialize};
 	txs.w
@@ -683,12 +683,12 @@ L_049
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	clc
 	adc.w 1,S
 	adj #2
-	pli
+	pli.s
 	sta.w 0,I++
 ;  196:         newcol := oldcol + coloffset[adj];
 	lda.w newcol_042,X
@@ -701,12 +701,12 @@ L_049
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	clc
 	adc.w 1,S
 	adj #2
-	pli
+	pli.s
 	sta.w 0,I++
 ;  197:         what   := island[newrow, newcol];
 	psh.w #island_002
@@ -723,7 +723,7 @@ L_049
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	sta.w what_044,X
 ;  198:         done   := what = rabbit;
@@ -793,12 +793,12 @@ L_055
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	clc
 	adc.w 1,S
 	adj #2
-	pli
+	pli.s
 	sta.w 0,I++
 ;  207:         newcol := oldcol + coloffset[adj];
 	lda.w newcol_042,X
@@ -811,12 +811,12 @@ L_055
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	clc
 	adc.w 1,S
 	adj #2
-	pli
+	pli.s
 	sta.w 0,I++
 ;  208:         what   := island[newrow, newcol];
 	psh.w #island_002
@@ -833,7 +833,7 @@ L_055
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	sta.w what_044,X
 ;  209:         UNTIL    (what = empty)
@@ -946,7 +946,7 @@ processwolf_060 .sub
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #1
@@ -954,7 +954,7 @@ processwolf_060 .sub
 	sec
 	sbc.w 1,S
 	adj #2
-	pli
+	pli.s
 	sta.w 0,I++
 ;  227: 
 ;  228:     IF foodunits[oldrow, oldcol] = 0 THEN BEGIN
@@ -974,7 +974,7 @@ processwolf_060 .sub
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #0
@@ -1009,7 +1009,7 @@ L_066
 	adc.w 1,S
 	sta.w 1,S
 	lda #4
-	pli
+	pli.s
 	sta.w 0,I++
 ;  232:         numwolves := numwolves - 1;
 	lda.w numwolves_005
@@ -1144,7 +1144,7 @@ L_075
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #1
@@ -1195,14 +1195,14 @@ L_077
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #6
 	clc
 	adc.w 1,S
 	adj #2
-	pli
+	pli.s
 	sta.w 0,I++
 ;  248:             numrabbits := numrabbits - 1;
 	lda.w numrabbits_006
@@ -1279,7 +1279,7 @@ L_078
 	adc.w 1,S
 	sta.w 1,S
 	lda #2
-	pli
+	pli.s
 	sta.w 0,I++
 ;  255:         island[oldrow, oldcol] := empty;
 	psh.w #island_002
@@ -1297,7 +1297,7 @@ L_078
 	adc.w 1,S
 	sta.w 1,S
 	lda #4
-	pli
+	pli.s
 	sta.w 0,I++
 ;  256:         foodunits[newrow, newcol] := foodunits[oldrow, oldcol];
 	psh.w #foodunits_003
@@ -1332,9 +1332,9 @@ L_078
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
-	pli
+	pli.s
 	sta.w 0,I++
 ;  257:         foodunits[oldrow, oldcol] := 0;
 	psh.w #foodunits_003
@@ -1354,7 +1354,7 @@ L_078
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 ;  258:         END;
 L_076
@@ -1397,7 +1397,7 @@ L_083
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #1
@@ -1450,14 +1450,14 @@ L_081
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #2
 	pha.w
 	jsr _idiv
 	adj #4
-	pli
+	pli.s
 	sta.w 0,I++
 ;  265: 
 ;  266:         {If moved, then leave behind an offspring.}
@@ -1483,7 +1483,7 @@ L_085
 	adc.w 1,S
 	sta.w 1,S
 	lda #2
-	pli
+	pli.s
 	sta.w 0,I++
 ;  269:             foodunits[oldrow, oldcol] :=
 	psh.w #foodunits_003
@@ -1519,9 +1519,9 @@ L_085
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
-	pli
+	pli.s
 	sta.w 0,I++
 ;  271:             numwolves := numwolves + 1;
 	lda.w numwolves_005
@@ -1680,7 +1680,7 @@ L_096
 	adc.w 1,S
 	sta.w 1,S
 	lda #3
-	pli
+	pli.s
 	sta.w 0,I++
 ;  295:         island[oldrow, oldcol] := empty;
 	psh.w #island_002
@@ -1698,7 +1698,7 @@ L_096
 	adc.w 1,S
 	sta.w 1,S
 	lda #4
-	pli
+	pli.s
 	sta.w 0,I++
 ;  296:     END;
 L_097
@@ -1751,7 +1751,7 @@ L_101
 	adc.w 1,S
 	sta.w 1,S
 	lda #3
-	pli
+	pli.s
 	sta.w 0,I++
 ;  304:         numrabbits := numrabbits + 1;
 	lda.w numrabbits_006
@@ -1867,7 +1867,7 @@ L_111
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #0
@@ -1941,7 +1941,7 @@ L_120
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #1
@@ -2065,7 +2065,7 @@ L_134
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	sta.w cnts_128,X
 ;  359:         IF      cnts = empty  THEN write('. ')
@@ -2208,7 +2208,7 @@ L_157
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #2
@@ -2241,7 +2241,7 @@ L_159
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 ;  381:         END
 ;  382:         ELSE IF island[row, col] = newrabbit THEN BEGIN
@@ -2261,7 +2261,7 @@ L_160
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #3
@@ -2294,7 +2294,7 @@ L_163
 	adc.w 1,S
 	sta.w 1,S
 	lda #1
-	pli
+	pli.s
 	sta.w 0,I++
 ;  384:         END;
 L_164
@@ -2335,7 +2335,7 @@ _pc65_main .sub
 ;  396:     read(seed);
 	psh.w #seed_010
 	jsr _iread
-	pli
+	pli.s
 	sta.w 0,I++
 ;  397: 
 ;  398:     PrintIsland;
@@ -2377,7 +2377,7 @@ L_166
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	xma.w 1,S
 	cmp.w 1,S

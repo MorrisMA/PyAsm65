@@ -140,7 +140,7 @@ L_022
 	adc.w #ch_017
 	pha.w
 	jsr _cread
-	pli
+	pli.s
 	sta 0,I++
 ;   70:         write(ch);
 	lda ch_017,X
@@ -406,7 +406,7 @@ L_047
 	adc.w 1,S
 	sta.w 1,S
 	lda ch_033,X
-	pli
+	pli.s
 	sta 0,I++
 ;  120:         END;
 L_044
@@ -444,7 +444,7 @@ L_051
 	adc.w 1,S
 	sta.w 1,S
 	lda #32
-	pli
+	pli.s
 	sta 0,I++
 ;  127:         END;
 	inc.w charcount_032,X
@@ -524,7 +524,7 @@ L_058
 	adc.w #nextindex_006
 	pha.w
 	lda.w nextnumberindex_010
-	pli
+	pli.s
 	sta.w 0,I++
 ;  145:         END;
 L_059
@@ -541,7 +541,7 @@ L_059
 	adc.w #number_005
 	pha.w
 	lda.w linenumber_011
-	pli
+	pli.s
 	sta.w 0,I++
 ;  147:         numbertable[nextnumberindex].nextindex := 0;
 	psh.w #numbertable_008
@@ -556,7 +556,7 @@ L_059
 	adc.w #nextindex_006
 	pha.w
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 ;  148:         appendlinenumber := nextnumberindex;
 	lda.w nextnumberindex_010
@@ -730,14 +730,14 @@ L_070
 	clc
 	adc.w #lastnumberindex_004
 	pha.w
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda.w STATIC_LINK,X
 	pha.w
 	jsr appendlinenumber_053
 	adj #4
-	pli
+	pli.s
 	sta.w 0,I++
 ;  183:     END
 ;  184: 
@@ -790,7 +790,7 @@ L_074
 	pha.w
 	jsr appendlinenumber_053
 	adj #4
-	pli
+	pli.s
 	sta.w 0,I++
 ;  189:         wordtable[i].lastnumberindex :=
 	psh.w #wordtable_007
@@ -822,9 +822,9 @@ L_074
 	clc
 	adc.w #firstnumberindex_003
 	pha.w
-	pli
+	pli.s
 	lda.w 0,I++
-	pli
+	pli.s
 	sta.w 0,I++
 ;  191:     END
 ;  192: 
@@ -1062,7 +1062,7 @@ L_095
 	clc
 	adc.w #number_005
 	pha.w
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda #4
@@ -1081,7 +1081,7 @@ L_095
 	clc
 	adc.w #nextindex_006
 	pha.w
-	pli
+	pli.s
 	lda.w 0,I++
 	sta.w i_094,X
 ;  229:     UNTIL i = 0;
@@ -1197,7 +1197,7 @@ L_103
 	clc
 	adc.w #firstnumberindex_003
 	pha.w
-	pli
+	pli.s
 	lda.w 0,I++
 	pha.w
 	lda.w STATIC_LINK,X

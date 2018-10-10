@@ -44,7 +44,7 @@ _pc65_main .sub
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 ;   13: 
 ;   14:     FOR i := 2 TO max DO
@@ -65,7 +65,7 @@ L_009
 	adc.w 1,S
 	sta.w 1,S
 	lda #1
-	pli
+	pli.s
 	sta.w 0,I++
 	inc.w i_003
 	jmp L_008
@@ -95,7 +95,7 @@ L_013
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	eor #1
 	cmp.w #1
@@ -149,7 +149,7 @@ L_017
 	adc.w 1,S
 	sta.w 1,S
 	lda #0
-	pli
+	pli.s
 	sta.w 0,I++
 ;   28:             factor := factor + prime;
 	lda.w factor_007
@@ -220,7 +220,7 @@ L_025
 	clc
 	adc.w 1,S
 	sta.w 1,S
-	pli
+	pli.s
 	lda.w 0,I++
 	cmp.w #1
 	beq L_027

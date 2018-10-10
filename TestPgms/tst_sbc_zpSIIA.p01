@@ -1,0 +1,9 @@
+   1     .cod    512
+   5     psh.w #128
+   6     stz.w 0x80
+   7     stz.w 0x00
+   8     lda.w #512
+   9     ldy.w 0o1000
+  10     sec
+  14     sbc.yw ((1,S)),A
+  16     .end

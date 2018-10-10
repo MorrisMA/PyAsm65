@@ -1,0 +1,84 @@
+.load tst_sbc_zpSIIA.bin 200
+Wrote +25 bytes from $0200 to $0218
+
+          PC   AC   XR   YR   SP   VM  NVMBDIZC
+M65C02A: 0200 0000 0000 0000 01FF 0000 00110000
+              0000 0000 0000 01FF 0000
+              0000 0000 0000
+.g 200
+   IR: AB <= mem[0200]
+   IR: E2 <= mem[0201]
+ rdPM: 80 <= mem[0202]
+ rdPM: 00 <= mem[0203]
+ wrDM: 00 => mem[01FF]
+ wrDM: 80 => mem[01FE]
+   IR: AB <= mem[0204]
+   IR: 9C <= mem[0205]
+ rdPM: 80 <= mem[0206]
+ rdPM: 00 <= mem[0207]
+ wrDM: 00 => mem[0080]
+ wrDM: 00 => mem[0081]
+   IR: AB <= mem[0208]
+   IR: 9C <= mem[0209]
+ rdPM: 00 <= mem[020A]
+ rdPM: 00 <= mem[020B]
+ wrDM: 00 => mem[0000]
+ wrDM: 00 => mem[0001]
+   IR: AB <= mem[020C]
+   IR: A9 <= mem[020D]
+ rdPM: 00 <= mem[020E]
+ rdPM: 02 <= mem[020F]
+   IR: AB <= mem[0210]
+   IR: AC <= mem[0211]
+ rdPM: 00 <= mem[0212]
+ rdPM: 02 <= mem[0213]
+ rdDM: AB <= mem[0200]
+ rdDM: E2 <= mem[0201]
+   IR: 38 <= mem[0214]
+   IR: FB <= mem[0215]
+   IR: DB <= mem[0216]
+   IR: F1 <= mem[0217]
+ rdPM: 01 <= mem[0218]
+ rdDM: 80 <= mem[01FE]
+ rdDM: 00 <= mem[01FF]
+ rdDM: 00 <= mem[0080]
+ rdDM: 00 <= mem[0081]
+ rdDM: AB <= mem[0200]
+ rdDM: E2 <= mem[0201]
+
+          PC   AC   XR   YR   SP   VM  NVMBDIZC
+M65C02A: 0219 0200 0000 0000 01FD 0000 00110011
+              0000 0000 0000 01FF 0000
+              0000 0000 0000
+.cycles
+Total = 39, Num Inst = 7, Pgm Rd = 25, Data Rd = 8, Data Wr = 6, Dummy Cycles = 0
+  CPI = 5.57, Avg Inst Len = 3.57
+
+
+          PC   AC   XR   YR   SP   VM  NVMBDIZC
+M65C02A: 0219 0200 0000 0000 01FD 0000 00110011
+              0000 0000 0000 01FF 0000
+              0000 0000 0000
+.d 200:218
+$0200  AB        SIZ
+$0201  E2 80     PSH #$80
+$0203  00        ???
+$0204  AB        SIZ
+$0205  9C 80 00  STZ $0080
+$0208  AB        SIZ
+$0209  9C 00 00  STZ $0000
+$020C  AB        SIZ
+$020D  A9 00     LDA #$00
+$020F  02        ???
+$0210  AB        SIZ
+$0211  AC 00 02  LDY $0200
+$0214  38        SEC
+$0215  FB        OAY
+$0216  DB        OIS
+$0217  F1 01     SBC ($01),Y
+
+          PC   AC   XR   YR   SP   VM  NVMBDIZC
+M65C02A: 0219 0200 0000 0000 01FD 0000 00110011
+              0000 0000 0000 01FF 0000
+              0000 0000 0000
+.

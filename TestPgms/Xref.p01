@@ -1,0 +1,1124 @@
+<<<<<<< HEAD
+=======
+   2 	.stk 1024
+   3 	.cod 512
+   4 STATIC_LINK .equ +5
+   5 RETURN_VALUE .equ -3
+   6 HIGH_RETURN_VALUE .equ -1
+   7 _start
+   8 	tsx.w
+   9 	lds.w #_stk_top
+  10 	stz _bss_start
+  11 	ldx.w #_bss_start
+  12 	ldy.w #_bss_start+1
+  13 	lda.w #_stk_top
+  14 	sec
+  15 	sbc.w #_bss_start
+  16 	mov #15
+  17 	jmp _pc65_main
+  37 word_002	.equ +0
+  41 firstnumberindex_003	.equ +20
+  42 lastnumberindex_004	.equ +22
+  48 number_005	.equ +0
+  51 nextindex_006	.equ +2
+  79 ch_017 .equ -5
+  80 nextchar_016 .sub
+  81 	phx.w
+  82 	tsx.w
+  83 	adj #-4
+  84 	adj #-2
+  86 	jsr _eol
+  87 	sta.w newline_014
+  89 	lda.w newline_014
+  90 	cmp.w #1
+  91 	beq L_018
+  92 	jmp L_019
+  93 L_018
+  95 	jsr _readln
+  97 	jsr _writeln
+  99 	lda.w linenumber_011
+ 100 	pha.w
+ 101 	lda #1
+ 102 	clc
+ 103 	adc.w 1,S
+ 104 	adj #2
+ 105 	sta.w linenumber_011
+ 107 	lda.w linenumber_011
+ 108 	pha.w
+ 109 	lda #5
+ 110 	pha.w
+ 111 	jsr _iwrite
+ 112 	adj #4
+ 113 	psh.w #S_020
+ 114 	psh.w #0
+ 115 	psh.w #3
+ 116 	jsr _swrite
+ 117 	adj #6
+ 119 L_019
+ 121 	lda.w newline_014
+ 122 	pha.w
+ 123 	jsr _eof
+ 124 	ora.w 1,S
+ 125 	adj #2
+ 126 	cmp.w #1
+ 127 	beq L_021
+ 128 	jmp L_022
+ 129 L_021
+ 131 	lda #32
+ 132 	sta ch_017
+ 135 	jmp L_023
+ 136 L_022
+ 138 	txa.w
+ 139 	clc
+ 140 	adc.w #ch_017
+ 141 	pha.w
+ 142 	jsr _cread
+ 143 	pli.s
+ 144 	sta 0,I++
+ 146 	lda ch_017,X
+ 147 	pha.w
+ 148 	psh.w #0
+ 149 	jsr _cwrite
+ 150 	adj #4
+ 152 L_023
+ 154 	lda ch_017,X
+ 155 	tay
+ 156 	tya
+ 157 	sta.w RETURN_VALUE,X
+ 159 	lda.w RETURN_VALUE,X
+ 160 	txs.w
+ 161 	plx.w
+ 162 	rts
+ 163 	.end nextchar_016
+ 171 ch_025 .equ +7
+ 172 isletter_024 .sub
+ 173 	phx.w
+ 174 	tsx.w
+ 175 	adj #-4
+ 177 	lda ch_025,X
+ 178 	pha.w
+ 179 	lda #97
+ 180 	xma.w 1,S
+ 181 	cmp.w 1,S
+ 182 	adj #2
+ 183 	php
+ 184 	lda #1
+ 185 	plp
+ 186 	bge L_026
+ 187 	lda #0
+ 188 L_026
+ 189 	pha.w
+ 190 	lda ch_025,X
+ 191 	pha.w
+ 192 	lda #122
+ 193 	xma.w 1,S
+ 194 	cmp.w 1,S
+ 195 	adj #2
+ 196 	php
+ 197 	lda #1
+ 198 	plp
+ 199 	ble L_027
+ 200 	lda #0
+ 201 L_027
+ 202 	and.w 1,S
+ 203 	adj #2
+ 205 	pha.w
+ 206 	lda ch_025,X
+ 207 	pha.w
+ 208 	lda #65
+ 209 	xma.w 1,S
+ 210 	cmp.w 1,S
+ 211 	adj #2
+ 212 	php
+ 213 	lda #1
+ 214 	plp
+ 215 	bge L_028
+ 216 	lda #0
+ 217 L_028
+ 218 	pha.w
+ 219 	lda ch_025,X
+ 220 	pha.w
+ 221 	lda #90
+ 222 	xma.w 1,S
+ 223 	cmp.w 1,S
+ 224 	adj #2
+ 225 	php
+ 226 	lda #1
+ 227 	plp
+ 228 	ble L_029
+ 229 	lda #0
+ 230 L_029
+ 231 	and.w 1,S
+ 232 	adj #2
+ 233 	ora.w 1,S
+ 234 	adj #2
+ 235 	sta.w RETURN_VALUE,X
+ 237 	lda.w RETURN_VALUE,X
+ 238 	txs.w
+ 239 	plx.w
+ 240 	rts
+ 241 	.end isletter_024
+ 256 buffer_031 .equ +7
+ 257 charcount_032 .equ -1
+ 258 ch_033 .equ -3
+ 259 readword_030 .sub
+ 260 	phx.w
+ 261 	tsx.w
+ 262 	adj #-4
+ 264 	lda #0
+ 265 	sta.w gotword_015
+ 269 	jsr _eof
+ 270 	eor #1
+ 271 	cmp.w #1
+ 272 	beq L_034
+ 273 	jmp L_035
+ 274 L_034
+ 276 L_036
+ 278 	lda.w STATIC_LINK,X
+ 279 	pha.w
+ 280 	jsr nextchar_016
+ 281 	adj #2
+ 282 	sta ch_033
+ 284 	jsr _eof
+ 285 	pha.w
+ 286 	lda ch_033,X
+ 287 	pha.w
+ 288 	lda.w STATIC_LINK,X
+ 289 	pha.w
+ 290 	jsr isletter_024
+ 291 	adj #4
+ 292 	ora.w 1,S
+ 293 	adj #2
+ 294 	cmp.w #1
+ 295 	beq L_037
+ 296 	jmp L_036
+ 297 L_037
+ 299 L_035
+ 303 	jsr _eof
+ 304 	eor #1
+ 305 	cmp.w #1
+ 306 	beq L_038
+ 307 	jmp L_039
+ 308 L_038
+ 310 	lda #0
+ 311 	sta.w charcount_032,X
+ 316 L_040
+ 317 	lda ch_033,X
+ 318 	pha.w
+ 319 	lda.w STATIC_LINK,X
+ 320 	pha.w
+ 321 	jsr isletter_024
+ 322 	adj #4
+ 323 	cmp.w #1
+ 324 	beq L_041
+ 325 	jmp L_042
+ 326 L_041
+ 328 	lda.w charcount_032,X
+ 329 	pha.w
+ 330 	lda #20
+ 331 	xma.w 1,S
+ 332 	cmp.w 1,S
+ 333 	adj #2
+ 334 	php
+ 335 	lda #1
+ 336 	plp
+ 337 	blt L_045
+ 338 	lda #0
+ 339 L_045
+ 340 	cmp.w #1
+ 341 	beq L_043
+ 342 	jmp L_044
+ 343 L_043
+ 345 	lda ch_033,X
+ 346 	pha.w
+ 347 	lda #65
+ 348 	xma.w 1,S
+ 349 	cmp.w 1,S
+ 350 	adj #2
+ 351 	php
+ 352 	lda #1
+ 353 	plp
+ 354 	bge L_048
+ 355 	lda #0
+ 356 L_048
+ 357 	pha.w
+ 358 	lda ch_033,X
+ 359 	pha.w
+ 360 	lda #90
+ 361 	xma.w 1,S
+ 362 	cmp.w 1,S
+ 363 	adj #2
+ 364 	php
+ 365 	lda #1
+ 366 	plp
+ 367 	ble L_049
+ 368 	lda #0
+ 369 L_049
+ 370 	and.w 1,S
+ 371 	adj #2
+ 372 	cmp.w #1
+ 373 	beq L_046
+ 374 	jmp L_047
+ 375 L_046
+ 377 	lda ch_033,X
+ 378 	pha.w
+ 379 	lda #97
+ 380 	pha.w
+ 381 	lda #65
+ 382 	xma.w 1,S
+ 383 	sec
+ 384 	sbc.w 1,S
+ 385 	adj #2
+ 386 	clc
+ 387 	adc.w 1,S
+ 388 	adj #2
+ 389 	sta ch_033
+ 391 L_047
+ 393 	lda.w charcount_032,X
+ 394 	pha.w
+ 395 	lda #1
+ 396 	clc
+ 397 	adc.w 1,S
+ 398 	adj #2
+ 399 	sta.w charcount_032,X
+ 401 	lda.w buffer_031,X
+ 402 	pha.w
+ 403 	lda.w charcount_032,X
+ 404 	dec.w a
+ 405 	clc
+ 406 	adc.w 1,S
+ 407 	sta.w 1,S
+ 408 	lda ch_033,X
+ 409 	pli.s
+ 410 	sta 0,I++
+ 412 L_044
+ 414 	lda.w STATIC_LINK,X
+ 415 	pha.w
+ 416 	jsr nextchar_016
+ 417 	adj #2
+ 418 	sta ch_033
+ 420 	jmp L_040
+ 421 L_042
+ 425 	lda.w charcount_032,X
+ 426 	pha.w
+ 427 	lda #1
+ 428 	clc
+ 429 	adc.w 1,S
+ 430 	adj #2
+ 431 	sta.w charcount_032,X
+ 432 L_050
+ 433 	lda #20
+ 434 	cmp.w charcount_032,X
+ 435 	bge L_051
+ 436 	jmp L_052
+ 437 L_051
+ 439 	lda.w buffer_031,X
+ 440 	pha.w
+ 441 	lda.w charcount_032,X
+ 442 	dec.w a
+ 443 	clc
+ 444 	adc.w 1,S
+ 445 	sta.w 1,S
+ 446 	lda #32
+ 447 	pli.s
+ 448 	sta 0,I++
+ 450 	inc.w charcount_032,X
+ 451 	jmp L_050
+ 452 L_052
+ 453 	dec.w charcount_032,X
+ 456 	lda #1
+ 457 	sta.w gotword_015
+ 459 L_039
+ 461 	txs.w
+ 462 	plx.w
+ 463 	rts
+ 464 	.end readword_030
+ 475 lastnumberindex_054 .equ +7
+ 476 appendlinenumber_053 .sub
+ 477 	phx.w
+ 478 	tsx.w
+ 479 	adj #-4
+ 481 	lda.w nextnumberindex_010
+ 482 	pha.w
+ 483 	lda.w #1000
+ 484 	xma.w 1,S
+ 485 	cmp.w 1,S
+ 486 	adj #2
+ 487 	php
+ 488 	lda #1
+ 489 	plp
+ 490 	blt L_057
+ 491 	lda #0
+ 492 L_057
+ 493 	cmp.w #1
+ 494 	beq L_055
+ 495 	jmp L_056
+ 496 L_055
+ 498 	lda.w lastnumberindex_054,X
+ 499 	pha.w
+ 500 	lda #0
+ 501 	xma.w 1,S
+ 502 	cmp.w 1,S
+ 503 	adj #2
+ 504 	php
+ 505 	lda #1
+ 506 	plp
+ 507 	bne L_060
+ 508 	lda #0
+ 509 L_060
+ 510 	cmp.w #1
+ 511 	beq L_058
+ 512 	jmp L_059
+ 513 L_058
+ 515 	psh.w #numbertable_008
+ 516 	lda.w lastnumberindex_054,X
+ 517 	asl.w a
+ 518 	asl.w a
+ 519 	clc
+ 520 	adc.w 1,S
+ 521 	sta.w 1,S
+ 522 	pla.w
+ 523 	clc
+ 524 	adc.w #nextindex_006
+ 525 	pha.w
+ 526 	lda.w nextnumberindex_010
+ 527 	pli.s
+ 528 	sta.w 0,I++
+ 530 L_059
+ 532 	psh.w #numbertable_008
+ 533 	lda.w nextnumberindex_010
+ 534 	asl.w a
+ 535 	asl.w a
+ 536 	clc
+ 537 	adc.w 1,S
+ 538 	sta.w 1,S
+ 539 	pla.w
+ 540 	clc
+ 541 	adc.w #number_005
+ 542 	pha.w
+ 543 	lda.w linenumber_011
+ 544 	pli.s
+ 545 	sta.w 0,I++
+ 547 	psh.w #numbertable_008
+ 548 	lda.w nextnumberindex_010
+ 549 	asl.w a
+ 550 	asl.w a
+ 551 	clc
+ 552 	adc.w 1,S
+ 553 	sta.w 1,S
+ 554 	pla.w
+ 555 	clc
+ 556 	adc.w #nextindex_006
+ 557 	pha.w
+ 558 	lda #0
+ 559 	pli.s
+ 560 	sta.w 0,I++
+ 562 	lda.w nextnumberindex_010
+ 563 	sta.w RETURN_VALUE,X
+ 565 	lda.w nextnumberindex_010
+ 566 	pha.w
+ 567 	lda #1
+ 568 	clc
+ 569 	adc.w 1,S
+ 570 	adj #2
+ 571 	sta.w nextnumberindex_010
+ 574 	jmp L_061
+ 575 L_056
+ 577 	lda #1
+ 578 	sta.w numbertablefull_013
+ 580 	lda #0
+ 581 	sta.w RETURN_VALUE,X
+ 583 L_061
+ 585 	lda.w RETURN_VALUE,X
+ 586 	txs.w
+ 587 	plx.w
+ 588 	rts
+ 589 	.end appendlinenumber_053
+ 601 i_063 .equ -1
+ 602 enterword_062 .sub
+ 603 	phx.w
+ 604 	tsx.w
+ 605 	adj #-2
+ 610 	lda.w newline_014
+ 611 	cmp.w #1
+ 612 	beq L_064
+ 613 	jmp L_065
+ 614 L_064
+ 615 	lda.w linenumber_011
+ 616 	pha.w
+ 617 	lda #1
+ 618 	xma.w 1,S
+ 619 	sec
+ 620 	sbc.w 1,S
+ 621 	adj #2
+ 622 	sta.w linenumber_011
+ 623 L_065
+ 627 	lda #1
+ 628 	sta.w i_063,X
+ 630 L_066
+ 631 	psh.w #wordtable_007
+ 632 	lda.w i_063,X
+ 633 	dec.w a
+ 634 	pha.w
+ 635 	psh.w #24
+ 636 	jsr _imul
+ 637 	adj #4
+ 638 	clc
+ 639 	adc.w 1,S
+ 640 	sta.w 1,S
+ 642 	pla.w
+ 643 	clc
+ 644 	adc.w #word_002
+ 645 	pha.w
+ 646 	psh.w #wordtable_007
+ 647 	lda.w nextwordindex_009
+ 648 	dec.w a
+ 649 	pha.w
+ 650 	psh.w #24
+ 651 	jsr _imul
+ 652 	adj #4
+ 653 	clc
+ 654 	adc.w 1,S
+ 655 	sta.w 1,S
+ 656 	pla.w
+ 657 	clc
+ 658 	adc.w #word_002
+ 659 	pha.w
+ 660 	psh.w #20
+ 661 	jsr _cmpsb
+ 662 	adj #+6
+ 663 	php
+ 664 	lda #1
+ 665 	plp
+ 666 	bne L_069
+ 667 	lda #0
+ 668 L_069
+ 669 	cmp.w #1
+ 670 	beq L_067
+ 671 	jmp L_068
+ 672 L_067
+ 674 	lda.w i_063,X
+ 675 	pha.w
+ 676 	lda #1
+ 677 	clc
+ 678 	adc.w 1,S
+ 679 	adj #2
+ 680 	sta.w i_063,X
+ 682 	jmp L_066
+ 683 L_068
+ 687 	lda.w i_063,X
+ 688 	pha.w
+ 689 	lda.w nextwordindex_009
+ 690 	xma.w 1,S
+ 691 	cmp.w 1,S
+ 692 	adj #2
+ 693 	php
+ 694 	lda #1
+ 695 	plp
+ 696 	blt L_072
+ 697 	lda #0
+ 698 L_072
+ 699 	cmp.w #1
+ 700 	beq L_070
+ 701 	jmp L_071
+ 702 L_070
+ 704 	psh.w #wordtable_007
+ 705 	lda.w i_063,X
+ 706 	dec.w a
+ 707 	pha.w
+ 708 	psh.w #24
+ 709 	jsr _imul
+ 710 	adj #4
+ 711 	clc
+ 712 	adc.w 1,S
+ 713 	sta.w 1,S
+ 714 	pla.w
+ 715 	clc
+ 716 	adc.w #lastnumberindex_004
+ 717 	pha.w
+ 719 	psh.w #wordtable_007
+ 720 	lda.w i_063,X
+ 721 	dec.w a
+ 722 	pha.w
+ 723 	psh.w #24
+ 724 	jsr _imul
+ 725 	adj #4
+ 726 	clc
+ 727 	adc.w 1,S
+ 728 	sta.w 1,S
+ 729 	pla.w
+ 730 	clc
+ 731 	adc.w #lastnumberindex_004
+ 732 	pha.w
+ 733 	pli.s
+ 734 	lda.w 0,I++
+ 735 	pha.w
+ 736 	lda.w STATIC_LINK,X
+ 737 	pha.w
+ 738 	jsr appendlinenumber_053
+ 739 	adj #4
+ 740 	pli.s
+ 741 	sta.w 0,I++
+ 746 	jmp L_073
+ 747 L_071
+ 748 	lda.w nextwordindex_009
+ 749 	pha.w
+ 750 	lda.w #500
+ 751 	xma.w 1,S
+ 752 	cmp.w 1,S
+ 753 	adj #2
+ 754 	php
+ 755 	lda #1
+ 756 	plp
+ 757 	blt L_076
+ 758 	lda #0
+ 759 L_076
+ 760 	cmp.w #1
+ 761 	beq L_074
+ 762 	jmp L_075
+ 763 L_074
+ 765 	lda.w nextwordindex_009
+ 766 	pha.w
+ 767 	lda #1
+ 768 	clc
+ 769 	adc.w 1,S
+ 770 	adj #2
+ 771 	sta.w nextwordindex_009
+ 773 	psh.w #wordtable_007
+ 774 	lda.w i_063,X
+ 775 	dec.w a
+ 776 	pha.w
+ 777 	psh.w #24
+ 778 	jsr _imul
+ 779 	adj #4
+ 780 	clc
+ 781 	adc.w 1,S
+ 782 	sta.w 1,S
+ 783 	pla.w
+ 784 	clc
+ 785 	adc.w #firstnumberindex_003
+ 786 	pha.w
+ 787 	lda #0
+ 788 	pha.w
+ 789 	lda.w STATIC_LINK,X
+ 790 	pha.w
+ 791 	jsr appendlinenumber_053
+ 792 	adj #4
+ 793 	pli.s
+ 794 	sta.w 0,I++
+ 796 	psh.w #wordtable_007
+ 797 	lda.w i_063,X
+ 798 	dec.w a
+ 799 	pha.w
+ 800 	psh.w #24
+ 801 	jsr _imul
+ 802 	adj #4
+ 803 	clc
+ 804 	adc.w 1,S
+ 805 	sta.w 1,S
+ 806 	pla.w
+ 807 	clc
+ 808 	adc.w #lastnumberindex_004
+ 809 	pha.w
+ 811 	psh.w #wordtable_007
+ 812 	lda.w i_063,X
+ 813 	dec.w a
+ 814 	pha.w
+ 815 	psh.w #24
+ 816 	jsr _imul
+ 817 	adj #4
+ 818 	clc
+ 819 	adc.w 1,S
+ 820 	sta.w 1,S
+ 821 	pla.w
+ 822 	clc
+ 823 	adc.w #firstnumberindex_003
+ 824 	pha.w
+ 825 	pli.s
+ 826 	lda.w 0,I++
+ 827 	pli.s
+ 828 	sta.w 0,I++
+ 833 	jmp L_077
+ 834 L_075
+ 835 	lda #1
+ 836 	sta.w wordtablefull_012
+ 837 L_077
+ 838 L_073
+ 841 	lda.w newline_014
+ 842 	cmp.w #1
+ 843 	beq L_078
+ 844 	jmp L_079
+ 845 L_078
+ 846 	lda.w linenumber_011
+ 847 	pha.w
+ 848 	lda #1
+ 849 	clc
+ 850 	adc.w 1,S
+ 851 	adj #2
+ 852 	sta.w linenumber_011
+ 853 L_079
+ 855 	txs.w
+ 856 	plx.w
+ 857 	rts
+ 858 	.end enterword_062
+ 870 i_081 .equ -1
+ 871 j_082 .equ -3
+ 872 temp_083 .equ -27
+ 873 sortwords_080 .sub
+ 874 	phx.w
+ 875 	tsx.w
+ 876 	adj #-28
+ 878 	lda #1
+ 879 	sta.w i_081,X
+ 880 L_084
+ 881 	lda.w nextwordindex_009
+ 882 	pha.w
+ 883 	lda #2
+ 884 	xma.w 1,S
+ 885 	sec
+ 886 	sbc.w 1,S
+ 887 	adj #2
+ 888 	cmp.w i_081,X
+ 889 	bge L_085
+ 890 	jmp L_086
+ 891 L_085
+ 893 	lda.w i_081,X
+ 894 	pha.w
+ 895 	lda #1
+ 896 	clc
+ 897 	adc.w 1,S
+ 898 	adj #2
+ 899 	sta.w j_082,X
+ 900 L_087
+ 901 	lda.w nextwordindex_009
+ 902 	pha.w
+ 903 	lda #1
+ 904 	xma.w 1,S
+ 905 	sec
+ 906 	sbc.w 1,S
+ 907 	adj #2
+ 908 	cmp.w j_082,X
+ 909 	bge L_088
+ 910 	jmp L_089
+ 911 L_088
+ 913 	psh.w #wordtable_007
+ 914 	lda.w i_081,X
+ 915 	dec.w a
+ 916 	pha.w
+ 917 	psh.w #24
+ 918 	jsr _imul
+ 919 	adj #4
+ 920 	clc
+ 921 	adc.w 1,S
+ 922 	sta.w 1,S
+ 923 	pla.w
+ 924 	clc
+ 925 	adc.w #word_002
+ 926 	pha.w
+ 927 	psh.w #wordtable_007
+ 928 	lda.w j_082,X
+ 929 	dec.w a
+ 930 	pha.w
+ 931 	psh.w #24
+ 932 	jsr _imul
+ 933 	adj #4
+ 934 	clc
+ 935 	adc.w 1,S
+ 936 	sta.w 1,S
+ 937 	pla.w
+ 938 	clc
+ 939 	adc.w #word_002
+ 940 	pha.w
+ 941 	psh.w #20
+ 942 	jsr _cmpsb
+ 943 	adj #+6
+ 944 	php
+ 945 	lda #1
+ 946 	plp
+ 947 	bgt L_092
+ 948 	lda #0
+ 949 L_092
+ 950 	cmp.w #1
+ 951 	beq L_090
+ 952 	jmp L_091
+ 953 L_090
+ 955 	txa.w
+ 956 	clc
+ 957 	adc.w #temp_083
+ 958 	pha.w
+ 959 	psh.w #wordtable_007
+ 960 	lda.w i_081,X
+ 961 	dec.w a
+ 962 	pha.w
+ 963 	psh.w #24
+ 964 	jsr _imul
+ 965 	adj #4
+ 966 	clc
+ 967 	adc.w 1,S
+ 968 	sta.w 1,S
+ 969 	swp x
+ 970 	lda #24
+ 971 	plx.w
+ 972 	ply.w
+ 973 	mov #15
+ 974 	swp x
+ 976 	psh.w #wordtable_007
+ 977 	lda.w i_081,X
+ 978 	dec.w a
+ 979 	pha.w
+ 980 	psh.w #24
+ 981 	jsr _imul
+ 982 	adj #4
+ 983 	clc
+ 984 	adc.w 1,S
+ 985 	sta.w 1,S
+ 986 	psh.w #wordtable_007
+ 987 	lda.w j_082,X
+ 988 	dec.w a
+ 989 	pha.w
+ 990 	psh.w #24
+ 991 	jsr _imul
+ 992 	adj #4
+ 993 	clc
+ 994 	adc.w 1,S
+ 995 	sta.w 1,S
+ 996 	swp x
+ 997 	lda #24
+ 998 	plx.w
+ 999 	ply.w
+1000 	mov #15
+1001 	swp x
+1003 	psh.w #wordtable_007
+1004 	lda.w j_082,X
+1005 	dec.w a
+1006 	pha.w
+1007 	psh.w #24
+1008 	jsr _imul
+1009 	adj #4
+1010 	clc
+1011 	adc.w 1,S
+1012 	sta.w 1,S
+1013 	txa.w
+1014 	clc
+1015 	adc.w #temp_083
+1016 	pha.w
+1017 	swp x
+1018 	lda #24
+1019 	plx.w
+1020 	ply.w
+1021 	mov #15
+1022 	swp x
+1024 L_091
+1026 	inc.w j_082,X
+1027 	jmp L_087
+1028 L_089
+1029 	dec.w j_082,X
+1031 	inc.w i_081,X
+1032 	jmp L_084
+1033 L_086
+1034 	dec.w i_081,X
+1036 	txs.w
+1037 	plx.w
+1038 	rts
+1039 	.end sortwords_080
+1047 i_094 .equ +7
+1048 printnumbers_093 .sub
+1049 	phx.w
+1050 	tsx.w
+1052 L_095
+1054 	psh.w #numbertable_008
+1055 	lda.w i_094,X
+1056 	asl.w a
+1057 	asl.w a
+1058 	clc
+1059 	adc.w 1,S
+1060 	sta.w 1,S
+1061 	pla.w
+1062 	clc
+1063 	adc.w #number_005
+1064 	pha.w
+1065 	pli.s
+1066 	lda.w 0,I++
+1067 	pha.w
+1068 	lda #4
+1069 	pha.w
+1070 	jsr _iwrite
+1071 	adj #4
+1073 	psh.w #numbertable_008
+1074 	lda.w i_094,X
+1075 	asl.w a
+1076 	asl.w a
+1077 	clc
+1078 	adc.w 1,S
+1079 	sta.w 1,S
+1080 	pla.w
+1081 	clc
+1082 	adc.w #nextindex_006
+1083 	pha.w
+1084 	pli.s
+1085 	lda.w 0,I++
+1086 	sta.w i_094,X
+1088 	lda.w i_094,X
+1089 	pha.w
+1090 	lda #0
+1091 	xma.w 1,S
+1092 	cmp.w 1,S
+1093 	adj #2
+1094 	php
+1095 	lda #1
+1096 	plp
+1097 	beq L_097
+1098 	lda #0
+1099 L_097
+1100 	cmp.w #1
+1101 	beq L_096
+1102 	jmp L_095
+1103 L_096
+1105 	jsr _writeln
+1107 	txs.w
+1108 	plx.w
+1109 	rts
+1110 	.end printnumbers_093
+1121 i_099 .equ -1
+1122 printxref_098 .sub
+1123 	phx.w
+1124 	tsx.w
+1125 	adj #-2
+1127 	jsr _writeln
+1129 	jsr _writeln
+1131 	psh.w #S_100
+1132 	psh.w #0
+1133 	psh.w #15
+1134 	jsr _swrite
+1135 	adj #6
+1136 	jsr _writeln
+1138 	psh.w #S_101
+1139 	psh.w #0
+1140 	psh.w #15
+1141 	jsr _swrite
+1142 	adj #6
+1143 	jsr _writeln
+1145 	jsr _writeln
+1147 	lda.w STATIC_LINK,X
+1148 	pha.w
+1149 	jsr sortwords_080
+1150 	adj #2
+1152 	lda #1
+1153 	sta.w i_099,X
+1154 L_102
+1155 	lda.w nextwordindex_009
+1156 	pha.w
+1157 	lda #1
+1158 	xma.w 1,S
+1159 	sec
+1160 	sbc.w 1,S
+1161 	adj #2
+1162 	cmp.w i_099,X
+1163 	bge L_103
+1164 	jmp L_104
+1165 L_103
+1167 	psh.w #wordtable_007
+1168 	lda.w i_099,X
+1169 	dec.w a
+1170 	pha.w
+1171 	psh.w #24
+1172 	jsr _imul
+1173 	adj #4
+1174 	clc
+1175 	adc.w 1,S
+1176 	sta.w 1,S
+1177 	pla.w
+1178 	clc
+1179 	adc.w #word_002
+1180 	pha.w
+1181 	psh.w #0
+1182 	psh.w #20
+1183 	jsr _swrite
+1184 	adj #6
+1186 	psh.w #wordtable_007
+1187 	lda.w i_099,X
+1188 	dec.w a
+1189 	pha.w
+1190 	psh.w #24
+1191 	jsr _imul
+1192 	adj #4
+1193 	clc
+1194 	adc.w 1,S
+1195 	sta.w 1,S
+1196 	pla.w
+1197 	clc
+1198 	adc.w #firstnumberindex_003
+1199 	pha.w
+1200 	pli.s
+1201 	lda.w 0,I++
+1202 	pha.w
+1203 	lda.w STATIC_LINK,X
+1204 	pha.w
+1205 	jsr printnumbers_093
+1206 	adj #4
+1208 	inc.w i_099,X
+1209 	jmp L_102
+1210 L_104
+1211 	dec.w i_099,X
+1213 	txs.w
+1214 	plx.w
+1215 	rts
+1216 	.end printxref_098
+1220 _pc65_main .sub
+1221 	phx.w
+1222 	tsx.w
+1224 	lda #0
+1225 	sta.w wordtablefull_012
+1227 	lda #0
+1228 	sta.w numbertablefull_013
+1230 	lda #1
+1231 	sta.w nextwordindex_009
+1233 	lda #1
+1234 	sta.w nextnumberindex_010
+1236 	lda #1
+1237 	sta.w linenumber_011
+1239 	psh.w #S_105
+1240 	psh.w #0
+1241 	psh.w #8
+1242 	jsr _swrite
+1243 	adj #6
+1247 L_106
+1248 	jsr _eof
+1249 	pha.w
+1250 	lda.w wordtablefull_012
+1251 	ora.w 1,S
+1252 	adj #2
+1253 	pha.w
+1254 	lda.w numbertablefull_013
+1255 	ora.w 1,S
+1256 	adj #2
+1257 	eor #1
+1258 	cmp.w #1
+1259 	beq L_107
+1260 	jmp L_108
+1261 L_107
+1263 	psh.w #wordtable_007
+1264 	lda.w nextwordindex_009
+1265 	dec.w a
+1266 	pha.w
+1267 	psh.w #24
+1268 	jsr _imul
+1269 	adj #4
+1270 	clc
+1271 	adc.w 1,S
+1272 	sta.w 1,S
+1273 	pla.w
+1274 	clc
+1275 	adc.w #word_002
+1276 	pha.w
+1277 	phx.w
+1278 	jsr readword_030
+1279 	adj #4
+1281 	lda.w gotword_015
+1282 	cmp.w #1
+1283 	beq L_109
+1284 	jmp L_110
+1285 L_109
+1286 	phx.w
+1287 	jsr enterword_062
+1288 	adj #2
+1289 L_110
+1291 	jmp L_106
+1292 L_108
+1296 	lda.w wordtablefull_012
+1297 	cmp.w #1
+1298 	beq L_111
+1299 	jmp L_112
+1300 L_111
+1302 	jsr _writeln
+1304 	psh.w #S_113
+1305 	psh.w #0
+1306 	psh.w #43
+1307 	jsr _swrite
+1308 	adj #6
+1309 	jsr _writeln
+1312 	jmp L_114
+1313 L_112
+1314 	lda.w numbertablefull_013
+1315 	cmp.w #1
+1316 	beq L_115
+1317 	jmp L_116
+1318 L_115
+1320 	jsr _writeln
+1322 	psh.w #S_117
+1323 	psh.w #0
+1324 	psh.w #45
+1325 	jsr _swrite
+1326 	adj #6
+1327 	jsr _writeln
+1330 	jmp L_118
+1331 L_116
+1333 	phx.w
+1334 	jsr printxref_098
+1335 	adj #2
+1337 L_118
+1338 L_114
+1342 	jsr _writeln
+1344 	lda.w nextwordindex_009
+1345 	pha.w
+1346 	lda #1
+1347 	xma.w 1,S
+1348 	sec
+1349 	sbc.w 1,S
+1350 	adj #2
+1351 	pha.w
+1352 	lda #5
+1353 	pha.w
+1354 	jsr _iwrite
+1355 	adj #4
+1356 	psh.w #S_119
+1357 	psh.w #0
+1358 	psh.w #14
+1359 	jsr _swrite
+1360 	adj #6
+1361 	jsr _writeln
+1363 	lda.w nextnumberindex_010
+1364 	pha.w
+1365 	lda #1
+1366 	xma.w 1,S
+1367 	sec
+1368 	sbc.w 1,S
+1369 	adj #2
+1370 	pha.w
+1371 	lda #5
+1372 	pha.w
+1373 	jsr _iwrite
+1374 	adj #4
+1375 	psh.w #S_120
+1376 	psh.w #0
+1377 	psh.w #21
+1378 	jsr _swrite
+1379 	adj #6
+1380 	jsr _writeln
+1383 	plx.w
+1384 	rts
+1385 	.end _pc65_main
+1387 	.dat
+1389 S_120 .str " line number entries."
+1390 S_119 .str " word entries."
+1391 S_117 .str "*** The number table is not large enough. ***"
+1392 S_113 .str "*** The word table is not large enough. ***"
+1393 S_105 .str "    1 : "
+1394 S_101 .str "---------------"
+1395 S_100 .str "Cross-reference"
+1396 S_020 .str " : "
+1397 _bss_start .byt 1
+1398 wordtable_007 .byt 12000
+1399 numbertable_008 .byt 4004
+1400 nextwordindex_009 .wrd 1
+1401 nextnumberindex_010 .wrd 1
+1402 linenumber_011 .wrd 1
+1403 wordtablefull_012 .wrd 1
+1404 numbertablefull_013 .wrd 1
+1405 newline_014 .wrd 1
+1406 gotword_015 .wrd 1
+1407 _bss_end .byt 1
+1408 _stk .byt 1023
+1409 _stk_top .byt 1
+1411 	.end
+>>>>>>> 5383c57aee4c7b05df3780356a8dc724807dd42f

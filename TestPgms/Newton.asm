@@ -39,7 +39,7 @@ L_005
 ;   13:     read(number);
 	psh.w #number_002
 	jsr _fread
-	pli
+	pli.s
 	sta.w 0,I++
 	swp a
 	sta.w 0,I++
