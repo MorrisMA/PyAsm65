@@ -1,0 +1,36 @@
+   2         .cod 512
+   3 _idiv   .proc
+   4         lda #0
+   5         dup a
+   6         lda.w 5,S
+   7         ldy #16
+   8 _idiv_Lp
+   9         clc
+  10         asl.w a
+  11         swp a
+  12         rol.w a
+  13         bcs _idiv_Plus
+  14 _idiv_Minus
+  15         sec
+  16         sbc.w 3,S
+  17         bra _idiv_Next
+  18 _idiv_Plus
+  19         clc
+  20         adc.w 3,S
+  21 _idiv_Next
+  22         swp a
+  23         bmi _idiv_Dec
+  24         inc.w a
+  25 _idiv_Dec
+  26         dey
+  27         bne _idiv_Lp
+  29 _idiv_Exit
+  30         swp a
+  31         ora.w #0
+  32         bpl _idiv_Finish
+  33         clc
+  34         adc.w 3,S
+  35 _idiv_Finish
+  36         swp a
+  37         rts
+  38         .endp

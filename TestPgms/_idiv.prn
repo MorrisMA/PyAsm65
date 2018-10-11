@@ -1,0 +1,39 @@
+(   1)                  ; ;   unsigned division 16 x 16
+(   2)                  ;         .cod 512
+(   3)                  ; _idiv   .proc
+(   4) 0200 A900        ;         lda #0
+(   5) 0202 0B          ;         dup a
+(   6) 0203 CBB505      ;         lda.w 5,S
+(   7) 0206 A010        ;         ldy #16
+(   8)                  ; _idiv_Lp    
+(   9) 0208 18          ;         clc
+(  10) 0209 AB0A        ;         asl.w a
+(  11) 020B 1B          ;         swp a
+(  12) 020C AB2A        ;         rol.w a
+(  13) 020E B006        ;         bcs _idiv_Plus
+(  14)                  ; _idiv_Minus
+(  15) 0210 38          ;         sec
+(  16) 0211 CBF503      ;         sbc.w 3,S
+(  17) 0214 8004        ;         bra _idiv_Next
+(  18)                  ; _idiv_Plus
+(  19) 0216 18          ;         clc
+(  20) 0217 CB7503      ;         adc.w 3,S
+(  21)                  ; _idiv_Next    
+(  22) 021A 1B          ;         swp a
+(  23) 021B 3002        ;         bmi _idiv_Dec
+(  24) 021D AB1A        ;         inc.w a
+(  25)                  ; _idiv_Dec
+(  26) 021F 88          ;         dey
+(  27) 0220 D0E6        ;         bne _idiv_Lp
+(  28)                  ; ;
+(  29)                  ; _idiv_Exit
+(  30) 0222 1B          ;         swp a
+(  31) 0223 AB090000    ;         ora.w #0
+(  32) 0227 1004        ;         bpl _idiv_Finish
+(  33) 0229 18          ;         clc
+(  34) 022A CB7503      ;         adc.w 3,S
+(  35)                  ; _idiv_Finish
+(  36) 022D 1B          ;         swp a
+(  37) 022E 60          ;         rts
+(  38)                  ;         .endp
+(  39)                  ;         .end

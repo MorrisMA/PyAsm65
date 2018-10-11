@@ -1,0 +1,40 @@
+   2         .cod 512
+   3 _imul   .proc
+   4         ldy #16
+   5         lda #0
+   6         dup a
+   7         dup a
+   8         lda.w 3,S
+   9         rev
+  10         ora.w #0
+  11         clc
+  12         rot a
+  14         bra _imul_TstB
+  16 _imul_Lp
+  17         asl.w a
+  18         rot a
+  19 _imul_TstB
+  20         bcc _imul_SubShft
+  22 _imul_AddShft
+  23         bmi _imul_ShftP
+  24 _imul_AddM
+  25         clc
+  26         adc.w 5,S
+  27         bra _imul_ShftP
+  29 _imul_SubShft
+  30         bpl _imul_ShftP
+  31 _imul_SubM
+  32         sec
+  33         sbc.w 5,S
+  35 _imul_ShftP
+  36         asr.w a
+  37         rot a
+  38         ror.w a
+  39         rot a
+  41 _imul_Dec
+  42         dey
+  43         bne _imul_Lp
+  45 _imul_Exit
+  46         rot a
+  47         rts
+  49         .endp

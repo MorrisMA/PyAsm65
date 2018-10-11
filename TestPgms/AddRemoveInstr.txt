@@ -1,0 +1,42 @@
+Add
+--------------------------------------------------------------------------------
+stx_zpA, 2, 2, FB96
+stx.w_zpA, 3, 2, FBAB96
+stx.w_zpIA, 3, 2, FBBB96
+stx_zpIA, 3, 2, FB9B96
+--
+sts_zpA, 3, 2, FB8B96
+sts.w_zpA, 3, 2, FBCB96
+sts.w_zpIA, 3, 2, FBDB96
+sts_zpIA, 4, 2, FB8B9B96
+--
+ldx_zpA, 2, 2, FBB6
+ldx.w_zpA, 3, 2, FBABB6
+ldx.w_zpIA, 3, 2, FBBBB6
+ldx_zpIA, 3, 2, FB9BB6
+--
+lds_zpA, 3, 2, FB8BB6
+lds.w_zpA, 3, 2, FBCBB6
+lds.w_zpIA, 3, 2, FBDBB6
+lds_zpIA, 4, 2, FB8B9BB6
+--
+ldx_absA, 2, 2, FBBE
+ldx.w_absA, 3, 2, FBABBE
+ldx.w_absIA, 3, 2, FBBBBE
+ldx_absIA, 3, 2, FB9BBE
+--
+lds_absA, 3, 2, FB8BBE
+lds.w_absA, 3, 2, FBCBBE
+lds.w_absIA, 3, 2, FBDBBE
+lds_absIA, 4, 2, FB8B9BBE
+--
+inu_imp, 3, 0, 8B9BE8
+inu.w_imp 2, 0, CBE8
+deu_imp, 3, 0, 8B9BCA
+deu.w_imp 2, 0, CBCA
+--------------------------------------------------------------------------------
+Remove
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+

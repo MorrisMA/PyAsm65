@@ -1,0 +1,50 @@
+(   1)                  ; ; signed multiplication: 16 x 16 => 32
+(   2)                  ;         .cod 512
+(   3)                  ; _imul   .proc
+(   4) 0200 A010        ;         ldy #16
+(   5) 0202 A900        ;         lda #0
+(   6) 0204 0B          ;         dup a
+(   7) 0205 0B          ;         dup a
+(   8) 0206 CBB503      ;         lda.w 3,S
+(   9) 0209 9B2B        ;         rev
+(  10) 020B AB090000    ;         ora.w #0
+(  11) 020F 18          ;         clc
+(  12) 0210 2B          ;         rot a
+(  13)                  ; ;
+(  14) 0211 8003        ;         bra _imul_TstB
+(  15)                  ; ;
+(  16)                  ; _imul_Lp
+(  17) 0213 AB0A        ;         asl.w a
+(  18) 0215 2B          ;         rot a
+(  19)                  ; _imul_TstB
+(  20) 0216 9008        ;         bcc _imul_SubShft
+(  21)                  ; ;
+(  22)                  ; _imul_AddShft
+(  23) 0218 300C        ;         bmi _imul_ShftP
+(  24)                  ; _imul_AddM
+(  25) 021A 18          ;         clc
+(  26) 021B CB7505      ;         adc.w 5,S
+(  27) 021E 8006        ;         bra _imul_ShftP
+(  28)                  ; ;
+(  29)                  ; _imul_SubShft
+(  30) 0220 1004        ;         bpl _imul_ShftP
+(  31)                  ; _imul_SubM
+(  32) 0222 38          ;         sec
+(  33) 0223 CBF505      ;         sbc.w 5,S
+(  34)                  ; ;
+(  35)                  ; _imul_ShftP
+(  36) 0226 BB4A        ;         asr.w a
+(  37) 0228 2B          ;         rot a
+(  38) 0229 AB6A        ;         ror.w a
+(  39) 022B 2B          ;         rot a
+(  40)                  ; ;
+(  41)                  ; _imul_Dec
+(  42) 022C 88          ;         dey
+(  43) 022D D0E4        ;         bne _imul_Lp
+(  44)                  ; ;
+(  45)                  ; _imul_Exit
+(  46) 022F 2B          ;         rot a
+(  47) 0230 60          ;         rts
+(  48)                  ; ;
+(  49)                  ;         .endp
+(  50)                  ;         .end
