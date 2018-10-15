@@ -1,0 +1,3 @@
+(   8) 0000 A90A        ;             lda #_newLine
+(   9) 0002 8D01F0      ;             sta _putChar
+(  10) 0005 60          ;             rts

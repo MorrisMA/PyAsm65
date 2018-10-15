@@ -1,0 +1,13 @@
+(   1)                  ; ; put <newLine> to output
+(   2)                  ;             .cod
+(   3)                  ; ;
+(   4)                  ; _newLine    .equ    0x0A
+(   5)                  ; _putChar    .equ    0xF001
+(   6)                  ; ;
+(   7)                  ; _writeln    .proc
+(   8) 0000 A90A        ;             lda #_newLine
+(   9) 0002 8D01F0      ;             sta _putChar
+(  10) 0005 60          ;             rts
+(  11)                  ; ;
+(  12)                  ;             .endp
+(  13)                  ;             .end

@@ -1,0 +1,383 @@
+   2 	.stk 1024
+   3 	.cod 512
+   4 STATIC_LINK .equ +5
+   5 RETURN_VALUE .equ -3
+   6 HIGH_RETURN_VALUE .equ -1
+   7 _start
+   8 	tsx.w
+   9 	lds.w #_stk_top
+  10 	stz _bss_start
+  11 	ldx.w #_bss_start
+  12 	ldy.w #_bss_start+1
+  13 	lda.w #_stk_top
+  14 	sec
+  15 	sbc.w #_bss_start
+  16 	mov #10
+  17 	jmp _pc65_main
+  27 _pc65_main .sub
+  28 	phx.w
+  29 	tsx.w
+  31 	lda.w #1000
+  32 	pha.w
+  33 	lda #2
+  34 	pha.w
+  35 	jsr _idiv
+  36 	adj #4
+  37 	sta.w limit_005
+  39 	psh.w #sieve_002
+  40 	lda #1
+  41 	dec.w a
+  42 	asl.w a
+  43 	clc
+  44 	adc.w 1,S
+  45 	sta.w 1,S
+  46 	lda #0
+  47 	pli.s
+  48 	sta.w 0,I++
+  51 	lda #2
+  52 	sta.w i_003
+  53 L_008
+  54 	lda.w #1000
+  55 	cmp.w i_003
+  56 	bge L_009
+  57 	jmp L_010
+  58 L_009
+  60 	psh.w #sieve_002
+  61 	lda.w i_003
+  62 	dec.w a
+  63 	asl.w a
+  64 	clc
+  65 	adc.w 1,S
+  66 	sta.w 1,S
+  67 	lda #1
+  68 	pli.s
+  69 	sta.w 0,I++
+  70 	inc.w i_003
+  71 	jmp L_008
+  72 L_010
+  73 	dec.w i_003
+  76 	lda #1
+  77 	sta.w prime_006
+  80 L_011
+  82 	lda.w prime_006
+  83 	pha.w
+  84 	lda #1
+  85 	clc
+  86 	adc.w 1,S
+  87 	adj #2
+  88 	sta.w prime_006
+  90 L_013
+  91 	psh.w #sieve_002
+  92 	lda.w prime_006
+  93 	dec.w a
+  94 	asl.w a
+  95 	clc
+  96 	adc.w 1,S
+  97 	sta.w 1,S
+  98 	pli.s
+  99 	lda.w 0,I++
+ 100 	eor #1
+ 101 	cmp.w #1
+ 102 	beq L_014
+ 103 	jmp L_015
+ 104 L_014
+ 106 	lda.w prime_006
+ 107 	pha.w
+ 108 	lda #1
+ 109 	clc
+ 110 	adc.w 1,S
+ 111 	adj #2
+ 112 	sta.w prime_006
+ 113 	jmp L_013
+ 114 L_015
+ 117 	lda #2
+ 118 	pha.w
+ 119 	lda.w prime_006
+ 120 	pha.w
+ 121 	jsr _imul
+ 122 	adj #4
+ 123 	sta.w factor_007
+ 126 L_016
+ 127 	lda.w factor_007
+ 128 	pha.w
+ 129 	lda.w #1000
+ 130 	xma.w 1,S
+ 131 	cmp.w 1,S
+ 132 	adj #2
+ 133 	php
+ 134 	lda #1
+ 135 	plp
+ 136 	ble L_019
+ 137 	lda #0
+ 138 L_019
+ 139 	cmp.w #1
+ 140 	beq L_017
+ 141 	jmp L_018
+ 142 L_017
+ 144 	psh.w #sieve_002
+ 145 	lda.w factor_007
+ 146 	dec.w a
+ 147 	asl.w a
+ 148 	clc
+ 149 	adc.w 1,S
+ 150 	sta.w 1,S
+ 151 	lda #0
+ 152 	pli.s
+ 153 	sta.w 0,I++
+ 155 	lda.w factor_007
+ 156 	pha.w
+ 157 	lda.w prime_006
+ 158 	clc
+ 159 	adc.w 1,S
+ 160 	adj #2
+ 161 	sta.w factor_007
+ 164 	jmp L_016
+ 165 L_018
+ 166 	lda.w prime_006
+ 167 	pha.w
+ 168 	lda.w limit_005
+ 169 	xma.w 1,S
+ 170 	cmp.w 1,S
+ 171 	adj #2
+ 172 	php
+ 173 	lda #1
+ 174 	plp
+ 175 	bgt L_020
+ 176 	lda #0
+ 177 L_020
+ 178 	cmp.w #1
+ 179 	beq L_012
+ 180 	jmp L_011
+ 181 L_012
+ 184 	psh.w #S_021
+ 185 	psh.w #0
+ 186 	psh.w #21
+ 187 	jsr _swrite
+ 188 	adj #6
+ 189 	jsr _writeln
+ 191 	jsr _writeln
+ 194 	lda #1
+ 195 	sta.w i_003
+ 197 L_022
+ 199 	lda #0
+ 200 	sta.w j_004
+ 201 L_024
+ 202 	lda #19
+ 203 	cmp.w j_004
+ 204 	bge L_025
+ 205 	jmp L_026
+ 206 L_025
+ 208 	lda.w i_003
+ 209 	pha.w
+ 210 	lda.w j_004
+ 211 	clc
+ 212 	adc.w 1,S
+ 213 	adj #2
+ 214 	sta.w prime_006
+ 216 	psh.w #sieve_002
+ 217 	lda.w prime_006
+ 218 	dec.w a
+ 219 	asl.w a
+ 220 	clc
+ 221 	adc.w 1,S
+ 222 	sta.w 1,S
+ 223 	pli.s
+ 224 	lda.w 0,I++
+ 225 	cmp.w #1
+ 226 	beq L_027
+ 227 	jmp L_028
+ 228 L_027
+ 230 	lda.w prime_006
+ 231 	pha.w
+ 232 	lda #3
+ 233 	pha.w
+ 234 	jsr _iwrite
+ 235 	adj #4
+ 237 	jmp L_029
+ 238 L_028
+ 240 	psh.w #S_030
+ 241 	psh.w #0
+ 242 	psh.w #3
+ 243 	jsr _swrite
+ 244 	adj #6
+ 245 L_029
+ 247 	inc.w j_004
+ 248 	jmp L_024
+ 249 L_026
+ 250 	dec.w j_004
+ 252 	jsr _writeln
+ 254 	lda.w i_003
+ 255 	pha.w
+ 256 	lda #20
+ 258 	clc
+ 259 	adc.w 1,S
+ 260 	adj #2
+ 261 	sta.w i_003
+ 262 	lda.w i_003
+ 263 	pha.w
+ 265 	lda.w #1000
+ 266 	xma.w 1,S
+ 267 	cmp.w 1,S
+ 268 	adj #2
+ 269 	php
+ 270 	lda #1
+ 271 	plp
+ 272 	bgt L_031
+ 273 	lda #0
+ 274 L_031
+ 275 	cmp.w #1
+ 276 	beq L_023
+ 277 	jmp L_022
+ 278 L_023
+ 279 	plx.w
+ 280 	rts
+ 281 	.end _pc65_main
+ 285             .cod
+ 287 _Q          .equ    5
+ 288 _D          .equ    3
+ 290 _idiv       .proc
+ 291             lda #0
+ 292             dup a
+ 293             lda.w _Q,S
+ 294             ldy #16
+ 296 _idiv_Lp
+ 297             clc
+ 298             asl.w a
+ 299             swp a
+ 300             rol.w a
+ 302             bcs _idiv_Plus
+ 304 _idiv_Minus
+ 305             sec
+ 306             sbc.w _D,S
+ 308             bra _idiv_Next
+ 310 _idiv_Plus
+ 311             clc
+ 312             adc.w _D,S
+ 314 _idiv_Next
+ 315             swp a
+ 316             bmi _idiv_Dec
+ 317             inc.w a
+ 319 _idiv_Dec
+ 320             dey
+ 321             bne _idiv_Lp
+ 323 _idiv_Exit
+ 324             swp a
+ 325             ora.w #0
+ 326             bpl _idiv_Finish
+ 327             clc
+ 328             adc.w 3,S
+ 329 _idiv_Finish
+ 330             swp a
+ 332             rts
+ 334             .endp _idiv
+ 338             .cod
+ 340 _M          .equ    5
+ 341 _R          .equ    3
+ 343 _imul       .proc
+ 344             ldy #16
+ 345             lda #0
+ 346             dup a
+ 347             dup a
+ 348             lda.w _R,S
+ 349             rev
+ 350             ora.w #0
+ 351             clc
+ 352             rot a
+ 354             bra _imul_TstB
+ 356 _imul_Lp
+ 357             asl.w a
+ 358             rot a
+ 359 _imul_TstB
+ 360             bcc _imul_SubShft
+ 362 _imul_AddShft
+ 363             bmi _imul_ShftP
+ 364 _imul_AddM
+ 365             clc
+ 366             adc.w _M,S
+ 367             bra _imul_ShftP
+ 369 _imul_SubShft
+ 370             bpl _imul_ShftP
+ 371 _imul_SubM
+ 372             sec
+ 373             sbc.w _M,S
+ 375 _imul_ShftP
+ 376             asr.w a
+ 377             rot a
+ 378             ror.w a
+ 379             rot a
+ 381 _imul_Dec
+ 382             dey
+ 383             bne _imul_Lp
+ 385 _imul_Exit
+ 386             rot a
+ 387             swp a
+ 389             rts
+ 391             .endp _imul
+ 396             .cod
+ 398 _newLine    .equ    0x0A
+ 399 _putChar    .equ    0xF001
+ 401 _writeln    .proc
+ 402             lda #_newLine
+ 403             sta _putChar
+ 405             rts
+ 407             .endp _writeln
+ 411             .cod
+ 413 _sPtrOff    .equ    7
+ 414 _sLenOff    .equ    3
+ 416 _swrite     .proc
+ 417             ldy.w _sLenOff,S
+ 418             lda.w _sPtrOff,S
+ 419             tai
+ 421 _swrite_Lp
+ 422             lda 0,I++
+ 423             sta _putChar
+ 425             dey.w
+ 426             bne _swrite_Lp
+ 428             rts
+ 430             .endp _swrite
+ 432             .cod
+ 434 _iValOff    .equ    7
+ 435 _fLenOff    .equ    5
+ 436 _iCntOff    .equ    -1
+ 438 _iwrite     .proc
+ 439             phx.w
+ 440             tsx.w
+ 442             psh.w #5
+ 443             lda.w _iValOff,X
+ 445 _iwrite_Lp
+ 446             pha.w
+ 447             psh.w #10
+ 448             csr _idiv
+ 449             adj #4
+ 450             swp a
+ 452             clc
+ 453             adc #48
+ 454             pha
+ 456             rot a
+ 458             dec.w _iCntOff,X
+ 459             bne _iwrite_Lp
+ 461             tsa.w
+ 462             inc.w a
+ 464             pha.w
+ 465             psh.w #0
+ 466             psh.w #5
+ 467             csr _swrite
+ 468             adj #6
+ 470             txs.w
+ 471             plx.w
+ 472             rts
+ 474             .endp _iwrite
+ 476 	.dat
+ 478 S_030 .str "   "
+ 479 S_021 .str "Sieve of Eratosthenes"
+ 480 _bss_start .byt 1
+ 481 sieve_002 .byt 2000
+ 482 i_003 .wrd 1
+ 483 j_004 .wrd 1
+ 484 limit_005 .wrd 1
+ 485 prime_006 .wrd 1
+ 486 factor_007 .wrd 1
+ 487 _bss_end .byt 1
+ 488 _stk .byt 1023
+ 489 _stk_top .byt 1
+ 491 	.end

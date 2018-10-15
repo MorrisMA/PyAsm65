@@ -1,0 +1,15 @@
+   2             .cod
+   4 _sPtrOff    .equ    7
+   5 _len        .equ    3
+   6 _putChar    .equ    0xF001
+   8 _swrite     .proc
+   9             ldy.w _len,S
+  10             lda.w _sPtrOff,S
+  11             tai
+  13 _swrite_Lp
+  14             lda 0,I++
+  15             sta _putChar
+  17             dey
+  18             bne _swrite_Lp
+  20             rts
+  22             .endp

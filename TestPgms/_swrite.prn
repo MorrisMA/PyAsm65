@@ -1,0 +1,23 @@
+(   1)                  ; ; put <newLine> to output
+(   2)                  ;             .cod
+(   3)                  ; ;
+(   4)                  ; _sPtrOff    .equ    7
+(   5)                  ; _len        .equ    3
+(   6)                  ; _putChar    .equ    0xF001
+(   7)                  ; ;
+(   8)                  ; _swrite     .proc
+(   9) 0000 CBB403      ;             ldy.w _len,S
+(  10) 0003 CBB507      ;             lda.w _sPtrOff,S
+(  11) 0006 9B0B        ;             tai
+(  12)                  ; ;
+(  13)                  ; _swrite_Lp
+(  14) 0008 A300        ;             lda 0,I++
+(  15) 000A 8D01F0      ;             sta _putChar
+(  16)                  ; ;
+(  17) 000D 88          ;             dey
+(  18) 000E D0F8        ;             bne _swrite_Lp
+(  19)                  ; ;
+(  20) 0010 60          ;             rts
+(  21)                  ; ;
+(  22)                  ;             .endp
+(  23)                  ;             .end

@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
    2 	.stk 1024
    3 	.cod 512
    4 STATIC_LINK .equ +5
@@ -248,4 +246,3 @@
  295 _stk .byt 1023
  296 _stk_top .byt 1
  298 	.end
->>>>>>> 5383c57aee4c7b05df3780356a8dc724807dd42f

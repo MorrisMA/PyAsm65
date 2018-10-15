@@ -1,0 +1,8 @@
+(   9) 0000 CBB403      ;             ldy.w _len,S
+(  10) 0003 CBB507      ;             lda.w _sPtrOff,S
+(  11) 0006 9B0B        ;             tai
+(  14) 0008 A300        ;             lda 0,I++
+(  15) 000A 8D01F0      ;             sta _putChar
+(  17) 000D 88          ;             dey
+(  18) 000E D0F8        ;             bne _swrite_Lp
+(  20) 0010 60          ;             rts

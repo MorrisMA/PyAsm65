@@ -1,0 +1,8 @@
+   2             .cod
+   4 _newLine    .equ    0x0A
+   5 _putChar    .equ    0xF001
+   7 _writeln    .proc
+   8             lda #_newLine
+   9             sta _putChar
+  10             rts
+  12             .endp
