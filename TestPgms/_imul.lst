@@ -7,24 +7,23 @@
 (  14) 000B AB090000    ;             ora.w #0
 (  15) 000F 18          ;             clc
 (  16) 0010 2B          ;             rot a
-(  18) 0011 8004        ;             bra _imul_TstB
-(  21) 0013 B8          ;             clv
-(  22) 0014 AB0A        ;             asl.w a
-(  23) 0016 2B          ;             rot a
-(  25) 0017 9008        ;             bcc _imul_SubShft
-(  28) 0019 300C        ;             bmi _imul_ShftP
-(  30) 001B 18          ;             clc
-(  31) 001C CB7505      ;             adc.w _M,S
-(  32) 001F 8006        ;             bra _imul_ShftP
-(  35) 0021 1004        ;             bpl _imul_ShftP
-(  37) 0023 38          ;             sec
-(  38) 0024 CBF505      ;             sbc.w _M,S
-(  41) 0027 BB4A        ;             asr.w a
-(  42) 0029 2B          ;             rot a
-(  43) 002A AB6A        ;             ror.w a
-(  44) 002C 2B          ;             rot a
-(  47) 002D 88          ;             dey
-(  48) 002E D0E3        ;             bne _imul_Lp
-(  51) 0030 2B          ;             rot a
-(  52) 0031 1B          ;             swp a
-(  54) 0032 60          ;             rts
+(  18) 0011 8003        ;             bra _imul_TstB
+(  21) 0013 AB0A        ;             asl.w a
+(  22) 0015 2B          ;             rot a
+(  24) 0016 9008        ;             bcc _imul_SubShft
+(  27) 0018 300C        ;             bmi _imul_ShftP
+(  29) 001A 18          ;             clc
+(  30) 001B CB7505      ;             adc.w _M,S
+(  31) 001E 8006        ;             bra _imul_ShftP
+(  34) 0020 1004        ;             bpl _imul_ShftP
+(  36) 0022 38          ;             sec
+(  37) 0023 CBF505      ;             sbc.w _M,S
+(  40) 0026 BB4A        ;             asr.w a
+(  41) 0028 2B          ;             rot a
+(  42) 0029 AB6A        ;             ror.w a
+(  43) 002B 2B          ;             rot a
+(  46) 002C 88          ;             dey
+(  47) 002D D0E4        ;             bne _imul_Lp
+(  50) 002F 2B          ;             rot a
+(  51) 0030 1B          ;             swp a
+(  53) 0031 60          ;             rts

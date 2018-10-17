@@ -13,33 +13,32 @@
   16             rot a
   18             bra _imul_TstB
   20 _imul_Lp
-  21             clv
-  22             asl.w a
-  23             rot a
-  24 _imul_TstB
-  25             bcc _imul_SubShft
-  27 _imul_AddShft
-  28             bmi _imul_ShftP
-  29 _imul_AddM
-  30             clc
-  31             adc.w _M,S
-  32             bra _imul_ShftP
-  34 _imul_SubShft
-  35             bpl _imul_ShftP
-  36 _imul_SubM
-  37             sec
-  38             sbc.w _M,S
-  40 _imul_ShftP
-  41             asr.w a
-  42             rot a
-  43             ror.w a
-  44             rot a
-  46 _imul_Dec
-  47             dey
-  48             bne _imul_Lp
-  50 _imul_Exit
-  51             rot a
-  52             swp a
-  54             rts
-  56             .endp _imul
-  57             .end
+  21             asl.w a
+  22             rot a
+  23 _imul_TstB
+  24             bcc _imul_SubShft
+  26 _imul_AddShft
+  27             bmi _imul_ShftP
+  28 _imul_AddM
+  29             clc
+  30             adc.w _M,S
+  31             bra _imul_ShftP
+  33 _imul_SubShft
+  34             bpl _imul_ShftP
+  35 _imul_SubM
+  36             sec
+  37             sbc.w _M,S
+  39 _imul_ShftP
+  40             asr.w a
+  41             rot a
+  42             ror.w a
+  43             rot a
+  45 _imul_Dec
+  46             dey
+  47             bne _imul_Lp
+  49 _imul_Exit
+  50             rot a
+  51             swp a
+  53             rts
+  55             .endp _imul
+  56             .end

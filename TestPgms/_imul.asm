@@ -18,7 +18,6 @@ _imul       .proc
             bra _imul_TstB
 ;
 _imul_Lp
-            clv
             asl.w a             ; A = {`R << 1, PH, PL}
             rot a               ; A = {PH, PL, `R}
 _imul_TstB
