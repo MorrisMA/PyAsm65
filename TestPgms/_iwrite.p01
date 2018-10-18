@@ -5,80 +5,46 @@
    8 _iwrite     .proc
    9             phx.w
   10             tsx.w
-  12             psh.w #5
-  13             lda.w _iValOff,X
-  15 _iwrite_Lp
-  16             pha.w
-  17             psh.w #10
-  18             csr _udiv
-  19             adj #4
-  20             swp a
-  22             clc
-  23             adc #48
-  24             pha
-  26             rot a
-  28             dec.w _iCntOff,X
-  29             bne _iwrite_Lp
-  31             tsa.w
-  32             inc.w a
-  34             pha.w
-  35             psh.w #0
-  36             psh.w #5
-  37             csr _swrite
-  38             adj #6
-  40             txs.w
-  41             plx.w
-  42             rts
-  44             .endp _iwrite
-  48             .cod
-  50 _udiv       .proc
-  51             lda #0
-  52             dup a
-  53             lda.w 5,S
-  54             ldy #16
-  56 _udiv_Lp
-  57             clc
-  58             asl.w a
-  59             swp a
-  60             rol.w a
-  62             bcs _udiv_Plus
-  64 _udiv_Minus
-  65             sec
-  66             sbc.w 3,S
-  68             bra _udiv_Next
-  70 _udiv_Plus
-  71             clc
-  72             adc.w 3,S
-  74 _udiv_Next
-  75             swp a
-  76             bmi _udiv_Dec
-  77             inc.w a
-  79 _udiv_Dec
-  80             dey
-  81             bne _udiv_Lp
-  83 _udiv_Exit
-  84             swp a
-  85             ora.w #0
-  86             bpl _udiv_Finish
-  87             clc
-  88             adc.w 3,S
-  89 _udiv_Finish
-  90             swp a
-  92             rts
-  94             .endp _udiv
-  98             .cod
- 100 _sPtrOff    .equ    7
- 101 _sLenOff    .equ    3
- 102 _putChar    .equ    0xF001
- 104 _swrite     .proc
- 105             ldy.w _sLenOff,S
- 106             lda.w _sPtrOff,S
- 107             tai
- 109 _swrite_Lp
- 110             lda 0,I++
- 111             sta _putChar
- 113             dey.w
- 114             bne _swrite_Lp
- 116             rts
- 118             .endp _swrite
- 120             .end
+  12             lda _fLenOff,X
+  13             cmp #5
+  14             ble _iwrite_SetCnt
+  15             lda #5
+  16 _iwrite_SetCnt
+  17             pha.w
+  18             lda.w _iValOff,X
+  20 _iwrite_Lp
+  21             pha.w
+  22             psh.w #10
+  23             csr _idiv
+  24             adj #4
+  25             swp a
+  27             clc
+  28             adc #48
+  29             pha
+  31             rot a
+  33             dec.w _iCntOff,X
+  34             bne _iwrite_Lp
+  36             tsa.w
+  37             inc.w a
+  39             pha.w
+  40             ldy #0
+  41 _iwrite_Sup0
+  42             lda (1,S),Y
+  43             cmp #48
+  44             bne _iwrite_Sup0a
+  45             lda #32
+  46             sta (1,S),Y
+  47             iny
+  48             cmp.y _fLenOff,X
+  49             bne _iwrite_Sup0
+  50 _iwrite_Sup0a
+  51             psh.w #0
+  52             lda _fLenOff,X
+  53             pha.w
+  54             csr _swrite
+  55             adj #6
+  57             txs.w
+  58             plx.w
+  59             rts
+  61             .endp _iwrite
+  62             .end

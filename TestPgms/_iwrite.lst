@@ -1,59 +1,39 @@
 (   9) 0000 ABDA        ;             phx.w
 (  10) 0002 ABBA        ;             tsx.w
-(  12) 0004 ABE20500    ;             psh.w #5
-(  13) 0008 ABB507      ;             lda.w _iValOff,X
-(  16) 000B AB48        ;             pha.w
-(  17) 000D ABE20A00    ;             psh.w #10
-(  18) 0011 9B5C2600    ;             csr _udiv
-(  19) 0015 C204        ;             adj #4
-(  20) 0017 1B          ;             swp a
-(  22) 0018 18          ;             clc
-(  23) 0019 6930        ;             adc #48
-(  24) 001B 48          ;             pha
-(  26) 001C 2B          ;             rot a
-(  28) 001D ABD6FF      ;             dec.w _iCntOff,X
-(  29) 0020 D0E9        ;             bne _iwrite_Lp
-(  31) 0022 CB8A        ;             tsa.w
-(  32) 0024 AB1A        ;             inc.w a
-(  34) 0026 AB48        ;             pha.w
-(  35) 0028 ABE20000    ;             psh.w #0
-(  36) 002C ABE20500    ;             psh.w #5
-(  37) 0030 9B5C3600    ;             csr _swrite
-(  38) 0034 C206        ;             adj #6
-(  40) 0036 AB9A        ;             txs.w
-(  41) 0038 ABFA        ;             plx.w
-(  42) 003A 60          ;             rts
-(  51) 003B A900        ;             lda #0
-(  52) 003D 0B          ;             dup a
-(  53) 003E CBB505      ;             lda.w 5,S
-(  54) 0041 A010        ;             ldy #16
-(  57) 0043 18          ;             clc
-(  58) 0044 AB0A        ;             asl.w a
-(  59) 0046 1B          ;             swp a
-(  60) 0047 AB2A        ;             rol.w a
-(  62) 0049 B006        ;             bcs _udiv_Plus
-(  65) 004B 38          ;             sec
-(  66) 004C CBF503      ;             sbc.w 3,S
-(  68) 004F 8004        ;             bra _udiv_Next
-(  71) 0051 18          ;             clc
-(  72) 0052 CB7503      ;             adc.w 3,S
-(  75) 0055 1B          ;             swp a
-(  76) 0056 3002        ;             bmi _udiv_Dec
-(  77) 0058 AB1A        ;             inc.w a
-(  80) 005A 88          ;             dey
-(  81) 005B D0E6        ;             bne _udiv_Lp
-(  84) 005D 1B          ;             swp a
-(  85) 005E AB090000    ;             ora.w #0
-(  86) 0062 1004        ;             bpl _udiv_Finish
-(  87) 0064 18          ;             clc
-(  88) 0065 CB7503      ;             adc.w 3,S
-(  90) 0068 1B          ;             swp a
-(  92) 0069 60          ;             rts
-( 105) 006A CBB403      ;             ldy.w _sLenOff,S
-( 106) 006D CBB507      ;             lda.w _sPtrOff,S
-( 107) 0070 9B0B        ;             tai
-( 110) 0072 A300        ;             lda 0,I++
-( 111) 0074 8D01F0      ;             sta _putChar
-( 113) 0077 AB88        ;             dey.w
-( 114) 0079 D0F7        ;             bne _swrite_Lp
-( 116) 007B 60          ;             rts
+(  12) 0004 B505        ;             lda _fLenOff,X
+(  13) 0006 C905        ;             cmp #5
+(  14) 0008 AB3002      ;             ble _iwrite_SetCnt
+(  15) 000B A905        ;             lda #5
+(  17) 000D AB48        ;             pha.w
+(  18) 000F ABB507      ;             lda.w _iValOff,X
+(  21) 0012 AB48        ;             pha.w
+(  22) 0014 ABE20A00    ;             psh.w #10
+	Missing conversion(s): 0x0018-0x001B
+(  24) 001C C204        ;             adj #4
+(  25) 001E 1B          ;             swp a
+(  27) 001F 18          ;             clc
+(  28) 0020 6930        ;             adc #48
+(  29) 0022 48          ;             pha
+(  31) 0023 2B          ;             rot a
+(  33) 0024 ABD6FF      ;             dec.w _iCntOff,X
+(  34) 0027 D0E9        ;             bne _iwrite_Lp
+(  36) 0029 CB8A        ;             tsa.w
+(  37) 002B AB1A        ;             inc.w a
+(  39) 002D AB48        ;             pha.w
+(  40) 002F A000        ;             ldy #0
+(  42) 0031 8BB101      ;             lda (1,S),Y
+(  43) 0034 C930        ;             cmp #48
+(  44) 0036 D00B        ;             bne _iwrite_Sup0a
+(  45) 0038 A920        ;             lda #32
+(  46) 003A 8B9101      ;             sta (1,S),Y
+(  47) 003D C8          ;             iny
+(  48) 003E FBD505      ;             cmp.y _fLenOff,X
+(  49) 0041 D0EE        ;             bne _iwrite_Sup0
+(  51) 0043 ABE20000    ;             psh.w #0
+(  52) 0047 B505        ;             lda _fLenOff,X
+(  53) 0049 AB48        ;             pha.w
+	Missing conversion(s): 0x004B-0x004E
+(  55) 004F C206        ;             adj #6
+(  57) 0051 AB9A        ;             txs.w
+(  58) 0053 ABFA        ;             plx.w
+(  59) 0055 60          ;             rts
