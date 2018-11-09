@@ -1,4 +1,6 @@
+;
 ;   unsigned division 16 x 16
+;
         .cod
 ;
 _idiv   .proc
@@ -40,6 +42,7 @@ _idiv_Exit
         bpl _idiv_Finish
         clc
         adc.w 3,S
+;
 _idiv_Finish
         swp a
 ;

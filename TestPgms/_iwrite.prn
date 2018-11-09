@@ -13,52 +13,85 @@
 (  13) 0006 C905        ;             cmp #5
 (  14) 0008 AB3002      ;             ble _iwrite_SetCnt
 (  15) 000B A905        ;             lda #5
-(  16)                  ; _iwrite_SetCnt
-(  17) 000D AB48        ;             pha.w
-(  18) 000F ABB507      ;             lda.w _iValOff,X
-(  19)                  ; ; 
-(  20)                  ; _iwrite_Lp
-(  21) 0012 AB48        ;             pha.w
-(  22) 0014 ABE20A00    ;             psh.w #10
+(  16)                  ; ;
+(  17)                  ; _iwrite_SetCnt
+(  18) 000D AB48        ;             pha.w
+(  19) 000F ABB507      ;             lda.w _iValOff,X
+(  20)                  ; ;
+(  21)                  ; _iwrite_Lp
+(  22) 0012 AB48        ;             pha.w
+(  23) 0014 ABE20A00    ;             psh.w #10
 	Missing conversion(s): 0x0018-0x001B
-(  23)                  ;             csr _idiv               ; determine the remainder,
-(  24) 001C C204        ;             adj #4
-(  25) 001E 1B          ;             swp a
-(  26)                  ; ;
-(  27) 001F 18          ;             clc
-(  28) 0020 6930        ;             adc #48
-(  29) 0022 48          ;             pha
-(  30)                  ; ;
-(  31) 0023 2B          ;             rot a
-(  32)                  ; ;
-(  33) 0024 ABD6FF      ;             dec.w _iCntOff,X
-(  34) 0027 D0E9        ;             bne _iwrite_Lp
-(  35)                  ; ;
-(  36) 0029 CB8A        ;             tsa.w
-(  37) 002B AB1A        ;             inc.w a
-(  38)                  ; ;
-(  39) 002D AB48        ;             pha.w
-(  40) 002F A000        ;             ldy #0
-(  41)                  ; _iwrite_Sup0
-(  42) 0031 8BB101      ;             lda (1,S),Y
-(  43) 0034 C930        ;             cmp #48
-(  44) 0036 D00B        ;             bne _iwrite_Sup0a
-(  45) 0038 A920        ;             lda #32
-(  46) 003A 8B9101      ;             sta (1,S),Y
-(  47) 003D C8          ;             iny
-(  48) 003E FBD505      ;             cmp.y _fLenOff,X
-(  49) 0041 D0EE        ;             bne _iwrite_Sup0
-(  50)                  ; _iwrite_Sup0a
-(  51) 0043 ABE20000    ;             psh.w #0
-(  52) 0047 B505        ;             lda _fLenOff,X
-(  53) 0049 AB48        ;             pha.w
-	Missing conversion(s): 0x004B-0x004E
-(  54)                  ;             csr _swrite             ; write integer value string using _swrite()
-(  55) 004F C206        ;             adj #6
-(  56)                  ; ;
-(  57) 0051 AB9A        ;             txs.w
-(  58) 0053 ABFA        ;             plx.w
-(  59) 0055 60          ;             rts
-(  60)                  ; ;
-(  61)                  ;             .endp _iwrite
-(  62)                  ;             .end
+(  24)                  ;             csr _idiv               ; determine the remainder,
+(  25) 001C C204        ;             adj #4
+(  26) 001E 1B          ;             swp a
+(  27)                  ; ;
+(  28) 001F 18          ;             clc
+(  29) 0020 6930        ;             adc #48
+(  30) 0022 48          ;             pha
+(  31)                  ; ;
+(  32) 0023 2B          ;             rot a
+(  33)                  ; ;
+(  34) 0024 ABD6FF      ;             dec.w _iCntOff,X
+(  35) 0027 D0E9        ;             bne _iwrite_Lp
+(  36)                  ; ;-------------------------------------------------------------------------------
+(  37) 0029 0B          ;             dup a
+(  38)                  ; ;-------------------------------------------------------------------------------
+(  39)                  ; _iwrite_Fill
+(  40) 002A B505        ;             lda _fLenOff,X
+(  41) 002C C905        ;             cmp #5
+(  42) 002E AB300A      ;             ble _iwrite_GenPtr
+(  43) 0031 38          ;             sec
+(  44) 0032 E905        ;             sbc #5
+(  45) 0034 A8          ;             tay
+(  46) 0035 A930        ;             lda #48
+(  47)                  ; ;
+(  48)                  ; _iwrite_Fill_Lp                     ; increase string on stack with fill data
+(  49) 0037 48          ;             pha
+(  50) 0038 88          ;             dey
+(  51) 0039 D0FC        ;             bne _iwrite_Fill_Lp
+(  52)                  ; ;-------------------------------------------------------------------------------
+(  53)                  ; _iwrite_GenPtr
+(  54) 003B CB8A        ;             tsa.w
+(  55) 003D AB1A        ;             inc.w a
+(  56) 003F AB48        ;             pha.w
+(  57)                  ; ;-------------------------------------------------------------------------------
+(  58) 0041 2B          ;             rot a
+(  59)                  ; ;-------------------------------------------------------------------------------
+(  60) 0042 ABC90000    ;             cmp.w #0
+(  61) 0046 F00F        ;             beq _iwrite_Sup0
+(  62) 0048 A000        ;             ldy #0
+(  63)                  ; _iwrite_ErrLp
+(  64) 004A A92A        ;             lda #0x2A
+(  65) 004C 8B9101      ;             sta (1,S),Y
+(  66) 004F C8          ;             iny
+(  67) 0050 FBD505      ;             cmp.y _fLenOff,X
+(  68) 0053 D0F5        ;             bne _iwrite_ErrLp
+(  69) 0055 8014        ;             bra _iwrite_Exit
+(  70)                  ; ;-------------------------------------------------------------------------------
+(  71)                  ; _iwrite_Sup0
+(  72) 0057 A000        ;             ldy #0
+(  73)                  ; _iwrite_Sup0_Lp
+(  74) 0059 8BB101      ;             lda (1,S),Y
+(  75) 005C C930        ;             cmp #48
+(  76) 005E D00B        ;             bne _iwrite_Exit
+(  77) 0060 A920        ;             lda #32
+(  78) 0062 8B9101      ;             sta (1,S),Y
+(  79) 0065 C8          ;             iny
+(  80) 0066 FBD505      ;             cmp.y _fLenOff,X
+(  81) 0069 D0EE        ;             bne _iwrite_Sup0_Lp
+(  82)                  ; ;-------------------------------------------------------------------------------
+(  83)                  ; _iwrite_Exit
+(  84) 006B ABE20000    ;             psh.w #0
+(  85) 006F B505        ;             lda _fLenOff,X
+(  86) 0071 AB48        ;             pha.w
+	Missing conversion(s): 0x0073-0x0076
+(  87)                  ;             csr _swrite             ; write integer value string using _swrite()
+(  88) 0077 C206        ;             adj #6
+(  89)                  ; ;
+(  90) 0079 AB9A        ;             txs.w
+(  91) 007B ABFA        ;             plx.w
+(  92) 007D 60          ;             rts
+(  93)                  ; ;
+(  94)                  ;             .endp _iwrite
+(  95)                  ;             .end

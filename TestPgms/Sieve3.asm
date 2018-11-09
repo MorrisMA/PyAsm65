@@ -15,14 +15,14 @@ _start
     sbc.w #_bss_start
     mov #10
     jmp _pc65_main
-;    2: 
+;    2:
 ;    3: CONST
 ;    4:     max = 1000;
-;    5: 
+;    5:
 ;    6: VAR
 ;    7:     sieve : ARRAY [1..max] OF BOOLEAN;
 ;    8:     i, j, limit, prime, factor : INTEGER;
-;    9: 
+;    9:
 ;   10: BEGIN
 _pc65_main .sub
     phx.w
@@ -33,7 +33,7 @@ _pc65_main .sub
 ;   12:     sieve[1] := FALSE;
     lda #0
     sta sieve_002
-;   13: 
+;   13:
 ;   14:     FOR i := 2 TO max DO
 L_008
 L_009
@@ -47,11 +47,11 @@ L_009
     mov #10
     rot x
 L_010
-;   16: 
+;   16:
 ;   17:     prime := 1;
     lda #1
     sta.w prime_006
-;   18: 
+;   18:
 ;   19:     REPEAT
 L_011
 ;   20:         prime := prime + 1;
@@ -70,12 +70,12 @@ L_014
     inc.w prime_006
     bra L_013
 L_015
-;   23: 
+;   23:
 ;   24:         factor := 2*prime;
     lda.w prime_006
     asl.w a
     sta.w factor_007
-;   25: 
+;   25:
 ;   26:         WHILE factor <= max DO BEGIN
 L_016
     lda.w factor_007
@@ -104,7 +104,7 @@ L_018
     bgt L_012
     jmp L_011
 L_012
-;   31: 
+;   31:
 ;   32:     writeln('Sieve of Eratosthenes');
     psh.w #S_021
     psh.w #0
@@ -114,7 +114,7 @@ L_012
     jsr _writeln
 ;   33:     writeln;
     jsr _writeln
-;   34: 
+;   34:
 ;   35:     i := 1;
     lda #1
     sta.w i_003
@@ -190,11 +190,11 @@ _D          .equ    3
 ;
 _idiv       .proc
             lda #0          ; clear remainder (A)
-            dup a           ; push 
+            dup a           ; push
             lda.w _Q,S      ; load dividend (Q)
             ldy #16         ; bit counter
 ;
-_idiv_Lp    
+_idiv_Lp
             clc
             asl.w a         ; shift AQ left
             swp a
@@ -212,7 +212,7 @@ _idiv_Plus
             clc
             adc.w _D,S      ; add divisor (D)
 ;
-_idiv_Next    
+_idiv_Next
             swp a           ; restore order of Acc stack {Q, A, -}
             bmi _idiv_Dec   ; if A < 0 then Q[0] = 0 else Q[0] = 1
             inc.w a
@@ -243,10 +243,10 @@ _R          .equ    3
 ;
 _imul       .proc
             ldy #16             ; y = bit count
-            lda #0              ; A = { 0,  x,  x} - clear product              
+            lda #0              ; A = { 0,  x,  x} - clear product
             dup a               ; A = { 0,  0,  x}
             dup a               ; A = { 0,  0,  0}
-            lda.w _R,S          ; A = { R,  0,  0} - load multiplier (R)       
+            lda.w _R,S          ; A = { R,  0,  0} - load multiplier (R)
             rev                 ; A = {`R,  0,  0} - reverse multiplier (`R)
             ora.w #0            ; set N flag if msb ATOS == 1
             clc                 ; initialize Booth recoding bit
@@ -317,7 +317,7 @@ _sLenOff    .equ    3
 _swrite     .proc
             ldy.w _sLenOff,S        ; load string length
             lda.w _sPtrOff,S        ; load string pointer
-            tai                     ; transfer sptr to IP  
+            tai                     ; transfer sptr to IP
 ;
 _swrite_Lp
             lda 0,I++               ; load char from strig
@@ -329,7 +329,9 @@ _swrite_Lp
             rts
 ;
             .endp _swrite
+;
 ; put integer to output
+;
             .cod
 ;
 _iValOff    .equ    7
@@ -344,16 +346,17 @@ _iwrite     .proc
             cmp #5                  ; compare against max integer digit count
             ble _iwrite_SetCnt
             lda #5
+;
 _iwrite_SetCnt
             pha.w                   ; set iteration count to fld width
             lda.w _iValOff,X        ; load a with integer value
-; 
+;
 _iwrite_Lp
             pha.w                   ; push dividend argument to _idiv
             psh.w #10               ; push divisor argument to _idiv
             csr _idiv               ; determine the remainder,
             adj #4                  ; remove arguments passed to _idiv from stk
-            swp a                   ; put the remainder into ATOS   
+            swp a                   ; put the remainder into ATOS
 ;
             clc                     ; convert remainder into ASCII character
             adc #48
@@ -363,16 +366,31 @@ _iwrite_Lp
 ;
             dec.w _iCntOff,X        ; decrement digit iteration count
             bne _iwrite_Lp
-;
+;-------------------------------------------------------------------------------
             dup a                   ; save integer part of the conversion
+;-------------------------------------------------------------------------------
+_iwrite_Fill
+            lda _fLenOff,X          ; load field width specifier
+            cmp #5                  ; compare against max integer digit count
+            ble _iwrite_GenPtr
+            sec                     ; subtract max integer length from fld len
+            sbc #5
+            tay                     ; set difference as loop counter
+            lda #48                 ; fill remaining field with '0'
 ;
+_iwrite_Fill_Lp                     ; increase string on stack with fill data
+            pha
+            dey
+            bne _iwrite_Fill_Lp
+;-------------------------------------------------------------------------------
+_iwrite_GenPtr
             tsa.w                   ; transfer current stk pointer to A
             inc.w a                 ; remove stack pointer write bias
             pha.w                   ; push string pointer to stack
-;
+;-------------------------------------------------------------------------------
             rot a                   ; restore integer part of the conversion
 ;-------------------------------------------------------------------------------
-            cmp.w #0                ; test for 0. If not 0, .
+            cmp.w #0                ; test for 0. If not 0, int > 10^fld
             beq _iwrite_Sup0
             ldy #0
 _iwrite_ErrLp

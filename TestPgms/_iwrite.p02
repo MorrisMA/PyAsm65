@@ -9,41 +9,67 @@
   13             cmp #5
   14             ble _iwrite_SetCnt
   15             lda #5
-  16 _iwrite_SetCnt
-  17             pha.w
-  18             lda.w _iValOff,X
-  20 _iwrite_Lp
-  21             pha.w
-  22             psh.w #10
-  23             csr _idiv
-  24             adj #4
-  25             swp a
-  27             clc
-  28             adc #48
-  29             pha
-  31             rot a
-  33             dec.w _iCntOff,X
-  34             bne _iwrite_Lp
-  36             tsa.w
-  37             inc.w a
-  39             pha.w
-  40             ldy #0
-  41 _iwrite_Sup0
-  42             lda (1,S),Y
-  43             cmp #48
-  44             bne _iwrite_Sup0a
-  45             lda #32
-  46             sta (1,S),Y
-  47             iny
-  48             cmp.y _fLenOff,X
-  49             bne _iwrite_Sup0
-  50 _iwrite_Sup0a
-  51             psh.w #0
-  52             lda _fLenOff,X
-  53             pha.w
-  54             csr _swrite
-  55             adj #6
-  57             txs.w
-  58             plx.w
-  59             rts
-  61             .endp _iwrite
+  17 _iwrite_SetCnt
+  18             pha.w
+  19             lda.w _iValOff,X
+  21 _iwrite_Lp
+  22             pha.w
+  23             psh.w #10
+  24             csr _idiv
+  25             adj #4
+  26             swp a
+  28             clc
+  29             adc #48
+  30             pha
+  32             rot a
+  34             dec.w _iCntOff,X
+  35             bne _iwrite_Lp
+  37             dup a
+  39 _iwrite_Fill
+  40             lda _fLenOff,X
+  41             cmp #5
+  42             ble _iwrite_GenPtr
+  43             sec
+  44             sbc #5
+  45             tay
+  46             lda #48
+  48 _iwrite_Fill_Lp
+  49             pha
+  50             dey
+  51             bne _iwrite_Fill_Lp
+  53 _iwrite_GenPtr
+  54             tsa.w
+  55             inc.w a
+  56             pha.w
+  58             rot a
+  60             cmp.w #0
+  61             beq _iwrite_Sup0
+  62             ldy #0
+  63 _iwrite_ErrLp
+  64             lda #0x2A
+  65             sta (1,S),Y
+  66             iny
+  67             cmp.y _fLenOff,X
+  68             bne _iwrite_ErrLp
+  69             bra _iwrite_Exit
+  71 _iwrite_Sup0
+  72             ldy #0
+  73 _iwrite_Sup0_Lp
+  74             lda (1,S),Y
+  75             cmp #48
+  76             bne _iwrite_Exit
+  77             lda #32
+  78             sta (1,S),Y
+  79             iny
+  80             cmp.y _fLenOff,X
+  81             bne _iwrite_Sup0_Lp
+  83 _iwrite_Exit
+  84             psh.w #0
+  85             lda _fLenOff,X
+  86             pha.w
+  87             csr _swrite
+  88             adj #6
+  90             txs.w
+  91             plx.w
+  92             rts
+  94             .endp _iwrite

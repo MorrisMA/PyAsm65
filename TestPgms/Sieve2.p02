@@ -331,48 +331,91 @@
  426             bne _swrite_Lp
  428             rts
  430             .endp _swrite
- 432             .cod
- 434 _iValOff    .equ    7
- 435 _fLenOff    .equ    5
- 436 _iCntOff    .equ    -1
- 438 _iwrite     .proc
- 439             phx.w
- 440             tsx.w
- 442             psh.w #5
- 443             lda.w _iValOff,X
- 445 _iwrite_Lp
- 446             pha.w
- 447             psh.w #10
- 448             csr _idiv
- 449             adj #4
- 450             swp a
- 452             clc
- 453             adc #48
- 454             pha
- 456             rot a
- 458             dec.w _iCntOff,X
- 459             bne _iwrite_Lp
- 461             tsa.w
- 462             inc.w a
- 464             pha.w
- 465             psh.w #0
- 466             psh.w #5
- 467             csr _swrite
- 468             adj #6
- 470             txs.w
- 471             plx.w
- 472             rts
- 474             .endp _iwrite
- 476 	.dat
- 478 S_030 .str "   "
- 479 S_021 .str "Sieve of Eratosthenes"
- 480 _bss_start .byt 1
- 481 sieve_002 .byt 2000
- 482 i_003 .wrd 1
- 483 j_004 .wrd 1
- 484 limit_005 .wrd 1
- 485 prime_006 .wrd 1
- 486 factor_007 .wrd 1
- 487 _bss_end .byt 1
- 488 _stk .byt 1023
- 489 _stk_top .byt 1
+ 434             .cod
+ 436 _iValOff    .equ    7
+ 437 _fLenOff    .equ    5
+ 438 _iCntOff    .equ    -1
+ 440 _iwrite     .proc
+ 441             phx.w
+ 442             tsx.w
+ 444             lda _fLenOff,X
+ 445             cmp #5
+ 446             ble _iwrite_SetCnt
+ 447             lda #5
+ 449 _iwrite_SetCnt
+ 450             pha.w
+ 451             lda.w _iValOff,X
+ 453 _iwrite_Lp
+ 454             pha.w
+ 455             psh.w #10
+ 456             csr _idiv
+ 457             adj #4
+ 458             swp a
+ 460             clc
+ 461             adc #48
+ 462             pha
+ 464             rot a
+ 466             dec.w _iCntOff,X
+ 467             bne _iwrite_Lp
+ 469             dup a
+ 471 _iwrite_Fill
+ 472             lda _fLenOff,X
+ 473             cmp #5
+ 474             ble _iwrite_GenPtr
+ 475             sec
+ 476             sbc #5
+ 477             tay
+ 478             lda #48
+ 480 _iwrite_Fill_Lp
+ 481             pha
+ 482             dey
+ 483             bne _iwrite_Fill_Lp
+ 485 _iwrite_GenPtr
+ 486             tsa.w
+ 487             inc.w a
+ 488             pha.w
+ 490             rot a
+ 492             cmp.w #0
+ 493             beq _iwrite_Sup0
+ 494             ldy #0
+ 495 _iwrite_ErrLp
+ 496             lda #0x2A
+ 497             sta (1,S),Y
+ 498             iny
+ 499             cmp.y _fLenOff,X
+ 500             bne _iwrite_ErrLp
+ 501             bra _iwrite_Exit
+ 503 _iwrite_Sup0
+ 504             ldy #0
+ 505 _iwrite_Sup0_Lp
+ 506             lda (1,S),Y
+ 507             cmp #48
+ 508             bne _iwrite_Exit
+ 509             lda #32
+ 510             sta (1,S),Y
+ 511             iny
+ 512             cmp.y _fLenOff,X
+ 513             bne _iwrite_Sup0_Lp
+ 515 _iwrite_Exit
+ 516             psh.w #0
+ 517             lda _fLenOff,X
+ 518             pha.w
+ 519             csr _swrite
+ 520             adj #6
+ 522             txs.w
+ 523             plx.w
+ 524             rts
+ 526             .endp _iwrite
+ 528 	.dat
+ 530 S_030 .str "   "
+ 531 S_021 .str "Sieve of Eratosthenes"
+ 532 _bss_start .byt 1
+ 533 sieve_002 .byt 2000
+ 534 i_003 .wrd 1
+ 535 j_004 .wrd 1
+ 536 limit_005 .wrd 1
+ 537 prime_006 .wrd 1
+ 538 factor_007 .wrd 1
+ 539 _bss_end .byt 1
+ 540 _stk .byt 1023
+ 541 _stk_top .byt 1

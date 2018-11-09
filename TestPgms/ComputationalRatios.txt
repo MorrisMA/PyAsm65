@@ -1,0 +1,4 @@
+Initialization:      6102     2572   2.3725
+Clearing Sieve:     62408     2044  30.5323
+Computing Primes:  302393   135149   2.2375
+Display Primes:    386890   352043   1.0959

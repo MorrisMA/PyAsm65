@@ -1,4 +1,6 @@
+;
 ;   unsigned division 16 x 16
+;
             .cod
 ;
 _Q          .equ    5
@@ -43,6 +45,7 @@ _udiv_Exit
             bpl _udiv_Finish
             clc
             adc.w 3,S
+;
 _udiv_Finish
             swp a
 ;
