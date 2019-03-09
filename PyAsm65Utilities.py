@@ -63,8 +63,6 @@ def readSource(filename):
             finp.close()
             return
         else:
-#            m = re.split('\s*;[\s\w]*', ln)
-#            srcText = m[0].rstrip()
             srcText = ln.rstrip()
             if srcText == '' or srcText == '\n':
                 pass
@@ -79,7 +77,6 @@ def readSource(filename):
                             flds.append(fld)
                         elif len(flds) == 1 and flds[0] == '':
                             flds = list()
-#                        print('-'*7+'>', curSrc, i, ln[i], flds)
                         break
                     elif ln[i] in [' ', '\t']:
                         while ln[i] in [' ', '\t'] and i < lnLen:
@@ -160,26 +157,75 @@ def numVal(dt):
         val = int(dt)
     return val
     
-def evalByt(dt, vlc):
-    inpList = list(); strStrt = False; strVal = str()
-    for i in range(len(dt)):
-        if dt[i] == '"':
-            if strStrt:
-                strStrt = False
-            else: strStrt = True
-        elif dt[i] == ',' and not strStrt:
+def parseByt(dt, vlc):
+    inpList = list()
+    strVal = str()
+    dtLen = len(dt)
+    i = 0
+    while i < dtLen:
+        ch = dt[i]; i += 1
+        if ch == ',':
             inpList.append(strVal)
             strVal = ''
             continue
-        strVal += dt[i]
+        elif ch == '"':
+            strVal += ch
+            while i < dtLen:
+                ch = dt[i]; strVal += ch; i += 1
+                if ch == '"': break
+        else: strVal += ch
     else:
         inpList.append(strVal)
-
-    if '";"' in dt:
-        print('==>>'*8, dt, inpList)
         
-    siz = 0; outStr = str()
+    siz = 0
     for i in range(len(inpList)):
+        if inpList[i][0] == '"':
+            strDat = inpList[i][1:-1]
+            siz += len(strDat)
+        elif ']' in inpList[i]:
+            flds = str(inpList[i]).split('[')
+            try:
+                siz += eval(str(flds[1][:-1]), vlc)
+            except:
+                print('\tError(parseByt): eval([%s]) failed' % flds[1][:-1])
+                siz = -1
+                break
+        else: siz += 1
+
+    return (siz, inpList)
+
+def parseWrd(dt, vlc):
+    inpList = list()
+    strVal = str()
+    dtLen = len(dt)
+    i = 0
+    while i < dtLen:
+        ch = dt[i]; i += 1
+        if ch == ',':
+            inpList.append(strVal)
+            strVal = ''
+            continue
+        else: strVal += ch
+    else:
+        inpList.append(strVal)
+        
+    siz = 0
+    for i in range(len(inpList)):
+        if ']' in inpList[i]:
+            flds = str(inpList[i]).split('[')
+            try:
+                siz += eval(str(flds[1][:-1]), vlc)
+            except:
+                print('\tError(parseWrd): eval([%s]) failed' % flds[1][:-1])
+                siz = -1
+                break
+        else: siz += 1
+
+    return (2 * siz, inpList)
+
+def evalByt(inpList, vlc):        
+    siz = 0; outStr = str(); lenList = len(inpList)
+    for i in range(lenList):
         if inpList[i][0] == '"':
             strDat = inpList[i][1:-1]
             for ch in strDat:
@@ -199,13 +245,11 @@ def evalByt(dt, vlc):
             try:
                 val = eval(str(dat), vlc)
             except:
-#                print('\tError: eval(%s) failed' % dat)
                 val = -1
 
             try:
                 rep = eval(str(cnt), vlc)
             except:
-#                print('\tError: eval(%s) failed' % cnt)
                 rep = 1
 
             val &= 0xFF
@@ -215,23 +259,57 @@ def evalByt(dt, vlc):
                 siz += 1
     return (siz, outStr)
 
-def evalWrd(dt, vlc):
-    inpList = dt.split(',')
-    siz = 2*len(inpList)
-    outStr = str()
-    for i in range(len(inpList)):
-        inpStr = inpList[i]
-        if inpStr[0] == '$':
-            inpStr = '_loc_' + inpStr[1:]
-        try:
-            val = eval(str(inpStr), vlc)
-        except:
-#            print('\tError: eval(%s) failed' % inpList[i])
-            val = -1
-        wrd = "%04X" % val
-        outStr += wrd[2:] + wrd[:2]
+#def evalWrd(dt, vlc):
+    #inpList = dt.split(',')
+    #siz = 2*len(inpList)
+    #outStr = str()
+    #for i in range(len(inpList)):
+        #inpStr = inpList[i]
+        #if inpStr[0] == '$':
+            #inpStr = '_loc_' + inpStr[1:]
+        #try:
+            #val = eval(str(inpStr), vlc)
+        #except:
+##            print('\tError: eval(%s) failed' % inpList[i])
+            #val = -1
+        #wrd = "%04X" % val
+        #outStr += wrd[2:] + wrd[:2]
 
-    return (siz, outStr)
+    #return (siz, outStr)
+
+def evalWrd(inpList, vlc):
+    siz = 0; outStr = str(); lenList = len(inpList)
+    for i in range(lenList):
+        if ']' in inpList[i]:
+            flds = str(inpList[i]).split('[')
+            dat  = flds[0]
+            if '' == dat:
+                dat = '0'
+            cnt  = flds[1][:-1]
+        else:
+            dat = inpList[i]
+            cnt = 1
+
+        try:
+            if '$' in dat:
+                flds = dat.split('$')
+                dat = '_loc_'.join(flds)
+            val = eval(str(dat), vlc)
+        except:
+            val = -1
+
+        try:
+            rep = eval(str(cnt), vlc)
+        except:
+            rep = 1
+
+        val &= 0xFFFF
+            
+        for i in range(rep):
+            wrdStr = "%04X" % val
+            outStr += wrdStr[2:] + wrdStr[:2]
+            siz += 1
+    return (2*siz, outStr)
 
 def evalLng(dt, vlc):
     inpList = dt.split(',')
@@ -243,6 +321,6 @@ def evalLng(dt, vlc):
         except:
 #            print('\tError: eval(%s) failed' % inpList[i])
             val = -1
-        lng = "%04X" % val
+        lng = "%08X" % val
         outStr += lng[6:] + lng[4:6] + lng[2:4] + lng[:2]
     return (siz, outStr)

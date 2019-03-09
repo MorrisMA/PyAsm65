@@ -4,7 +4,7 @@
 (  72) 0405 4CF112      ;             jmp     WARM            ; Vector to WARM entry
 (  73) 0408 0400        ;             .wrd    0x0004          ; 6502 in radix-36
 (  74) 040A D25E        ;             .wrd    0x5ED2          ; 0x5ED2
-(  75) 040C 01-0        ;             .wrd    NTOP            ; Name address of MON
+(  75) 040C 811A        ;             .wrd    NTOP            ; Name address of MON
 (  76) 040E 0800        ;             .wrd    8               ; Backspace Character
 (  77) 0410 80EF        ;             .wrd    UAREA           ; Initial User Area
 (  78) 0412 9F00        ;             .wrd    TOS             ; Initial Top of Stack
@@ -12,20 +12,20 @@
 (  80) 0416 0001        ;             .wrd    TIBX            ; Initial terminal input buffer
 (  83) 0418 1F00        ;             .wrd    31              ; Initial name field width
 (  84) 041A 0100        ;             .wrd    1               ; 0=nod disk, 1=disk
-(  85) 041C 01-0        ;             .wrd    TOP             ; Initial fence address
-(  86) 041E 01-0        ;             .wrd    TOP             ; Initial top of dictionary
-(  87) 0420 01-0        ;             .wrd    VL0             ; Initial Vocabulary link ptr.
+(  85) 041C 8D1A        ;             .wrd    TOP             ; Initial fence address
+(  86) 041E 8D1A        ;             .wrd    TOP             ; Initial top of dictionary
+(  87) 0420 5812        ;             .wrd    VL0             ; Initial Vocabulary link ptr.
 (  94) 0422 EA          ;             nop
 (  95) 0423 EA          ;             nop
-( 101) 0424 034C4954    ; L22         .byt    3, "LIT"    ; <----- name length field
-( 102) 0428 0000        ;             .wrd    00          ; <----- link field, last marked by zero
-( 103) 042A 2C04        ; LIT         .wrd    $+2         ; <----- code address field
-( 105) 042C ABA300      ;             lda.w   0,I++       ; <----- start of parameter field
+( 101) 0424 834C49D4    ; L22         .byt    0x83,"LI",0xD4  ; <----- name length field
+( 102) 0428 0000        ;             .wrd    00              ; <----- link field, last marked by zero
+( 103) 042A 2C04        ; LIT         .wrd    $+2             ; <----- code field (CF)
+( 105) 042C ABA300      ;             lda.w   0,I++           ; <----- parameter field PF = (CF+2) = (W+2)
 ( 106) 042F AB48        ;             pha.w
 ( 111) 0431 9B3B        ; NEXT        inxt
-( 115) 0433 04434C49    ; L35         .byt    4, "CLIT"
-       0437 54
-( 116) 0438 2404        ;             .wrd    L22         ;Link to LIT
+( 115) 0433 84434C49    ; L35         .byt    0x84,"CLI",0xD4
+       0437 D4
+( 116) 0438 2404        ;             .wrd    L22             ; Link to LIT
 ( 117) 043A 3C04        ; CLIT        .wrd    $+2
 ( 119) 043C A300        ;             lda     0,I++
 ( 120) 043E AB48        ;             pha.w
@@ -40,24 +40,24 @@
 ( 131) 044E D0F5        ;             bne     L63
 ( 132) 0450 A000        ;             ldy     #0
 ( 133) 0452 8B60        ;             rts.s
-( 138) 0454 07455845    ; L75         .byt    7, "EXECUTE"
-       0458 43555445
-( 139) 045C 3304        ;             .wrd    L35         ;link to CLIT
+( 138) 0454 87455845    ; L75         .byt    0x87,"EXECUT",0xC5
+       0458 435554C5
+( 139) 045C 3304        ;             .wrd    L35             ;link to CLIT
 ( 140) 045E 6004        ; EXEC        .wrd    $+2
-( 142) 0460 ABB501      ;             lda.w   1,X
+( 142) 0460 CBB501      ;             lda.w   1,S
 ( 143) 0463 DB6B        ;             plw.s
-( 144) 0465 EB7C0000    ;             jmp     (0,A)       ;0x82: jpr  zp,W; jpr ( zp,W);  -  / ind
-( 150) 0469 06425241    ; L89         .byt    6, "BRANCH"
-       046D 4E4348
+( 144) 0465 EB7C0000    ;             jmp     (0,A)           ;0x82: jpr  zp,W; jpr ( zp,W);  -  / ind
+( 150) 0469 86425241    ; L89         .byt    0x86,"BRANC",0xC8
+       046D 4E43C8
 ( 151) 0470 5404        ;             .wrd    L75             ;link to EXCECUTE
 ( 152) 0472 7404        ; BRAN        .wrd    $+2
-( 154) 0474 AB0B        ;             tia
+( 154) 0474 BB0B        ;             xai
 ( 156) 0476 18          ;             clc
 ( 157) 0477 AB6300      ;             adc.w   0,I++
-( 159) 047A 9B0B        ;             tai
+( 159) 047A BB0B        ;             xai
 ( 160) 047C 9B3B        ;             inxt
-( 165) 047E 07304252    ; L107        .byt    7, "0BRANCH"
-       0482 414E4348
+( 165) 047E 87304252    ; L107        .byt    0x87,"0BRANC",0xC8
+       0482 414E43C8
 ( 166) 0486 6904        ;             .wrd    L89             ;link to BRANCH
 ( 167) 0488 8A04        ; ZBRAN       .wrd    $+2
 ( 169) 048A AB68        ;             pla.w
@@ -65,8 +65,8 @@
 ( 172) 048E 5B          ; BUMP        ini                 ; skip over the branch offset in thread
 ( 173) 048F 5B          ;             ini
 ( 174) 0490 9B3B        ;             inxt                ; NEXT
-( 179) 0492 06284C4F    ; L127        .byt    6, "(LOOP)"
-       0496 4F5029
+( 179) 0492 86284C4F    ; L127        .byt    0x86,"(LOOP",0xA8
+       0496 4F50A8
 ( 180) 0499 7E04        ;             .wrd    L107            ;link to 0BRANCH
 ( 181) 049B 9D04        ; PLOOP       .wrd    $+2
 ( 183) 049D ABF601      ;             inc.w   1,X             ;Increment Loop Counter on PS
@@ -78,8 +78,8 @@
 ( 192) 04AC 5B          ;             ini                     ;Skip branch offset in thread
 ( 193) 04AD 5B          ;             ini
 ( 194) 04AE 9B3B        ;             inxt                    ;NEXT
-( 199) 04B0 07282B4C    ; L154        .byt    7, "(+LOOP)"
-       04B4 4F4F5029
+( 199) 04B0 87282B4C    ; L154        .byt    0x87,"(+LOOP",0xA8
+       04B4 4F4F50A8
 ( 200) 04B8 9204        ;             .wrd    L127            ;link to (loop)
 ( 201) 04BA BC04        ; PPLOO       .wrd    $+2
 ( 203) 04BC AB68        ;             pla.w               ; Pull increment from PS
@@ -93,8 +93,8 @@
 ( 214) 04CC ABB501      ;             lda.w   1,X
 ( 215) 04CF ABF503      ;             sbc.w   3,X
 ( 216) 04D2 80D3        ;             bra     PL2         ; check if loop complete
-( 221) 04D4 0428444F    ; L185        .byt    4, "(DO)"
-       04D8 29
+( 221) 04D4 8428444F    ; L185        .byt    0x84,"(DO",0xA8
+       04D8 A8
 ( 222) 04D9 B004        ;             .wrd    L154        ;link to (+LOOP)
 ( 223) 04DB DD04        ; PDO         .wrd    $+2
 ( 225) 04DD CBB503      ;             lda.w   3,S
@@ -107,7 +107,7 @@
 ( 234) 04ED 9B3B        ;             inxt
 ( 239) 04EF 81C9        ; L207            .byt  0x81,0xC9
 ( 240) 04F1 D404        ;                 .wrd  L185              ;link to (DO)
-( 241) 04F3 01-0        ; I               .wrd  R+2               ;share the code for R
+( 241) 04F3 3D07        ; I               .wrd  R+2               ;share the code for R
 ( 246) 04F5 85444947    ; L214            .byt  0x85,"DIGI",0xD4
        04F9 49D4
 ( 247) 04FB EF04        ;                 .wrd  L207              ;link to I
@@ -134,8 +134,8 @@
 ( 268) 0520 E8          ;                 inx
 ( 269) 0521 E8          ;                 inx
 ( 270) 0522 4CFFFF      ;                 jmp   PUT               ;SEMISfalse with bad conversion
-( 275) 0525 86284649    ; L243            .byt  0x86,"(FIND",0xA9
-       0529 4E44A9
+( 275) 0525 86284649    ; L243            .byt  0x86,"(FIND",0xA8
+       0529 4E44A8
 ( 276) 052C F504        ;                 .wrd  L214              ;Link to DIGIT
 ( 277) 052E 3005        ; PFIND           .wrd  $+2
 ( 278) 0530 A902        ;                 lda   #2
@@ -225,17 +225,17 @@
 ( 371) 05CC 84454D49    ; L337            .byt  0x84,"EMI",0xD4
        05D0 D4
 ( 372) 05D1 8A05        ;                 .wrd  L301              ;link to ENCLOSE
-( 373) 05D3 01-0        ; EMIT            .wrd  XEMIT             ;Vector to code for KEY
+( 373) 05D3 8B16        ; EMIT            .wrd  XEMIT             ;Vector to code for KEY
 ( 378) 05D5 834B45D9    ; L344            .byt  0x83,"KE",0xD9
 ( 379) 05D9 CC05        ;                 .wrd  L337              ;link to EMIT
-( 380) 05DB 01-0        ; KEY             .wrd  XKEY              ;Vector to code for KEY
+( 380) 05DB 9516        ; KEY             .wrd  XKEY              ;Vector to code for KEY
 ( 385) 05DD 893F5445    ; L351            .byt  0x89,"?TERMINA",0xCC
        05E1 524D494E41CC
 ( 386) 05E7 D505        ;                 .wrd  L344              ;link to KEY
-( 387) 05E9 01-0        ; QTERM           .wrd  XQTER             ;Vector to code for ?TERMINAL
+( 387) 05E9 9B16        ; QTERM           .wrd  XQTER             ;Vector to code for ?TERMINAL
 ( 396) 05EB 8243D2      ; L358            .byt  0x82,"C",0xD2
 ( 397) 05EE DD05        ;                 .wrd  L351              ;link to ?TERMINAL
-( 398) 05F0 01-0        ; CR              .wrd  XCR               ;Vector to code for CR
+( 398) 05F0 A216        ; CR              .wrd  XCR               ;Vector to code for CR
 ( 403) 05F2 85434D4F    ; L365            .byt  0x85,"CMOV",0xC5
        05F6 56C5
 ( 404) 05F8 EB05        ;                 .wrd  L358              ;link to CR
@@ -558,44 +558,44 @@
 ( 916) 08B4 C1BA        ; L823            .byt  0xC1,0xBA
 ( 917) 08B6 6608        ;                 .wrd  L813              ;link to C!
 ( 918) 08B8 7708        ; COLON           .wrd  DOCOL
-( 919) 08BA 01-0        ;                 .wrd  QEXEC
-( 920) 08BC 01-0        ;                 .wrd  SCSP
-( 921) 08BE 01-0        ;                 .wrd  CURR
+( 919) 08BA FA0B        ;                 .wrd  QEXEC
+( 920) 08BC B60B        ;                 .wrd  SCSP
+( 921) 08BE 100A        ;                 .wrd  CURR
 ( 922) 08C0 3D08        ;                 .wrd  AT
-( 923) 08C2 01-0        ;                 .wrd  CON
+( 923) 08C2 030A        ;                 .wrd  CON
 ( 924) 08C4 5A08        ;                 .wrd  STORE
-( 925) 08C6 01-0        ;                 .wrd  CREAT
-( 926) 08C8 01-0        ;                 .wrd  RBRAC
-( 927) 08CA 01-0        ;                 .wrd  PSCOD
+( 925) 08C6 D010        ;                 .wrd  CREAT
+( 926) 08C8 7B0C        ;                 .wrd  RBRAC
+( 927) 08CA CA0C        ;                 .wrd  PSCOD
 ( 932) 08CC C1BB        ; L853            .byt  0xC1,0xBB
 ( 933) 08CE B408        ;                 .wrd  L823              ;link to :
 ( 934) 08D0 7708        ;                 .wrd  DOCOL
-( 935) 08D2 01-0        ;                 .wrd  QCSP
-( 936) 08D4 01-0        ;                 .wrd  COMP
+( 935) 08D2 220C        ;                 .wrd  QCSP
+( 936) 08D4 570C        ;                 .wrd  COMP
 ( 937) 08D6 0607        ;                 .wrd  SEMIS
-( 938) 08D8 01-0        ;                 .wrd  SMUDG
-( 939) 08DA 01-0        ;                 .wrd  LBRAC
+( 938) 08D8 8F0C        ;                 .wrd  SMUDG
+( 939) 08DA 6D0C        ;                 .wrd  LBRAC
 ( 940) 08DC 0607        ;                 .wrd  SEMIS
 ( 945) 08DE 88434F4E    ; L867            .byt  0x88,"CONSTAN",0xD4
        08E2 5354414ED4
 ( 946) 08E7 CC08        ;                 .wrd  L853              ;link to ;
 ( 947) 08E9 7708        ; CONST           .wrd  DOCOL
-( 948) 08EB 01-0        ;                 .wrd  CREAT
-( 949) 08ED 01-0        ;                 .wrd  SMUDG
-( 950) 08EF 01-0        ;                 .wrd  COMMA
-( 951) 08F1 01-0        ;                 .wrd  PSCOD
+( 948) 08EB D010        ;                 .wrd  CREAT
+( 949) 08ED 8F0C        ;                 .wrd  SMUDG
+( 950) 08EF 910A        ;                 .wrd  COMMA
+( 951) 08F1 CA0C        ;                 .wrd  PSCOD
 ( 956) 08F3 88564152    ; L885            .byt  0x88,"VARIABL",0xC5
        08F7 4941424CC5
 ( 957) 08FC DE08        ;                 .wrd  L867              ;link to CONSTANT
 ( 958) 08FE 7708        ; VAR             .wrd  DOCOL
 ( 959) 0900 E908        ;                 .wrd  CONST
-( 960) 0902 01-0        ;                 .wrd  PSCOD
+( 960) 0902 CA0C        ;                 .wrd  PSCOD
 ( 965) 0904 84555345    ; L902            .byt  0x84,"USE",0xD2
        0908 D2
 ( 966) 0909 F308        ;                 .wrd  L885              ;link to VARIABLE
 ( 967) 090B 7708        ; USER            .wrd  DOCOL
 ( 968) 090D E908        ;                 .wrd  CONST
-( 969) 090F 01-0        ;                 .wrd  PSCOD
+( 969) 090F CA0C        ;                 .wrd  PSCOD
 ( 974) 0911 81B0        ; L920            .byt  0x81,0xB0
 ( 975) 0913 0409        ;                 .wrd  L902              ;link to USER
 ( 976) 0915 7908        ; ZERO            .wrd  DOCON
@@ -912,7 +912,7 @@
 (1477) 0BCB EE07        ;                 .wrd  SWAP
 (1478) 0BCD 8804        ;                 .wrd  ZBRAN
 (1479) 0BCF 0800        ; L1402           .wrd  8                 ;L1406-L1402
-(1480) 0BD1 01-0        ;                 .wrd  ERROR
+(1480) 0BD1 6710        ;                 .wrd  ERROR
 (1481) 0BD3 7204        ;                 .wrd  BRAN
 (1482) 0BD5 0400        ; L1405           .wrd  4                 ;L1407-L1405
 (1483) 0BD7 E507        ; L1406           .wrd  DROP
@@ -1137,14 +1137,14 @@
 (1765) 0DB4 1400        ; L1709           .wrd  0x14               ;L1719-L1709
 (1766) 0DB6 570C        ;                 .wrd  COMP
 (1767) 0DB8 900D        ;                 .wrd  PDOTQ
-(1768) 0DBA 01-0        ;                 .wrd  WORD
+(1768) 0DBA 0A0F        ;                 .wrd  WORD
 (1769) 0DBC 750A        ;                 .wrd  HERE
 (1770) 0DBE 4C08        ;                 .wrd  CAT
 (1771) 0DC0 590A        ;                 .wrd  ONEP
 (1772) 0DC2 850A        ;                 .wrd  ALLOT
 (1773) 0DC4 7204        ;                 .wrd  BRAN
 (1774) 0DC6 0A00        ; L1718           .wrd  0xA                ;L1723-L1718
-(1775) 0DC8 01-0        ; L1719           .wrd  WORD
+(1775) 0DC8 0A0F        ; L1719           .wrd  WORD
 (1776) 0DCA 750A        ;                 .wrd  HERE
 (1777) 0DCC 1C0D        ;                 .wrd  COUNT
 (1778) 0DCE 2F0D        ;                 .wrd  TYPE
@@ -1192,7 +1192,7 @@
 (1823) 0E22 3609        ;                 .wrd  BL
 (1824) 0E24 1509        ;                 .wrd  ZERO
 (1825) 0E26 7204        ;                 .wrd  BRAN
-(1826) 0E28 01-0        ; L1771           .wrd  04                ;L1773-L1771
+(1826) 0E28 FFFF        ; L1771           .wrd  04                ;L1773-L1771
 (1827) 0E2A 0308        ; L1772           .wrd  DUP
 (1828) 0E2C F304        ; L1773           .wrd  I
 (1829) 0E2E 6B08        ;                 .wrd  CSTOR
@@ -1305,7 +1305,7 @@
 (1964) 0F12 0C00        ; L1908           .wrd  0xC                ;L1914-L1908
 (1965) 0F14 D009        ;                 .wrd  BLK
 (1966) 0F16 3D08        ;                 .wrd  AT
-(1967) 0F18 01-0        ;                 .wrd  BLOCK
+(1967) 0F18 6F15        ;                 .wrd  BLOCK
 (1968) 0F1A 7204        ;                 .wrd  BRAN
 (1969) 0F1C 0600        ; L1913           .wrd  0x6                ;L1916-L1913
 (1970) 0F1E 8E09        ; L1914           .wrd  TIB
@@ -1347,7 +1347,7 @@
 (2009) 0F67 5F          ;                 .byt  0x5F
 (2010) 0F68 F40A        ;                 .wrd  GREAT
 (2011) 0F6A 8804        ;                 .wrd  ZBRAN
-(2012) 0F6C 01-0        ; L1956           .wrd  09                ;L1961-L1956
+(2012) 0F6C FFFF        ; L1956           .wrd  09                ;L1961-L1956
 (2013) 0F6E F304        ;                 .wrd  I
 (2014) 0F70 3A04        ;                 .wrd  CLIT
 (2015) 0F72 20          ;                 .byt  0x20
@@ -1460,7 +1460,7 @@
        1053 4F5254A9
 (2135) 1057 1F10        ;                 .wrd  L2052             ;link to -FIND
 (2136) 1059 7708        ; PABOR           .wrd  DOCOL
-(2137) 105B 01-0        ;                 .wrd  ABORT
+(2137) 105B B712        ;                 .wrd  ABORT
 (2138) 105D 0607        ;                 .wrd  SEMIS
 (2143) 105F 85455252    ; L2087           .byt  0x85,"ERRO",0xD2
        1063 4FD2
@@ -1478,14 +1478,14 @@
 (2155) 107B 900D        ;                 .wrd  PDOTQ
 (2156) 107D 0420203F    ;                 .byt  4,"  ? "
        1081 20
-(2157) 1082 01-0        ;                 .wrd  MESS
+(2157) 1082 0616        ;                 .wrd  MESS
 (2158) 1084 E806        ;                 .wrd  SPSTO
 (2159) 1086 E507E507    ;                 .wrd  DROP,DROP         ;make room for 2 error values
 (2160) 108A D809        ;                 .wrd  IN
 (2161) 108C 3D08        ;                 .wrd  AT
 (2162) 108E D009        ;                 .wrd  BLK
 (2163) 1090 3D08        ;                 .wrd  AT
-(2164) 1092 01-0        ;                 .wrd  QUIT
+(2164) 1092 8812        ;                 .wrd  QUIT
 (2165) 1094 0607        ;                 .wrd  SEMIS
 (2170) 1096 834944AE    ; L2113           .byt  0x83,"ID",0xAE
 (2171) 109A 5F10        ;                 .wrd  L2087             ;link to ERROR
@@ -1519,7 +1519,7 @@
 (2202) 10D2 8E09        ;                 .wrd  TIB               ;)
 (2203) 10D4 750A        ;                 .wrd  HERE              ;|
 (2204) 10D6 3A04        ;                 .wrd  CLIT              ;|  6502 only, assures
-(2205) 10D8 A0          ;                 .byt  0xA0               ;|  room exists in dict.
+(2205) 10D8 A0          ;                 .byt  0xA0              ;|  room exists in dict.
 (2206) 10D9 7007        ;                 .wrd  PLUS              ;|
 (2207) 10DB CB0A        ;                 .wrd  ULESS             ;|
 (2208) 10DD 2509        ;                 .wrd  TWO               ;|
@@ -1532,14 +1532,14 @@
 (2215) 10EB 9C10        ;                 .wrd  IDDOT
 (2216) 10ED 3A04        ;                 .wrd  CLIT
 (2217) 10EF 04          ;                 .byt  4
-(2218) 10F0 01-0        ;                 .wrd  MESS
+(2218) 10F0 0616        ;                 .wrd  MESS
 (2219) 10F2 160B        ;                 .wrd  SPACE
 (2220) 10F4 750A        ; L2163           .wrd  HERE
 (2221) 10F6 0308        ;                 .wrd  DUP
 (2222) 10F8 4C08        ;                 .wrd  CAT
 (2223) 10FA 9909        ;                 .wrd  WIDTH
 (2224) 10FC 3D08        ;                 .wrd  AT
-(2225) 10FE 01-0        ;                 .wrd  MIN
+(2225) 10FE 6C13        ;                 .wrd  MIN
 (2226) 1100 590A        ;                 .wrd  ONEP
 (2227) 1102 850A        ;                 .wrd  ALLOT
 (2228) 1104 B909        ;                 .wrd  DP                ;)
@@ -1694,7 +1694,7 @@
 (2401) 1250 9F08        ; FORTH           .wrd  DODOE
 (2402) 1252 4012        ;                 .wrd  DOVOC
 (2403) 1254 81A0        ;                 .wrd  0xA081
-(2404) 1256 01-0        ; XFOR            .wrd  NTOP              ;points to top name in FORTH
+(2404) 1256 811A        ; XFOR            .wrd  NTOP              ;points to top name in FORTH
 (2405) 1258 0000        ; VL0             .wrd  0                 ;last vocab link ends at zero
 (2411) 125A 8B444546    ; L2357           .byt  0x8B,"DEFINITION",0xD3
        125E 494E4954494F4ED3
@@ -1740,7 +1740,7 @@
 (2461) 12B7 7708        ; ABORT           .wrd  DOCOL
 (2462) 12B9 E806        ;                 .wrd  SPSTO
 (2463) 12BB B50C        ;                 .wrd  DECIM
-(2464) 12BD 01-0        ;                 .wrd  DR0
+(2464) 12BD 0215        ;                 .wrd  DR0
 (2465) 12BF F005        ;                 .wrd  CR
 (2466) 12C1 900D        ;                 .wrd  PDOTQ
 (2467) 12C3 0E666967    ;                 .byt  14,"fig-FORTH 1.0a"
@@ -1978,7 +1978,7 @@
        14CA 590A
 (2775) 14CC 1509DB04    ;                 .wrd  ZERO,PDO
 (2776) 14D0 2A04FF7F    ; L2835           .wrd  LIT,0x7FFF,BUFFR
-       14D4 01-0
+       14D4 2715
 (2777) 14D6 E5079B04    ;                 .wrd  DROP,PLOOP
 (2778) 14DA F6FF        ; L2839           .wrd  0xFFF6             ;L2835-L2839
 (2779) 14DC 0607        ;                 .wrd  SEMIS
@@ -2031,7 +2031,7 @@
 (2840) 154D 2A04FF7F    ;                 .wrd  LIT,0x7FFF
 (2841) 1551 A506        ;                 .wrd  ANDD
 (2842) 1553 1509        ;                 .wrd  ZERO
-(2844) 1555 01-0        ;                 .wrd  RSW
+(2844) 1555 C716        ;                 .wrd  RSW
 (2845) 1557 3B07        ; L2776           .wrd  R
 (2846) 1559 5A08        ;                 .wrd  STORE
 (2847) 155B 3B07        ;                 .wrd  R
@@ -2068,7 +2068,7 @@
 (2881) 159B 0308        ;                 .wrd  DUP
 (2882) 159D 3B07        ;                 .wrd  R
 (2883) 159F 1D09        ;                 .wrd  ONE
-(2885) 15A1 01-0        ;                 .wrd  RSW
+(2885) 15A1 C716        ;                 .wrd  RSW
 (2886) 15A3 2509        ;                 .wrd  TWO
 (2887) 15A5 B20A        ;                 .wrd  SUB
 (2888) 15A7 0308        ; L2818           .wrd  DUP
@@ -2135,7 +2135,7 @@
 (2959) 1629 900D        ; L2888           .wrd  PDOTQ
 (2960) 162B 064D5347    ;                 .byt  6,"MSG # "
        162F 202320
-(2961) 1632 01-0        ;                 .wrd  DOT
+(2961) 1632 7A19        ;                 .wrd  DOT
 (2962) 1634 0607        ; L2891           .wrd  SEMIS
 (2967) 1636 844C4F41    ; L2896           .byt  0x84,"LOA",0xC4
        163A C4
@@ -2235,7 +2235,7 @@
        1723 C7093D08
 (3157) 1727 3B07D507    ; L3220           .wrd  R,OVER,ULESS
        172B CB0A
-(3158) 172D 880401-0    ;                 .wrd  ZBRAN,L3225-*
+(3158) 172D 8804FFFF    ;                 .wrd  ZBRAN,L3225-*
 (3159) 1731 50126812    ;                 .wrd  FORTH,DEFIN,AT,DUP
        1735 3D080308
 (3160) 1739 C7095A08    ;                 .wrd  VOCL,STORE

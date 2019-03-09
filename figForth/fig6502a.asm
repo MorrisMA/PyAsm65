@@ -98,22 +98,18 @@ RESTART     nop                     ; User Warm entry point
 ;                                   LIT
 ;                                   SCREEN 13 LINE 1
 ;
-L22         .byt    3, "LIT"    ; <----- name length field
-            .wrd    00          ; <----- link field, last marked by zero
-LIT         .wrd    $+2         ; <----- code address field
+L22         .byt    0x83,"LI",0xD4  ; <----- name length field
+            .wrd    00              ; <----- link field, last marked by zero
+LIT         .wrd    $+2             ; <----- code field (CF)
 ;
-            lda.w   0,I++       ; <----- start of parameter field
+            lda.w   0,I++           ; <----- parameter field PF = (CF+2) = (W+2)
             pha.w
-;
-;    NEXT is the address interpreter that moves from machine
-;    level word to word.
-;
-NEXT        inxt
+            inxt
 ;
 ;    CLIT pushes the next inline byte to data stack
 ;
-L35         .byt    4, "CLIT"
-            .wrd    L22         ;Link to LIT
+L35         .byt    0x84,"CLI",0xD4
+            .wrd    L22             ; Link to LIT
 CLIT        .wrd    $+2
 ;
             lda     0,I++
@@ -135,34 +131,34 @@ L63         lda     0,X
 ;                                       EXCECUTE
 ;                                       SCREEN 14 LINE 11
 ;
-L75         .byt    7, "EXECUTE"
-            .wrd    L35         ;link to CLIT
+L75         .byt    0x87,"EXECUT",0xC5
+            .wrd    L35             ;link to CLIT
 EXEC        .wrd    $+2
 ;
-            lda.w   1,X
+            lda.w   1,S
             plw.s
-            jmp     (0,A)       ;0x82: jpr  zp,W; jpr ( zp,W);  -  / ind
-                                ;      jpr abs,W; jpr (abs,W); siz / isz
+            jmp     (0,A)           ;0x82: jpr  zp,W; jpr ( zp,W);  -  / ind
+                                    ;      jpr abs,W; jpr (abs,W); siz / isz
 ;
 ;                                       BRANCH
 ;                                       SCREEN 15 LINE 11
 ;
-L89         .byt    6, "BRANCH"
+L89         .byt    0x86,"BRANC",0xC8
             .wrd    L75             ;link to EXCECUTE
 BRAN        .wrd    $+2
 ;
-            tia
+            xai
 ;
             clc
             adc.w   0,I++
 ;
-            tai
+            xai
             inxt
 ;
 ;                                       0BRANCH
 ;                                       SCREEN 15 LINE 6
 ;
-L107        .byt    7, "0BRANCH"
+L107        .byt    0x87,"0BRANC",0xC8
             .wrd    L89             ;link to BRANCH
 ZBRAN       .wrd    $+2
 ;
@@ -176,7 +172,7 @@ BUMP        ini                 ; skip over the branch offset in thread
 ;                                       (LOOP)
 ;                                       SCREEN 16 LINE 1
 ;
-L127        .byt    6, "(LOOP)"
+L127        .byt    0x86,"(LOOP",0xA8
             .wrd    L107            ;link to 0BRANCH
 PLOOP       .wrd    $+2
 ;
@@ -196,7 +192,7 @@ PL2         bpl     BRAN+2          ;Loop if Loop Cntr <= Loop Termination
 ;                                       (+LOOP)
 ;                                       SCREEN 16 LINE 8
 ;
-L154        .byt    7, "(+LOOP)"
+L154        .byt    0x87,"(+LOOP",0xA8
             .wrd    L127            ;link to (loop)
 PPLOO       .wrd    $+2
 ;
@@ -218,7 +214,7 @@ PPLOO       .wrd    $+2
 ;                                       (DO)
 ;                                       SCREEN 17 LINE 2
 ;
-L185        .byt    4, "(DO)"
+L185        .byt    0x84,"(DO",0xA8
             .wrd    L154        ;link to (+LOOP)
 PDO         .wrd    $+2
 ;
@@ -272,7 +268,7 @@ L234            tya
 ;                                       (FIND)
 ;                                       SCREEN 19 LINE 1
 ;
-L243            .byt  0x86,"(FIND",0xA9
+L243            .byt  0x86,"(FIND",0xA8
                 .wrd  L214              ;Link to DIGIT
 PFIND           .wrd  $+2
                 lda   #2
@@ -843,6 +839,8 @@ CSTOR           .wrd  $+2
 ;   Helper primitives for secondary words
 ;
 ;===============================================================================
+;
+NEXT            inxt
 ;
 DOCOL           ient
 ;
@@ -2202,7 +2200,7 @@ CREAT           .wrd  DOCOL
                 .wrd  TIB               ;)
                 .wrd  HERE              ;|
                 .wrd  CLIT              ;|  6502 only, assures
-                .byt  0xA0               ;|  room exists in dict.
+                .byt  0xA0              ;|  room exists in dict.
                 .wrd  PLUS              ;|
                 .wrd  ULESS             ;|
                 .wrd  TWO               ;|

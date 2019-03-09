@@ -119,7 +119,6 @@ for src in source:
     
     if lbl == '':
         if op in directives:
-#            print('>'*8, "label = '', op in directives().")
             if op == directives['.stack'] or op == directives['.stk']:
                 stkSize = eval(str(dt), vlc)    # .stack    size
             elif op == directives['.code'] or op == directives['.cod']:
@@ -142,7 +141,6 @@ for src in source:
                 print('Error. Unknown directive: line #%d, %s, %s.' \
                       % (srcLine, op, srcLine, directives[op]))
         elif op in defines:
-#            print('>'*8, "label = '', op in defines().")
             if op == '.eq' or op == '.equ':
                 if curSegment == 'code':
                     vlc['_loc_'] = code
@@ -151,23 +149,15 @@ for src in source:
                 vlc[lbl] = constants[lbl] 
             elif op == '.db' or op == '.byt':
                 if curSegment == 'code':
-#                    labels[lbl] = code
-#                    vlc[lbl] = code
                     vlc['_loc_'] = code
-                    siz, val = evalByt(dt, vlc)
+                    siz, val = parseByt(dt, vlc)
 
-                    asmText = '%04X %s' % (code, val[:8])
-                    bufLen = 15 - len(asmText)
-                    cod.append([code, '.byt', 'imp', operand, \
-                                siz, 0, val, srcLine, \
-                                ' '*bufLen + ' ; ' + srcText])
+                    cod.append([code, '.byt', 'db', val, \
+                                0, siz, '', srcLine, ' ; ' + srcText])
                     code += siz
                 else:
-#                    variables[lbl] = (data, siz, val)
-#                    vlc[lbl] = data
                     vlc['_loc_'] = data
                     siz, val = evalByt(dt, vlc)
-#                    print('='*8, lbl, variables[lbl])
 
                     asmText = '%04X %s' % (data, val[:8])
                     bufLen = 15 - len(asmText)
@@ -176,23 +166,14 @@ for src in source:
                     data += siz
             elif op == '.dw' or op == '.wrd':
                 if curSegment == 'code':
-#                    labels[lbl] = code
-#                    vlc[lbl] = code
                     vlc['_loc_'] = code
-                    siz, val = evalWrd(dt, vlc)
+                    siz, val = parseWrd(dt, vlc)
 
-                    asmText = '%04X %s' % (code, val[:8])
-                    bufLen = 15 - len(asmText)
-                    cod.append([code, '.byt', 'imp', operand, \
-                                siz, 0, val, srcLine, \
-                                ' '*bufLen + ' ; ' + srcText])
+                    cod.append([code, '.wrd', 'dw', val, \
+                                0, siz, '', srcLine, ' ; ' + srcText])
                     code += siz
                 else:
-#                    variables[lbl] = (data, siz, val)
-#                    vlc[lbl] = data
-                    vlc['_loc_'] = data
                     siz, val = evalWrd(dt, vlc)
-#                    print('='*8, lbl, variables[lbl])
 
                     asmText = '%04X %s' % (data, val[:8])
                     bufLen = 15 - len(asmText)
@@ -201,11 +182,7 @@ for src in source:
                     data += siz
             elif op == '.dl' or op == '.lng' or op == '.flt':
                 if curSegment == 'code':
-#                    labels[lbl] = code
-#                    vlc[lbl] = code
-                    vlc['_loc_'] = code
                     siz, val = evalLng(dt, vlc)
-#                    print('='*8, lbl, labels[lbl])
 
                     asmText = '%04X %s' % (code, val[:8])
                     bufLen = 15 - len(asmText)
@@ -214,11 +191,8 @@ for src in source:
                                 ' '*bufLen + ' ; ' + srcText])
                     code += siz
                 else:
-#                    variables[lbl] = (data, siz, val)
-#                    vlc[lbl] = data
                     vlc['_loc_'] = data
                     siz, val = evalLng(dt, vlc)
-#                    print('='*8, lbl, variables[lbl])
 
                     asmText = '%04X %s' % (data, val[:8])
                     bufLen = 15 - len(asmText)
@@ -243,7 +217,6 @@ for src in source:
                 print('Error. Unknown define: %s.' % (op))
                 pass
         else:
-#            print('>'*8, "label = '', op not in defines() or directives().")
             if re.match('^\.\w$', op):
                 print('Error. Unexpected opcode: %s. Line #%d.' \
                       % (op, srcLine))
@@ -290,7 +263,6 @@ for src in source:
                 elif re.match('^\(.*,[aA]\)$', dt):
                     addrsMode = 'absAI'
                     operand = dt.split(',')[0][1:]
-#                elif re.match('^\w*$', dt):
                 elif re.match('^.*$', dt):
                     if op in relative:
                         addrsMode = 'rel'
@@ -310,8 +282,6 @@ for src in source:
                 else:
                     addrsMode = 'abs'
                     operand = dt
-#                    print('Error. Unknown addressing mode: %s. Line #%d.' \
-#                          % (dt, srcLine))
 
                 opcode = op + '_' + addrsMode
                 if opcode in opcodes:
@@ -364,20 +334,18 @@ for src in source:
                 elif op == '.db' or op == '.byt':
                     if curSegment == 'code':
                         labels[lbl] = code
-                        vlc[lbl] = code; vlc['_loc_'] = code
-                        siz, val = evalByt(dt, vlc)
+                        vlc[lbl] = code
+                        siz, val = parseByt(dt, vlc)
 
-                        asmText = '%04X %s' % (code, val[:8])
-                        bufLen = 15 - len(asmText)
-                        cod.append([code, '.byt', 'imp', operand, \
-                                    siz, 0, val, srcLine, \
-                                    ' '*bufLen + ' ; ' + srcText])
+                        cod.append([code, '.byt', 'db', val, \
+                                    0, siz, '', srcLine, \
+                                    ' ; ' + srcText])
+#                        print('-'*7+'>', asmText, siz, val)
                         code += siz
                     else:
                         variables[lbl] = (data, siz, val)
                         vlc[lbl] = data; vlc['_loc_'] = data
                         siz, val = evalByt(dt, vlc)
-#                        print('='*8, lbl, variables[lbl])
 
                         asmText = '%04X %s' % (data, val[:8])
                         bufLen = 15 - len(asmText)
@@ -387,20 +355,15 @@ for src in source:
                 elif op == '.dw' or op == '.wrd':
                     if curSegment == 'code':
                         labels[lbl] = code
-                        vlc[lbl] = code; vlc['_loc_'] = code
-                        siz, val = evalWrd(dt, vlc)
+                        siz, val = parseWrd(dt, vlc)
 
-                        asmText = '%04X %s' % (code, val[:8])
-                        bufLen = 15 - len(asmText)
-                        cod.append([code, '.byt', 'imp', operand, \
-                                    siz, 0, val, srcLine, \
-                                    ' '*bufLen + ' ; ' + srcText])
+                        cod.append([code, '.wrd', 'dw', val, \
+                                    0, siz, '', srcLine, ' ; ' + srcText])
                         code += siz
                     else:
                         variables[lbl] = (data, siz, val)
                         vlc[lbl] = data; vlc['_loc_'] = data
                         siz, val = evalWrd(dt, vlc)
-#                        print('='*8, lbl, variables[lbl])
 
                         asmText = '%04X %s' % (data, val[:8])
                         bufLen = 15 - len(asmText)
@@ -412,7 +375,6 @@ for src in source:
                         labels[lbl] = code
                         vlc[lbl] = code; vlc['_loc_'] = code
                         siz, val = evalLng(dt, vlc)
-#                        print('='*8, lbl, labels[lbl])
 
                         asmText = '%04X %s' % (code, val[:8])
                         bufLen = 15 - len(asmText)
@@ -424,7 +386,6 @@ for src in source:
                         variables[lbl] = (data, siz, val)
                         vlc[lbl] = data; vlc['_loc_'] = data
                         siz, val = evalLng(dt, vlc)
-#                        print('='*8, lbl, variables[lbl])
 
                         asmText = '%04X %s' % (data, val[:8])
                         bufLen = 15 - len(asmText)
@@ -491,7 +452,6 @@ for src in source:
                 elif re.match('^\(.*,[aA]\)$', dt):
                     addrsMode = 'absAI'
                     operand = dt.split(',')[0][1:]
-#                elif re.match('^\w*$', dt):
                 elif re.match('^.*$', dt):
                     if op in relative:
                         addrsMode = 'rel'
@@ -511,8 +471,6 @@ for src in source:
                 else:
                     addrsMode = 'abs'
                     operand = dt
-#                    print('Error. Unknown addressing mode: %s. Line #%d.' \
-#                          % (dt, srcLine))
 
                 opcode = op + '_' + addrsMode
 
@@ -714,9 +672,25 @@ for ln in cod:
             out[addrs] = [opLen + dtLen, \
                           ''.join([opStr, loStr, hiStr]), \
                           srcTxt, srcLine]
-    elif md in ('db', 'byt', 'ds', 'str'):
-        val, siz, strVal = variables[op]
-        out[addrs] = [siz, opStr, srcTxt, srcLine]
+    elif md in ('db', 'dw', 'dl', 'ds', 'str'):
+#        val, siz, strVal = variables[op]
+#        out[addrs] = [siz, opStr, srcTxt, srcLine]
+#        print('-'*8, 'Pass 2:', hex(addrs), "'"+op+"'", "'"+md+"'", dt,
+#              opLen, dtLen, "'"+opStr+"'", "'"+srcTxt+"'", srcLine)
+        vlc['_loc_'] = addrs
+        if md == 'db':
+            siz, outStr = evalByt(dt, vlc)
+            if siz == dtLen:
+                out[addrs] = [siz, outStr, srcTxt, srcLine]
+#                print('='*13, hex(addrs), siz, outStr, "'"+srcTxt+"'", srcLine)
+            else: print('=== Error(evalByt) ==>', 'returned siz does not match dtLen')
+        elif md == 'dw':
+            siz, outStr = evalWrd(dt, vlc)
+            if siz == dtLen:
+                out[addrs] = [siz, outStr, srcTxt, srcLine]
+#                print('='*13, hex(addrs), siz, outStr, "'"+srcTxt+"'", srcLine)
+            else: print('=== Error(evalWrd) ==>', 'returned siz does not match dtLen')
+
 
 '''
     Print results of Pass 2
@@ -724,7 +698,7 @@ for ln in cod:
 
 pgm = array.array('B', [])
 
-print("Pass 2: Generating print results.")
+print("Writing Listing File.")
 
 with open(filename+'.lst', 'wt') as fout:
     start = False
@@ -753,7 +727,12 @@ with open(filename+'.lst', 'wt') as fout:
                 print('\tError: %s' % outTxt[beg:end], 'Line: %d' % srcLine)
                 binVal = 255
             pgm.append(binVal)
-        print('(%4d) %04X' % (srcLine, i), outTxt[:8], srcTxt, file=fout)
+
+        srcTxt = srcTxt.lstrip()
+        if len(outTxt[:8]) <= 8: bufLen = (8 - len(outTxt[:8])) + 3
+        else: bufLen = 0
+        print('(%4d) %04X' % (srcLine, i),
+              outTxt[:8], ' '*bufLen+srcTxt, file=fout)
         if len(outTxt) > 8:
             outTxt = outTxt[8:]
             addrs = i + 4
@@ -778,7 +757,7 @@ with open(filename+'.bin', 'wb') as fout:
     Generate Print File -- Interleave Input File and Output File
 '''
 
-print("Generating Print File")
+print("Writing Print File")
 
 srcLine = 0
 with open(filename+'.lst', 'rt') as lst:

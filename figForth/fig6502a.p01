@@ -39,14 +39,14 @@
   87             .wrd    VL0             ; Initial Vocabulary link ptr.
   94             nop
   95             nop
- 101 L22         .byt    3, "LIT"    ; <----- name length field
- 102             .wrd    00          ; <----- link field, last marked by zero
- 103 LIT         .wrd    $+2         ; <----- code address field
- 105             lda.w   0,I++       ; <----- start of parameter field
+ 101 L22         .byt    0x83,"LI",0xD4  ; <----- name length field
+ 102             .wrd    00              ; <----- link field, last marked by zero
+ 103 LIT         .wrd    $+2             ; <----- code field (CF)
+ 105             lda.w   0,I++           ; <----- parameter field PF = (CF+2) = (W+2)
  106             pha.w
  111 NEXT        inxt
- 115 L35         .byt    4, "CLIT"
- 116             .wrd    L22         ;Link to LIT
+ 115 L35         .byt    0x84,"CLI",0xD4
+ 116             .wrd    L22             ; Link to LIT
  117 CLIT        .wrd    $+2
  119             lda     0,I++
  120             pha.w
@@ -61,21 +61,21 @@
  131             bne     L63
  132             ldy     #0
  133             rts.s
- 138 L75         .byt    7, "EXECUTE"
- 139             .wrd    L35         ;link to CLIT
+ 138 L75         .byt    0x87,"EXECUT",0xC5
+ 139             .wrd    L35             ;link to CLIT
  140 EXEC        .wrd    $+2
- 142             lda.w   1,X
+ 142             lda.w   1,S
  143             plw.s
- 144             jmp     (0,A)       ;0x82: jpr  zp,W; jpr ( zp,W);  -  / ind
- 150 L89         .byt    6, "BRANCH"
+ 144             jmp     (0,A)           ;0x82: jpr  zp,W; jpr ( zp,W);  -  / ind
+ 150 L89         .byt    0x86,"BRANC",0xC8
  151             .wrd    L75             ;link to EXCECUTE
  152 BRAN        .wrd    $+2
- 154             tia
+ 154             xai
  156             clc
  157             adc.w   0,I++
- 159             tai
+ 159             xai
  160             inxt
- 165 L107        .byt    7, "0BRANCH"
+ 165 L107        .byt    0x87,"0BRANC",0xC8
  166             .wrd    L89             ;link to BRANCH
  167 ZBRAN       .wrd    $+2
  169             pla.w
@@ -83,7 +83,7 @@
  172 BUMP        ini                 ; skip over the branch offset in thread
  173             ini
  174             inxt                ; NEXT
- 179 L127        .byt    6, "(LOOP)"
+ 179 L127        .byt    0x86,"(LOOP",0xA8
  180             .wrd    L107            ;link to 0BRANCH
  181 PLOOP       .wrd    $+2
  183             inc.w   1,X             ;Increment Loop Counter on PS
@@ -95,7 +95,7 @@
  192             ini                     ;Skip branch offset in thread
  193             ini
  194             inxt                    ;NEXT
- 199 L154        .byt    7, "(+LOOP)"
+ 199 L154        .byt    0x87,"(+LOOP",0xA8
  200             .wrd    L127            ;link to (loop)
  201 PPLOO       .wrd    $+2
  203             pla.w               ; Pull increment from PS
@@ -109,7 +109,7 @@
  214             lda.w   1,X
  215             sbc.w   3,X
  216             bra     PL2         ; check if loop complete
- 221 L185        .byt    4, "(DO)"
+ 221 L185        .byt    0x84,"(DO",0xA8
  222             .wrd    L154        ;link to (+LOOP)
  223 PDO         .wrd    $+2
  225             lda.w   3,S
@@ -148,7 +148,7 @@
  268                 inx
  269                 inx
  270                 jmp   PUT               ;SEMISfalse with bad conversion
- 275 L243            .byt  0x86,"(FIND",0xA9
+ 275 L243            .byt  0x86,"(FIND",0xA8
  276                 .wrd  L214              ;Link to DIGIT
  277 PFIND           .wrd  $+2
  278                 lda   #2
@@ -1465,7 +1465,7 @@
 2202                 .wrd  TIB               ;)
 2203                 .wrd  HERE              ;|
 2204                 .wrd  CLIT              ;|  6502 only, assures
-2205                 .byt  0xA0               ;|  room exists in dict.
+2205                 .byt  0xA0              ;|  room exists in dict.
 2206                 .wrd  PLUS              ;|
 2207                 .wrd  ULESS             ;|
 2208                 .wrd  TWO               ;|
