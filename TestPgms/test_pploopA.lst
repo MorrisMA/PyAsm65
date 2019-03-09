@@ -1,0 +1,24 @@
+(   8) 0200 AB68        ;         pla.w
+(  10) 0202 18          ;         clc
+(  11) 0203 100F        ;         bpl     PL1
+(  13) 0205 AB7501      ;         adc.w   1,X
+(  14) 0208 AB9501      ;         sta.w   1,X
+(  16) 020B 18          ;         clc
+(  17) 020C ABB501      ;         lda.w   1,X
+(  18) 020F ABF503      ;         sbc.w   3,X
+(  19) 0212 800D        ;         bra     PL2
+(  21) 0214 AB7501      ; PL1     adc.w   1,X
+(  22) 0217 AB9501      ;         sta.w   1,X
+(  24) 021A 18          ;         clc
+(  25) 021B ABB503      ;         lda.w   3,X
+(  26) 021E ABF501      ;         sbc.w   1,X
+(  28) 0221 1006        ; PL2     bpl     BRANCH
+(  29) 0223 8BC204      ;         adj.s   #4
+(  31) 0226 5B          ;         ini
+(  32) 0227 5B          ;         ini
+(  34) 0228 00          ;         brk
+(  36) 0229 AB0B        ; BRANCH  tia
+(  38) 022B 18          ;         clc
+(  39) 022C AB6300      ;         adc.w   0,I++
+(  41) 022F 9B0B        ;         tai
+(  43) 0231 00          ;         brk

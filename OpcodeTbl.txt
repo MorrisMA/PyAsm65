@@ -827,8 +827,6 @@ pla.s_imp 2 0 8B68
 ins_imp 2 0 8BE8
 phy.s_imp 2 0 8B5A
 ply.s_imp 2 0 8B7A
-tsa_imp 2 0 8B8A
-tas_imp 2 0 8BAA
 des_imp 2 0 8BCA
 nxt.s_imp 2 0 8B3B
 phi.s_imp 2 0 8B4B
@@ -934,8 +932,6 @@ pla.sw_imp 2 0 CB68
 ins.w_imp 2 0 CBE8
 phy.sw_imp 2 0 CB5A
 ply.sw_imp 2 0 CB7A
-tsa.w_imp 2 0 CB8A
-tas.w_imp 2 0 CBAA
 des.w_imp 2 0 CBCA
 tsb.w_absS 2 2 CB0C
 trb.w_absS 2 2 CB1C
@@ -1009,8 +1005,6 @@ sta.w_absSIY 2 2 DB99
 lda.w_absSIY 2 2 DBB9
 cmp.w_absSIY 2 2 DBD9
 sbc.w_absSIY 2 2 DBF9
-tua.w_imp 2 0 DB8A
-tau.w_imp 2 0 DBAA
 tsb.w_absSI 2 2 DB0C
 trb.w_absSI 2 2 DB1C
 bit.w_absSI 2 2 DB3C
@@ -1101,8 +1095,6 @@ sta_absSIY 3 2 8B9B99
 lda_absSIY 3 2 8B9BB9
 cmp_absSIY 3 2 8B9BD9
 sbc_absSIY 3 2 8B9BF9
-tua_imp 3 0 8B9B8A
-tau_imp 3 0 8B9BAA
 inxt.s_imp 2 0 DB3B
 phw.s_imp 2 0 DB4B
 plw.s_imp 2 0 DB6B
@@ -2008,3 +2000,11 @@ txy_imp 2 0 FB8A
 txy.w_imp 3 0 FBAB8A
 tyx_imp 2 0 EB98
 tyx.w_imp 3 0 EBAB98
+tsa_imp 2 0 EBBA
+tsa.w_imp 3 0 EBABBA
+tas_imp 2 0 EB9A
+tas.w_imp 3 0 EBAB9A
+tua_imp 3 0 EB9BBA
+tua.w_imp 3 0 EBBBBA
+tau_imp 3 0 EB9B9A
+tau.w_imp 3 0 EBBB9A

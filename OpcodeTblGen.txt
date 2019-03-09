@@ -167,10 +167,10 @@ F9  SBC  absY  Y   Y   Y   Y   N   Y   Y   Y
 5A  PHY  imp   N   Y   N   Y   Y   N   N   N
 6A  ROR  acc   N   Y   N   N   N   N   Y   Y
 7A  PLY  imp   N   Y   N   Y   Y   N   N   N
-8A  TXA  imp   Y   Y   N   Y   Y   Y   N   Y
-9A  TXS  imp   Y   Y   Y   N   N   N   N   N
-AA  TAX  imp   Y   Y   N   Y   Y   Y   N   N
-BA  TSX  imp   Y   Y   Y   N   N   N   N   N
+8A  TXA  imp   N   Y   N   N   N   N   N   Y
+9A  TXS  imp   Y   Y   Y   N   N   N   Y   N
+AA  TAX  imp   N   Y   N   N   N   N   N   N
+BA  TSX  imp   Y   Y   Y   N   N   N   Y   N
 CA  DEX  imp   N   Y   N   Y   Y   N   N   N
 DA  PHX  imp   N   Y   N   Y   Y   N   N   N
 EA  NOP  imp   N   N   N   N   N   N   N   N

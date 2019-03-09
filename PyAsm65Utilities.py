@@ -48,23 +48,6 @@ def loadOpcodeTable(opcodes, fn = 'OpcodeTbl', genOpcodeLst = False):
 
     return opcodes
 
-def numVal(dt):
-    if len(dt) == 1:
-        val = int(dt)
-    elif dt[0] == '0':
-        radix = dt[1]
-        if radix == 'b':
-            val = int(dt, base=2)
-        elif radix == 'o':
-            val = int(dt, base=8)
-        elif radix == 'x':
-            val = int(dt, base=16)
-        else:
-            print('Error. Unknown numeric representation.')
-    else:
-        val = int(dt)
-    return val
-    
 def readSource(filename):
     '''
         readSource - generator that reads a file
@@ -80,21 +63,53 @@ def readSource(filename):
             finp.close()
             return
         else:
-            m = re.split('\s*;[\s\w]*', ln)
-            srcText = m[0].rstrip()
+#            m = re.split('\s*;[\s\w]*', ln)
+#            srcText = m[0].rstrip()
+            srcText = ln.rstrip()
             if srcText == '' or srcText == '\n':
                 pass
             else:
                 curSrc = [inpLine, srcText]
-                if '"' in curSrc[1]:
-                    ln   = curSrc[1].split('"')
-                    flds = re.split('\s', ln[0])[:2]
-                    flds.append(ln[1])
+                ln = curSrc[1]
+                lnLen = len(ln)
+                i = 0; flds = list(); fld = str()
+                while i < lnLen:
+                    if ln[i] == ';':
+                        if fld != '':
+                            flds.append(fld)
+                        elif len(flds) == 1 and flds[0] == '':
+                            flds = list()
+#                        print('-'*7+'>', curSrc, i, ln[i], flds)
+                        break
+                    elif ln[i] in [' ', '\t']:
+                        while ln[i] in [' ', '\t'] and i < lnLen:
+                            i += 1
+                        flds.append(fld)
+                        fld = str()
+                    elif ln[i] == '"':
+                        flds.append(fld)
+                        fld = ln[i]
+                        i += 1
+                        while i < lnLen:
+                            ch = ln[i]
+                            fld += ch
+                            i += 1
+                            if ch == '"': break
+                        flds.append(fld)
+                        fld = str()
+                    else:
+                        ch = ln[i]
+                        if ch in [' ', '\t']:
+                            flds.append(fld)
+                            fld = str()
+                            continue
+                        else:
+                            fld += ch
+                        i += 1
                 else:
-                    flds = re.split('[ \t][\s]*', curSrc[1])
-                    if len(flds) < 2:
-                        flds.append(str())
-                yield [curSrc, flds]
+                    flds.append(fld)            
+                if flds != []:
+                    yield [curSrc, flds]
             inpLine += 1
 
 def pho_ldaImmPha_to_pshImm(source):
@@ -106,7 +121,7 @@ def pho_ldaImmPha_to_pshImm(source):
         newLine = source[i]
         inpLine, *_ = newLine[0]
         try:
-            lbl, op, dt = newLine[1]
+            lbl, op, dt, *_ = newLine[1]
         except:
             try:
                 lbl, op = newLine[1]
@@ -128,207 +143,106 @@ def pho_ldaImmPha_to_pshImm(source):
         i += 1
     return newSrc
 
-def asmPass1(code, data, lbl, op, dt, srcLine,
-             opcodes, directives, defines, relative):
-    if lbl == '':
-        if op in directives:
-            if op == directives['.stack'] or op == directives['.stk']:
-                stkSize = numVal(dt)            # .stack    size
-            elif op == directives['.code'] or op == directives['.cod']:
-                if dt != '':
-                    code = numVal(dt)           # .code     [address]
-            elif op == directives['.data'] or op == directives['.dat']:
-                if dt != '':
-                    data = numVal(dt)           # .data     [address]
-            elif op == directives['.proc'] \
-                 or op == directives['.sub'] \
-                 or op == directives['.fnc']:   # .proc
-                pass
-            elif op == directives['.endp']:     # .endp
-                pass
-            elif op == directives['.end']:      # .end
-                pass
-            else:
-                print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
+def numVal(dt):
+    if len(dt) == 1:
+        val = int(dt)
+    elif dt[0] == '0':
+        radix = dt[1]
+        if radix == 'b':
+            val = int(dt, base=2)
+        elif radix == 'o':
+            val = int(dt, base=8)
+        elif radix == 'x':
+            val = int(dt, base=16)
         else:
-            if re.match('^\.\w$', op):
-                print('Error. Unexpected opcode: %s. Line #%d.' % (op, srcLine))
-            else:
-                if dt == '':
-                    addrsMode = 'imp'
-                    operand = ''
-                elif re.match('^[aAxXyY]$', dt):
-                    addrsMode = dt.lower()
-                    operand = dt.lower()
-                elif re.match('^#', dt):
-                    addrsMode = 'imm'
-                    operand = dt[1:]
-                elif re.match('^\w*$', dt):
-                    if op in relative:
-                        addrsMode = 'rel'
-                    else:
-                        addrsMode = 'abs'
-                    operand = dt
-                    if re.match('^_\w*$', dt):
-                        if dt not in library:
-                            library.append(dt)
-                elif re.match('^.*,[xX]$', dt):
-                    addrsMode = 'zpX'
-                    operand = dt.split(',')[0]
-                elif re.match('^\(.*,[xX]\)$', dt):
-                    addrsMode = 'zpXI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^.*,[sS]$', dt):
-                    addrsMode = 'zpS'
-                    operand = dt.split(',')[0]
-                elif re.match('^\(.*,[sS]\)$', dt):
-                    addrsMode = 'zpSI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^\(.*,[sS]\),[yY]$', dt):
-                    addrsMode = 'zpSIY'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^.*,[iI][+]{2}$', dt):
-                    addrsMode = 'ipp'
-                    operand = dt.split(',')[0]
-                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
-                    addrsMode = 'ippI'
-                    operand = dt.split(',')[0][1:]
-                else:
-                    addrsMode = '???'
-                    print('Error. Unknown addressing mode: %s. Line #%d.' \
-                          % (dt, srcLine))
-
-                opcode = op + '_' + addrsMode
-                if opcode in opcodes:
-                    opLen = opcodes[opcode][0]
-                    dtLen = opcodes[opcode][1]
-                    opDat = opcodes[opcode][2]
-                    asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
-                    bufLen = 15 - len(asmText)
-
-                    entry = [code, op, addrsMode, operand, \
-                              opLen, dtLen, opDat, ' '*bufLen+' ; '+srcText]
-                    code += opLen + dtLen
-                    return (True, entry)
-                else:
-                    print('Error. Unknown opcode: %s. Line #%d.' \
-                          % (opcode, srcLine))
+            print('Error. Unknown numeric representation.')
     else:
-        if lbl in labels or lbl in constants or lbl in variables:
-            print('Error: Redefinition of %s in %d' % (lbl, srcLine))
-        elif op in directives:
-            labels[lbl] = code
-            if op == directives['.stack'] or op == directives['.stk']:
-                stkSize = numVal(dt)            # .stack    size
-            elif op == directives['.code'] or op == directives['.cod']:
-                if dt != '':
-                    code = numVal(dt)           # .code     [address]
-            elif op == directives['.data'] or op == directives['.dat']:
-                if dt != '':
-                    data = numVal(dt)           # .data     [address]
-            elif op == directives['.proc'] \
-                 or op == directives['.sub'] \
-                 or op == directives['.fnc']:   # .proc
-                pass
-            elif op == directives['.endp']:     # .endp
-                pass
-            elif op == directives['.end']:      # .end
-                pass
-            else:
-                print('Error. Unknown directive: %s. Line #%d.' % (op, srcLine))
+        val = int(dt)
+    return val
+    
+def evalByt(dt, vlc):
+    inpList = list(); strStrt = False; strVal = str()
+    for i in range(len(dt)):
+        if dt[i] == '"':
+            if strStrt:
+                strStrt = False
+            else: strStrt = True
+        elif dt[i] == ',' and not strStrt:
+            inpList.append(strVal)
+            strVal = ''
+            continue
+        strVal += dt[i]
+    else:
+        inpList.append(strVal)
+
+    if '";"' in dt:
+        print('==>>'*8, dt, inpList)
+        
+    siz = 0; outStr = str()
+    for i in range(len(inpList)):
+        if inpList[i][0] == '"':
+            strDat = inpList[i][1:-1]
+            for ch in strDat:
+                outStr += "%02X" % ord(ch)
+                siz += 1
         else:
-            if op == '':
-                labels[lbl] = code
-            elif op in defines:
-                if op == '.eq' or op == '.equ':
-                    constants[lbl] = numVal(dt)
-                elif op == '.db' or op == '.byt':
-                    siz = int(dt)
-                    val = '00'*siz
-                    variables[lbl] = (data, siz, val)
-
-                    asmText = '%04X %s' % (data, val[:8])
-                    bufLen = 15 - len(asmText)
-                    dat.append([data, lbl, 'db', dt, siz, 0, val, \
-                                ' '*bufLen+' ; '+srcText])
-                    data += siz
-                elif op == '.ds' or op == '.str':
-                    siz = len(dt)
-                    variables[lbl] = (data, siz, dt)
-                    strVal = []
-
-                    for ch in dt:
-                        strVal.append('%02X' % (ord(ch)))
-                    strVal = ''.join(strVal)
-
-                    asmText = '%04X %s' % (data, strVal[:8])
-                    bufLen = 15 - len(asmText)
-                    dat.append([data, lbl, 'ds', dt, siz, 0, strVal, \
-                                ' '*bufLen+' ; '+srcText])
-                    data += siz
-                else:
-                    print('Error. Unknown define: %s.' % (op))
-                    pass
+            if ']' in inpList[i]:
+                flds = str(inpList[i]).split('[')
+                dat  = flds[0]
+                if '' == dat:
+                    dat = '0'
+                cnt  = flds[1][:-1]
             else:
-                if dt == '':
-                    addrsMode = 'imp'
-                    operand = ''
-                elif re.match('^[aAxXyY]$', dt):
-                    addrsMode = dt.lower()
-                    operand = dt.lower()
-                elif re.match('^#', dt):
-                    addrsMode = 'imm'
-                    operand = dt[1:]
-                elif re.match('^\w*$', dt):
-                    if op in relative:
-                        addrsMode = 'rel'
-                    else:
-                        addrsMode = 'abs'
-                    operand = dt
-                    if re.match('^_\w*$', dt):
-                        if dt not in library:
-                            library.append(dt)
-                elif re.match('^.*,[xX]$', dt):
-                    addrsMode = 'zpX'
-                    operand = dt.split(',')[0]
-                elif re.match('^\(.*,[xX]\)$', dt):
-                    addrsMode = 'zpXI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^.*,[sS]$', dt):
-                    addrsMode = 'zpS'
-                    operand = dt.split(',')[0]
-                elif re.match('^\(.*,[sS]\)$', dt):
-                    addrsMode = 'zpSI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^\(.*,[sS]\),[yY]$', dt):
-                    addrsMode = 'zpSIY'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^.*,[iI][+]{2}$', dt):
-                    addrsMode = 'ipp'
-                    operand = dt.split(',')[0]
-                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
-                    addrsMode = 'ippI'
-                    operand = dt.split(',')[0][1:]
-                else:
-                    addrsMode = '???'
-                    print('Error. Unknown addressing mode: %s. Line #%d.' \
-                          % (dt, srcLine))
+                dat = inpList[i]
+                cnt = 1
 
-                opcode = op + '_' + addrsMode
+            try:
+                val = eval(str(dat), vlc)
+            except:
+#                print('\tError: eval(%s) failed' % dat)
+                val = -1
 
-                if opcode in opcodes:
-                    opLen = opcodes[opcode][0]
-                    dtLen = opcodes[opcode][1]
-                    asmText = '%04X %s%s' % (code, opDat, '00'*dtLen)
-                    bufLen = 15 - len(asmText)
+            try:
+                rep = eval(str(cnt), vlc)
+            except:
+#                print('\tError: eval(%s) failed' % cnt)
+                rep = 1
 
-                    entry  = [code, op, addrsMode, operand, \
-                              opLen, dtLen, opDat, ' '*bufLen+' ; '+srcText]
-                    code += opLen + dtLen
-                    return (True, entry)
-                else:
-                    print('Error. Unknown opcode: %s. Line #%d.' \
-                          % (opcode, srcLine))
-    return (None, None)
+            val &= 0xFF
+                
+            for i in range(rep):
+                outStr += "%02X" % val
+                siz += 1
+    return (siz, outStr)
 
+def evalWrd(dt, vlc):
+    inpList = dt.split(',')
+    siz = 2*len(inpList)
+    outStr = str()
+    for i in range(len(inpList)):
+        inpStr = inpList[i]
+        if inpStr[0] == '$':
+            inpStr = '_loc_' + inpStr[1:]
+        try:
+            val = eval(str(inpStr), vlc)
+        except:
+#            print('\tError: eval(%s) failed' % inpList[i])
+            val = -1
+        wrd = "%04X" % val
+        outStr += wrd[2:] + wrd[:2]
 
+    return (siz, outStr)
+
+def evalLng(dt, vlc):
+    inpList = dt.split(',')
+    siz = 4*len(inpList)
+    outStr = str()
+    for i in range(len(inpList)):
+        try:
+            val = eval(str(inpList[i]), vlc)
+        except:
+#            print('\tError: eval(%s) failed' % inpList[i])
+            val = -1
+        lng = "%04X" % val
+        outStr += lng[6:] + lng[4:6] + lng[2:4] + lng[:2]
+    return (siz, outStr)

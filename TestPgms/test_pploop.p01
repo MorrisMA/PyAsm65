@@ -1,0 +1,31 @@
+   4         .cod    512
+   6 PPLOOP  .proc
+   8         pla.w
+   9         tay.w
+  11         clc
+  12         adc.w   1,X
+  13         sta.w   1,X
+  15         tya.w
+  16         bpl     PL1
+  18         clc
+  19         lda.w   1,X
+  20         sbc.w   3,X
+  21         bra     PL2
+  23 PL1
+  24         clc
+  25         lda.w   3,X
+  26         sbc.w   1,X
+  28 PL2
+  29         bpl     BRANCH
+  30         adj.s   #4
+  32         ini
+  33         ini
+  35         brk
+  37 BRANCH
+  38         tia
+  40         clc
+  41         adc.w   0,I++
+  43         tai
+  45         brk
+  47         .endp
+  48         .end

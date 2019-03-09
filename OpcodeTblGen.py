@@ -81,7 +81,6 @@ indMap = {'txs_impI'      : ('txu_imp',     2, 0, '9B9A'), \
           'ini_impI'      : ('inw_imp',     2, 0, '9B5B'), \
           'pli_impI'      : ('plw_imp',     2, 0, '9B6B'), \
           'ent_impI'      : ('ient_imp',    2, 0, '9B7B') }
-          
 
 accMap = {'asl_acc'       : ('asl_a',       1, 0, '0A'), \
           'asl.w_acc'     : ('asl.w_a',     2, 0, 'AB0A'), \
@@ -184,15 +183,7 @@ osxMap = {'jsr_absS'      : ('jsr.s_abs',   2, 2, '8B20'), \
           'inx.s_imp'     : ('ins_imp',     2, 0, '8BE8'), \
           'inx.sw_imp'    : ('ins.w_imp',   2, 0, 'CBE8'), \
           'dex.s_imp'     : ('des_imp',     2, 0, '8BCA'), \
-          'dex.sw_imp'    : ('des.w_imp',   2, 0, 'CBCA'), \
-          'txa.s_imp'     : ('tsa_imp',     2, 0, '8B8A'), \
-          'txa.sw_imp'    : ('tsa.w_imp',   2, 0, 'CB8A'), \
-          'tax.s_imp'     : ('tas_imp',     2, 0, '8BAA'), \
-          'tax.sw_imp'    : ('tas.w_imp',   2, 0, 'CBAA'), \
-          'txa.s_impI'    : ('tua_imp',     3, 0, '8B9B8A'), \
-          'txa.sw_impI'   : ('tua.w_imp',   2, 0, 'DB8A'), \
-          'tax.s_impI'    : ('tau_imp',     3, 0, '8B9BAA'), \
-          'tax.sw_impI'   : ('tau.w_imp',   2, 0, 'DBAA') }
+          'dex.sw_imp'    : ('des.w_imp',   2, 0, 'CBCA'), }
 
 accTuple = ('ora', 'and', 'eor', \
             'adc', 'sbc', \
@@ -208,6 +199,7 @@ indexedByX = {'zpX'    : 'zpA',   \
               'absX'   : 'absA',  \
               'absXI'  : 'absAI', \
               'absXII' : 'absAII' }
+
 indexedByY = {'zpY'    : 'zpA',    \
               'zpIY'   : 'zpIA',   \
               'zpIIY'  : 'zpIIA',  \
@@ -216,6 +208,7 @@ indexedByY = {'zpY'    : 'zpA',    \
               'zpSIY'  : 'zpSIA',  \
               'zpSIIY' : 'zpSIIA', \
               'absSIY' : 'absSIA', }
+
 indexedByS = ('zpS', 'zpSI', 'zpSII',    \
               'zpSIY', 'zpSIIY',         \
               'absS', 'absSI', 'absSII', \
@@ -806,7 +799,7 @@ for fld in flds:
         swapping the A with either the X or the Y registers. If the X or Y
         registers are being used as index registers for the memory operand,
         the A register assumes their role, i.e. is used as the index register.
-
+        
         The OAX prefix instructions is mutually exclusive with the OSX and OAY
         prefix instructions. The OAY prefix instruction can be paired with
         either OSX or OAX. However, pairing OAY indiscriminately with OSX can
@@ -846,6 +839,7 @@ for opcode in opcodes:
     else:
         instrByNameTbl[base] = [(base, options, addrMd, \
                                  opLen, dtLen, flds[3])]
+
 '''
     Add instructions using OAX prefix instruction.
 
@@ -961,6 +955,7 @@ for base in instrByNameTbl.keys():
             opcodeDict[opcode] = [instr, opLen, dtLen, code]
             print(instr, opLen, dtLen, code)
             print(instr, opLen, dtLen, code, file=fout)
+
 '''
     Add instructions using OAY prefix instruction.
 
@@ -1053,10 +1048,18 @@ for base in instrByNameTbl.keys():
     Add register-register instructions using OAX/OAY prefix instruction.
 '''
 
-xfrMap = {'txy'   : ('txy_imp', 2, 0, 'FB8A'), \
+xfrMap = {'txy'   : ('txy_imp',   2, 0, 'FB8A'), \
           'txy.w' : ('txy.w_imp', 3, 0, 'FBAB8A'), \
-          'tyx'   : ('tyx_imp', 2, 0, 'EB98'), \
-          'tyx.w' : ('tyx.w_imp', 3, 0, 'EBAB98') }
+          'tyx'   : ('tyx_imp',   2, 0, 'EB98'), \
+          'tyx.w' : ('tyx.w_imp', 3, 0, 'EBAB98'), \
+          'tsa'   : ('tsa_imp',   2, 0, 'EBBA'), \
+          'tsa.w' : ('tsa.w_imp', 3, 0, 'EBABBA'), \
+          'tas'   : ('tas_imp',   2, 0, 'EB9A'), \
+          'tas.w' : ('tas.w_imp', 3, 0, 'EBAB9A'), \
+          'tua'   : ('tua_imp',   3, 0, 'EB9BBA'), \
+          'tua.w' : ('tua.w_imp', 3, 0, 'EBBBBA'), \
+          'tau'   : ('tau_imp',   3, 0, 'EB9B9A'), \
+          'tau.w' : ('tau.w_imp', 3, 0, 'EBBB9A'), }
 
 for i in xfrMap.keys():
     instr, opLen, dtLen, code = xfrMap[i]

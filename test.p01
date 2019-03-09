@@ -1,0 +1,37 @@
+   4         .cod    512
+   6 PPLOOP  .proc
+   8         pla.w
+  10         clc
+  11         bpl     PL1
+  13         adc.w   1,X
+  14         sta.w   1,X
+  16         clc
+  17         lda.w   1,X
+  18         sbc.w   3,X
+  19         bra     PL2
+  21 PL1     adc.w   1,X
+  22         sta.w   1,X
+  24         clc
+  25         lda.w   3,X
+  26         sbc.w   1,X
+  28 PL2     bpl     BRANCH
+  29         adj.s   #4
+  31         ini
+  32         ini
+  34         brk
+  36 BRANCH  tia
+  38         clc
+  39         adc.w   0,I++
+  41         tai
+  43         brk
+  45 Stack   .equ    36
+  46 NewLine .equ    10
+  48 Byte    .byt    1 | 0x80 [8]
+  49         .byt    [Stack]
+  50         .byt    -1 [8]
+  51         .byt    7, 6, 5, 4, 3, 2, 1, 0 | 0x80
+  52 Word    .wrd    PPLOOP, PL1, PL2, BRANCH
+  53 Long    .lng    0x78563412
+  54         .byt    10, "ABT, Inc.", NewLine, -1
+  55         .endp
+  56         .end
