@@ -223,6 +223,35 @@ def parseWrd(dt, vlc):
 
     return (2 * siz, inpList)
 
+def parseLng(dt, vlc):
+    inpList = list()
+    strVal = str()
+    dtLen = len(dt)
+    i = 0
+    while i < dtLen:
+        ch = dt[i]; i += 1
+        if ch == ',':
+            inpList.append(strVal)
+            strVal = ''
+            continue
+        else: strVal += ch
+    else:
+        inpList.append(strVal)
+        
+    siz = 0
+    for i in range(len(inpList)):
+        if ']' in inpList[i]:
+            flds = str(inpList[i]).split('[')
+            try:
+                siz += eval(str(flds[1][:-1]), vlc)
+            except:
+                print('\tError(parseLng): eval([%s]) failed' % flds[1][:-1])
+                siz = -1
+                break
+        else: siz += 1
+
+    return (4 * siz, inpList)
+
 def evalByt(inpList, vlc):        
     siz = 0; outStr = str(); lenList = len(inpList)
     for i in range(lenList):
@@ -259,24 +288,6 @@ def evalByt(inpList, vlc):
                 siz += 1
     return (siz, outStr)
 
-#def evalWrd(dt, vlc):
-    #inpList = dt.split(',')
-    #siz = 2*len(inpList)
-    #outStr = str()
-    #for i in range(len(inpList)):
-        #inpStr = inpList[i]
-        #if inpStr[0] == '$':
-            #inpStr = '_loc_' + inpStr[1:]
-        #try:
-            #val = eval(str(inpStr), vlc)
-        #except:
-##            print('\tError: eval(%s) failed' % inpList[i])
-            #val = -1
-        #wrd = "%04X" % val
-        #outStr += wrd[2:] + wrd[:2]
-
-    #return (siz, outStr)
-
 def evalWrd(inpList, vlc):
     siz = 0; outStr = str(); lenList = len(inpList)
     for i in range(lenList):
@@ -311,16 +322,36 @@ def evalWrd(inpList, vlc):
             siz += 1
     return (2*siz, outStr)
 
-def evalLng(dt, vlc):
-    inpList = dt.split(',')
-    siz = 4*len(inpList)
-    outStr = str()
-    for i in range(len(inpList)):
+def evalLng(inpList, vlc):
+    siz = 0; outStr = str(); lenList = len(inpList)
+    for i in range(lenList):
+        if ']' in inpList[i]:
+            flds = str(inpList[i]).split('[')
+            dat  = flds[0]
+            if '' == dat:
+                dat = '0'
+            cnt  = flds[1][:-1]
+        else:
+            dat = inpList[i]
+            cnt = 1
+
         try:
-            val = eval(str(inpList[i]), vlc)
+            if '$' in dat:
+                flds = dat.split('$')
+                dat = '_loc_'.join(flds)
+            val = eval(str(dat), vlc)
         except:
-#            print('\tError: eval(%s) failed' % inpList[i])
             val = -1
-        lng = "%08X" % val
-        outStr += lng[6:] + lng[4:6] + lng[2:4] + lng[:2]
-    return (siz, outStr)
+
+        try:
+            rep = eval(str(cnt), vlc)
+        except:
+            rep = 1
+
+        val &= 0xFFFFFFFF
+            
+        for i in range(rep):
+            wrdStr = "%08X" % val
+            outStr += wrdStr[6:] + wrdStr[4:6] + wrdStr[2:4] + wrdStr[:2]
+            siz += 1
+    return (4*siz, outStr)

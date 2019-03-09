@@ -3153,19 +3153,19 @@ FORG            .wrd  DOCOL
                 .byt  0x15
                 .wrd  QERR,TOR,VOCL,AT
 L3220           .wrd  R,OVER,ULESS
-                .wrd  ZBRAN,L3225-*
+                .wrd  ZBRAN,L3225-$
                 .wrd  FORTH,DEFIN,AT,DUP
                 .wrd  VOCL,STORE
-                .wrd  BRAN,0xFFFF-24+1   ;L3220-*
+                .wrd  BRAN,0xFFFF-24+1   ;L3220-$
 L3225           .wrd  DUP,CLIT
                 .byt  4
                 .wrd  SUB
 L3228           .wrd  PFA,LFA,AT
                 .wrd  DUP,R,ULESS
-                .wrd  ZBRAN,0xFFFF-14+1  ;L3228-*
+                .wrd  ZBRAN,0xFFFF-14+1  ;L3228-$
                 .wrd  OVER,TWO,SUB,STORE
                 .wrd  AT,DDUP,ZEQU
-                .wrd  ZBRAN,0xFFFF-39+1  ;L3225-*
+                .wrd  ZBRAN,0xFFFF-39+1  ;L3225-$
                 .wrd  RFROM,DP,STORE
                 .wrd  SEMIS
 ;

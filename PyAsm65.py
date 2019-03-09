@@ -672,7 +672,7 @@ for ln in cod:
             out[addrs] = [opLen + dtLen, \
                           ''.join([opStr, loStr, hiStr]), \
                           srcTxt, srcLine]
-    elif md in ('db', 'dw', 'dl', 'ds', 'str'):
+    elif md in ('db', 'dw', 'dl', 'df', 'dd', 'ds', ):
 #        val, siz, strVal = variables[op]
 #        out[addrs] = [siz, opStr, srcTxt, srcLine]
 #        print('-'*8, 'Pass 2:', hex(addrs), "'"+op+"'", "'"+md+"'", dt,
@@ -682,13 +682,11 @@ for ln in cod:
             siz, outStr = evalByt(dt, vlc)
             if siz == dtLen:
                 out[addrs] = [siz, outStr, srcTxt, srcLine]
-#                print('='*13, hex(addrs), siz, outStr, "'"+srcTxt+"'", srcLine)
             else: print('=== Error(evalByt) ==>', 'returned siz does not match dtLen')
         elif md == 'dw':
             siz, outStr = evalWrd(dt, vlc)
             if siz == dtLen:
                 out[addrs] = [siz, outStr, srcTxt, srcLine]
-#                print('='*13, hex(addrs), siz, outStr, "'"+srcTxt+"'", srcLine)
             else: print('=== Error(evalWrd) ==>', 'returned siz does not match dtLen')
 
 
