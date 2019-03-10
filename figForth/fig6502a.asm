@@ -826,10 +826,12 @@ STORE           .wrd  $+2
 L813            .byt  0x82,"C",0xA1
                 .wrd  L798              ;link to !
 CSTOR           .wrd  $+2
+;
                 lda     3,S
                 sta     (1,S)
                 adj     #4
                 inxt
+;
 ;===============================================================================
 ;
 ;   End of primitives
@@ -1054,7 +1056,8 @@ BSCR            .wrd  DOCON
 L1000           .byt  0x87,"+ORIGI",0xCE
                 .wrd  L992              ;link to B/SCR
 PORIG           .wrd  DOCOL
-                .wrd  LIT,ORIG
+                .wrd  LIT
+                .wrd  ORIG
                 .wrd  PLUS
                 .wrd  SEMIS
 ;
@@ -1372,7 +1375,7 @@ L1296           .byt  0x84,"-DU",0xD0
 DDUP            .wrd  DOCOL
                 .wrd  DUP
                 .wrd  ZBRAN
-L1301           .wrd  0x4                ;L1303-L1301
+L1301           .wrd  L1303-L1301       ;0x4
                 .wrd  DUP
 L1303           .wrd  SEMIS
 ;
@@ -1391,7 +1394,7 @@ L1312           .wrd  OVER
                 .wrd  CAT
                 .wrd  LESS
                 .wrd  ZBRAN
-L1320           .wrd  0xFFF1             ;L1312-L1320
+L1320           .wrd  L1312-L1320       ;0xFFF1
                 .wrd  SWAP
                 .wrd  DROP
                 .wrd  SEMIS
@@ -1438,7 +1441,8 @@ NFA             .wrd  DOCOL
                 .wrd  CLIT
                 .byt  0x5
                 .wrd  SUB
-                .wrd  LIT,0xFFFF
+                .wrd  LIT
+                .wrd  0xFFFF
                 .wrd  TRAV
                 .wrd  SEMIS
 ;
@@ -1474,10 +1478,10 @@ L1397           .byt  0x86,"?ERRO",0xD2
 QERR            .wrd  DOCOL
                 .wrd  SWAP
                 .wrd  ZBRAN
-L1402           .wrd  8                 ;L1406-L1402
+L1402           .wrd  L1406-L1402       ;0x8
                 .wrd  ERROR
                 .wrd  BRAN
-L1405           .wrd  4                 ;L1407-L1405
+L1405           .wrd  L1407-L1405       ;0x4
 L1406           .wrd  DROP
 L1407           .wrd  SEMIS
 ;
@@ -1691,7 +1695,7 @@ L1634           .byt  0x84,"TYP",0xC5
 TYPE            .wrd  DOCOL
                 .wrd  DDUP
                 .wrd  ZBRAN
-L1639           .wrd  0x18               ;L1651-L1639
+L1639           .wrd  L1651-L1639       ;0x18
                 .wrd  OVER
                 .wrd  PLUS
                 .wrd  SWAP
@@ -1700,9 +1704,9 @@ L1644           .wrd  I
                 .wrd  CAT
                 .wrd  EMIT
                 .wrd  PLOOP
-L1648           .wrd  0xFFF8             ;L1644-L1648
+L1648           .wrd  L1644-L1648       ;0xFFF8
                 .wrd  BRAN
-L1650           .wrd  0x4                ;L1652-L1650
+L1650           .wrd  L1652-L1650       ;0x4
 L1651           .wrd  DROP
 L1652           .wrd  SEMIS
 ;
@@ -1724,14 +1728,14 @@ L1663           .wrd  OVER
                 .wrd  BL
                 .wrd  SUB
                 .wrd  ZBRAN
-L1672           .wrd  8                 ;L1676-L1672
+L1672           .wrd  L1676-L1672       ;0x8
                 .wrd  LEAVE
                 .wrd  BRAN
-L1675           .wrd  6                 ;L1678-L1675
+L1675           .wrd  L1678-L1675       ;0x6
 L1676           .wrd  ONE
                 .wrd  SUB
 L1678           .wrd  PLOOP
-L1679           .wrd  0xFFE0             ;L1663-L1679
+L1679           .wrd  L1663-L1679       ;0xFFE0
                 .wrd  SEMIS
 ;
 ;                                       (.")
@@ -1760,7 +1764,7 @@ L1701           .byt  0xC2,".",0xA2
                 .wrd  STATE
                 .wrd  AT
                 .wrd  ZBRAN
-L1709           .wrd  0x14               ;L1719-L1709
+L1709           .wrd  L1719-L1709       ;0x14
                 .wrd  COMP
                 .wrd  PDOTQ
                 .wrd  WORD
@@ -1769,7 +1773,7 @@ L1709           .wrd  0x14               ;L1719-L1709
                 .wrd  ONEP
                 .wrd  ALLOT
                 .wrd  BRAN
-L1718           .wrd  0xA                ;L1723-L1718
+L1718           .wrd  L1723-L1718       ;0xA
 L1719           .wrd  WORD
                 .wrd  HERE
                 .wrd  COUNT
@@ -1794,7 +1798,7 @@ L1736           .wrd  KEY
                 .wrd  AT
                 .wrd  EQUAL
                 .wrd  ZBRAN
-L1744           .wrd  0x1F               ;L1760-L1744
+L1744           .wrd  L1760-L1744       ;0x1F
                 .wrd  DROP
                 .wrd  CLIT
                 .byt  08                ;Backspace!
@@ -1809,19 +1813,19 @@ L1744           .wrd  0x1F               ;L1760-L1744
                 .wrd  TOR
                 .wrd  SUB
                 .wrd  BRAN
-L1759           .wrd  0x27               ;L1779-L1759
+L1759           .wrd  L1779-L1759       ;0x27
 L1760           .wrd  DUP
                 .wrd  CLIT
                 .byt  0x0D
                 .wrd  EQUAL
                 .wrd  ZBRAN
-L1765           .wrd  0x0E               ;L1772-L1765
+L1765           .wrd  L1772-L1765       ;0x0E
                 .wrd  LEAVE
                 .wrd  DROP
                 .wrd  BL
                 .wrd  ZERO
                 .wrd  BRAN
-L1771           .wrd  04                ;L1773-L1771
+L1771           .wrd  L1773-L1771       ;0x4
 L1772           .wrd  DUP
 L1773           .wrd  I
                 .wrd  CSTOR
@@ -1831,8 +1835,8 @@ L1773           .wrd  I
                 .wrd  STORE
 L1779           .wrd  EMIT
                 .wrd  PLOOP
-L1781           .wrd  0xFFA9
-                .wrd  DROP              ;L1736-L1781
+L1781           .wrd  L1736-L1781       ;0xFFA9
+                .wrd  DROP          
                 .wrd  SEMIS
 ;
 ;                                       QUERY
@@ -1861,7 +1865,7 @@ L1804           .byt  0xC1,0x80
                 .wrd  BLK
                 .wrd  AT
                 .wrd  ZBRAN
-L1810           .wrd  0x2A               ;L1830-l1810
+L1810           .wrd  L1830-L1810       ;0x2A
                 .wrd  ONE
                 .wrd  BLK
                 .wrd  PSTOR
@@ -1870,17 +1874,18 @@ L1810           .wrd  0x2A               ;L1830-l1810
                 .wrd  STORE
                 .wrd  BLK
                 .wrd  AT
-                .wrd  ZERO,BSCR
+                .wrd  ZERO
+                .wrd  BSCR
                 .wrd  USLAS
                 .wrd  DROP              ;fixed from model
                 .wrd  ZEQU
                 .wrd  ZBRAN
-L1824           .wrd  8                 ;L1828-L1824
+L1824           .wrd  L1828-L1824       ;0x8
                 .wrd  QEXEC
                 .wrd  RFROM
                 .wrd  DROP
 L1828           .wrd  BRAN
-L1829           .wrd  6                 ;L1832-L1829
+L1829           .wrd  L1832-L1829       ;0x6
 L1830           .wrd  RFROM
                 .wrd  DROP
 L1832           .wrd  SEMIS
@@ -1959,12 +1964,12 @@ WORD            .wrd  DOCOL
                 .wrd  BLK
                 .wrd  AT
                 .wrd  ZBRAN
-L1908           .wrd  0xC                ;L1914-L1908
+L1908           .wrd  L1914-L1908       ;0xC
                 .wrd  BLK
                 .wrd  AT
                 .wrd  BLOCK
                 .wrd  BRAN
-L1913           .wrd  0x6                ;L1916-L1913
+L1913           .wrd  L1916-L1913       ;0x6
 L1914           .wrd  TIB
                 .wrd  AT
 L1916           .wrd  IN
@@ -2007,13 +2012,13 @@ L1950           .wrd  I
                 .byt  0x5F
                 .wrd  GREAT
                 .wrd  ZBRAN
-L1956           .wrd  09                ;L1961-L1956
+L1956           .wrd  L1961-L1956       ;0x9
                 .wrd  I
                 .wrd  CLIT
                 .byt  0x20
                 .wrd  TOGGL
 L1961           .wrd  PLOOP
-L1962           .wrd  0xFFEA             ;L1950-L1962
+L1962           .wrd  L1950-L1962       ;0xFFEA
                 .wrd  SEMIS
 ;
 ;                                       (NUMBER)
@@ -2030,7 +2035,7 @@ L1971           .wrd  ONEP
                 .wrd  AT
                 .wrd  DIGIT
                 .wrd  ZBRAN
-L1979           .wrd  0x2C               ;L2001-L1979
+L1979           .wrd  L2001-L1979       ;0x2C
                 .wrd  SWAP
                 .wrd  BASE
                 .wrd  AT
@@ -2045,13 +2050,13 @@ L1979           .wrd  0x2C               ;L2001-L1979
                 .wrd  AT
                 .wrd  ONEP
                 .wrd  ZBRAN
-L1994           .wrd  8                 ;L1998-L1994
+L1994           .wrd  L1998-L1994       ;0x8
                 .wrd  ONE
                 .wrd  DPL
                 .wrd  PSTOR
 L1998           .wrd  RFROM
                 .wrd  BRAN
-L2000           .wrd  0xFFC6             ;L1971-L2000
+L2000           .wrd  L1971-L2000       ;0xFFC6
 L2001           .wrd  RFROM
                 .wrd  SEMIS
 ;
@@ -2082,7 +2087,7 @@ L2023           .wrd  DPL
                 .wrd  BL
                 .wrd  SUB
                 .wrd  ZBRAN
-L2031           .wrd  0x15               ;L2042-L2031
+L2031           .wrd  L2042-L2031       ;0x15
                 .wrd  DUP
                 .wrd  CAT
                 .wrd  CLIT
@@ -2092,11 +2097,11 @@ L2031           .wrd  0x15               ;L2042-L2031
                 .wrd  QERR
                 .wrd  ZERO
                 .wrd  BRAN
-L2041           .wrd  0xFFDD             ;L2023-L2041
+L2041           .wrd  L2023-L2041       ;0xFFDD
 L2042           .wrd  DROP
                 .wrd  RFROM
                 .wrd  ZBRAN
-L2045           .wrd  4                 ;L2047-L2045
+L2045           .wrd  L2047-L2045       ;0x4
                 .wrd  DMINU
 L2047           .wrd  SEMIS
 ;
@@ -2119,7 +2124,7 @@ DFIND           .wrd  DOCOL
                 .wrd  DUP
                 .wrd  ZEQU
                 .wrd  ZBRAN
-L2068           .wrd  0xA                ;L2073-L2068
+L2068           .wrd  L2073-L2068       ;0xA
                 .wrd  DROP
                 .wrd  HERE
                 .wrd  LATES
@@ -2145,7 +2150,7 @@ ERROR           .wrd  DOCOL
                 .wrd  AT
                 .wrd  ZLESS
                 .wrd  ZBRAN
-L2094           .wrd  0x4                ;L2096-L2094
+L2094           .wrd  L2096-L2094       ;0x4
                 .wrd  PABOR
 L2096           .wrd  HERE
                 .wrd  COUNT
@@ -2154,7 +2159,8 @@ L2096           .wrd  HERE
                 .byt  4,"  ? "
                 .wrd  MESS
                 .wrd  SPSTO
-                .wrd  DROP,DROP         ;make room for 2 error values
+                .wrd  DROP              ;make room for 2 error values
+                .wrd  DROP
                 .wrd  IN
                 .wrd  AT
                 .wrd  BLK
@@ -2273,7 +2279,7 @@ LITER           .wrd  DOCOL
                 .wrd  STATE
                 .wrd  AT
                 .wrd  ZBRAN
-L2222           .wrd  8                 ;L2226-L2222
+L2222           .wrd  L2226-L2222       ;0x8
                 .wrd  COMP
                 .wrd  LIT
                 .wrd  COMMA
@@ -2288,7 +2294,7 @@ DLIT            .wrd  DOCOL
                 .wrd  STATE
                 .wrd  AT
                 .wrd  ZBRAN
-L2238           .wrd  8                 ;L2242-L2238
+L2238           .wrd  L2242-L2238       ;0x8
                 .wrd  SWAP
                 .wrd  LITER
                 .wrd  LITER
@@ -2323,36 +2329,36 @@ L2269           .byt  0x89,"INTERPRE",0xD4
 INTER           .wrd  DOCOL
 L2272           .wrd  DFIND
                 .wrd  ZBRAN
-L2274           .wrd  0x1E               ;L2289-L2274
+L2274           .wrd  L2289-L2274       ;0x1E
                 .wrd  STATE
                 .wrd  AT
                 .wrd  LESS
                 .wrd  ZBRAN
-L2279           .wrd  0xA                ;L2284-L2279
+L2279           .wrd  L2284-L2279       ;0xA
                 .wrd  CFA
                 .wrd  COMMA
                 .wrd  BRAN
-L2283           .wrd  0x6                ;L2286-L2283
+L2283           .wrd  L2286-L2283       ;0x6
 L2284           .wrd  CFA
                 .wrd  EXEC
 L2286           .wrd  QSTAC
                 .wrd  BRAN
-L2288           .wrd  0x1C               ;L2302-L2288
+L2288           .wrd  L2302-L2288       ;0x1C
 L2289           .wrd  HERE
                 .wrd  NUMBER
                 .wrd  DPL
                 .wrd  AT
                 .wrd  ONEP
                 .wrd  ZBRAN
-L2295           .wrd  8                 ;L2299-L2295
+L2295           .wrd  L2299-L2295       ;0x8
                 .wrd  DLIT
                 .wrd  BRAN
-L2298           .wrd  0x6                ;L2301-L2298
+L2298           .wrd  L2301-L2298       ;0x6 
 L2299           .wrd  DROP
                 .wrd  LITER
 L2301           .wrd  QSTAC
 L2302           .wrd  BRAN
-L2303           .wrd  0xFFC2             ;L2272-L2303
+L2303           .wrd  L2272-L2303       ;0xFFC2
 ;
 ;                                       IMMEDIATE
 ;                                       SCREEN 53 LINE 1
@@ -2373,7 +2379,8 @@ L2321           .byt  0x8A,"VOCABULAR",0xD9
                 .wrd  L2309             ;link to IMMEDIATE
                 .wrd  DOCOL
                 .wrd  BUILD
-                .wrd  LIT,0xA081
+                .wrd  LIT
+                .wrd  0xA081
                 .wrd  COMMA
                 .wrd  CURR
                 .wrd  AT
@@ -2444,11 +2451,11 @@ L2388           .wrd  RPSTO
                 .wrd  AT
                 .wrd  ZEQU
                 .wrd  ZBRAN
-L2396           .wrd  7                 ;L2399-L2396
+L2396           .wrd  L2399-L2396       ;0x7
                 .wrd  PDOTQ
                 .byt  2,"OK"
 L2399           .wrd  BRAN
-L2400           .wrd  0xFFE7             ;L2388-L2400
+L2400           .wrd  L2388-L2400       ;0xFFE7
                 .wrd  SEMIS
 ;
 ;                                       ABORT
@@ -2473,7 +2480,7 @@ ABORT           .wrd  DOCOL
 L2423           .byt  0x84,"COL",0xC4
                 .wrd  L2406             ;link to ABORT
 COLD            .wrd  $+2
-                lda   ORIG+0x0C          ;from cold start area
+                lda   ORIG+0x0C         ;from cold start area
                 sta   FORTH+6
                 lda   ORIG+0x0D
                 sta   FORTH+7
@@ -2528,7 +2535,7 @@ L2476           .byt  0x83,"D+",0xAD
 DPM             .wrd  DOCOL
                 .wrd  ZLESS
                 .wrd  ZBRAN
-L2481           .wrd  4                 ;L2483-L2481
+L2481           .wrd  L2483-L2481       ;0x4
                 .wrd  DMINU
 L2483           .wrd  SEMIS
 ;
@@ -2562,7 +2569,7 @@ MIN             .wrd  DOCOL
                 .wrd  OVER
                 .wrd  GREAT
                 .wrd  ZBRAN
-L2515           .wrd  4                 ;L2517-L2515
+L2515           .wrd  L2517-L2515       ;0x4
                 .wrd  SWAP
 L2517           .wrd  DROP
                 .wrd  SEMIS
@@ -2577,7 +2584,7 @@ MAX             .wrd  DOCOL
                 .wrd  OVER
                 .wrd  LESS
                 .wrd  ZBRAN
-L2530           .wrd  4                 ;L2532-L2530
+L2530           .wrd  L2532-L2530       ;0x4
                 .wrd  SWAP
 L2532           .wrd  DROP
                 .wrd  SEMIS
@@ -2736,7 +2743,7 @@ PBUF            .wrd  DOCOL
                 .wrd  LIMIT
                 .wrd  EQUAL
                 .wrd  ZBRAN
-L2688           .wrd  6                 ;L2691-L2688
+L2688           .wrd  L2691-L2688       ;0x6
                 .wrd  DROP
                 .wrd  FIRST
 L2691           .wrd  DUP
@@ -2773,7 +2780,7 @@ L2705           .byt  0x85,"FLUS",0xC8
                 .wrd  ZERO,PDO
 L2835           .wrd  LIT,0x7FFF,BUFFR
                 .wrd  DROP,PLOOP
-L2839           .wrd  0xFFF6             ;L2835-L2839
+L2839           .wrd  L2835-L2839       ;0xFFF6           
                 .wrd  SEMIS
 ;
 ;                                       EMPTY-BUFFERS
@@ -2823,19 +2830,20 @@ BUFFR           .wrd  DOCOL
                 .wrd  TOR
 L2758           .wrd  PBUF
                 .wrd  ZBRAN
-L2760           .wrd  0xFFFC             ;L2758-L2760
+L2760           .wrd  L2758-L2760       ;0xFFFC
                 .wrd  USE
                 .wrd  STORE
                 .wrd  R
                 .wrd  AT
                 .wrd  ZLESS
                 .wrd  ZBRAN
-L2767           .wrd  0x14               ;L2776-L2767
+L2767           .wrd  L2776-L2767       ;0x14
                 .wrd  R
                 .wrd  TWOP
                 .wrd  R
                 .wrd  AT
-                .wrd  LIT,0x7FFF
+                .wrd  LIT
+                .wrd  0x7FFF
                 .wrd  ANDD
                 .wrd  ZERO
 ;          .WORD RSLW
@@ -2868,11 +2876,11 @@ BLOCK           .wrd  DOCOL
                 .wrd  DUP
                 .wrd  PLUS
                 .wrd  ZBRAN
-L2804           .wrd  0x34               ;L2830-L2804
+L2804           .wrd  L2830-L2804       ;0x34
 L2805           .wrd  PBUF
                 .wrd  ZEQU
                 .wrd  ZBRAN
-L2808           .wrd  0x14               ;L2818-L2808
+L2808           .wrd  L2818-L2808       ;0x14
                 .wrd  DROP
                 .wrd  R
                 .wrd  BUFFR
@@ -2891,7 +2899,7 @@ L2818           .wrd  DUP
                 .wrd  PLUS
                 .wrd  ZEQU
                 .wrd  ZBRAN
-L2826           .wrd  0xFFD6             ;L2805-L2826
+L2826           .wrd  L2805-L2826       ;0xFFD6
                 .wrd  DUP
                 .wrd  PREV
                 .wrd  STORE
@@ -2940,10 +2948,10 @@ MESS            .wrd  DOCOL
                 .wrd  WARN
                 .wrd  AT
                 .wrd  ZBRAN
-L2874           .wrd  0x1B               ;L2888-L2874
+L2874           .wrd  L2888-L2874       ;0x1B
                 .wrd  DDUP
                 .wrd  ZBRAN
-L2877           .wrd  0x11               ;L2886-L2877
+L2877           .wrd  L2886-L2877       ;0x11
                 .wrd  CLIT
                 .byt  4
                 .wrd  OFSET
@@ -2953,7 +2961,7 @@ L2877           .wrd  0x11               ;L2886-L2877
                 .wrd  SUB
                 .wrd  DLINE
 L2886           .wrd  BRAN
-L2887           .wrd  13                ;L2891-L2887
+L2887           .wrd  L2891-L2887           ;0xD
 L2888           .wrd  PDOTQ
                 .byt  6,"MSG # "
                 .wrd  DOT
@@ -3084,11 +3092,15 @@ XCR             jsr     crout               ;use monitor call
 L3050           .byt  0x84,"-BC",0xC4
                 .wrd  L2924             ;link to -DISC
 DBCD            .wrd  DOCOL
-                .wrd  ZERO,CLIT
+                .wrd  ZERO
+                .wrd  CLIT
                 .byt  10
-                .wrd  USLAS,CLIT
+                .wrd  USLAS
+                .wrd  CLIT
                 .byt  16
-                .wrd  STAR,OR,SEMIS
+                .wrd  STAR
+                .wrd  OR
+                .wrd  SEMIS
 
 ;
 ; ***                                       R/W
@@ -3120,10 +3132,24 @@ L3070           .byt  0x83,"RS",0xD7
                 .wrd  L3050             ;link to R/W
 RSW             .wrd  DOCOL
                 .wrd  TOR
-                .wrd  BBUF, STAR, LIT, 0x4000, PLUS, DUP
-                .wrd  LIT, 0x6800, GREAT, LIT, 0x6, QERR
-                .wrd  RFROM, ZBRAN, 0x4, SWAP
-                .wrd  BBUF, CMOVE
+                .wrd  BBUF
+                .wrd  STAR
+                .wrd  LIT
+                .wrd  0x4000
+                .wrd  PLUS
+                .wrd  DUP
+                .wrd  LIT
+                .wrd  0x6800
+                .wrd  GREAT
+                .wrd  LIT
+                .wrd  0x6
+                .wrd  QERR
+                .wrd  RFROM
+                .wrd  ZBRAN
+                .wrd  0x4
+                .wrd  SWAP
+                .wrd  BBUF
+                .wrd  CMOVE
                 .wrd  SEMIS
 ;
 ;
@@ -3148,25 +3174,55 @@ TICK            .wrd  DOCOL
 L3217           .byt  0x86,"FORGE",0xD4
                 .wrd  L3202             ;link to ' TICK
 FORG            .wrd  DOCOL
-                .wrd  TICK,NFA,DUP
-                .wrd  FENCE,AT,ULESS,CLIT
+                .wrd  TICK
+                .wrd  NFA
+                .wrd  DUP
+                .wrd  FENCE
+                .wrd  AT
+                .wrd  ULESS
+                .wrd  CLIT
                 .byt  0x15
-                .wrd  QERR,TOR,VOCL,AT
-L3220           .wrd  R,OVER,ULESS
-                .wrd  ZBRAN,L3225-$
-                .wrd  FORTH,DEFIN,AT,DUP
-                .wrd  VOCL,STORE
-                .wrd  BRAN,0xFFFF-24+1   ;L3220-$
-L3225           .wrd  DUP,CLIT
+                .wrd  QERR
+                .wrd  TOR
+                .wrd  VOCL
+                .wrd  AT
+L3220           .wrd  R
+                .wrd  OVER
+                .wrd  ULESS
+                .wrd  ZBRAN
+                .wrd  L3225-$
+                .wrd  FORTH
+                .wrd  DEFIN
+                .wrd  AT
+                .wrd  DUP
+                .wrd  VOCL
+                .wrd  STORE
+                .wrd  BRAN
+                .wrd  L3220-$           ;0xFFFF-24+1
+L3225           .wrd  DUP
+                .wrd  CLIT
                 .byt  4
                 .wrd  SUB
-L3228           .wrd  PFA,LFA,AT
-                .wrd  DUP,R,ULESS
-                .wrd  ZBRAN,0xFFFF-14+1  ;L3228-$
-                .wrd  OVER,TWO,SUB,STORE
-                .wrd  AT,DDUP,ZEQU
-                .wrd  ZBRAN,0xFFFF-39+1  ;L3225-$
-                .wrd  RFROM,DP,STORE
+L3228           .wrd  PFA
+                .wrd  LFA
+                .wrd  AT
+                .wrd  DUP
+                .wrd  R
+                .wrd  ULESS
+                .wrd  ZBRAN
+                .wrd  L3228-$           ;0xFFFF-14+1
+                .wrd  OVER
+                .wrd  TWO
+                .wrd  SUB
+                .wrd  STORE
+                .wrd  AT
+                .wrd  DDUP
+                .wrd  ZEQU
+                .wrd  ZBRAN
+                .wrd  L3225-$           ;0xFFFF-39+1
+                .wrd  RFROM
+                .wrd  DP
+                .wrd  STORE
                 .wrd  SEMIS
 ;
 ;                                       BACK
@@ -3359,12 +3415,12 @@ SPACS           .wrd  DOCOL
                 .wrd  MAX
                 .wrd  DDUP
                 .wrd  ZBRAN
-L3449           .wrd  0x0C               ;L3455-L3449
+L3449           .wrd  L3455-L3449       ;0x0C
                 .wrd  ZERO
                 .wrd  PDO
 L3452           .wrd  SPACE
                 .wrd  PLOOP
-L3454           .wrd  0xFFFC             ;L3452-L3454
+L3454           .wrd  L3452-L3454       ;0xFFFC
 L3455           .wrd  SEMIS
 ;
 ;                                       <#
@@ -3402,7 +3458,7 @@ SIGN            .wrd  DOCOL
                 .wrd  ROT
                 .wrd  ZLESS
                 .wrd  ZBRAN
-L3492           .wrd  0x7                ;L3496-L3492
+L3492           .wrd  L3496-L3492       ;0x7
                 .wrd  CLIT
                 .byt  0x2D
                 .wrd  HOLD
@@ -3423,7 +3479,7 @@ DIG             .wrd  DOCOL
                 .wrd  OVER
                 .wrd  LESS
                 .wrd  ZBRAN
-L3513           .wrd  7                 ;L3517-L3513
+L3513           .wrd  L3517-L3513       ;0x7
                 .wrd  CLIT
                 .byt  7
                 .wrd  PLUS
@@ -3445,7 +3501,7 @@ L3529           .wrd  DIG
                 .wrd  OR
                 .wrd  ZEQU
                 .wrd  ZBRAN
-L3535           .wrd  0xFFF4             ;L3529-L3535
+L3535           .wrd  L3529-L3535       ;0xFFF4
                 .wrd  SEMIS
 ;
 ;                                       D.R
@@ -3540,7 +3596,7 @@ L3620           .wrd  CR
                 .wrd  AT
                 .wrd  DLINE
                 .wrd  PLOOP
-L3630           .wrd  0xFFEC
+L3630           .wrd  L3620-L3630       ;0xFFEC
                 .wrd  CR
                 .wrd  SEMIS
 ;
@@ -3564,12 +3620,12 @@ L3647           .wrd  CR
                 .wrd  DLINE
                 .wrd  QTERM
                 .wrd  ZBRAN
-L3657           .wrd  4                 ;L3659-L3657
+L3657           .wrd  L3659-L3657       ;0x4
                 .wrd  LEAVE
 L3659           .wrd  PLOOP
-L3660           .wrd  0xFFE6             ;L3647-L3660
+L3660           .wrd  L3647-L3660       ;0xFFE6
                 .wrd  CLIT
-                .byt  0x0C               ;form feed for printer
+                .byt  0x0C              ;form feed for printer
                 .wrd  EMIT
                 .wrd  SEMIS
 ;
@@ -3592,7 +3648,7 @@ L3681           .wrd  CR
                 .wrd  I
                 .wrd  LIST
                 .wrd  PLOOP
-L3685           .wrd  0xFFF8             ;L3681-L3685
+L3685           .wrd  L3681-L3685       ;0xFFF8
                 .wrd  CR
                 .wrd  CLIT
                 .byt  0xF
@@ -3622,7 +3678,7 @@ L3706           .wrd  OUT
                 .wrd  CSLL
                 .wrd  GREAT
                 .wrd  ZBRAN
-L3711           .wrd  0xA                ;L3716-L3711
+L3711           .wrd  L3716-L3711       ;0xA
                 .wrd  CR
                 .wrd  ZERO
                 .wrd  OUT
@@ -3639,7 +3695,7 @@ L3716           .wrd  DUP
                 .wrd  QTERM
                 .wrd  OR
                 .wrd  ZBRAN
-L3728           .wrd  0xFFD4             ;L3706-L3728
+L3728           .wrd  L3706-L3728       ;0xFFD4
                 .wrd  DROP
                 .wrd  SEMIS
 ;
