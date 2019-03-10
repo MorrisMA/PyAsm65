@@ -81,7 +81,7 @@ RESTART     nop                     ; User Warm entry point
 ;
 ;
             .wrd    31              ; Initial name field width
-            .wrd    1               ; 0=nod disk, 1=disk
+            .wrd    0               ; 0=no disk, 1=disk
             .wrd    TOP             ; Initial fence address
             .wrd    TOP             ; Initial top of dictionary
             .wrd    VL0             ; Initial Vocabulary link ptr.
@@ -94,19 +94,18 @@ RESTART     nop                     ; User Warm entry point
             nop
             nop
 ;
-;
-;                                   LIT
-;                                   SCREEN 13 LINE 1
+;           LIT
+;           SCREEN 13 LINE 1
 ;
 L22         .byt    0x83,"LI",0xD4  ; <----- name length field
-            .wrd    00              ; <----- link field, last marked by zero
+            .wrd    0               ; <----- link field, last marked by zero
 LIT         .wrd    $+2             ; <----- code field (CF)
 ;
             lda.w   0,I++           ; <----- parameter field PF = (CF+2) = (W+2)
             pha.w
             inxt
 ;
-;    CLIT pushes the next inline byte to data stack
+;           CLIT pushes the next inline byte to data stack
 ;
 L35         .byt    0x84,"CLI",0xD4
             .wrd    L22             ; Link to LIT
@@ -128,8 +127,8 @@ L63         lda     0,X
             ldy     #0
             rts.s
 ;
-;                                       EXCECUTE
-;                                       SCREEN 14 LINE 11
+;           EXCECUTE
+;           SCREEN 14 LINE 11
 ;
 L75         .byt    0x87,"EXECUT",0xC5
             .wrd    L35             ;link to CLIT
@@ -137,11 +136,10 @@ EXEC        .wrd    $+2
 ;
             lda.w   1,S
             plw.s
-            jmp     (0,A)           ;0x82: jpr  zp,W; jpr ( zp,W);  -  / ind
-                                    ;      jpr abs,W; jpr (abs,W); siz / isz
+            jmp     (0,A)
 ;
-;                                       BRANCH
-;                                       SCREEN 15 LINE 11
+;           BRANCH
+;           SCREEN 15 LINE 11
 ;
 L89         .byt    0x86,"BRANC",0xC8
             .wrd    L75             ;link to EXCECUTE
@@ -155,8 +153,8 @@ BRAN        .wrd    $+2
             xai
             inxt
 ;
-;                                       0BRANCH
-;                                       SCREEN 15 LINE 6
+;           0BRANCH
+;           SCREEN 15 LINE 6
 ;
 L107        .byt    0x87,"0BRANC",0xC8
             .wrd    L89             ;link to BRANCH
@@ -169,8 +167,8 @@ BUMP        ini                 ; skip over the branch offset in thread
             ini
             inxt                ; NEXT
 ;
-;                                       (LOOP)
-;                                       SCREEN 16 LINE 1
+;           (LOOP)
+;           SCREEN 16 LINE 1
 ;
 L127        .byt    0x86,"(LOOP",0xA8
             .wrd    L107            ;link to 0BRANCH
@@ -189,8 +187,8 @@ PL2         bpl     BRAN+2          ;Loop if Loop Cntr <= Loop Termination
             ini
             inxt                    ;NEXT
 ;
-;                                       (+LOOP)
-;                                       SCREEN 16 LINE 8
+;           (+LOOP)
+;           SCREEN 16 LINE 8
 ;
 L154        .byt    0x87,"(+LOOP",0xA8
             .wrd    L127            ;link to (loop)
@@ -211,8 +209,8 @@ PPLOO       .wrd    $+2
             sbc.w   3,X
             bra     PL2         ; check if loop complete
 ;
-;                                       (DO)
-;                                       SCREEN 17 LINE 2
+;           (DO)
+;           SCREEN 17 LINE 2
 ;
 L185        .byt    0x84,"(DO",0xA8
             .wrd    L154        ;link to (+LOOP)
@@ -229,101 +227,100 @@ POPTWO      adj     #4
 POP         adj     #2
             inxt
 ;
-;                                       I
-;                                       SCREEN 17 LINE 9
+;           I
+;           SCREEN 17 LINE 9
 ;
-L207            .byt  0x81,0xC9
-                .wrd  L185              ;link to (DO)
-I               .wrd  R+2               ;share the code for R
+L207        .byt    0x81,0xC9
+            .wrd    L185        ;link to (DO)
+I           .wrd    R+2         ;share the code for R
 ;
-;                                       DIGIT
-;                                       SCREEN 18 LINE 1
+;           DIGIT
+;           SCREEN 18 LINE 1
 ;
-L214            .byt  0x85,"DIGI",0xD4
-                .wrd  L207              ;link to I
-DIGIT           .wrd  $+2
-                sec
-                lda   2,X
-                sbc   #0x30
-                bmi   L234
-                cmp   #0xA
-                bmi   L227
-                sec
-                sbc   #7
-                cmp   #0xA
-                bmi   L234
-L227            cmp   0,X
-                bpl   L234
-                sta   2,X
-                lda   #1
-                pha
-                tya
-                jmp   PUT               ;SEMIStrue with converted value
-L234            tya
-                pha
-                inx
-                inx
-                jmp   PUT               ;SEMISfalse with bad conversion
+L214        .byt    0x85,"DIGI",0xD4
+            .wrd    L207        ;link to I
+DIGIT       .wrd    $+2
+            sec
+            lda     2,X
+            sbc     #0x30
+            bmi     L234
+            cmp     #0xA
+            bmi     L227
+            sec
+            sbc     #7
+            cmp     #0xA
+            bmi     L234
+L227        cmp     0,X
+            bpl     L234
+            sta     2,X
+            lda     #1
+            pha
+            tya
+            jmp     PUT         ;SEMIStrue with converted value
+L234        tya
+            pha
+            inx
+            inx
+            jmp     PUT         ;SEMISfalse with bad conversion
 ;
-;                                       (FIND)
-;                                       SCREEN 19 LINE 1
+;           (FIND)
+;           SCREEN 19 LINE 1
 ;
-L243            .byt  0x86,"(FIND",0xA8
-                .wrd  L214              ;Link to DIGIT
-PFIND           .wrd  $+2
-                lda   #2
-                jsr   SETUP
-                stx   XSAVE
-L249            ldy   #0
-                lda   (N),Y
-                eor   (N+2),Y
+L243        .byt    0x86,"(FIND",0xA8
+            .wrd    L214        ;Link to DIGIT
+PFIND       .wrd    $+2
+            lda     #2
+            jsr     SETUP
+            stx     XSAVE
+L249        ldy     #0
+            lda     (N),Y
+            eor     (N+2),Y
 ;
-;
-                and   #0x3F
-                bne   L281
-L254            iny
-                lda   (N),Y
-                eor   (N+2),Y
-                asl   a
-                bne   L280
-                bcc   L254
-                ldx   XSAVE
-                dex
-                dex
-                dex
-                dex
-                clc
-                tya
-                adc   #5
-                adc   N
-                sta   2,X
-                ldy   #0
-                tya
-                adc   N+1
-                sta   3,X
-                sty   1,X
-                lda   (N),Y
-                sta   0,X
-                lda   #1
-                pha
-                jmp   PUSH
-L280            bcs   L284
-L281            iny
-                lda   (N),Y
-                bpl   L281
-L284            iny
-                lda   (N),Y
-                tax
-                iny
-                lda   (N),Y
-                sta   N+1
-                stx   N
-                ora   N
-                bne   L249
-                ldx   XSAVE
-                lda   #0
-                pha
-                jmp   PUSH              ;SEMISfalse upon reading null link
+            and     #0x3F
+            bne     L281
+L254        iny
+            lda     (N),Y
+            eor     (N+2),Y
+            asl     a
+            bne     L280
+            bcc     L254
+            ldx     XSAVE
+            dex
+            dex
+            dex
+            dex
+            clc
+            tya
+            adc     #5
+            adc     N
+            sta     2,X
+            ldy     #0
+            tya
+            adc     N+1
+            sta     3,X
+            sty     1,X
+            lda     (N),Y
+            sta     0,X
+            lda     #1
+            pha
+            jmp     PUSH
+L280        bcs     L284
+L281        iny
+            lda     (N),Y
+            bpl     L281
+L284        iny
+            lda     (N),Y
+            tax
+            iny
+            lda     (N),Y
+            sta     N+1
+            stx     N
+            ora     N
+            bne     L249
+            ldx     XSAVE
+            lda     #0
+            pha
+            jmp     PUSH        ;SEMISfalse upon reading null link
 ;
 ;                                       ENCLOSE
 ;                                       SCREEN 20 LINE 1

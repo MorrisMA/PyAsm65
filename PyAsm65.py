@@ -150,69 +150,100 @@ for src in source:
             elif op == '.db' or op == '.byt':
                 if curSegment == 'code':
                     vlc['_loc_'] = code
+                    vlc[lbl] = code
                     siz, val = parseByt(dt, vlc)
+                    labels[lbl] = code
 
                     cod.append([code, '.byt', 'db', val, \
                                 0, siz, '', srcLine, ' ; ' + srcText])
                     code += siz
                 else:
                     vlc['_loc_'] = data
-                    siz, val = evalByt(dt, vlc)
+                    vlc[lbl] = data
+                    siz, val = parseByt(dt, vlc)
+                    variables[lbl] = (data, siz, val)
 
-                    asmText = '%04X %s' % (data, val[:8])
-                    bufLen = 15 - len(asmText)
-                    dat.append([data, lbl, 'db', dt, siz, 0, val, srcLine, \
-                                ' '*bufLen + ' ; ' + srcText])
+                    dat.append([data, '.byt', 'db', val, \
+                                0, siz, '', srcLine, ' ; ' + srcText])
                     data += siz
             elif op == '.dw' or op == '.wrd':
                 if curSegment == 'code':
                     vlc['_loc_'] = code
+                    vlc[lbl] = code
                     siz, val = parseWrd(dt, vlc)
+                    labels[lbl] = code
 
                     cod.append([code, '.wrd', 'dw', val, \
                                 0, siz, '', srcLine, ' ; ' + srcText])
                     code += siz
                 else:
-                    siz, val = evalWrd(dt, vlc)
+                    vlc['_loc_'] = data
+                    vlc[lbl] = data
+                    siz, val = parseWrd(dt, vlc)
+                    variables[lbl] = (data, siz, val)
 
-                    asmText = '%04X %s' % (data, val[:8])
-                    bufLen = 15 - len(asmText)
-                    dat.append([data, lbl, 'db', dt, siz, 0, val, srcLine, \
-                                ' '*bufLen + ' ; ' + srcText])
+                    dat.append([data, '.wrd', 'dw', val,
+                                0, siz, '', srcLine, ' ; ' + srcText])
                     data += siz
-            elif op == '.dl' or op == '.lng' or op == '.flt':
+            elif op == '.dl' or op == '.lng':
                 if curSegment == 'code':
-                    siz, val = evalLng(dt, vlc)
+                    vlc['_loc_'] = code
+                    vlc[lbl] = code
+                    siz, val = parseLng(dt, vlc)
+                    labels[lbl] = code
 
-                    asmText = '%04X %s' % (code, val[:8])
-                    bufLen = 15 - len(asmText)
-                    cod.append([code, '.byt', 'imp', operand, \
-                                siz, 0, val, srcLine, \
-                                ' '*bufLen + ' ; ' + srcText])
+                    cod.append([code, '.lng', 'dl', val, \
+                                0, siz, '', srcLine, ' ; ' + srcText])
                     code += siz
                 else:
                     vlc['_loc_'] = data
-                    siz, val = evalLng(dt, vlc)
+                    vlc[lbl] = data
+                    siz, val = parseLng(dt, vlc)
+                    variables[lbl] = (data, siz, val)
 
-                    asmText = '%04X %s' % (data, val[:8])
-                    bufLen = 15 - len(asmText)
-                    dat.append([data, lbl, 'db', dt, siz, 0, val, srcLine, \
-                                ' '*bufLen + ' ; ' + srcText])
+                    dat.append([data, '.lng', 'dl', val,
+                                0, siz, '', srcLine, ' ; ' + srcText])
+                    data += siz
+            elif op == '.df' or op == '.flt':
+                if curSegment == 'code':
+                    vlc['_loc_'] = code
+                    vlc[lbl] = code
+                    siz, val = parseFlt(dt, vlc)
+                    labels[lbl] = code
+
+                    cod.append([code, '.flt', 'df', val, \
+                                0, siz, '', srcLine, ' ; ' + srcText])
+                    code += siz
+                else:
+                    vlc['_loc_'] = data
+                    vlc[lbl] = data
+                    siz, val = parseFlt(dt, vlc)
+                    variables[lbl] = (data, siz, val)
+
+                    dat.append([data, '.flt', 'df', val,
+                                0, siz, '', srcLine, ' ; ' + srcText])
                     data += siz
             elif op == '.ds' or op == '.str':
-                siz = len(dt)
-                variables[lbl] = (data, siz, dt)
-                strVal = []
-
-                for ch in dt:
-                    strVal.append('%02X' % (ord(ch)))
-                strVal = ''.join(strVal)
-
-                asmText = '%04X %s' % (data, strVal[:8])
-                bufLen = 15 - len(asmText)
-                dat.append([data, lbl, 'ds', dt, siz, 0, strVal, srcLine, \
-                            ' '*bufLen + ' ; ' + srcText])
-                data += siz
+                if curSegment == 'code':
+                    vlc['_loc_'] = code
+                    vlc[lbl] = code
+                    siz = len(dt); val = str()
+                    for ch in dt: val += '%02X' % ord(ch)
+                    labels[lbl] = code
+                    
+                    cod.append([code, '.str', 'ds', val,
+                                0, siz, '', srcLine, ' ; ' + srcText])
+                    code += siz
+                else:
+                    vlc['_loc_'] = data
+                    vlc[lbl] = data
+                    siz = len(dt); val = str()
+                    for ch in dt: val += '%02X' % ord(ch)
+                    variables[lbl] = (data, siz, val)
+                    
+                    dat.append([data, '.str', 'ds', val,
+                                0, siz, '', srcLine, ' ; ' + srcText])
+                    data += siz
             else:
                 print('Error. Unknown define: %s.' % (op))
                 pass
@@ -333,79 +364,101 @@ for src in source:
                     vlc[lbl] = constants[lbl]
                 elif op == '.db' or op == '.byt':
                     if curSegment == 'code':
-                        labels[lbl] = code
+                        vlc['_loc_'] = code
                         vlc[lbl] = code
                         siz, val = parseByt(dt, vlc)
+                        labels[lbl] = code
 
                         cod.append([code, '.byt', 'db', val, \
-                                    0, siz, '', srcLine, \
-                                    ' ; ' + srcText])
-#                        print('-'*7+'>', asmText, siz, val)
+                                    0, siz, '', srcLine, ' ; ' + srcText])
                         code += siz
                     else:
+                        vlc['_loc_'] = data
+                        vlc[lbl] = data
+                        siz, val = parseByt(dt, vlc)
                         variables[lbl] = (data, siz, val)
-                        vlc[lbl] = data; vlc['_loc_'] = data
-                        siz, val = evalByt(dt, vlc)
 
-                        asmText = '%04X %s' % (data, val[:8])
-                        bufLen = 15 - len(asmText)
-                        dat.append([data, lbl, 'db', dt, siz, 0, val, srcLine, \
-                                    ' '*bufLen + ' ; ' + srcText])
+                        dat.append([data, '.byt', 'db', val, \
+                                    0, siz, '', srcLine, ' ; ' + srcText])
                         data += siz
                 elif op == '.dw' or op == '.wrd':
                     if curSegment == 'code':
-                        labels[lbl] = code
+                        vlc['_loc_'] = code
+                        vlc[lbl] = code
                         siz, val = parseWrd(dt, vlc)
+                        labels[lbl] = code
 
                         cod.append([code, '.wrd', 'dw', val, \
                                     0, siz, '', srcLine, ' ; ' + srcText])
                         code += siz
                     else:
+                        vlc['_loc_'] = data
+                        vlc[lbl] = data
+                        siz, val = parseWrd(dt, vlc)
                         variables[lbl] = (data, siz, val)
-                        vlc[lbl] = data; vlc['_loc_'] = data
-                        siz, val = evalWrd(dt, vlc)
 
-                        asmText = '%04X %s' % (data, val[:8])
-                        bufLen = 15 - len(asmText)
-                        dat.append([data, lbl, 'db', dt, siz, 0, val, srcLine, \
-                                    ' '*bufLen + ' ; ' + srcText])
+                        dat.append([data, '.wrd', 'dw', val,
+                                    0, siz, '', srcLine, ' ; ' + srcText])
                         data += siz
-                elif op == '.dl' or op == '.lng' or op == '.flt':
+                elif op == '.dl' or op == '.lng':
                     if curSegment == 'code':
+                        vlc['_loc_'] = code
+                        vlc[lbl] = code
+                        siz, val = parseLng(dt, vlc)
                         labels[lbl] = code
-                        vlc[lbl] = code; vlc['_loc_'] = code
-                        siz, val = evalLng(dt, vlc)
 
-                        asmText = '%04X %s' % (code, val[:8])
-                        bufLen = 15 - len(asmText)
-                        cod.append([code, '.byt', 'imp', operand, \
-                                    siz, 0, val, srcLine, \
-                                    ' '*bufLen + ' ; ' + srcText])
+                        cod.append([code, '.lng', 'dl', val, \
+                                    0, siz, '', srcLine, ' ; ' + srcText])
                         code += siz
                     else:
+                        vlc['_loc_'] = data
+                        vlc[lbl] = data
+                        siz, val = parseLng(dt, vlc)
                         variables[lbl] = (data, siz, val)
-                        vlc[lbl] = data; vlc['_loc_'] = data
-                        siz, val = evalLng(dt, vlc)
 
-                        asmText = '%04X %s' % (data, val[:8])
-                        bufLen = 15 - len(asmText)
-                        dat.append([data, lbl, 'db', dt, siz, 0, val, srcLine, \
-                                    ' '*bufLen + ' ; ' + srcText])
+                        dat.append([data, '.lng', 'dl', val,
+                                    0, siz, '', srcLine, ' ; ' + srcText])
+                        data += siz
+                elif op == '.df' or op == '.flt':
+                    if curSegment == 'code':
+                        vlc['_loc_'] = code
+                        vlc[lbl] = code
+                        siz, val = parseFlt(dt, vlc)
+                        labels[lbl] = code
+
+                        cod.append([code, '.flt', 'df', val, \
+                                    0, siz, '', srcLine, ' ; ' + srcText])
+                        code += siz
+                    else:
+                        vlc['_loc_'] = data
+                        vlc[lbl] = data
+                        siz, val = parseFlt(dt, vlc)
+                        variables[lbl] = (data, siz, val)
+
+                        dat.append([data, '.flt', 'df', val,
+                                    0, siz, '', srcLine, ' ; ' + srcText])
                         data += siz
                 elif op == '.ds' or op == '.str':
-                    siz = len(dt)
-                    variables[lbl] = (data, siz, dt)
-                    strVal = []
-
-                    for ch in dt:
-                        strVal.append('%02X' % (ord(ch)))
-                    strVal = ''.join(strVal)
-
-                    asmText = '%04X %s' % (data, strVal[:8])
-                    bufLen = 15 - len(asmText)
-                    dat.append([data, lbl, 'ds', dt, siz, 0, strVal, srcLine, \
-                                ' '*bufLen + ' ; ' + srcText])
-                    data += siz
+                    if curSegment == 'code':
+                        vlc['_loc_'] = code
+                        vlc[lbl] = code
+                        siz = len(dt); val = str()
+                        for ch in dt: val += '%02X' % ord(ch)
+                        labels[lbl] = code
+                        
+                        cod.append([code, '.str', 'ds', val,
+                                    0, siz, '', srcLine, ' ; ' + srcText])
+                        code += siz
+                    else:
+                        vlc['_loc_'] = data
+                        vlc[lbl] = data
+                        siz = len(dt); val = str()
+                        for ch in dt: val += '%02X' % ord(ch)
+                        variables[lbl] = (data, siz, val)
+                        
+                        dat.append([data, '.str', 'ds', val,
+                                    0, siz, '', srcLine, ' ; ' + srcText])
+                        data += siz
                 else:
                     print('Error. Unknown define: %s.' % (op))
                     pass
@@ -500,8 +553,13 @@ for src in source:
 '''
 
 for ln in dat:
-    data, lbl, op, dt, siz, zerVal, val, srcLine, srcText = ln
-    cod.append([code + data, lbl, op, dt, siz, zerVal, val, srcLine, srcText])
+    addrs, op, md, operand, opLen, dtLen, opStr, srcText, srcLine = ln
+    if addrs < code:
+        cod.append([code + addrs, op, md, operand,
+                    opLen, dtLen, opStr, srcText, srcLine])
+    else:
+        cod.append([addrs, op, md, operand,
+                    opLen, dtLen, opStr, srcText, srcLine])
 
 '''
     Adjust addresses of variables{}
@@ -509,7 +567,9 @@ for ln in dat:
 
 for key in variables.keys():
     addr, siz, dt = variables[key]
-    variables[key] = (code + addr, siz, dt)
+    if addrs < code:
+        variables[key] = (code + addr, siz, dt)
+    else: variables[key] = (addr, siz, dt)
 
 '''
     Create a common dictionary for variables, labels, and constants that will be
@@ -673,10 +733,6 @@ for ln in cod:
                           ''.join([opStr, loStr, hiStr]), \
                           srcTxt, srcLine]
     elif md in ('db', 'dw', 'dl', 'df', 'dd', 'ds', ):
-#        val, siz, strVal = variables[op]
-#        out[addrs] = [siz, opStr, srcTxt, srcLine]
-#        print('-'*8, 'Pass 2:', hex(addrs), "'"+op+"'", "'"+md+"'", dt,
-#              opLen, dtLen, "'"+opStr+"'", "'"+srcTxt+"'", srcLine)
         vlc['_loc_'] = addrs
         if md == 'db':
             siz, outStr = evalByt(dt, vlc)
@@ -688,7 +744,11 @@ for ln in cod:
             if siz == dtLen:
                 out[addrs] = [siz, outStr, srcTxt, srcLine]
             else: print('=== Error(evalWrd) ==>', 'returned siz does not match dtLen')
-
+        elif md == 'dl':
+            siz, outStr = evalLng(dt, vlc)
+            if siz == dtLen:
+                out[addrs] = [siz, outStr, srcTxt, srcLine]
+            else: print('=== Error(evalLng) ==>', 'returned siz does not match dtLen')
 
 '''
     Print results of Pass 2
@@ -763,7 +823,7 @@ with open(filename+'.lst', 'rt') as lst:
         with open(filename+'.prn', 'wt') as prn:
             asmInp = asm.readline(); srcLine += 1
             lstInp = lst.readline()
-            while lstInp != '':
+            while lstInp != '' and asmInp != '':
                 if lstInp[0:1] == '(':
                     lstLine = lstInp.split(';')
                     lstFlds = lstLine[0].split(')')
@@ -793,8 +853,8 @@ with open(filename+'.lst', 'rt') as lst:
                                 print('(%4d)' % (srcLine), ' '*16,
                                       ';', asmInp[:-1], file=prn)
                             break
-                        elif lstInp[0:1] == ' ':
-                            print("Extended line")
+#                        elif lstInp[0:1] == ' ':
+#                            print("Extended line")
                         elif lstInp == '':
                             print('(%4d)' % (srcLine), ' '*16,
                                   ';', asmInp[:-1], file=prn)

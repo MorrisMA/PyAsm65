@@ -355,3 +355,5 @@ def evalLng(inpList, vlc):
             outStr += wrdStr[6:] + wrdStr[4:6] + wrdStr[2:4] + wrdStr[:2]
             siz += 1
     return (4*siz, outStr)
+
+
