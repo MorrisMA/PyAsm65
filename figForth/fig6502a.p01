@@ -187,2360 +187,2360 @@
  325 ENCL        .wrd    $+2
  329             pul.w   N
  330             pul.w   N+2
- 332             txa
- 333             sec
- 334             sbc     #8
- 335             tax
- 337             sty     3,X
- 338             sty     1,X
- 339             dey
- 340 L313        iny
- 341             lda     (N+2),Y
- 342             cmp     N
- 343             beq     L313
- 344             sty     4,X
- 345 L318        lda     (N+2),Y
- 346             bne     L327
- 347             sty     2,X
- 348             sty     0,X
- 349             tya
- 350             cmp     4,X
- 351             bne     L326
- 352             inc     2,X
- 353 L326        jmp     NEXT
- 354 L327        sty     2,X
- 355             iny
- 356             cmp     N
- 357             bne     L318
- 358             sty     0,X
- 359             jmp     NEXT
- 364 L337        .byt    0x84,"EMI",0xD4
- 365             .wrd    L301        ;link to ENCLOSE
- 366 EMIT        .wrd    XEMIT       ;Vector to code for KEY
- 371 L344        .byt    0x83,"KE",0xD9
- 372             .wrd    L337        ;link to EMIT
- 373 KEY         .wrd    XKEY        ;Vector to code for KEY
- 378 L351        .byt    0x89,"?TERMINA",0xCC
- 379             .wrd    L344        ;link to KEY
- 380 QTERM       .wrd    XQTER       ;Vector to code for ?TERMINAL
- 385 L358        .byt    0x82,"C",0xD2
- 386             .wrd    L351        ;link to ?TERMINAL
- 387 CR          .wrd    XCR         ;Vector to code for CR
- 392 L365        .byt    0x85,"CMOV",0xC5
- 393             .wrd    L358        ;link to CR
- 394 CMOVE       .wrd    $+2
- 396             dup     x           ; save RSP
- 398             pla.w               ; pull count into a
- 399             ply.w               ; pull dst pointer into y
- 400             plx.w               ; pull src pointer into x
- 402             mov     #0x0F       ; block move inc src/dst pointers
- 404             rot     x           ; restore RSP
- 406             inxt                ; NEXT
- 411 L386        .byt    0x82,"U",0xAA
- 412             .wrd    L365        ;link to CMOVE
- 413 USTAR       .wrd    $+2
- 417                 lda   #0                ;in some implementations TYA can be used since NEXT leaves Y=$00
- 418                 sta   N
- 419                 ldy   #16
- 420                 lsr   3,X
- 421                 ror   2,X
- 422 L1              bcc   L2
- 423                 clc
- 424                 sta   N+1               ;PHA
- 425                 lda   N
- 426                 adc   0,X
- 427                 sta   N
- 428                 lda   N+1               ;PLA
- 429                 adc   1,X
- 430 L2              ror   a
- 431                 ror   N
- 432                 ror   3,X
- 433                 ror   2,X
- 434                 dey
- 435                 bne   L1
- 436                 sta   1,X
- 437                 lda   N
- 438                 sta   0,X
- 439                 jmp   NEXT
- 445 L418        .byt    0x82,"U",0xAF
- 446             .wrd    L386        ;link to U*
- 447 USLAS       .wrd    $+2
- 451                 sec                     ;Modified code - dr
- 452                 lda   2,X               ;Subtract hi cell of dividend by
- 453                 sbc   0,X               ;divisor to see if there's an overflow condition.
- 454                 lda   3,X
- 455                 sbc   1,X
- 456                 bcs   oflow             ;Branch if /0 or overflow.
- 457                 lda   #0x11              ;Loop 17x.
- 458                 sta   N                 ;Use N for loop counter.
- 459 loopp           rol   4,X               ;Rotate dividend lo cell left one bit.
- 460                 rol   5,X
- 461                 dec   N                 ;Decrement loop counter.
- 462                 beq   endd              ;If we're done, then branch to end.
- 463                 rol   2,X               ;Otherwise rotate dividend hi cell left one bit.
- 464                 rol   3,X
- 466                 pha
- 467                 lda #0
- 468                 sta N+1
- 469                 pla
- 471                 rol   N+1               ;Rotate the bit carried out of above into N+1.
- 472                 sec
- 473                 lda   2,X               ;Subtract dividend hi cell minus divisor.
- 474                 sbc   0,X
- 475                 sta   N+2               ;Put result temporarily in N+2 (lo byte)
- 476                 lda   3,X
- 477                 sbc   1,X
- 478                 tay                     ;and Y (hi byte).
- 479                 lda   N+1               ;Remember now to bring in the bit carried out above.
- 480                 sbc   #0x00
- 481                 bcc   loopp
- 482                 lda   N+2               ;If that didn't cause a borrow,
- 483                 sta   2,X               ;make the result from above to
- 484                 sty   3,X               ;be the new dividend hi cell
- 485                 bcs   loopp             ;and then brach up.  (NMOS 6502 can use BCS here.)
- 486 oflow           lda   #0xFF              ;If overflow or /0 condition found,
- 487                 sta   2,X               ;just put FFFF in both the remainder
- 488                 sta   3,X
- 489                 sta   4,X               ;and the quotient.
- 490                 sta   5,X
- 491 endd            inx                     ;When you're done, show one less cell on data stack,
- 492                 inx                     ;(INX INX is exactly what the Forth word DROP does)
- 493                 jmp   SWAP+2            ;and swap the two top cells to put quotient on top.
- 499 L453            .byt  0x83,"AN",0xC4
- 500                 .wrd  L418              ;link to U/
- 501 ANDD            .wrd  $+2
- 503                 pla.w
- 504                 and.w   1,S
- 505                 sta.w   1,S
- 506                 inxt
- 511 L469            .byt  0x82,"O",0xD2
- 512                 .wrd  L453              ;link to AND
- 513 OR              .wrd  $+2
- 515                 pla.w
- 516                 ora.w   1,S
- 517                 sta.w   1,S
- 518                 inxt
- 523 L484            .byt  0x83,"XO",0xD2
- 524                 .wrd  L469              ;link to OR
- 525 XOR             .wrd  $+2
- 527                 pla.w
- 528                 eor.w   1,S
- 529                 sta.w   1,S
- 530                 inxt
- 535 L499            .byt  0x83,"SP",0xC0
- 536                 .wrd  L484              ;link  to XOR
- 537 SPAT            .wrd  $+2
- 539                 tsa
- 540 PUSHOA          pha.sw
- 541                 inxt
- 547 L511            .byt  0x83,"SP",0xA1
- 548                 .wrd  L499              ;link to SP@
- 549 SPSTO           .wrd  $+2
- 551                 ldy     #6              ; set y to User Area offset of S0
- 552                 lda     (UP),Y          ; load data stack pointer (X reg) from
- 553                 tas                     ; silent user variable S0.
- 554                 inxt
- 559 L522            .byt  0x83,"RP",0xA1
- 560                 .wrd  L511              ;link to SP!
- 561 RPSTO           .wrd  $+2
- 563                 ldy     #8              ; stack pointer) from silent user
- 564                 lda     (UP),Y          ; VARIABLE R0
- 565                 tax
- 566                 inxt
- 571 L536            .byt  0x82,";",0xD3
- 572                 .wrd  L522              ;link to RP!
- 573 SEMIS           .wrd  $+2
- 575                 pli
- 576                 inxt
- 581 L548            .byt  0x85,"LEAV",0xC5
- 582                 .wrd  L536              ;link to ;S
- 583 LEAVE           .wrd  $+2
- 585                 lda.w   1,X
- 586                 sta.w   3,X
- 587                 inxt
- 592 L563            .byt  0x82,">",0xD2
- 593                 .wrd  L548              ;link to LEAVE
- 594 TOR             .wrd  $+2
- 596                 pla.w
- 597                 pha.sw
- 598                 inxt
- 603 L577            .byt  0x82,"R",0xBE
- 604                 .wrd  L563              ;link to >R
- 605 RFROM           .wrd  $+2
- 607                 pla.sw
- 608                 pha.w
- 609                 inxt
- 614 L591            .byt  0x81,0xD2
- 615                 .wrd  L577              ;link to R>
- 616 R               .wrd  $+2
- 618                 lda.w 1,X
- 619                 pha.w
- 620                 inxt
- 625 L605            .byt  0x82,"0",0xBD
- 626                 .wrd  L591              ;link to R
- 627 ZEQU            .wrd  $+2
- 629                 lda.w   1,S
- 630                 stz.w   1,S
- 631                 bne     L613
- 632                 inc     1,S
- 633 L613            inxt
- 638 L619            .byt  0x82,"0",0xBC
- 639                 .wrd  L605              ;link to 0=
- 640 ZLESS           .wrd  $+2
- 642                 lda.w   1,S
- 643                 stz.w   1,S
- 644                 bpl     L620
- 645                 inc     1,S
- 646 L620            inxt
- 651 L632            .byt  0x81,0xAB
- 652                 .wrd  L619              ;link to V-ADJ
- 653 PLUS            .wrd  $+2
- 655                 clc
- 656                 pla.w
- 657                 adc.w   1,S
- 658                 sta.w   1,S
- 659                 inxt
- 664 L649            .byt  0x82,"D",0xAB
- 665                 .wrd  L632              ;LINK TO +
- 666 DPLUS           .wrd  $+2
- 668                 clc
- 669                 lda.w   3,S
- 670                 adc.w   7,S
- 671                 sta.w   7,S
- 672                 lda.w   1,S
- 673                 adc.w   5,S
- 674                 sta.w   5,S
- 675                 adj     #4
- 676                 inxt
- 681 L670            .byt  0x85,"MINU",0xD3
- 682                 .wrd  L649              ;link to D+
- 683 MINUS           .wrd  $+2
- 685                 sec
- 686                 lda     #0
- 687                 sbc.w   1,S
- 688                 sta.w   1,S
- 689                 inxt
- 694 L685            .byt  0x86,"DMINU",0xD3
- 695                 .wrd  L670              ;link to  MINUS
- 696 DMINU           .wrd  $+2
- 698                 sec
- 699                 lda     #0
- 700                 dup     a
- 701                 sbc.w   3,S
- 702                 sta.w   3,S
- 703                 rot     a
- 704                 sbc.w   1,S
- 705                 sta.w   1,S
- 706                 inxt
- 711 L700            .byt  0x84,"OVE",0xD2
- 712                 .wrd  L685              ;link to DMINUS
- 713 OVER            .wrd  $+2
- 715                 lda.w   3,S
- 716                 pha.w
- 717                 inxt
- 722 L711            .byt  0x84,"DRO",0xD0
- 723                 .wrd  L700              ;link to OVER
- 724 DROP            .wrd  POP
- 729 L718            .byt  0x84,"SWA",0xD0
- 730                 .wrd  L711              ;link to DROP
- 731 SWAP            .wrd  $+2
- 733                 pla.w
- 734                 dup     a
+ 334             txa
+ 335             sec
+ 336             sbc     #8
+ 337             tax
+ 339             sty     3,X
+ 340             sty     1,X
+ 341             dey
+ 342 L313        iny
+ 343             lda     (N+2),Y
+ 344             cmp     N
+ 345             beq     L313
+ 346             sty     4,X
+ 347 L318        lda     (N+2),Y
+ 348             bne     L327
+ 349             sty     2,X
+ 350             sty     0,X
+ 351             tya
+ 352             cmp     4,X
+ 353             bne     L326
+ 354             inc     2,X
+ 355 L326        jmp     NEXT
+ 356 L327        sty     2,X
+ 357             iny
+ 358             cmp     N
+ 359             bne     L318
+ 360             sty     0,X
+ 361             jmp     NEXT
+ 366 L337        .byt    0x84,"EMI",0xD4
+ 367             .wrd    L301        ;link to ENCLOSE
+ 368 EMIT        .wrd    XEMIT       ;Vector to code for KEY
+ 373 L344        .byt    0x83,"KE",0xD9
+ 374             .wrd    L337        ;link to EMIT
+ 375 KEY         .wrd    XKEY        ;Vector to code for KEY
+ 380 L351        .byt    0x89,"?TERMINA",0xCC
+ 381             .wrd    L344        ;link to KEY
+ 382 QTERM       .wrd    XQTER       ;Vector to code for ?TERMINAL
+ 387 L358        .byt    0x82,"C",0xD2
+ 388             .wrd    L351        ;link to ?TERMINAL
+ 389 CR          .wrd    XCR         ;Vector to code for CR
+ 394 L365        .byt    0x85,"CMOV",0xC5
+ 395             .wrd    L358        ;link to CR
+ 396 CMOVE       .wrd    $+2
+ 398             dup     x           ; save RSP
+ 400             pla.w               ; pull count into a
+ 401             ply.w               ; pull dst pointer into y
+ 402             plx.w               ; pull src pointer into x
+ 404             mov     #0x0F       ; block move inc src/dst pointers
+ 406             rot     x           ; restore RSP
+ 408             inxt                ; NEXT
+ 413 L386        .byt    0x82,"U",0xAA
+ 414             .wrd    L365        ;link to CMOVE
+ 415 USTAR       .wrd    $+2
+ 419                 lda   #0                ;in some implementations TYA can be used since NEXT leaves Y=$00
+ 420                 sta   N
+ 421                 ldy   #16
+ 422                 lsr   3,X
+ 423                 ror   2,X
+ 424 L1              bcc   L2
+ 425                 clc
+ 426                 sta   N+1               ;PHA
+ 427                 lda   N
+ 428                 adc   0,X
+ 429                 sta   N
+ 430                 lda   N+1               ;PLA
+ 431                 adc   1,X
+ 432 L2              ror   a
+ 433                 ror   N
+ 434                 ror   3,X
+ 435                 ror   2,X
+ 436                 dey
+ 437                 bne   L1
+ 438                 sta   1,X
+ 439                 lda   N
+ 440                 sta   0,X
+ 441                 jmp   NEXT
+ 447 L418        .byt    0x82,"U",0xAF
+ 448             .wrd    L386        ;link to U*
+ 449 USLAS       .wrd    $+2
+ 453                 sec                     ;Modified code - dr
+ 454                 lda   2,X               ;Subtract hi cell of dividend by
+ 455                 sbc   0,X               ;divisor to see if there's an overflow condition.
+ 456                 lda   3,X
+ 457                 sbc   1,X
+ 458                 bcs   oflow             ;Branch if /0 or overflow.
+ 459                 lda   #0x11              ;Loop 17x.
+ 460                 sta   N                 ;Use N for loop counter.
+ 461 loopp           rol   4,X               ;Rotate dividend lo cell left one bit.
+ 462                 rol   5,X
+ 463                 dec   N                 ;Decrement loop counter.
+ 464                 beq   endd              ;If we're done, then branch to end.
+ 465                 rol   2,X               ;Otherwise rotate dividend hi cell left one bit.
+ 466                 rol   3,X
+ 468                 pha
+ 469                 lda #0
+ 470                 sta N+1
+ 471                 pla
+ 473                 rol   N+1               ;Rotate the bit carried out of above into N+1.
+ 474                 sec
+ 475                 lda   2,X               ;Subtract dividend hi cell minus divisor.
+ 476                 sbc   0,X
+ 477                 sta   N+2               ;Put result temporarily in N+2 (lo byte)
+ 478                 lda   3,X
+ 479                 sbc   1,X
+ 480                 tay                     ;and Y (hi byte).
+ 481                 lda   N+1               ;Remember now to bring in the bit carried out above.
+ 482                 sbc   #0x00
+ 483                 bcc   loopp
+ 484                 lda   N+2               ;If that didn't cause a borrow,
+ 485                 sta   2,X               ;make the result from above to
+ 486                 sty   3,X               ;be the new dividend hi cell
+ 487                 bcs   loopp             ;and then brach up.  (NMOS 6502 can use BCS here.)
+ 488 oflow           lda   #0xFF              ;If overflow or /0 condition found,
+ 489                 sta   2,X               ;just put FFFF in both the remainder
+ 490                 sta   3,X
+ 491                 sta   4,X               ;and the quotient.
+ 492                 sta   5,X
+ 493 endd            inx                     ;When you're done, show one less cell on data stack,
+ 494                 inx                     ;(INX INX is exactly what the Forth word DROP does)
+ 495                 jmp   SWAP+2            ;and swap the two top cells to put quotient on top.
+ 501 L453            .byt  0x83,"AN",0xC4
+ 502                 .wrd  L418              ;link to U/
+ 503 ANDD            .wrd  $+2
+ 505                 pla.w
+ 506                 and.w   1,S
+ 507                 sta.w   1,S
+ 508                 inxt
+ 513 L469            .byt  0x82,"O",0xD2
+ 514                 .wrd  L453              ;link to AND
+ 515 OR              .wrd  $+2
+ 517                 pla.w
+ 518                 ora.w   1,S
+ 519                 sta.w   1,S
+ 520                 inxt
+ 525 L484            .byt  0x83,"XO",0xD2
+ 526                 .wrd  L469              ;link to OR
+ 527 XOR             .wrd  $+2
+ 529                 pla.w
+ 530                 eor.w   1,S
+ 531                 sta.w   1,S
+ 532                 inxt
+ 537 L499            .byt  0x83,"SP",0xC0
+ 538                 .wrd  L484              ;link  to XOR
+ 539 SPAT            .wrd  $+2
+ 541                 tsa
+ 542 PUSHOA          pha.sw
+ 543                 inxt
+ 549 L511            .byt  0x83,"SP",0xA1
+ 550                 .wrd  L499              ;link to SP@
+ 551 SPSTO           .wrd  $+2
+ 553                 ldy     #6              ; set y to User Area offset of S0
+ 554                 lda     (UP),Y          ; load data stack pointer (X reg) from
+ 555                 tas                     ; silent user variable S0.
+ 556                 inxt
+ 561 L522            .byt  0x83,"RP",0xA1
+ 562                 .wrd  L511              ;link to SP!
+ 563 RPSTO           .wrd  $+2
+ 565                 ldy     #8              ; stack pointer) from silent user
+ 566                 lda     (UP),Y          ; VARIABLE R0
+ 567                 tax
+ 568                 inxt
+ 573 L536            .byt  0x82,";",0xD3
+ 574                 .wrd  L522              ;link to RP!
+ 575 SEMIS           .wrd  $+2
+ 577                 pli
+ 578                 inxt
+ 583 L548            .byt  0x85,"LEAV",0xC5
+ 584                 .wrd  L536              ;link to ;S
+ 585 LEAVE           .wrd  $+2
+ 587                 lda.w   1,X
+ 588                 sta.w   3,X
+ 589                 inxt
+ 594 L563            .byt  0x82,">",0xD2
+ 595                 .wrd  L548              ;link to LEAVE
+ 596 TOR             .wrd  $+2
+ 598                 pla.w
+ 599                 pha.sw
+ 600                 inxt
+ 605 L577            .byt  0x82,"R",0xBE
+ 606                 .wrd  L563              ;link to >R
+ 607 RFROM           .wrd  $+2
+ 609                 pla.sw
+ 610                 pha.w
+ 611                 inxt
+ 616 L591            .byt  0x81,0xD2
+ 617                 .wrd  L577              ;link to R>
+ 618 R               .wrd  $+2
+ 620                 lda.w 1,X
+ 621                 pha.w
+ 622                 inxt
+ 627 L605            .byt  0x82,"0",0xBD
+ 628                 .wrd  L591              ;link to R
+ 629 ZEQU            .wrd  $+2
+ 631                 lda.w   1,S
+ 632                 stz.w   1,S
+ 633                 bne     L613
+ 634                 inc     1,S
+ 635 L613            inxt
+ 640 L619            .byt  0x82,"0",0xBC
+ 641                 .wrd  L605              ;link to 0=
+ 642 ZLESS           .wrd  $+2
+ 644                 lda.w   1,S
+ 645                 stz.w   1,S
+ 646                 bpl     L620
+ 647                 inc     1,S
+ 648 L620            inxt
+ 653 L632            .byt  0x81,0xAB
+ 654                 .wrd  L619              ;link to V-ADJ
+ 655 PLUS            .wrd  $+2
+ 657                 clc
+ 658                 pla.w
+ 659                 adc.w   1,S
+ 660                 sta.w   1,S
+ 661                 inxt
+ 666 L649            .byt  0x82,"D",0xAB
+ 667                 .wrd  L632              ;LINK TO +
+ 668 DPLUS           .wrd  $+2
+ 670                 clc
+ 671                 lda.w   3,S
+ 672                 adc.w   7,S
+ 673                 sta.w   7,S
+ 674                 lda.w   1,S
+ 675                 adc.w   5,S
+ 676                 sta.w   5,S
+ 677                 adj     #4
+ 678                 inxt
+ 683 L670            .byt  0x85,"MINU",0xD3
+ 684                 .wrd  L649              ;link to D+
+ 685 MINUS           .wrd  $+2
+ 687                 sec
+ 688                 lda     #0
+ 689                 sbc.w   1,S
+ 690                 sta.w   1,S
+ 691                 inxt
+ 696 L685            .byt  0x86,"DMINU",0xD3
+ 697                 .wrd  L670              ;link to  MINUS
+ 698 DMINU           .wrd  $+2
+ 700                 sec
+ 701                 lda     #0
+ 702                 dup     a
+ 703                 sbc.w   3,S
+ 704                 sta.w   3,S
+ 705                 rot     a
+ 706                 sbc.w   1,S
+ 707                 sta.w   1,S
+ 708                 inxt
+ 713 L700            .byt  0x84,"OVE",0xD2
+ 714                 .wrd  L685              ;link to DMINUS
+ 715 OVER            .wrd  $+2
+ 717                 lda.w   3,S
+ 718                 pha.w
+ 719                 inxt
+ 724 L711            .byt  0x84,"DRO",0xD0
+ 725                 .wrd  L700              ;link to OVER
+ 726 DROP            .wrd  POP
+ 731 L718            .byt  0x84,"SWA",0xD0
+ 732                 .wrd  L711              ;link to DROP
+ 733 SWAP            .wrd  $+2
  735                 pla.w
- 736                 swp     a
- 737                 pha.w
- 738                 rot     a
+ 736                 dup     a
+ 737                 pla.w
+ 738                 swp     a
  739                 pha.w
- 740                 inxt
- 745 L733            .byt  0x83,"DU",0xD0
- 746                 .wrd  L718              ;link to SWAP
- 747 DUP             .wrd  $+2
- 749                 lda.w   1,S
- 750                 pha.w
- 751                 inxt
- 756 L744            .byt  0x82,"+",0xA1
- 757                 .wrd  L733              ;link to DUP
- 758 PSTOR           .wrd  $+2
- 760                 clc
- 761                 lda.w   (1,S)
- 762                 adc.w   3,S
- 763                 sta.w   (1,S)
- 764                 adj     #4
- 765                 inxt
- 770 L762            .byt  0x86,"TOGGL",0xC5
- 771                 .wrd  L744              ;link to +!
- 772 TOGGL           .wrd  $+2
- 774                 lda     (3,S)
- 775                 eor     1,S
- 776                 sta     (3,S)
- 777                 adj     #4
- 778                 inxt
- 783 L773            .byt  0x81,0xC0
- 784                 .wrd  L762              ;link to TOGGLE
- 785 AT              .wrd  $+2
- 787                 lda.w   (1,S)
- 788                 sta.w   1,S
- 789                 inxt
- 794 L787            .byt  0x82,"C",0xC0
- 795                 .wrd  L773              ;link to @
- 796 CAT             .wrd  $+2
- 798                 lda     (1,S)
- 799                 sta.w   1,S
- 800                 inxt
- 805 L798            .byt  0x81,0xA1
- 806                 .wrd  L787              ;link to C@
- 807 STORE           .wrd  $+2
- 809                 lda.w   3,S
- 810                 sta.w   (1,S)
- 811                 adj     #4
- 812                 inxt
- 817 L813            .byt  0x82,"C",0xA1
- 818                 .wrd  L798              ;link to !
- 819 CSTOR           .wrd  $+2
- 821                 lda     3,S
- 822                 sta     (1,S)
- 823                 adj     #4
- 824                 inxt
- 836 NEXT            inxt
- 838 DOCOL           ient
- 840 DOCON           phw.s               ; put address of current CFA onto PS
- 841                 ldy     #2
- 842                 lda.w   (1,S),Y     ; load constant from current word
- 843                 sta.w   1,S         ; overwrite ptr(CFA) with constant
- 844                 inxt
- 846 DOVAR           phw.s               ; push CFA (W) onto PS
- 847                 pla.w               ; pull CFA from PS into A
- 848                 inc     a           ; adjust to point to Parameter Field
- 849                 inc     a
- 850                 pha.w               ; push PF address onto PS
- 851                 inxt
- 853 DOUSE           phw.s
- 854                 ldy     #2
- 855                 lda     (1,S),Y
- 856                 clc
- 857                 adc.w   UP
- 858                 sta.w   1,S
- 859                 inxt
- 887 DODOE           phi                 ; push IP on RS
- 888                 ldy     #2          ; set offset to Parameter Field
- 889                 phw.s               ; push W (CFA) to PS
- 890                 lda     (1,S),Y     ; load pointer to Forth word into IP
- 891                 tai
- 892                 clc                 ; prepare to adjust W
- 893                 pla.w               ; load Acc with W
- 894                 adc.w   #4          ; adjust W
- 895                 pha.w               ; push pointer to PS
- 896                 inxt
- 907 L823            .byt  0xC1,0xBA
- 908                 .wrd  L813              ;link to C!
- 909 COLON           .wrd  DOCOL
- 910                 .wrd  QEXEC
- 911                 .wrd  SCSP
- 912                 .wrd  CURR
- 913                 .wrd  AT
- 914                 .wrd  CON
- 915                 .wrd  STORE
- 916                 .wrd  CREAT
- 917                 .wrd  RBRAC
- 918                 .wrd  PSCOD
- 923 L853            .byt  0xC1,0xBB
- 924                 .wrd  L823              ;link to :
- 925                 .wrd  DOCOL
- 926                 .wrd  QCSP
- 927                 .wrd  COMP
- 928                 .wrd  SEMIS
- 929                 .wrd  SMUDG
- 930                 .wrd  LBRAC
- 931                 .wrd  SEMIS
- 936 L867            .byt  0x88,"CONSTAN",0xD4
- 937                 .wrd  L853              ;link to ;
- 938 CONST           .wrd  DOCOL
- 939                 .wrd  CREAT
- 940                 .wrd  SMUDG
- 941                 .wrd  COMMA
- 942                 .wrd  PSCOD
- 947 L885            .byt  0x88,"VARIABL",0xC5
- 948                 .wrd  L867              ;link to CONSTANT
- 949 VAR             .wrd  DOCOL
- 950                 .wrd  CONST
- 951                 .wrd  PSCOD
- 956 L902            .byt  0x84,"USE",0xD2
- 957                 .wrd  L885              ;link to VARIABLE
- 958 USER            .wrd  DOCOL
- 959                 .wrd  CONST
- 960                 .wrd  PSCOD
- 965 L920            .byt  0x81,0xB0
- 966                 .wrd  L902              ;link to USER
- 967 ZERO            .wrd  DOCON
- 968                 .wrd  0
- 973 L928            .byt  0x81,0xB1
- 974                 .wrd  L920              ;link to 0
- 975 ONE             .wrd  DOCON
- 976                 .wrd  1
- 981 L936            .byt  0x81,0xB2
- 982                 .wrd  L928              ;link to 1
- 983 TWO             .wrd  DOCON
- 984                 .wrd  2
- 989 L944            .byt  0x81,0xB3
- 990                 .wrd  L936              ;link to 2
- 991 THREE           .wrd  DOCON
- 992                 .wrd  3
- 997 L952            .byt  0x82,"B",0xCC
- 998                 .wrd  L944              ;link to 3
- 999 BL              .wrd  DOCON
-1000                 .wrd  0x20
-1005 L960            .byt  0x83,"C/",0xCC
-1006                 .wrd  L952              ;link to BL
-1007 CSLL            .wrd  DOCON
-1008                 .wrd  64
-1013 L968            .byt  0x85,"FIRS",0xD4
-1014                 .wrd  L960              ;link to C/L
-1015 FIRST           .wrd  DOCON
-1016                 .wrd  DAREA             ;bottom of disk buffer area
-1021 L976            .byt  0x85,"LIMI",0xD4
-1022                 .wrd  L968              ;link to FIRST
-1023 LIMIT           .wrd  DOCON
-1024                 .wrd  UAREA             ;buffers end at user area
-1030 L984            .byt  0x85,"B/BU",0xC6
-1031                 .wrd  L976              ;link to LIMIT
-1032 BBUF            .wrd  DOCON
-1033                 .wrd  SSIZE             ;sector size
-1039 L992            .byt  0x85,"B/SC",0xD2
-1040                 .wrd  L984              ;link to B/BUF
-1041 BSCR            .wrd  DOCON
-1042                 .wrd  8                 ;blocks to make one screen
-1047 L1000           .byt  0x87,"+ORIGI",0xCE
-1048                 .wrd  L992              ;link to B/SCR
-1049 PORIG           .wrd  DOCOL
-1050                 .wrd  LIT
-1051                 .wrd  ORIG
-1052                 .wrd  PLUS
-1053                 .wrd  SEMIS
-1058 L1010           .byt  0x83,"TI",0xC2
-1059                 .wrd  L1000             ;link to +ORIGIN
-1060 TIB             .wrd  DOUSE
-1061                 .byt  0xA
-1066 L1018           .byt  0x85,"WIDT",0xC8
-1067                 .wrd  L1010             ;link to TIB
-1068 WIDTH           .wrd  DOUSE
-1069                 .byt  0xC
-1074 L1026           .byt  0x87,"WARNIN",0xC7
-1075                 .wrd  L1018             ;link to WIDTH
-1076 WARN            .wrd  DOUSE
-1077                 .byt  0xE
-1082 L1034           .byt  0x85,"FENC",0xC5
-1083                 .wrd  L1026             ;link to WARNING
-1084 FENCE           .wrd  DOUSE
-1085                 .byt  0x10
-1091 L1042           .byt  0x82,"D",0xD0
-1092                 .wrd  L1034             ;link to FENCE
-1093 DP              .wrd  DOUSE
-1094                 .byt  0x12
-1099 L1050           .byt  0x88,"VOC-LIN",0xCB
-1100                 .wrd  L1042             ;link to DP
-1101 VOCL            .wrd  DOUSE
-1102                 .byt  0x14
-1107 L1058           .byt  0x83,"BL",0xCB
-1108                 .wrd  L1050             ;link to VOC-LINK
-1109 BLK             .wrd  DOUSE
-1110                 .byt  0x16
-1115 L1066           .byt  0x82,"I",0xCE
-1116                 .wrd  L1058             ;link to BLK
-1117 IN              .wrd  DOUSE
-1118                 .byt  0x18
-1123 L1074           .byt  0x83,"OU",0xD4
-1124                 .wrd  L1066             ;link to IN
-1125 OUT             .wrd  DOUSE
-1126                 .byt  0x1A
-1131 L1082           .byt  0x83,"SC",0xD2
-1132                 .wrd  L1074             ;link to OUT
-1133 SCR             .wrd  DOUSE
-1134                 .byt  0x1C
-1139 L1090           .byt  0x86,"OFFSE",0xD4
-1140                 .wrd  L1082             ;link to SCR
-1141 OFSET           .wrd  DOUSE
-1142                 .byt  0x1E
-1147 L1098           .byt  0x87,"CONTEX",0xD4
-1148                 .wrd  L1090             ;link to OFFSET
-1149 CON             .wrd  DOUSE
-1150                 .byt  0x20
-1155 L1106           .byt  0x87,"CURREN",0xD4
-1156                 .wrd  L1098             ;link to CONTEXT
-1157 CURR            .wrd  DOUSE
-1158                 .byt  0x22
-1163 L1114           .byt  0x85,"STAT",0xC5
-1164                 .wrd  L1106             ;link to CURRENT
-1165 STATE           .wrd  DOUSE
-1166                 .byt  0x24
-1171 L1122           .byt  0x84,"BAS",0xC5
-1172                 .wrd  L1114             ;link to STATE
-1173 BASE            .wrd  DOUSE
-1174                 .byt  0x26
-1179 L1130           .byt  0x83,"DP",0xCC
-1180                 .wrd  L1122             ;link to BASE
-1181 DPL             .wrd  DOUSE
-1182                 .byt  0x28
-1187 L1138           .byt  0x83,"FL",0xC4
-1188                 .wrd  L1130             ;link to DPL
-1189 FLD             .wrd  DOUSE
-1190                 .byt  0x2A
-1195 L1146           .byt  0x83,"CS",0xD0
-1196                 .wrd  L1138             ;link to FLD
-1197 CSP             .wrd  DOUSE
-1198                 .byt  0x2C
-1203 L1154           .byt  0x82,"R",0xA3
-1204                 .wrd  L1146             ;link to CSP
-1205 RNUM            .wrd  DOUSE
-1206                 .byt  0x2E
-1211 L1162           .byt  0x83,"HL",0xC4
-1212                 .wrd  L1154             ;link to R#
-1213 HLD             .wrd  DOUSE
-1214                 .byt  0x30
-1219 L1170           .byt  0x82,"1",0xAB
-1220                 .wrd  L1162             ;link to HLD
-1221 ONEP            .wrd  DOCOL
-1222                 .wrd  ONE
-1223                 .wrd  PLUS
-1224                 .wrd  SEMIS
-1229 L1180           .byt  0x82,"2",0xAB
-1230                 .wrd  L1170             ;link to 1+
-1231 TWOP            .wrd  DOCOL
-1232                 .wrd  TWO
-1233                 .wrd  PLUS
-1234                 .wrd  SEMIS
-1239 L1190           .byt  0x84,"HER",0xC5
-1240                 .wrd  L1180             ;link to 2+
-1241 HERE            .wrd  DOCOL
-1242                 .wrd  DP
-1243                 .wrd  AT
-1244                 .wrd  SEMIS
-1249 L1200           .byt  0x85,"ALLO",0xD4
-1250                 .wrd  L1190             ;link to HERE
-1251 ALLOT           .wrd  DOCOL
-1252                 .wrd  DP
-1253                 .wrd  PSTOR
-1254                 .wrd  SEMIS
-1259 L1210           .byt  0x81,0xAC
-1260                 .wrd  L1200             ;link to ALLOT
-1261 COMMA           .wrd  DOCOL
-1262                 .wrd  HERE
-1263                 .wrd  STORE
-1264                 .wrd  TWO
-1265                 .wrd  ALLOT
-1266                 .wrd  SEMIS
-1271 L1222           .byt  0x82,"C",0xAC
-1272                 .wrd  L1210             ;link to ,
-1273 CCOMM           .wrd  DOCOL
-1274                 .wrd  HERE
-1275                 .wrd  CSTOR
-1276                 .wrd  ONE
-1277                 .wrd  ALLOT
-1278                 .wrd  SEMIS
-1283 L1234           .byt  0x81,0xAD
-1284                 .wrd  L1222             ;link to C,
-1285 SUB             .wrd  DOCOL
-1286                 .wrd  MINUS
-1287                 .wrd  PLUS
-1288                 .wrd  SEMIS
-1293 L1244           .byt  0x81,0xBD
-1294                 .wrd  L1234             ;link to -
-1295 EQUAL           .wrd  DOCOL
-1296                 .wrd  SUB
-1297                 .wrd  ZEQU
-1298                 .wrd  SEMIS
-1303 L1246           .byt  0x82,"U",0xBC
-1304                 .wrd  L1244             ;link to =
-1305 ULESS           .wrd  DOCOL
-1306                 .wrd  SUB               ;subtract two values
-1307                 .wrd  ZLESS             ;test sign
-1308                 .wrd  SEMIS
-1314 L1254           .byt  0x81,0xBC
-1315                 .wrd  L1246             ;link to U<
-1316 LESS            .wrd  $+2
-1317                 sec
-1318                 lda   2,X
-1319                 sbc   0,X               ;subtract
-1320                 lda   3,X
-1321                 sbc   1,X
-1322                 sty   3,X               ;zero high byte
-1323                 bvc   L1258
-1324                 eor   #0x80              ;correct overflow
-1325 L1258           bpl   L1260
-1326                 iny                     ;invert boolean
-1327 L1260           sty   2,X               ;leave boolean
-1328                 jmp   POP
-1332 L1264           .byt  0x81,0xBE
-1333                 .wrd  L1254             ;link to <
-1334 GREAT           .wrd  DOCOL
-1335                 .wrd  SWAP
-1336                 .wrd  LESS
-1337                 .wrd  SEMIS
-1342 L1274           .byt  0x83,"RO",0xD4
-1343                 .wrd  L1264             ;link to >
-1344 ROT             .wrd  DOCOL
-1345                 .wrd  TOR
-1346                 .wrd  SWAP
-1347                 .wrd  RFROM
+ 740                 rot     a
+ 741                 pha.w
+ 742                 inxt
+ 747 L733            .byt  0x83,"DU",0xD0
+ 748                 .wrd  L718              ;link to SWAP
+ 749 DUP             .wrd  $+2
+ 751                 lda.w   1,S
+ 752                 pha.w
+ 753                 inxt
+ 758 L744            .byt  0x82,"+",0xA1
+ 759                 .wrd  L733              ;link to DUP
+ 760 PSTOR           .wrd  $+2
+ 762                 clc
+ 763                 lda.w   (1,S)
+ 764                 adc.w   3,S
+ 765                 sta.w   (1,S)
+ 766                 adj     #4
+ 767                 inxt
+ 772 L762            .byt  0x86,"TOGGL",0xC5
+ 773                 .wrd  L744              ;link to +!
+ 774 TOGGL           .wrd  $+2
+ 776                 lda     (3,S)
+ 777                 eor     1,S
+ 778                 sta     (3,S)
+ 779                 adj     #4
+ 780                 inxt
+ 785 L773            .byt  0x81,0xC0
+ 786                 .wrd  L762              ;link to TOGGLE
+ 787 AT              .wrd  $+2
+ 789                 lda.w   (1,S)
+ 790                 sta.w   1,S
+ 791                 inxt
+ 796 L787            .byt  0x82,"C",0xC0
+ 797                 .wrd  L773              ;link to @
+ 798 CAT             .wrd  $+2
+ 800                 lda     (1,S)
+ 801                 sta.w   1,S
+ 802                 inxt
+ 807 L798            .byt  0x81,0xA1
+ 808                 .wrd  L787              ;link to C@
+ 809 STORE           .wrd  $+2
+ 811                 lda.w   3,S
+ 812                 sta.w   (1,S)
+ 813                 adj     #4
+ 814                 inxt
+ 819 L813            .byt  0x82,"C",0xA1
+ 820                 .wrd  L798              ;link to !
+ 821 CSTOR           .wrd  $+2
+ 823                 lda     3,S
+ 824                 sta     (1,S)
+ 825                 adj     #4
+ 826                 inxt
+ 838 NEXT            inxt
+ 840 DOCOL           ient
+ 842 DOCON           phw.s               ; put address of current CFA onto PS
+ 843                 ldy     #2
+ 844                 lda.w   (1,S),Y     ; load constant from current word
+ 845                 sta.w   1,S         ; overwrite ptr(CFA) with constant
+ 846                 inxt
+ 848 DOVAR           phw.s               ; push CFA (W) onto PS
+ 849                 pla.w               ; pull CFA from PS into A
+ 850                 inc     a           ; adjust to point to Parameter Field
+ 851                 inc     a
+ 852                 pha.w               ; push PF address onto PS
+ 853                 inxt
+ 855 DOUSE           phw.s
+ 856                 ldy     #2
+ 857                 lda     (1,S),Y
+ 858                 clc
+ 859                 adc.w   UP
+ 860                 sta.w   1,S
+ 861                 inxt
+ 889 DODOE           phi                 ; push IP on RS
+ 890                 ldy     #2          ; set offset to Parameter Field
+ 891                 phw.s               ; push W (CFA) to PS
+ 892                 lda     (1,S),Y     ; load pointer to Forth word into IP
+ 893                 tai
+ 894                 clc                 ; prepare to adjust W
+ 895                 pla.w               ; load Acc with W
+ 896                 adc.w   #4          ; adjust W
+ 897                 pha.w               ; push pointer to PS
+ 898                 inxt
+ 909 L823            .byt  0xC1,0xBA
+ 910                 .wrd  L813              ;link to C!
+ 911 COLON           .wrd  DOCOL
+ 912                 .wrd  QEXEC
+ 913                 .wrd  SCSP
+ 914                 .wrd  CURR
+ 915                 .wrd  AT
+ 916                 .wrd  CON
+ 917                 .wrd  STORE
+ 918                 .wrd  CREAT
+ 919                 .wrd  RBRAC
+ 920                 .wrd  PSCOD
+ 925 L853            .byt  0xC1,0xBB
+ 926                 .wrd  L823              ;link to :
+ 927                 .wrd  DOCOL
+ 928                 .wrd  QCSP
+ 929                 .wrd  COMP
+ 930                 .wrd  SEMIS
+ 931                 .wrd  SMUDG
+ 932                 .wrd  LBRAC
+ 933                 .wrd  SEMIS
+ 938 L867            .byt  0x88,"CONSTAN",0xD4
+ 939                 .wrd  L853              ;link to ;
+ 940 CONST           .wrd  DOCOL
+ 941                 .wrd  CREAT
+ 942                 .wrd  SMUDG
+ 943                 .wrd  COMMA
+ 944                 .wrd  PSCOD
+ 949 L885            .byt  0x88,"VARIABL",0xC5
+ 950                 .wrd  L867              ;link to CONSTANT
+ 951 VAR             .wrd  DOCOL
+ 952                 .wrd  CONST
+ 953                 .wrd  PSCOD
+ 958 L902            .byt  0x84,"USE",0xD2
+ 959                 .wrd  L885              ;link to VARIABLE
+ 960 USER            .wrd  DOCOL
+ 961                 .wrd  CONST
+ 962                 .wrd  PSCOD
+ 967 L920            .byt  0x81,0xB0
+ 968                 .wrd  L902              ;link to USER
+ 969 ZERO            .wrd  DOCON
+ 970                 .wrd  0
+ 975 L928            .byt  0x81,0xB1
+ 976                 .wrd  L920              ;link to 0
+ 977 ONE             .wrd  DOCON
+ 978                 .wrd  1
+ 983 L936            .byt  0x81,0xB2
+ 984                 .wrd  L928              ;link to 1
+ 985 TWO             .wrd  DOCON
+ 986                 .wrd  2
+ 991 L944            .byt  0x81,0xB3
+ 992                 .wrd  L936              ;link to 2
+ 993 THREE           .wrd  DOCON
+ 994                 .wrd  3
+ 999 L952            .byt  0x82,"B",0xCC
+1000                 .wrd  L944              ;link to 3
+1001 BL              .wrd  DOCON
+1002                 .wrd  0x20
+1007 L960            .byt  0x83,"C/",0xCC
+1008                 .wrd  L952              ;link to BL
+1009 CSLL            .wrd  DOCON
+1010                 .wrd  64
+1015 L968            .byt  0x85,"FIRS",0xD4
+1016                 .wrd  L960              ;link to C/L
+1017 FIRST           .wrd  DOCON
+1018                 .wrd  DAREA             ;bottom of disk buffer area
+1023 L976            .byt  0x85,"LIMI",0xD4
+1024                 .wrd  L968              ;link to FIRST
+1025 LIMIT           .wrd  DOCON
+1026                 .wrd  UAREA             ;buffers end at user area
+1032 L984            .byt  0x85,"B/BU",0xC6
+1033                 .wrd  L976              ;link to LIMIT
+1034 BBUF            .wrd  DOCON
+1035                 .wrd  SSIZE             ;sector size
+1041 L992            .byt  0x85,"B/SC",0xD2
+1042                 .wrd  L984              ;link to B/BUF
+1043 BSCR            .wrd  DOCON
+1044                 .wrd  8                 ;blocks to make one screen
+1049 L1000           .byt  0x87,"+ORIGI",0xCE
+1050                 .wrd  L992              ;link to B/SCR
+1051 PORIG           .wrd  DOCOL
+1052                 .wrd  LIT
+1053                 .wrd  ORIG
+1054                 .wrd  PLUS
+1055                 .wrd  SEMIS
+1060 L1010           .byt  0x83,"TI",0xC2
+1061                 .wrd  L1000             ;link to +ORIGIN
+1062 TIB             .wrd  DOUSE
+1063                 .byt  0xA
+1068 L1018           .byt  0x85,"WIDT",0xC8
+1069                 .wrd  L1010             ;link to TIB
+1070 WIDTH           .wrd  DOUSE
+1071                 .byt  0xC
+1076 L1026           .byt  0x87,"WARNIN",0xC7
+1077                 .wrd  L1018             ;link to WIDTH
+1078 WARN            .wrd  DOUSE
+1079                 .byt  0xE
+1084 L1034           .byt  0x85,"FENC",0xC5
+1085                 .wrd  L1026             ;link to WARNING
+1086 FENCE           .wrd  DOUSE
+1087                 .byt  0x10
+1093 L1042           .byt  0x82,"D",0xD0
+1094                 .wrd  L1034             ;link to FENCE
+1095 DP              .wrd  DOUSE
+1096                 .byt  0x12
+1101 L1050           .byt  0x88,"VOC-LIN",0xCB
+1102                 .wrd  L1042             ;link to DP
+1103 VOCL            .wrd  DOUSE
+1104                 .byt  0x14
+1109 L1058           .byt  0x83,"BL",0xCB
+1110                 .wrd  L1050             ;link to VOC-LINK
+1111 BLK             .wrd  DOUSE
+1112                 .byt  0x16
+1117 L1066           .byt  0x82,"I",0xCE
+1118                 .wrd  L1058             ;link to BLK
+1119 IN              .wrd  DOUSE
+1120                 .byt  0x18
+1125 L1074           .byt  0x83,"OU",0xD4
+1126                 .wrd  L1066             ;link to IN
+1127 OUT             .wrd  DOUSE
+1128                 .byt  0x1A
+1133 L1082           .byt  0x83,"SC",0xD2
+1134                 .wrd  L1074             ;link to OUT
+1135 SCR             .wrd  DOUSE
+1136                 .byt  0x1C
+1141 L1090           .byt  0x86,"OFFSE",0xD4
+1142                 .wrd  L1082             ;link to SCR
+1143 OFSET           .wrd  DOUSE
+1144                 .byt  0x1E
+1149 L1098           .byt  0x87,"CONTEX",0xD4
+1150                 .wrd  L1090             ;link to OFFSET
+1151 CON             .wrd  DOUSE
+1152                 .byt  0x20
+1157 L1106           .byt  0x87,"CURREN",0xD4
+1158                 .wrd  L1098             ;link to CONTEXT
+1159 CURR            .wrd  DOUSE
+1160                 .byt  0x22
+1165 L1114           .byt  0x85,"STAT",0xC5
+1166                 .wrd  L1106             ;link to CURRENT
+1167 STATE           .wrd  DOUSE
+1168                 .byt  0x24
+1173 L1122           .byt  0x84,"BAS",0xC5
+1174                 .wrd  L1114             ;link to STATE
+1175 BASE            .wrd  DOUSE
+1176                 .byt  0x26
+1181 L1130           .byt  0x83,"DP",0xCC
+1182                 .wrd  L1122             ;link to BASE
+1183 DPL             .wrd  DOUSE
+1184                 .byt  0x28
+1189 L1138           .byt  0x83,"FL",0xC4
+1190                 .wrd  L1130             ;link to DPL
+1191 FLD             .wrd  DOUSE
+1192                 .byt  0x2A
+1197 L1146           .byt  0x83,"CS",0xD0
+1198                 .wrd  L1138             ;link to FLD
+1199 CSP             .wrd  DOUSE
+1200                 .byt  0x2C
+1205 L1154           .byt  0x82,"R",0xA3
+1206                 .wrd  L1146             ;link to CSP
+1207 RNUM            .wrd  DOUSE
+1208                 .byt  0x2E
+1213 L1162           .byt  0x83,"HL",0xC4
+1214                 .wrd  L1154             ;link to R#
+1215 HLD             .wrd  DOUSE
+1216                 .byt  0x30
+1221 L1170           .byt  0x82,"1",0xAB
+1222                 .wrd  L1162             ;link to HLD
+1223 ONEP            .wrd  DOCOL
+1224                 .wrd  ONE
+1225                 .wrd  PLUS
+1226                 .wrd  SEMIS
+1231 L1180           .byt  0x82,"2",0xAB
+1232                 .wrd  L1170             ;link to 1+
+1233 TWOP            .wrd  DOCOL
+1234                 .wrd  TWO
+1235                 .wrd  PLUS
+1236                 .wrd  SEMIS
+1241 L1190           .byt  0x84,"HER",0xC5
+1242                 .wrd  L1180             ;link to 2+
+1243 HERE            .wrd  DOCOL
+1244                 .wrd  DP
+1245                 .wrd  AT
+1246                 .wrd  SEMIS
+1251 L1200           .byt  0x85,"ALLO",0xD4
+1252                 .wrd  L1190             ;link to HERE
+1253 ALLOT           .wrd  DOCOL
+1254                 .wrd  DP
+1255                 .wrd  PSTOR
+1256                 .wrd  SEMIS
+1261 L1210           .byt  0x81,0xAC
+1262                 .wrd  L1200             ;link to ALLOT
+1263 COMMA           .wrd  DOCOL
+1264                 .wrd  HERE
+1265                 .wrd  STORE
+1266                 .wrd  TWO
+1267                 .wrd  ALLOT
+1268                 .wrd  SEMIS
+1273 L1222           .byt  0x82,"C",0xAC
+1274                 .wrd  L1210             ;link to ,
+1275 CCOMM           .wrd  DOCOL
+1276                 .wrd  HERE
+1277                 .wrd  CSTOR
+1278                 .wrd  ONE
+1279                 .wrd  ALLOT
+1280                 .wrd  SEMIS
+1285 L1234           .byt  0x81,0xAD
+1286                 .wrd  L1222             ;link to C,
+1287 SUB             .wrd  DOCOL
+1288                 .wrd  MINUS
+1289                 .wrd  PLUS
+1290                 .wrd  SEMIS
+1295 L1244           .byt  0x81,0xBD
+1296                 .wrd  L1234             ;link to -
+1297 EQUAL           .wrd  DOCOL
+1298                 .wrd  SUB
+1299                 .wrd  ZEQU
+1300                 .wrd  SEMIS
+1305 L1246           .byt  0x82,"U",0xBC
+1306                 .wrd  L1244             ;link to =
+1307 ULESS           .wrd  DOCOL
+1308                 .wrd  SUB               ;subtract two values
+1309                 .wrd  ZLESS             ;test sign
+1310                 .wrd  SEMIS
+1316 L1254           .byt  0x81,0xBC
+1317                 .wrd  L1246             ;link to U<
+1318 LESS            .wrd  $+2
+1319                 sec
+1320                 lda   2,X
+1321                 sbc   0,X               ;subtract
+1322                 lda   3,X
+1323                 sbc   1,X
+1324                 sty   3,X               ;zero high byte
+1325                 bvc   L1258
+1326                 eor   #0x80              ;correct overflow
+1327 L1258           bpl   L1260
+1328                 iny                     ;invert boolean
+1329 L1260           sty   2,X               ;leave boolean
+1330                 jmp   POP
+1334 L1264           .byt  0x81,0xBE
+1335                 .wrd  L1254             ;link to <
+1336 GREAT           .wrd  DOCOL
+1337                 .wrd  SWAP
+1338                 .wrd  LESS
+1339                 .wrd  SEMIS
+1344 L1274           .byt  0x83,"RO",0xD4
+1345                 .wrd  L1264             ;link to >
+1346 ROT             .wrd  DOCOL
+1347                 .wrd  TOR
 1348                 .wrd  SWAP
-1349                 .wrd  SEMIS
-1354 L1286           .byt  0x85,"SPAC",0xC5
-1355                 .wrd  L1274             ;link to ROT
-1356 SPACE           .wrd  DOCOL
-1357                 .wrd  BL
-1358                 .wrd  EMIT
-1359                 .wrd  SEMIS
-1364 L1296           .byt  0x84,"-DU",0xD0
-1365                 .wrd  L1286             ;link to SPACE
-1366 DDUP            .wrd  DOCOL
-1367                 .wrd  DUP
-1368                 .wrd  ZBRAN
-1369 L1301           .wrd  L1303-L1301       ;0x4
-1370                 .wrd  DUP
-1371 L1303           .wrd  SEMIS
-1376 L1308           .byt  0x88,"TRAVERS",0xC5
-1377                 .wrd  L1296             ;link to -DUP
-1378 TRAV            .wrd  DOCOL
-1379                 .wrd  SWAP
-1380 L1312           .wrd  OVER
-1381                 .wrd  PLUS
-1382                 .wrd  CLIT
-1383                 .byt  0x7F
-1384                 .wrd  OVER
-1385                 .wrd  CAT
-1386                 .wrd  LESS
-1387                 .wrd  ZBRAN
-1388 L1320           .wrd  L1312-L1320       ;0xFFF1
-1389                 .wrd  SWAP
-1390                 .wrd  DROP
-1391                 .wrd  SEMIS
-1396 L1328           .byt  0x86,"LATES",0xD4
-1397                 .wrd  L1308             ;link to TRAVERSE
-1398 LATES           .wrd  DOCOL
-1399                 .wrd  CURR
-1400                 .wrd  AT
-1401                 .wrd  AT
-1402                 .wrd  SEMIS
-1408 L1339           .byt  0x83,"LF",0xC1
-1409                 .wrd  L1328             ;link to LATEST
-1410 LFA             .wrd  DOCOL
-1411                 .wrd  CLIT
-1412                 .byt  4
-1413                 .wrd  SUB
-1414                 .wrd  SEMIS
-1419 L1350           .byt  0x83,"CF",0xC1
-1420                 .wrd  L1339             ;link to LFA
-1421 CFA             .wrd  DOCOL
-1422                 .wrd  TWO
-1423                 .wrd  SUB
-1424                 .wrd  SEMIS
-1429 L1360           .byt  0x83,"NF",0xC1
-1430                 .wrd  L1350             ;link to CFA
-1431 NFA             .wrd  DOCOL
-1432                 .wrd  CLIT
-1433                 .byt  0x5
-1434                 .wrd  SUB
-1435                 .wrd  LIT
-1436                 .wrd  0xFFFF
-1437                 .wrd  TRAV
-1438                 .wrd  SEMIS
-1443 L1373           .byt  0x83,"PF",0xC1
-1444                 .wrd  L1360             ;link to NFA
-1445 PFA             .wrd  DOCOL
-1446                 .wrd  ONE
-1447                 .wrd  TRAV
-1448                 .wrd  CLIT
-1449                 .byt  5
-1450                 .wrd  PLUS
-1451                 .wrd  SEMIS
-1456 L1386           .byt  0x84,"!CS",0xD0
-1457                 .wrd  L1373             ;link to PFA
-1458 SCSP            .wrd  DOCOL
-1459                 .wrd  SPAT
-1460                 .wrd  CSP
-1461                 .wrd  STORE
-1462                 .wrd  SEMIS
-1467 L1397           .byt  0x86,"?ERRO",0xD2
-1468                 .wrd  L1386             ;link to !CSP
-1469 QERR            .wrd  DOCOL
-1470                 .wrd  SWAP
-1471                 .wrd  ZBRAN
-1472 L1402           .wrd  L1406-L1402       ;0x8
-1473                 .wrd  ERROR
-1474                 .wrd  BRAN
-1475 L1405           .wrd  L1407-L1405       ;0x4
-1476 L1406           .wrd  DROP
-1477 L1407           .wrd  SEMIS
-1482 L1412           .byt  0x85,"?COM",0xD0
-1483                 .wrd  L1397             ;link to ?ERROR
-1484 QCOMP           .wrd  DOCOL
-1485                 .wrd  STATE
-1486                 .wrd  AT
-1487                 .wrd  ZEQU
-1488                 .wrd  CLIT
-1489                 .byt  0x11
-1490                 .wrd  QERR
-1491                 .wrd  SEMIS
-1496 L1426           .byt  0x85,"?EXE",0xC3
-1497                 .wrd  L1412             ;link to ?COMP
-1498 QEXEC           .wrd  DOCOL
-1499                 .wrd  STATE
-1500                 .wrd  AT
-1501                 .wrd  CLIT
-1502                 .byt  0x12
-1503                 .wrd  QERR
-1504                 .wrd  SEMIS
-1509 L1439           .byt  0x86,"?PAIR",0xD3
-1510                 .wrd  L1426             ;link to ?EXEC
-1511 QPAIR           .wrd  DOCOL
-1512                 .wrd  SUB
-1513                 .wrd  CLIT
-1514                 .byt  0x13
-1515                 .wrd  QERR
-1516                 .wrd  SEMIS
-1521 L1451           .byt  0x84,"?CS",0xD0
-1522                 .wrd  L1439             ;link to ?PAIRS
-1523 QCSP            .wrd  DOCOL
-1524                 .wrd  SPAT
-1525                 .wrd  CSP
-1526                 .wrd  AT
-1527                 .wrd  SUB
-1528                 .wrd  CLIT
-1529                 .byt  0x14
-1530                 .wrd  QERR
-1531                 .wrd  SEMIS
-1536 L1466           .byt  0x88,"?LOADIN",0xC7
-1537                 .wrd  L1451             ;link to ?CSP
-1538 QLOAD           .wrd  DOCOL
-1539                 .wrd  BLK
-1540                 .wrd  AT
-1541                 .wrd  ZEQU
-1542                 .wrd  CLIT
-1543                 .byt  0x16
-1544                 .wrd  QERR
-1545                 .wrd  SEMIS
-1550 L1480           .byt  0x87,"COMPIL",0xC5
-1551                 .wrd  L1466             ;link to ?LOADING
-1552 COMP            .wrd  DOCOL
-1553                 .wrd  QCOMP
-1554                 .wrd  RFROM
-1555                 .wrd  DUP
-1556                 .wrd  TWOP
-1557                 .wrd  TOR
-1558                 .wrd  AT
-1559                 .wrd  COMMA
-1560                 .wrd  SEMIS
-1565 L1495           .byt  0xC1,0xDB
-1566                 .wrd  L1480             ;link to COMPILE
-1567 LBRAC           .wrd  DOCOL
-1568                 .wrd  ZERO
-1569                 .wrd  STATE
-1570                 .wrd  STORE
-1571                 .wrd  SEMIS
-1576 L1507           .byt  0x81,0xDD
-1577                 .wrd  L1495             ;link to [
-1578 RBRAC           .wrd  DOCOL
-1579                 .wrd  CLIT
-1580                 .byt  0xC0
-1581                 .wrd  STATE
-1582                 .wrd  STORE
-1583                 .wrd  SEMIS
-1588 L1519           .byt  0x86,"SMUDG",0xC5
-1589                 .wrd  L1507             ;link to ]
-1590 SMUDG           .wrd  DOCOL
-1591                 .wrd  LATES
-1592                 .wrd  CLIT
-1593                 .byt  0x20
-1594                 .wrd  TOGGL
-1595                 .wrd  SEMIS
-1600 L1531           .byt  0x83,"HE",0xD8
-1601                 .wrd  L1519             ;link to SMUDGE
-1602 HEX             .wrd  DOCOL
-1603                 .wrd  CLIT
-1604                 .byt  16
-1605                 .wrd  BASE
-1606                 .wrd  STORE
-1607                 .wrd  SEMIS
-1612 L1543           .byt  0x87,"DECIMA",0xCC
-1613                 .wrd  L1531             ;link to HEX
-1614 DECIM           .wrd  DOCOL
-1615                 .wrd  CLIT
-1616                 .byt  10
-1617                 .wrd  BASE
-1618                 .wrd  STORE
-1619                 .wrd  SEMIS
-1624 L1555           .byt  0x87,"(;CODE",0xA9
-1625                 .wrd  L1543             ;link to DECIMAL
-1626 PSCOD           .wrd  DOCOL
-1627                 .wrd  RFROM
-1628                 .wrd  LATES
-1629                 .wrd  PFA
-1630                 .wrd  CFA
-1631                 .wrd  STORE
-1632                 .wrd  SEMIS
-1637 L1568           .byt  0xC5,";COD",0xC5
-1638                 .wrd  L1555             ;link to (;CODE)
-1639 SCOD            .wrd  DOCOL
-1640                 .wrd  QCSP
-1641                 .wrd  COMP
-1642                 .wrd  PSCOD
-1643                 .wrd  LBRAC
-1644                 .wrd  SMUDG
-1645                 .wrd  SEMIS
-1650 L1582           .byt  0x87,"<BUILD",0xD3
-1651                 .wrd  L1568             ;link to ;CODE
-1652 BUILD           .wrd  DOCOL
-1653                 .wrd  ZERO
-1654                 .wrd  CONST
-1655                 .wrd  SEMIS
-1660 L1592           .byt  0x85,"DOES",0xBE
-1661                 .wrd  L1582             ;link to <BUILDS
-1662 DOES            .wrd  DOCOL
-1663                 .wrd  RFROM
-1664                 .wrd  LATES
-1665                 .wrd  PFA
-1666                 .wrd  STORE
-1667                 .wrd  PSCOD
-1672 L1622           .byt  0x85,"COUN",0xD4
-1673                 .wrd  L1592             ;link to DOES>
-1674 COUNT           .wrd  DOCOL
-1675                 .wrd  DUP
-1676                 .wrd  ONEP
-1677                 .wrd  SWAP
-1678                 .wrd  CAT
-1679                 .wrd  SEMIS
-1684 L1634           .byt  0x84,"TYP",0xC5
-1685                 .wrd  L1622             ;link to COUNT
-1686 TYPE            .wrd  DOCOL
-1687                 .wrd  DDUP
-1688                 .wrd  ZBRAN
-1689 L1639           .wrd  L1651-L1639       ;0x18
-1690                 .wrd  OVER
-1691                 .wrd  PLUS
-1692                 .wrd  SWAP
-1693                 .wrd  PDO
-1694 L1644           .wrd  I
-1695                 .wrd  CAT
-1696                 .wrd  EMIT
-1697                 .wrd  PLOOP
-1698 L1648           .wrd  L1644-L1648       ;0xFFF8
-1699                 .wrd  BRAN
-1700 L1650           .wrd  L1652-L1650       ;0x4
-1701 L1651           .wrd  DROP
-1702 L1652           .wrd  SEMIS
-1707 L1657           .byt  0x89,"-TRAILIN",0xC7
-1708                 .wrd  L1634             ;link to TYPE
-1709 DTRAI           .wrd  DOCOL
-1710                 .wrd  DUP
-1711                 .wrd  ZERO
-1712                 .wrd  PDO
-1713 L1663           .wrd  OVER
-1714                 .wrd  OVER
-1715                 .wrd  PLUS
-1716                 .wrd  ONE
-1717                 .wrd  SUB
-1718                 .wrd  CAT
-1719                 .wrd  BL
-1720                 .wrd  SUB
-1721                 .wrd  ZBRAN
-1722 L1672           .wrd  L1676-L1672       ;0x8
-1723                 .wrd  LEAVE
-1724                 .wrd  BRAN
-1725 L1675           .wrd  L1678-L1675       ;0x6
-1726 L1676           .wrd  ONE
-1727                 .wrd  SUB
-1728 L1678           .wrd  PLOOP
-1729 L1679           .wrd  L1663-L1679       ;0xFFE0
-1730                 .wrd  SEMIS
-1734 L1685           .byt  0x84,"(.",0x22,0xA9  ;$84 (." $A9
-1735                 .wrd  L1657             ;link to -TRAILING
-1736 PDOTQ           .wrd  DOCOL
-1737                 .wrd  R
-1738                 .wrd  COUNT
-1739                 .wrd  DUP
-1740                 .wrd  ONEP
-1741                 .wrd  RFROM
-1742                 .wrd  PLUS
-1743                 .wrd  TOR
-1744                 .wrd  TYPE
-1745                 .wrd  SEMIS
-1750 L1701           .byt  0xC2,".",0xA2
-1751                 .wrd  L1685             ;link to PDOTQ
-1752                 .wrd  DOCOL
-1753                 .wrd  CLIT
-1754                 .byt  0x22
-1755                 .wrd  STATE
-1756                 .wrd  AT
-1757                 .wrd  ZBRAN
-1758 L1709           .wrd  L1719-L1709       ;0x14
-1759                 .wrd  COMP
-1760                 .wrd  PDOTQ
-1761                 .wrd  WORD
-1762                 .wrd  HERE
-1763                 .wrd  CAT
-1764                 .wrd  ONEP
-1765                 .wrd  ALLOT
-1766                 .wrd  BRAN
-1767 L1718           .wrd  L1723-L1718       ;0xA
-1768 L1719           .wrd  WORD
-1769                 .wrd  HERE
-1770                 .wrd  COUNT
-1771                 .wrd  TYPE
-1772 L1723           .wrd  SEMIS
-1777 L1729           .byt  0x86,"EXPEC",0xD4
-1778                 .wrd  L1701             ;link to ."
-1779 EXPEC           .wrd  DOCOL
-1780                 .wrd  OVER
-1781                 .wrd  PLUS
+1349                 .wrd  RFROM
+1350                 .wrd  SWAP
+1351                 .wrd  SEMIS
+1356 L1286           .byt  0x85,"SPAC",0xC5
+1357                 .wrd  L1274             ;link to ROT
+1358 SPACE           .wrd  DOCOL
+1359                 .wrd  BL
+1360                 .wrd  EMIT
+1361                 .wrd  SEMIS
+1366 L1296           .byt  0x84,"-DU",0xD0
+1367                 .wrd  L1286             ;link to SPACE
+1368 DDUP            .wrd  DOCOL
+1369                 .wrd  DUP
+1370                 .wrd  ZBRAN
+1371 L1301           .wrd  L1303-L1301       ;0x4
+1372                 .wrd  DUP
+1373 L1303           .wrd  SEMIS
+1378 L1308           .byt  0x88,"TRAVERS",0xC5
+1379                 .wrd  L1296             ;link to -DUP
+1380 TRAV            .wrd  DOCOL
+1381                 .wrd  SWAP
+1382 L1312           .wrd  OVER
+1383                 .wrd  PLUS
+1384                 .wrd  CLIT
+1385                 .byt  0x7F
+1386                 .wrd  OVER
+1387                 .wrd  CAT
+1388                 .wrd  LESS
+1389                 .wrd  ZBRAN
+1390 L1320           .wrd  L1312-L1320       ;0xFFF1
+1391                 .wrd  SWAP
+1392                 .wrd  DROP
+1393                 .wrd  SEMIS
+1398 L1328           .byt  0x86,"LATES",0xD4
+1399                 .wrd  L1308             ;link to TRAVERSE
+1400 LATES           .wrd  DOCOL
+1401                 .wrd  CURR
+1402                 .wrd  AT
+1403                 .wrd  AT
+1404                 .wrd  SEMIS
+1410 L1339           .byt  0x83,"LF",0xC1
+1411                 .wrd  L1328             ;link to LATEST
+1412 LFA             .wrd  DOCOL
+1413                 .wrd  CLIT
+1414                 .byt  4
+1415                 .wrd  SUB
+1416                 .wrd  SEMIS
+1421 L1350           .byt  0x83,"CF",0xC1
+1422                 .wrd  L1339             ;link to LFA
+1423 CFA             .wrd  DOCOL
+1424                 .wrd  TWO
+1425                 .wrd  SUB
+1426                 .wrd  SEMIS
+1431 L1360           .byt  0x83,"NF",0xC1
+1432                 .wrd  L1350             ;link to CFA
+1433 NFA             .wrd  DOCOL
+1434                 .wrd  CLIT
+1435                 .byt  0x5
+1436                 .wrd  SUB
+1437                 .wrd  LIT
+1438                 .wrd  0xFFFF
+1439                 .wrd  TRAV
+1440                 .wrd  SEMIS
+1445 L1373           .byt  0x83,"PF",0xC1
+1446                 .wrd  L1360             ;link to NFA
+1447 PFA             .wrd  DOCOL
+1448                 .wrd  ONE
+1449                 .wrd  TRAV
+1450                 .wrd  CLIT
+1451                 .byt  5
+1452                 .wrd  PLUS
+1453                 .wrd  SEMIS
+1458 L1386           .byt  0x84,"!CS",0xD0
+1459                 .wrd  L1373             ;link to PFA
+1460 SCSP            .wrd  DOCOL
+1461                 .wrd  SPAT
+1462                 .wrd  CSP
+1463                 .wrd  STORE
+1464                 .wrd  SEMIS
+1469 L1397           .byt  0x86,"?ERRO",0xD2
+1470                 .wrd  L1386             ;link to !CSP
+1471 QERR            .wrd  DOCOL
+1472                 .wrd  SWAP
+1473                 .wrd  ZBRAN
+1474 L1402           .wrd  L1406-L1402       ;0x8
+1475                 .wrd  ERROR
+1476                 .wrd  BRAN
+1477 L1405           .wrd  L1407-L1405       ;0x4
+1478 L1406           .wrd  DROP
+1479 L1407           .wrd  SEMIS
+1484 L1412           .byt  0x85,"?COM",0xD0
+1485                 .wrd  L1397             ;link to ?ERROR
+1486 QCOMP           .wrd  DOCOL
+1487                 .wrd  STATE
+1488                 .wrd  AT
+1489                 .wrd  ZEQU
+1490                 .wrd  CLIT
+1491                 .byt  0x11
+1492                 .wrd  QERR
+1493                 .wrd  SEMIS
+1498 L1426           .byt  0x85,"?EXE",0xC3
+1499                 .wrd  L1412             ;link to ?COMP
+1500 QEXEC           .wrd  DOCOL
+1501                 .wrd  STATE
+1502                 .wrd  AT
+1503                 .wrd  CLIT
+1504                 .byt  0x12
+1505                 .wrd  QERR
+1506                 .wrd  SEMIS
+1511 L1439           .byt  0x86,"?PAIR",0xD3
+1512                 .wrd  L1426             ;link to ?EXEC
+1513 QPAIR           .wrd  DOCOL
+1514                 .wrd  SUB
+1515                 .wrd  CLIT
+1516                 .byt  0x13
+1517                 .wrd  QERR
+1518                 .wrd  SEMIS
+1523 L1451           .byt  0x84,"?CS",0xD0
+1524                 .wrd  L1439             ;link to ?PAIRS
+1525 QCSP            .wrd  DOCOL
+1526                 .wrd  SPAT
+1527                 .wrd  CSP
+1528                 .wrd  AT
+1529                 .wrd  SUB
+1530                 .wrd  CLIT
+1531                 .byt  0x14
+1532                 .wrd  QERR
+1533                 .wrd  SEMIS
+1538 L1466           .byt  0x88,"?LOADIN",0xC7
+1539                 .wrd  L1451             ;link to ?CSP
+1540 QLOAD           .wrd  DOCOL
+1541                 .wrd  BLK
+1542                 .wrd  AT
+1543                 .wrd  ZEQU
+1544                 .wrd  CLIT
+1545                 .byt  0x16
+1546                 .wrd  QERR
+1547                 .wrd  SEMIS
+1552 L1480           .byt  0x87,"COMPIL",0xC5
+1553                 .wrd  L1466             ;link to ?LOADING
+1554 COMP            .wrd  DOCOL
+1555                 .wrd  QCOMP
+1556                 .wrd  RFROM
+1557                 .wrd  DUP
+1558                 .wrd  TWOP
+1559                 .wrd  TOR
+1560                 .wrd  AT
+1561                 .wrd  COMMA
+1562                 .wrd  SEMIS
+1567 L1495           .byt  0xC1,0xDB
+1568                 .wrd  L1480             ;link to COMPILE
+1569 LBRAC           .wrd  DOCOL
+1570                 .wrd  ZERO
+1571                 .wrd  STATE
+1572                 .wrd  STORE
+1573                 .wrd  SEMIS
+1578 L1507           .byt  0x81,0xDD
+1579                 .wrd  L1495             ;link to [
+1580 RBRAC           .wrd  DOCOL
+1581                 .wrd  CLIT
+1582                 .byt  0xC0
+1583                 .wrd  STATE
+1584                 .wrd  STORE
+1585                 .wrd  SEMIS
+1590 L1519           .byt  0x86,"SMUDG",0xC5
+1591                 .wrd  L1507             ;link to ]
+1592 SMUDG           .wrd  DOCOL
+1593                 .wrd  LATES
+1594                 .wrd  CLIT
+1595                 .byt  0x20
+1596                 .wrd  TOGGL
+1597                 .wrd  SEMIS
+1602 L1531           .byt  0x83,"HE",0xD8
+1603                 .wrd  L1519             ;link to SMUDGE
+1604 HEX             .wrd  DOCOL
+1605                 .wrd  CLIT
+1606                 .byt  16
+1607                 .wrd  BASE
+1608                 .wrd  STORE
+1609                 .wrd  SEMIS
+1614 L1543           .byt  0x87,"DECIMA",0xCC
+1615                 .wrd  L1531             ;link to HEX
+1616 DECIM           .wrd  DOCOL
+1617                 .wrd  CLIT
+1618                 .byt  10
+1619                 .wrd  BASE
+1620                 .wrd  STORE
+1621                 .wrd  SEMIS
+1626 L1555           .byt  0x87,"(;CODE",0xA9
+1627                 .wrd  L1543             ;link to DECIMAL
+1628 PSCOD           .wrd  DOCOL
+1629                 .wrd  RFROM
+1630                 .wrd  LATES
+1631                 .wrd  PFA
+1632                 .wrd  CFA
+1633                 .wrd  STORE
+1634                 .wrd  SEMIS
+1639 L1568           .byt  0xC5,";COD",0xC5
+1640                 .wrd  L1555             ;link to (;CODE)
+1641 SCOD            .wrd  DOCOL
+1642                 .wrd  QCSP
+1643                 .wrd  COMP
+1644                 .wrd  PSCOD
+1645                 .wrd  LBRAC
+1646                 .wrd  SMUDG
+1647                 .wrd  SEMIS
+1652 L1582           .byt  0x87,"<BUILD",0xD3
+1653                 .wrd  L1568             ;link to ;CODE
+1654 BUILD           .wrd  DOCOL
+1655                 .wrd  ZERO
+1656                 .wrd  CONST
+1657                 .wrd  SEMIS
+1662 L1592           .byt  0x85,"DOES",0xBE
+1663                 .wrd  L1582             ;link to <BUILDS
+1664 DOES            .wrd  DOCOL
+1665                 .wrd  RFROM
+1666                 .wrd  LATES
+1667                 .wrd  PFA
+1668                 .wrd  STORE
+1669                 .wrd  PSCOD
+1674 L1622           .byt  0x85,"COUN",0xD4
+1675                 .wrd  L1592             ;link to DOES>
+1676 COUNT           .wrd  DOCOL
+1677                 .wrd  DUP
+1678                 .wrd  ONEP
+1679                 .wrd  SWAP
+1680                 .wrd  CAT
+1681                 .wrd  SEMIS
+1686 L1634           .byt  0x84,"TYP",0xC5
+1687                 .wrd  L1622             ;link to COUNT
+1688 TYPE            .wrd  DOCOL
+1689                 .wrd  DDUP
+1690                 .wrd  ZBRAN
+1691 L1639           .wrd  L1651-L1639       ;0x18
+1692                 .wrd  OVER
+1693                 .wrd  PLUS
+1694                 .wrd  SWAP
+1695                 .wrd  PDO
+1696 L1644           .wrd  I
+1697                 .wrd  CAT
+1698                 .wrd  EMIT
+1699                 .wrd  PLOOP
+1700 L1648           .wrd  L1644-L1648       ;0xFFF8
+1701                 .wrd  BRAN
+1702 L1650           .wrd  L1652-L1650       ;0x4
+1703 L1651           .wrd  DROP
+1704 L1652           .wrd  SEMIS
+1709 L1657           .byt  0x89,"-TRAILIN",0xC7
+1710                 .wrd  L1634             ;link to TYPE
+1711 DTRAI           .wrd  DOCOL
+1712                 .wrd  DUP
+1713                 .wrd  ZERO
+1714                 .wrd  PDO
+1715 L1663           .wrd  OVER
+1716                 .wrd  OVER
+1717                 .wrd  PLUS
+1718                 .wrd  ONE
+1719                 .wrd  SUB
+1720                 .wrd  CAT
+1721                 .wrd  BL
+1722                 .wrd  SUB
+1723                 .wrd  ZBRAN
+1724 L1672           .wrd  L1676-L1672       ;0x8
+1725                 .wrd  LEAVE
+1726                 .wrd  BRAN
+1727 L1675           .wrd  L1678-L1675       ;0x6
+1728 L1676           .wrd  ONE
+1729                 .wrd  SUB
+1730 L1678           .wrd  PLOOP
+1731 L1679           .wrd  L1663-L1679       ;0xFFE0
+1732                 .wrd  SEMIS
+1736 L1685           .byt  0x84,"(.",0x22,0xA9  ;$84 (." $A9
+1737                 .wrd  L1657             ;link to -TRAILING
+1738 PDOTQ           .wrd  DOCOL
+1739                 .wrd  R
+1740                 .wrd  COUNT
+1741                 .wrd  DUP
+1742                 .wrd  ONEP
+1743                 .wrd  RFROM
+1744                 .wrd  PLUS
+1745                 .wrd  TOR
+1746                 .wrd  TYPE
+1747                 .wrd  SEMIS
+1752 L1701           .byt  0xC2,".",0xA2
+1753                 .wrd  L1685             ;link to PDOTQ
+1754                 .wrd  DOCOL
+1755                 .wrd  CLIT
+1756                 .byt  0x22
+1757                 .wrd  STATE
+1758                 .wrd  AT
+1759                 .wrd  ZBRAN
+1760 L1709           .wrd  L1719-L1709       ;0x14
+1761                 .wrd  COMP
+1762                 .wrd  PDOTQ
+1763                 .wrd  WORD
+1764                 .wrd  HERE
+1765                 .wrd  CAT
+1766                 .wrd  ONEP
+1767                 .wrd  ALLOT
+1768                 .wrd  BRAN
+1769 L1718           .wrd  L1723-L1718       ;0xA
+1770 L1719           .wrd  WORD
+1771                 .wrd  HERE
+1772                 .wrd  COUNT
+1773                 .wrd  TYPE
+1774 L1723           .wrd  SEMIS
+1779 L1729           .byt  0x86,"EXPEC",0xD4
+1780                 .wrd  L1701             ;link to ."
+1781 EXPEC           .wrd  DOCOL
 1782                 .wrd  OVER
-1783                 .wrd  PDO
-1784 L1736           .wrd  KEY
-1785                 .wrd  DUP
-1786                 .wrd  CLIT
-1787                 .byt  0xE
-1788                 .wrd  PORIG
-1789                 .wrd  AT
-1790                 .wrd  EQUAL
-1791                 .wrd  ZBRAN
-1792 L1744           .wrd  L1760-L1744       ;0x1F
-1793                 .wrd  DROP
-1794                 .wrd  CLIT
-1795                 .byt  08                ;Backspace!
-1796                 .wrd  OVER
-1797                 .wrd  I
-1798                 .wrd  EQUAL
-1799                 .wrd  DUP
-1800                 .wrd  RFROM
-1801                 .wrd  TWO
-1802                 .wrd  SUB
-1803                 .wrd  PLUS
-1804                 .wrd  TOR
-1805                 .wrd  SUB
-1806                 .wrd  BRAN
-1807 L1759           .wrd  L1779-L1759       ;0x27
-1808 L1760           .wrd  DUP
-1809                 .wrd  CLIT
-1810                 .byt  0x0D
-1811                 .wrd  EQUAL
-1812                 .wrd  ZBRAN
-1813 L1765           .wrd  L1772-L1765       ;0x0E
-1814                 .wrd  LEAVE
-1815                 .wrd  DROP
-1816                 .wrd  BL
-1817                 .wrd  ZERO
-1818                 .wrd  BRAN
-1819 L1771           .wrd  L1773-L1771       ;0x4
-1820 L1772           .wrd  DUP
-1821 L1773           .wrd  I
-1822                 .wrd  CSTOR
-1823                 .wrd  ZERO
-1824                 .wrd  I
-1825                 .wrd  ONEP
-1826                 .wrd  STORE
-1827 L1779           .wrd  EMIT
-1828                 .wrd  PLOOP
-1829 L1781           .wrd  L1736-L1781       ;0xFFA9
-1830                 .wrd  DROP
-1831                 .wrd  SEMIS
-1836 L1788           .byt  0x85,"QUER",0xD9
-1837                 .wrd  L1729             ;link to EXPECT
-1838 QUERY           .wrd  DOCOL
-1839                 .wrd  TIB
-1840                 .wrd  AT
-1841                 .wrd  CLIT
-1842                 .byt  80                ;80 characters from terminal
-1843                 .wrd  EXPEC
-1844                 .wrd  ZERO
-1845                 .wrd  IN
-1846                 .wrd  STORE
-1847                 .wrd  SEMIS
-1853 L1804           .byt  0xC1,0x80
-1854                 .wrd  L1788             ;link to QUERY
-1855                 .wrd  DOCOL
-1856                 .wrd  BLK
-1857                 .wrd  AT
-1858                 .wrd  ZBRAN
-1859 L1810           .wrd  L1830-L1810       ;0x2A
-1860                 .wrd  ONE
-1861                 .wrd  BLK
-1862                 .wrd  PSTOR
-1863                 .wrd  ZERO
-1864                 .wrd  IN
-1865                 .wrd  STORE
-1866                 .wrd  BLK
-1867                 .wrd  AT
-1868                 .wrd  ZERO
-1869                 .wrd  BSCR
-1870                 .wrd  USLAS
-1871                 .wrd  DROP              ;fixed from model
-1872                 .wrd  ZEQU
-1873                 .wrd  ZBRAN
-1874 L1824           .wrd  L1828-L1824       ;0x8
-1875                 .wrd  QEXEC
-1876                 .wrd  RFROM
-1877                 .wrd  DROP
-1878 L1828           .wrd  BRAN
-1879 L1829           .wrd  L1832-L1829       ;0x6
-1880 L1830           .wrd  RFROM
-1881                 .wrd  DROP
-1882 L1832           .wrd  SEMIS
-1888 L1838           .byt  0x84,"FIL",0xCC
-1889                 .wrd  L1804             ;link to X
-1890 FILL            .wrd  DOCOL
-1891                 .wrd  SWAP
-1892                 .wrd  TOR
-1893                 .wrd  OVER
-1894                 .wrd  CSTOR
-1895                 .wrd  DUP
-1896                 .wrd  ONEP
-1897                 .wrd  RFROM
-1898                 .wrd  ONE
-1899                 .wrd  SUB
-1900                 .wrd  CMOVE
-1901                 .wrd  SEMIS
-1906 L1856           .byt  0x85,"ERAS",0xC5
-1907                 .wrd  L1838             ;link to FILL
-1908 ERASE           .wrd  DOCOL
-1909                 .wrd  ZERO
-1910                 .wrd  FILL
-1911                 .wrd  SEMIS
-1916 L1866           .byt  0x86,"BLANK",0xD3
-1917                 .wrd  L1856             ;link to ERASE
-1918 BLANK           .wrd  DOCOL
-1919                 .wrd  BL
-1920                 .wrd  FILL
-1921                 .wrd  SEMIS
-1926 L1876           .byt  0x84,"HOL",0xC4
-1927                 .wrd  L1866             ;link to BLANKS
-1928 HOLD            .wrd  DOCOL
-1929                 .wrd  LIT,0xFFFF
-1930                 .wrd  HLD
-1931                 .wrd  PSTOR
+1783                 .wrd  PLUS
+1784                 .wrd  OVER
+1785                 .wrd  PDO
+1786 L1736           .wrd  KEY
+1787                 .wrd  DUP
+1788                 .wrd  CLIT
+1789                 .byt  0xE
+1790                 .wrd  PORIG
+1791                 .wrd  AT
+1792                 .wrd  EQUAL
+1793                 .wrd  ZBRAN
+1794 L1744           .wrd  L1760-L1744       ;0x1F
+1795                 .wrd  DROP
+1796                 .wrd  CLIT
+1797                 .byt  08                ;Backspace!
+1798                 .wrd  OVER
+1799                 .wrd  I
+1800                 .wrd  EQUAL
+1801                 .wrd  DUP
+1802                 .wrd  RFROM
+1803                 .wrd  TWO
+1804                 .wrd  SUB
+1805                 .wrd  PLUS
+1806                 .wrd  TOR
+1807                 .wrd  SUB
+1808                 .wrd  BRAN
+1809 L1759           .wrd  L1779-L1759       ;0x27
+1810 L1760           .wrd  DUP
+1811                 .wrd  CLIT
+1812                 .byt  0x0D
+1813                 .wrd  EQUAL
+1814                 .wrd  ZBRAN
+1815 L1765           .wrd  L1772-L1765       ;0x0E
+1816                 .wrd  LEAVE
+1817                 .wrd  DROP
+1818                 .wrd  BL
+1819                 .wrd  ZERO
+1820                 .wrd  BRAN
+1821 L1771           .wrd  L1773-L1771       ;0x4
+1822 L1772           .wrd  DUP
+1823 L1773           .wrd  I
+1824                 .wrd  CSTOR
+1825                 .wrd  ZERO
+1826                 .wrd  I
+1827                 .wrd  ONEP
+1828                 .wrd  STORE
+1829 L1779           .wrd  EMIT
+1830                 .wrd  PLOOP
+1831 L1781           .wrd  L1736-L1781       ;0xFFA9
+1832                 .wrd  DROP
+1833                 .wrd  SEMIS
+1838 L1788           .byt  0x85,"QUER",0xD9
+1839                 .wrd  L1729             ;link to EXPECT
+1840 QUERY           .wrd  DOCOL
+1841                 .wrd  TIB
+1842                 .wrd  AT
+1843                 .wrd  CLIT
+1844                 .byt  80                ;80 characters from terminal
+1845                 .wrd  EXPEC
+1846                 .wrd  ZERO
+1847                 .wrd  IN
+1848                 .wrd  STORE
+1849                 .wrd  SEMIS
+1855 L1804           .byt  0xC1,0x80
+1856                 .wrd  L1788             ;link to QUERY
+1857                 .wrd  DOCOL
+1858                 .wrd  BLK
+1859                 .wrd  AT
+1860                 .wrd  ZBRAN
+1861 L1810           .wrd  L1830-L1810       ;0x2A
+1862                 .wrd  ONE
+1863                 .wrd  BLK
+1864                 .wrd  PSTOR
+1865                 .wrd  ZERO
+1866                 .wrd  IN
+1867                 .wrd  STORE
+1868                 .wrd  BLK
+1869                 .wrd  AT
+1870                 .wrd  ZERO
+1871                 .wrd  BSCR
+1872                 .wrd  USLAS
+1873                 .wrd  DROP              ;fixed from model
+1874                 .wrd  ZEQU
+1875                 .wrd  ZBRAN
+1876 L1824           .wrd  L1828-L1824       ;0x8
+1877                 .wrd  QEXEC
+1878                 .wrd  RFROM
+1879                 .wrd  DROP
+1880 L1828           .wrd  BRAN
+1881 L1829           .wrd  L1832-L1829       ;0x6
+1882 L1830           .wrd  RFROM
+1883                 .wrd  DROP
+1884 L1832           .wrd  SEMIS
+1890 L1838           .byt  0x84,"FIL",0xCC
+1891                 .wrd  L1804             ;link to X
+1892 FILL            .wrd  DOCOL
+1893                 .wrd  SWAP
+1894                 .wrd  TOR
+1895                 .wrd  OVER
+1896                 .wrd  CSTOR
+1897                 .wrd  DUP
+1898                 .wrd  ONEP
+1899                 .wrd  RFROM
+1900                 .wrd  ONE
+1901                 .wrd  SUB
+1902                 .wrd  CMOVE
+1903                 .wrd  SEMIS
+1908 L1856           .byt  0x85,"ERAS",0xC5
+1909                 .wrd  L1838             ;link to FILL
+1910 ERASE           .wrd  DOCOL
+1911                 .wrd  ZERO
+1912                 .wrd  FILL
+1913                 .wrd  SEMIS
+1918 L1866           .byt  0x86,"BLANK",0xD3
+1919                 .wrd  L1856             ;link to ERASE
+1920 BLANK           .wrd  DOCOL
+1921                 .wrd  BL
+1922                 .wrd  FILL
+1923                 .wrd  SEMIS
+1928 L1876           .byt  0x84,"HOL",0xC4
+1929                 .wrd  L1866             ;link to BLANKS
+1930 HOLD            .wrd  DOCOL
+1931                 .wrd  LIT,0xFFFF
 1932                 .wrd  HLD
-1933                 .wrd  AT
-1934                 .wrd  CSTOR
-1935                 .wrd  SEMIS
-1940 L1890           .byt  0x83,"PA",0xC4
-1941                 .wrd  L1876             ;link to HOLD
-1942 PAD             .wrd  DOCOL
-1943                 .wrd  HERE
-1944                 .wrd  CLIT
-1945                 .byt  68                ;PAD is 68 bytes above here.
-1946                 .wrd  PLUS
-1947                 .wrd  SEMIS
-1952 L1902           .byt  0x84,"WOR",0xC4
-1953                 .wrd  L1890             ;link to PAD
-1954 WORD            .wrd  DOCOL
-1955                 .wrd  BLK
-1956                 .wrd  AT
-1957                 .wrd  ZBRAN
-1958 L1908           .wrd  L1914-L1908       ;0xC
-1959                 .wrd  BLK
-1960                 .wrd  AT
-1961                 .wrd  BLOCK
-1962                 .wrd  BRAN
-1963 L1913           .wrd  L1916-L1913       ;0x6
-1964 L1914           .wrd  TIB
-1965                 .wrd  AT
-1966 L1916           .wrd  IN
+1933                 .wrd  PSTOR
+1934                 .wrd  HLD
+1935                 .wrd  AT
+1936                 .wrd  CSTOR
+1937                 .wrd  SEMIS
+1942 L1890           .byt  0x83,"PA",0xC4
+1943                 .wrd  L1876             ;link to HOLD
+1944 PAD             .wrd  DOCOL
+1945                 .wrd  HERE
+1946                 .wrd  CLIT
+1947                 .byt  68                ;PAD is 68 bytes above here.
+1948                 .wrd  PLUS
+1949                 .wrd  SEMIS
+1954 L1902           .byt  0x84,"WOR",0xC4
+1955                 .wrd  L1890             ;link to PAD
+1956 WORD            .wrd  DOCOL
+1957                 .wrd  BLK
+1958                 .wrd  AT
+1959                 .wrd  ZBRAN
+1960 L1908           .wrd  L1914-L1908       ;0xC
+1961                 .wrd  BLK
+1962                 .wrd  AT
+1963                 .wrd  BLOCK
+1964                 .wrd  BRAN
+1965 L1913           .wrd  L1916-L1913       ;0x6
+1966 L1914           .wrd  TIB
 1967                 .wrd  AT
-1968                 .wrd  PLUS
-1969                 .wrd  SWAP
-1970                 .wrd  ENCL
-1971                 .wrd  HERE
-1972                 .wrd  CLIT
-1973                 .byt  0x22
-1974                 .wrd  BLANK
-1975                 .wrd  IN
-1976                 .wrd  PSTOR
-1977                 .wrd  OVER
-1978                 .wrd  SUB
-1979                 .wrd  TOR
-1980                 .wrd  R
-1981                 .wrd  HERE
-1982                 .wrd  CSTOR
-1983                 .wrd  PLUS
-1984                 .wrd  HERE
-1985                 .wrd  ONEP
-1986                 .wrd  RFROM
-1987                 .wrd  CMOVE
-1988                 .wrd  SEMIS
-1993 L1943           .byt  0x85,"UPPE",0xD2
-1994                 .wrd  L1902             ;link to WORD
-1995 UPPER           .wrd  DOCOL
-1996                 .wrd  OVER              ;This routine converts text to U case
-1997                 .wrd  PLUS              ;It allows interpretation from a term.
-1998                 .wrd  SWAP              ;without a shift-lock.
-1999                 .wrd  PDO
-2000 L1950           .wrd  I
-2001                 .wrd  CAT
-2002                 .wrd  CLIT
-2003                 .byt  0x5F
-2004                 .wrd  GREAT
-2005                 .wrd  ZBRAN
-2006 L1956           .wrd  L1961-L1956       ;0x9
-2007                 .wrd  I
-2008                 .wrd  CLIT
-2009                 .byt  0x20
-2010                 .wrd  TOGGL
-2011 L1961           .wrd  PLOOP
-2012 L1962           .wrd  L1950-L1962       ;0xFFEA
-2013                 .wrd  SEMIS
-2018 L1968           .byt  0x88,"(NUMBER",0xA9
-2019                 .wrd  L1943             ;link to UPPER
-2020 PNUMB           .wrd  DOCOL
-2021 L1971           .wrd  ONEP
-2022                 .wrd  DUP
-2023                 .wrd  TOR
-2024                 .wrd  CAT
-2025                 .wrd  BASE
-2026                 .wrd  AT
-2027                 .wrd  DIGIT
-2028                 .wrd  ZBRAN
-2029 L1979           .wrd  L2001-L1979       ;0x2C
-2030                 .wrd  SWAP
-2031                 .wrd  BASE
-2032                 .wrd  AT
-2033                 .wrd  USTAR
-2034                 .wrd  DROP
-2035                 .wrd  ROT
-2036                 .wrd  BASE
-2037                 .wrd  AT
-2038                 .wrd  USTAR
-2039                 .wrd  DPLUS
-2040                 .wrd  DPL
-2041                 .wrd  AT
-2042                 .wrd  ONEP
-2043                 .wrd  ZBRAN
-2044 L1994           .wrd  L1998-L1994       ;0x8
-2045                 .wrd  ONE
-2046                 .wrd  DPL
-2047                 .wrd  PSTOR
-2048 L1998           .wrd  RFROM
-2049                 .wrd  BRAN
-2050 L2000           .wrd  L1971-L2000       ;0xFFC6
-2051 L2001           .wrd  RFROM
-2052                 .wrd  SEMIS
-2057 L2007           .byt  0x86,"NUMBE",0xD2
-2058                 .wrd  L1968             ;link to (NUMBER)
-2059 NUMBER          .wrd  DOCOL
-2060                 .wrd  ZERO
-2061                 .wrd  ZERO
-2062                 .wrd  ROT
-2063                 .wrd  DUP
-2064                 .wrd  ONEP
-2065                 .wrd  CAT
-2066                 .wrd  CLIT
-2067                 .byt  0x2D
-2068                 .wrd  EQUAL
-2069                 .wrd  DUP
-2070                 .wrd  TOR
-2071                 .wrd  PLUS
-2072                 .wrd  LIT,0xFFFF
-2073 L2023           .wrd  DPL
-2074                 .wrd  STORE
-2075                 .wrd  PNUMB
-2076                 .wrd  DUP
-2077                 .wrd  CAT
-2078                 .wrd  BL
-2079                 .wrd  SUB
-2080                 .wrd  ZBRAN
-2081 L2031           .wrd  L2042-L2031       ;0x15
-2082                 .wrd  DUP
-2083                 .wrd  CAT
-2084                 .wrd  CLIT
-2085                 .byt  0x2E
-2086                 .wrd  SUB
-2087                 .wrd  ZERO
-2088                 .wrd  QERR
+1968 L1916           .wrd  IN
+1969                 .wrd  AT
+1970                 .wrd  PLUS
+1971                 .wrd  SWAP
+1972                 .wrd  ENCL
+1973                 .wrd  HERE
+1974                 .wrd  CLIT
+1975                 .byt  0x22
+1976                 .wrd  BLANK
+1977                 .wrd  IN
+1978                 .wrd  PSTOR
+1979                 .wrd  OVER
+1980                 .wrd  SUB
+1981                 .wrd  TOR
+1982                 .wrd  R
+1983                 .wrd  HERE
+1984                 .wrd  CSTOR
+1985                 .wrd  PLUS
+1986                 .wrd  HERE
+1987                 .wrd  ONEP
+1988                 .wrd  RFROM
+1989                 .wrd  CMOVE
+1990                 .wrd  SEMIS
+1995 L1943           .byt  0x85,"UPPE",0xD2
+1996                 .wrd  L1902             ;link to WORD
+1997 UPPER           .wrd  DOCOL
+1998                 .wrd  OVER              ;This routine converts text to U case
+1999                 .wrd  PLUS              ;It allows interpretation from a term.
+2000                 .wrd  SWAP              ;without a shift-lock.
+2001                 .wrd  PDO
+2002 L1950           .wrd  I
+2003                 .wrd  CAT
+2004                 .wrd  CLIT
+2005                 .byt  0x5F
+2006                 .wrd  GREAT
+2007                 .wrd  ZBRAN
+2008 L1956           .wrd  L1961-L1956       ;0x9
+2009                 .wrd  I
+2010                 .wrd  CLIT
+2011                 .byt  0x20
+2012                 .wrd  TOGGL
+2013 L1961           .wrd  PLOOP
+2014 L1962           .wrd  L1950-L1962       ;0xFFEA
+2015                 .wrd  SEMIS
+2020 L1968           .byt  0x88,"(NUMBER",0xA9
+2021                 .wrd  L1943             ;link to UPPER
+2022 PNUMB           .wrd  DOCOL
+2023 L1971           .wrd  ONEP
+2024                 .wrd  DUP
+2025                 .wrd  TOR
+2026                 .wrd  CAT
+2027                 .wrd  BASE
+2028                 .wrd  AT
+2029                 .wrd  DIGIT
+2030                 .wrd  ZBRAN
+2031 L1979           .wrd  L2001-L1979       ;0x2C
+2032                 .wrd  SWAP
+2033                 .wrd  BASE
+2034                 .wrd  AT
+2035                 .wrd  USTAR
+2036                 .wrd  DROP
+2037                 .wrd  ROT
+2038                 .wrd  BASE
+2039                 .wrd  AT
+2040                 .wrd  USTAR
+2041                 .wrd  DPLUS
+2042                 .wrd  DPL
+2043                 .wrd  AT
+2044                 .wrd  ONEP
+2045                 .wrd  ZBRAN
+2046 L1994           .wrd  L1998-L1994       ;0x8
+2047                 .wrd  ONE
+2048                 .wrd  DPL
+2049                 .wrd  PSTOR
+2050 L1998           .wrd  RFROM
+2051                 .wrd  BRAN
+2052 L2000           .wrd  L1971-L2000       ;0xFFC6
+2053 L2001           .wrd  RFROM
+2054                 .wrd  SEMIS
+2059 L2007           .byt  0x86,"NUMBE",0xD2
+2060                 .wrd  L1968             ;link to (NUMBER)
+2061 NUMBER          .wrd  DOCOL
+2062                 .wrd  ZERO
+2063                 .wrd  ZERO
+2064                 .wrd  ROT
+2065                 .wrd  DUP
+2066                 .wrd  ONEP
+2067                 .wrd  CAT
+2068                 .wrd  CLIT
+2069                 .byt  0x2D
+2070                 .wrd  EQUAL
+2071                 .wrd  DUP
+2072                 .wrd  TOR
+2073                 .wrd  PLUS
+2074                 .wrd  LIT,0xFFFF
+2075 L2023           .wrd  DPL
+2076                 .wrd  STORE
+2077                 .wrd  PNUMB
+2078                 .wrd  DUP
+2079                 .wrd  CAT
+2080                 .wrd  BL
+2081                 .wrd  SUB
+2082                 .wrd  ZBRAN
+2083 L2031           .wrd  L2042-L2031       ;0x15
+2084                 .wrd  DUP
+2085                 .wrd  CAT
+2086                 .wrd  CLIT
+2087                 .byt  0x2E
+2088                 .wrd  SUB
 2089                 .wrd  ZERO
-2090                 .wrd  BRAN
-2091 L2041           .wrd  L2023-L2041       ;0xFFDD
-2092 L2042           .wrd  DROP
-2093                 .wrd  RFROM
-2094                 .wrd  ZBRAN
-2095 L2045           .wrd  L2047-L2045       ;0x4
-2096                 .wrd  DMINU
-2097 L2047           .wrd  SEMIS
-2102 L2052           .byt  0x85,"-FIN",0xC4
-2103                 .wrd  L2007             ;link to NUMBER
-2104 DFIND           .wrd  DOCOL
-2105                 .wrd  BL
-2106                 .wrd  WORD
-2107                 .wrd  HERE              ;)
-2108                 .wrd  COUNT             ;|- Optional allowing free use of low
-2109                 .wrd  UPPER             ;)  case from terminal
-2110                 .wrd  HERE
-2111                 .wrd  CON
-2112                 .wrd  AT
-2113                 .wrd  AT
-2114                 .wrd  PFIND
-2115                 .wrd  DUP
-2116                 .wrd  ZEQU
-2117                 .wrd  ZBRAN
-2118 L2068           .wrd  L2073-L2068       ;0xA
-2119                 .wrd  DROP
-2120                 .wrd  HERE
-2121                 .wrd  LATES
-2122                 .wrd  PFIND
-2123 L2073           .wrd  SEMIS
-2128 L2078           .byt  0x87,"(ABORT",0xA9
-2129                 .wrd  L2052             ;link to -FIND
-2130 PABOR           .wrd  DOCOL
-2131                 .wrd  ABORT
-2132                 .wrd  SEMIS
-2137 L2087           .byt  0x85,"ERRO",0xD2
-2138                 .wrd  L2078             ;link to (ABORT)
-2139 ERROR           .wrd  DOCOL
-2140                 .wrd  WARN
-2141                 .wrd  AT
-2142                 .wrd  ZLESS
-2143                 .wrd  ZBRAN
-2144 L2094           .wrd  L2096-L2094       ;0x4
-2145                 .wrd  PABOR
-2146 L2096           .wrd  HERE
-2147                 .wrd  COUNT
-2148                 .wrd  TYPE
-2149                 .wrd  PDOTQ
-2150                 .byt  4,"  ? "
-2151                 .wrd  MESS
-2152                 .wrd  SPSTO
-2153                 .wrd  DROP              ;make room for 2 error values
-2154                 .wrd  DROP
-2155                 .wrd  IN
-2156                 .wrd  AT
-2157                 .wrd  BLK
+2090                 .wrd  QERR
+2091                 .wrd  ZERO
+2092                 .wrd  BRAN
+2093 L2041           .wrd  L2023-L2041       ;0xFFDD
+2094 L2042           .wrd  DROP
+2095                 .wrd  RFROM
+2096                 .wrd  ZBRAN
+2097 L2045           .wrd  L2047-L2045       ;0x4
+2098                 .wrd  DMINU
+2099 L2047           .wrd  SEMIS
+2104 L2052           .byt  0x85,"-FIN",0xC4
+2105                 .wrd  L2007             ;link to NUMBER
+2106 DFIND           .wrd  DOCOL
+2107                 .wrd  BL
+2108                 .wrd  WORD
+2109                 .wrd  HERE              ;)
+2110                 .wrd  COUNT             ;|- Optional allowing free use of low
+2111                 .wrd  UPPER             ;)  case from terminal
+2112                 .wrd  HERE
+2113                 .wrd  CON
+2114                 .wrd  AT
+2115                 .wrd  AT
+2116                 .wrd  PFIND
+2117                 .wrd  DUP
+2118                 .wrd  ZEQU
+2119                 .wrd  ZBRAN
+2120 L2068           .wrd  L2073-L2068       ;0xA
+2121                 .wrd  DROP
+2122                 .wrd  HERE
+2123                 .wrd  LATES
+2124                 .wrd  PFIND
+2125 L2073           .wrd  SEMIS
+2130 L2078           .byt  0x87,"(ABORT",0xA9
+2131                 .wrd  L2052             ;link to -FIND
+2132 PABOR           .wrd  DOCOL
+2133                 .wrd  ABORT
+2134                 .wrd  SEMIS
+2139 L2087           .byt  0x85,"ERRO",0xD2
+2140                 .wrd  L2078             ;link to (ABORT)
+2141 ERROR           .wrd  DOCOL
+2142                 .wrd  WARN
+2143                 .wrd  AT
+2144                 .wrd  ZLESS
+2145                 .wrd  ZBRAN
+2146 L2094           .wrd  L2096-L2094       ;0x4
+2147                 .wrd  PABOR
+2148 L2096           .wrd  HERE
+2149                 .wrd  COUNT
+2150                 .wrd  TYPE
+2151                 .wrd  PDOTQ
+2152                 .byt  4,"  ? "
+2153                 .wrd  MESS
+2154                 .wrd  SPSTO
+2155                 .wrd  DROP              ;make room for 2 error values
+2156                 .wrd  DROP
+2157                 .wrd  IN
 2158                 .wrd  AT
-2159                 .wrd  QUIT
-2160                 .wrd  SEMIS
-2165 L2113           .byt  0x83,"ID",0xAE
-2166                 .wrd  L2087             ;link to ERROR
-2167 IDDOT           .wrd  DOCOL
-2168                 .wrd  PAD
-2169                 .wrd  CLIT
-2170                 .byt  0x20
+2159                 .wrd  BLK
+2160                 .wrd  AT
+2161                 .wrd  QUIT
+2162                 .wrd  SEMIS
+2167 L2113           .byt  0x83,"ID",0xAE
+2168                 .wrd  L2087             ;link to ERROR
+2169 IDDOT           .wrd  DOCOL
+2170                 .wrd  PAD
 2171                 .wrd  CLIT
-2172                 .byt  0x5F
-2173                 .wrd  FILL
-2174                 .wrd  DUP
-2175                 .wrd  PFA
-2176                 .wrd  LFA
-2177                 .wrd  OVER
-2178                 .wrd  SUB
-2179                 .wrd  PAD
-2180                 .wrd  SWAP
-2181                 .wrd  CMOVE
-2182                 .wrd  PAD
-2183                 .wrd  COUNT
-2184                 .wrd  CLIT
-2185                 .byt  0x1F
-2186                 .wrd  ANDD
-2187                 .wrd  TYPE
-2188                 .wrd  SPACE
-2189                 .wrd  SEMIS
-2194 L2142           .byt  0x86,"CREAT",0xC5
-2195                 .wrd  L2113             ;link to ID
-2196 CREAT           .wrd  DOCOL
-2197                 .wrd  TIB               ;)
-2198                 .wrd  HERE              ;|
-2199                 .wrd  CLIT              ;|  6502 only, assures
-2200                 .byt  0xA0              ;|  room exists in dict.
-2201                 .wrd  PLUS              ;|
-2202                 .wrd  ULESS             ;|
-2203                 .wrd  TWO               ;|
-2204                 .wrd  QERR              ;)
-2205                 .wrd  DFIND
-2206                 .wrd  ZBRAN
-2207 L2155           .wrd  0x0F
-2208                 .wrd  DROP
-2209                 .wrd  NFA
-2210                 .wrd  IDDOT
-2211                 .wrd  CLIT
-2212                 .byt  4
-2213                 .wrd  MESS
-2214                 .wrd  SPACE
-2215 L2163           .wrd  HERE
-2216                 .wrd  DUP
-2217                 .wrd  CAT
-2218                 .wrd  WIDTH
-2219                 .wrd  AT
-2220                 .wrd  MIN
-2221                 .wrd  ONEP
-2222                 .wrd  ALLOT
-2223                 .wrd  DP                ;)
-2224                 .wrd  CAT               ;| 6502 only. The code field
-2225                 .wrd  CLIT              ;| must not straddle page
-2226                 .byt  0xFD               ;| boundaries
-2227                 .wrd  EQUAL             ;|
-2228                 .wrd  ALLOT             ;)
-2229                 .wrd  DUP
-2230                 .wrd  CLIT
-2231                 .byt  0xA0
-2232                 .wrd  TOGGL
-2233                 .wrd  HERE
-2234                 .wrd  ONE
-2235                 .wrd  SUB
-2236                 .wrd  CLIT
-2237                 .byt  0x80
-2238                 .wrd  TOGGL
-2239                 .wrd  LATES
-2240                 .wrd  COMMA
-2241                 .wrd  CURR
-2242                 .wrd  AT
-2243                 .wrd  STORE
-2244                 .wrd  HERE
-2245                 .wrd  TWOP
-2246                 .wrd  COMMA
-2247                 .wrd  SEMIS
-2252 L2200           .byt  0xC9,"[COMPILE",0xDD
-2253                 .wrd  L2142             ;link to CREATE
-2254                 .wrd  DOCOL
-2255                 .wrd  DFIND
-2256                 .wrd  ZEQU
-2257                 .wrd  ZERO
-2258                 .wrd  QERR
-2259                 .wrd  DROP
-2260                 .wrd  CFA
-2261                 .wrd  COMMA
-2262                 .wrd  SEMIS
-2267 L2216           .byt  0xC7,"LITERA",0xCC
-2268                 .wrd  L2200             ;link to [COMPILE]
-2269 LITER           .wrd  DOCOL
-2270                 .wrd  STATE
-2271                 .wrd  AT
-2272                 .wrd  ZBRAN
-2273 L2222           .wrd  L2226-L2222       ;0x8
-2274                 .wrd  COMP
-2275                 .wrd  LIT
-2276                 .wrd  COMMA
-2277 L2226           .wrd  SEMIS
-2282 L2232           .byt  0xC8,"DLITERA",0xCC
-2283                 .wrd  L2216             ;link to LITERAL
-2284 DLIT            .wrd  DOCOL
-2285                 .wrd  STATE
-2286                 .wrd  AT
-2287                 .wrd  ZBRAN
-2288 L2238           .wrd  L2242-L2238       ;0x8
-2289                 .wrd  SWAP
-2290                 .wrd  LITER
-2291                 .wrd  LITER
-2292 L2242           .wrd  SEMIS
-2297 L2248           .byt  0x86,"?STAC",0xCB
-2298                 .wrd  L2232             ;link to DLITERAL
-2299 QSTAC           .wrd  DOCOL
-2300                 .wrd  CLIT
-2301                 .byt  TOS
-2302                 .wrd  SPAT
-2303                 .wrd  ULESS
-2304                 .wrd  ONE
-2305                 .wrd  QERR
-2306                 .wrd  SPAT
-2307                 .wrd  CLIT
-2308                 .byt  BOS
-2309                 .wrd  ULESS
-2310                 .wrd  CLIT
-2311                 .byt  7
-2312                 .wrd  QERR
-2313                 .wrd  SEMIS
-2318 L2269           .byt  0x89,"INTERPRE",0xD4
-2319                 .wrd  L2248             ;link to ?STACK
-2320 INTER           .wrd  DOCOL
-2321 L2272           .wrd  DFIND
-2322                 .wrd  ZBRAN
-2323 L2274           .wrd  L2289-L2274       ;0x1E
-2324                 .wrd  STATE
-2325                 .wrd  AT
-2326                 .wrd  LESS
-2327                 .wrd  ZBRAN
-2328 L2279           .wrd  L2284-L2279       ;0xA
-2329                 .wrd  CFA
-2330                 .wrd  COMMA
-2331                 .wrd  BRAN
-2332 L2283           .wrd  L2286-L2283       ;0x6
-2333 L2284           .wrd  CFA
-2334                 .wrd  EXEC
-2335 L2286           .wrd  QSTAC
-2336                 .wrd  BRAN
-2337 L2288           .wrd  L2302-L2288       ;0x1C
-2338 L2289           .wrd  HERE
-2339                 .wrd  NUMBER
-2340                 .wrd  DPL
-2341                 .wrd  AT
-2342                 .wrd  ONEP
-2343                 .wrd  ZBRAN
-2344 L2295           .wrd  L2299-L2295       ;0x8
-2345                 .wrd  DLIT
-2346                 .wrd  BRAN
-2347 L2298           .wrd  L2301-L2298       ;0x6
-2348 L2299           .wrd  DROP
-2349                 .wrd  LITER
-2350 L2301           .wrd  QSTAC
-2351 L2302           .wrd  BRAN
-2352 L2303           .wrd  L2272-L2303       ;0xFFC2
-2357 L2309           .byt  0x89,"IMMEDIAT",0xC5
-2358                 .wrd  L2269             ;; link to INTERPRET
-2359                 .wrd  DOCOL
-2360                 .wrd  LATES
-2361                 .wrd  CLIT
-2362                 .byt  0x40
-2363                 .wrd  TOGGL
-2364                 .wrd  SEMIS
-2369 L2321           .byt  0x8A,"VOCABULAR",0xD9
-2370                 .wrd  L2309             ;link to IMMEDIATE
-2371                 .wrd  DOCOL
-2372                 .wrd  BUILD
-2373                 .wrd  LIT
-2374                 .wrd  0xA081
-2375                 .wrd  COMMA
-2376                 .wrd  CURR
-2377                 .wrd  AT
-2378                 .wrd  CFA
-2379                 .wrd  COMMA
-2380                 .wrd  HERE
-2381                 .wrd  VOCL
-2382                 .wrd  AT
-2383                 .wrd  COMMA
-2384                 .wrd  VOCL
-2385                 .wrd  STORE
-2386                 .wrd  DOES
-2387 DOVOC           .wrd  TWOP
-2388                 .wrd  CON
-2389                 .wrd  STORE
-2390                 .wrd  SEMIS
-2395 L2346           .byt  0xC5,"FORT",0xC8
-2396                 .wrd  L2321             ;link to VOCABULARY
-2397 FORTH           .wrd  DODOE
-2398                 .wrd  DOVOC
-2399                 .wrd  0xA081
-2400 XFOR            .wrd  NTOP              ;points to top name in FORTH
-2401 VL0             .wrd  0                 ;last vocab link ends at zero
-2407 L2357           .byt  0x8B,"DEFINITION",0xD3
-2408                 .wrd  L2346             ;link to FORTH
-2409 DEFIN           .wrd  DOCOL
-2410                 .wrd  CON
-2411                 .wrd  AT
-2412                 .wrd  CURR
-2413                 .wrd  STORE
-2414                 .wrd  SEMIS
-2419 L2369           .byt  0xC1,0xA8
-2420                 .wrd  L2357             ;link to DEFINITIONS
-2421                 .wrd  DOCOL
-2422                 .wrd  CLIT
-2423                 .byt  0x29
-2424                 .wrd  WORD
-2425                 .wrd  SEMIS
-2430 L2381           .byt  0x84,"QUI",0xD4
-2431                 .wrd  L2369             ;link to (
-2432 QUIT            .wrd  DOCOL
-2433                 .wrd  ZERO
-2434                 .wrd  BLK
-2435                 .wrd  STORE
-2436                 .wrd  LBRAC
-2437 L2388           .wrd  RPSTO
-2438                 .wrd  CR
-2439                 .wrd  QUERY
-2440                 .wrd  INTER
-2441                 .wrd  STATE
-2442                 .wrd  AT
-2443                 .wrd  ZEQU
-2444                 .wrd  ZBRAN
-2445 L2396           .wrd  L2399-L2396       ;0x7
-2446                 .wrd  PDOTQ
-2447                 .byt  2,"OK"
-2448 L2399           .wrd  BRAN
-2449 L2400           .wrd  L2388-L2400       ;0xFFE7
-2450                 .wrd  SEMIS
-2455 L2406           .byt  0x85,"ABOR",0xD4
-2456                 .wrd  L2381             ;link to QUIT
-2457 ABORT           .wrd  DOCOL
-2458                 .wrd  SPSTO
-2459                 .wrd  DECIM
-2460                 .wrd  DR0
-2461                 .wrd  CR
-2462                 .wrd  PDOTQ
-2463                 .byt  14,"fig-FORTH 1.0a"
-2464                 .wrd  FORTH
-2465                 .wrd  DEFIN
-2466                 .wrd  QUIT
-2471 L2423           .byt  0x84,"COL",0xC4
-2472                 .wrd  L2406             ;link to ABORT
-2473 COLD            .wrd  $+2
-2474                 lda   ORIG+0x0C         ;from cold start area
-2475                 sta   FORTH+6
-2476                 lda   ORIG+0x0D
-2477                 sta   FORTH+7
-2478                 ldy   #0x15
-2479                 bne   L2433
-2480 WARM            ldy   #0x0F
-2481 L2433           lda   ORIG+0x10
-2482                 sta   UP
-2483                 lda   ORIG+0x11
-2484                 sta   UP+1
-2485 L2437           lda   ORIG+0x0C,Y
-2486                 sta   (UP),Y
-2487                 dey
-2488                 bpl   L2437
-2489                 lda   #((ABORT + 2) >> 8) & 0xFF        ;actually #>(ABORT+2)
-2490                 sta   IP+1
-2491                 lda   #(ABORT + 2) & 0xFF
-2492                 sta   IP
-2493                 cld
-2494                 lda   #0x6C              ;ind jump opcode
-2495                 sta   W-1
-2496                 jmp   RPSTO+2           ;And off we go !
-2501 L2453           .byt  0x84,"S->",0xC4
-2502                 .wrd  L2423             ;link to COLD
-2503 STOD            .wrd  DOCOL
-2504                 .wrd  DUP
-2505                 .wrd  ZLESS
-2506                 .wrd  MINUS
-2507                 .wrd  SEMIS
-2512 L2464           .byt  0x82,"+",0xAD
-2513                 .wrd  L2453             ;link to S->D
-2514 PM              .wrd  DOCOL
-2515                 .wrd  ZLESS
-2516                 .wrd  ZBRAN
-2517 L2469           .wrd  4
-2518                 .wrd  MINUS
-2519 L2471           .wrd  SEMIS
-2524 L2476           .byt  0x83,"D+",0xAD
-2525                 .wrd  L2464             ;link to +-
-2526 DPM             .wrd  DOCOL
-2527                 .wrd  ZLESS
-2528                 .wrd  ZBRAN
-2529 L2481           .wrd  L2483-L2481       ;0x4
-2530                 .wrd  DMINU
-2531 L2483           .wrd  SEMIS
-2536 L2488           .byt  0x83,"AB",0xD3
-2537                 .wrd  L2476             ;link to D+-
-2538 ABS             .wrd  DOCOL
-2539                 .wrd  DUP
-2540                 .wrd  PM
-2541                 .wrd  SEMIS
-2546 L2498           .byt  0x84,"DAB",0xD3
-2547                 .wrd  L2488             ;link to ABS
-2548 DABS            .wrd  DOCOL
-2549                 .wrd  DUP
-2550                 .wrd  DPM
-2551                 .wrd  SEMIS
-2556 L2508           .byt  0x83,"MI",0xCE
-2557                 .wrd  L2498             ;link to DABS
-2558 MIN             .wrd  DOCOL
-2559                 .wrd  OVER
-2560                 .wrd  OVER
-2561                 .wrd  GREAT
-2562                 .wrd  ZBRAN
-2563 L2515           .wrd  L2517-L2515       ;0x4
-2564                 .wrd  SWAP
-2565 L2517           .wrd  DROP
-2566                 .wrd  SEMIS
-2571 L2523           .byt  0x83,"MA",0xD8
-2572                 .wrd  L2508             ;link to MIN
-2573 MAX             .wrd  DOCOL
-2574                 .wrd  OVER
-2575                 .wrd  OVER
-2576                 .wrd  LESS
-2577                 .wrd  ZBRAN
-2578 L2530           .wrd  L2532-L2530       ;0x4
-2579                 .wrd  SWAP
-2580 L2532           .wrd  DROP
-2581                 .wrd  SEMIS
-2586 L2538           .byt  0x82,"M",0xAA
-2587                 .wrd  L2523             ;link to MAX
-2588 MSTAR           .wrd  DOCOL
-2589                 .wrd  OVER
-2590                 .wrd  OVER
-2591                 .wrd  XOR
-2592                 .wrd  TOR
-2593                 .wrd  ABS
-2594                 .wrd  SWAP
+2172                 .byt  0x20
+2173                 .wrd  CLIT
+2174                 .byt  0x5F
+2175                 .wrd  FILL
+2176                 .wrd  DUP
+2177                 .wrd  PFA
+2178                 .wrd  LFA
+2179                 .wrd  OVER
+2180                 .wrd  SUB
+2181                 .wrd  PAD
+2182                 .wrd  SWAP
+2183                 .wrd  CMOVE
+2184                 .wrd  PAD
+2185                 .wrd  COUNT
+2186                 .wrd  CLIT
+2187                 .byt  0x1F
+2188                 .wrd  ANDD
+2189                 .wrd  TYPE
+2190                 .wrd  SPACE
+2191                 .wrd  SEMIS
+2196 L2142           .byt  0x86,"CREAT",0xC5
+2197                 .wrd  L2113             ;link to ID
+2198 CREAT           .wrd  DOCOL
+2199                 .wrd  TIB               ;)
+2200                 .wrd  HERE              ;|
+2201                 .wrd  CLIT              ;|  6502 only, assures
+2202                 .byt  0xA0              ;|  room exists in dict.
+2203                 .wrd  PLUS              ;|
+2204                 .wrd  ULESS             ;|
+2205                 .wrd  TWO               ;|
+2206                 .wrd  QERR              ;)
+2207                 .wrd  DFIND
+2208                 .wrd  ZBRAN
+2209 L2155           .wrd  0x0F
+2210                 .wrd  DROP
+2211                 .wrd  NFA
+2212                 .wrd  IDDOT
+2213                 .wrd  CLIT
+2214                 .byt  4
+2215                 .wrd  MESS
+2216                 .wrd  SPACE
+2217 L2163           .wrd  HERE
+2218                 .wrd  DUP
+2219                 .wrd  CAT
+2220                 .wrd  WIDTH
+2221                 .wrd  AT
+2222                 .wrd  MIN
+2223                 .wrd  ONEP
+2224                 .wrd  ALLOT
+2225                 .wrd  DP                ;)
+2226                 .wrd  CAT               ;| 6502 only. The code field
+2227                 .wrd  CLIT              ;| must not straddle page
+2228                 .byt  0xFD               ;| boundaries
+2229                 .wrd  EQUAL             ;|
+2230                 .wrd  ALLOT             ;)
+2231                 .wrd  DUP
+2232                 .wrd  CLIT
+2233                 .byt  0xA0
+2234                 .wrd  TOGGL
+2235                 .wrd  HERE
+2236                 .wrd  ONE
+2237                 .wrd  SUB
+2238                 .wrd  CLIT
+2239                 .byt  0x80
+2240                 .wrd  TOGGL
+2241                 .wrd  LATES
+2242                 .wrd  COMMA
+2243                 .wrd  CURR
+2244                 .wrd  AT
+2245                 .wrd  STORE
+2246                 .wrd  HERE
+2247                 .wrd  TWOP
+2248                 .wrd  COMMA
+2249                 .wrd  SEMIS
+2254 L2200           .byt  0xC9,"[COMPILE",0xDD
+2255                 .wrd  L2142             ;link to CREATE
+2256                 .wrd  DOCOL
+2257                 .wrd  DFIND
+2258                 .wrd  ZEQU
+2259                 .wrd  ZERO
+2260                 .wrd  QERR
+2261                 .wrd  DROP
+2262                 .wrd  CFA
+2263                 .wrd  COMMA
+2264                 .wrd  SEMIS
+2269 L2216           .byt  0xC7,"LITERA",0xCC
+2270                 .wrd  L2200             ;link to [COMPILE]
+2271 LITER           .wrd  DOCOL
+2272                 .wrd  STATE
+2273                 .wrd  AT
+2274                 .wrd  ZBRAN
+2275 L2222           .wrd  L2226-L2222       ;0x8
+2276                 .wrd  COMP
+2277                 .wrd  LIT
+2278                 .wrd  COMMA
+2279 L2226           .wrd  SEMIS
+2284 L2232           .byt  0xC8,"DLITERA",0xCC
+2285                 .wrd  L2216             ;link to LITERAL
+2286 DLIT            .wrd  DOCOL
+2287                 .wrd  STATE
+2288                 .wrd  AT
+2289                 .wrd  ZBRAN
+2290 L2238           .wrd  L2242-L2238       ;0x8
+2291                 .wrd  SWAP
+2292                 .wrd  LITER
+2293                 .wrd  LITER
+2294 L2242           .wrd  SEMIS
+2299 L2248           .byt  0x86,"?STAC",0xCB
+2300                 .wrd  L2232             ;link to DLITERAL
+2301 QSTAC           .wrd  DOCOL
+2302                 .wrd  CLIT
+2303                 .byt  TOS
+2304                 .wrd  SPAT
+2305                 .wrd  ULESS
+2306                 .wrd  ONE
+2307                 .wrd  QERR
+2308                 .wrd  SPAT
+2309                 .wrd  CLIT
+2310                 .byt  BOS
+2311                 .wrd  ULESS
+2312                 .wrd  CLIT
+2313                 .byt  7
+2314                 .wrd  QERR
+2315                 .wrd  SEMIS
+2320 L2269           .byt  0x89,"INTERPRE",0xD4
+2321                 .wrd  L2248             ;link to ?STACK
+2322 INTER           .wrd  DOCOL
+2323 L2272           .wrd  DFIND
+2324                 .wrd  ZBRAN
+2325 L2274           .wrd  L2289-L2274       ;0x1E
+2326                 .wrd  STATE
+2327                 .wrd  AT
+2328                 .wrd  LESS
+2329                 .wrd  ZBRAN
+2330 L2279           .wrd  L2284-L2279       ;0xA
+2331                 .wrd  CFA
+2332                 .wrd  COMMA
+2333                 .wrd  BRAN
+2334 L2283           .wrd  L2286-L2283       ;0x6
+2335 L2284           .wrd  CFA
+2336                 .wrd  EXEC
+2337 L2286           .wrd  QSTAC
+2338                 .wrd  BRAN
+2339 L2288           .wrd  L2302-L2288       ;0x1C
+2340 L2289           .wrd  HERE
+2341                 .wrd  NUMBER
+2342                 .wrd  DPL
+2343                 .wrd  AT
+2344                 .wrd  ONEP
+2345                 .wrd  ZBRAN
+2346 L2295           .wrd  L2299-L2295       ;0x8
+2347                 .wrd  DLIT
+2348                 .wrd  BRAN
+2349 L2298           .wrd  L2301-L2298       ;0x6
+2350 L2299           .wrd  DROP
+2351                 .wrd  LITER
+2352 L2301           .wrd  QSTAC
+2353 L2302           .wrd  BRAN
+2354 L2303           .wrd  L2272-L2303       ;0xFFC2
+2359 L2309           .byt  0x89,"IMMEDIAT",0xC5
+2360                 .wrd  L2269             ;; link to INTERPRET
+2361                 .wrd  DOCOL
+2362                 .wrd  LATES
+2363                 .wrd  CLIT
+2364                 .byt  0x40
+2365                 .wrd  TOGGL
+2366                 .wrd  SEMIS
+2371 L2321           .byt  0x8A,"VOCABULAR",0xD9
+2372                 .wrd  L2309             ;link to IMMEDIATE
+2373                 .wrd  DOCOL
+2374                 .wrd  BUILD
+2375                 .wrd  LIT
+2376                 .wrd  0xA081
+2377                 .wrd  COMMA
+2378                 .wrd  CURR
+2379                 .wrd  AT
+2380                 .wrd  CFA
+2381                 .wrd  COMMA
+2382                 .wrd  HERE
+2383                 .wrd  VOCL
+2384                 .wrd  AT
+2385                 .wrd  COMMA
+2386                 .wrd  VOCL
+2387                 .wrd  STORE
+2388                 .wrd  DOES
+2389 DOVOC           .wrd  TWOP
+2390                 .wrd  CON
+2391                 .wrd  STORE
+2392                 .wrd  SEMIS
+2397 L2346           .byt  0xC5,"FORT",0xC8
+2398                 .wrd  L2321             ;link to VOCABULARY
+2399 FORTH           .wrd  DODOE
+2400                 .wrd  DOVOC
+2401                 .wrd  0xA081
+2402 XFOR            .wrd  NTOP              ;points to top name in FORTH
+2403 VL0             .wrd  0                 ;last vocab link ends at zero
+2409 L2357           .byt  0x8B,"DEFINITION",0xD3
+2410                 .wrd  L2346             ;link to FORTH
+2411 DEFIN           .wrd  DOCOL
+2412                 .wrd  CON
+2413                 .wrd  AT
+2414                 .wrd  CURR
+2415                 .wrd  STORE
+2416                 .wrd  SEMIS
+2421 L2369           .byt  0xC1,0xA8
+2422                 .wrd  L2357             ;link to DEFINITIONS
+2423                 .wrd  DOCOL
+2424                 .wrd  CLIT
+2425                 .byt  0x29
+2426                 .wrd  WORD
+2427                 .wrd  SEMIS
+2432 L2381           .byt  0x84,"QUI",0xD4
+2433                 .wrd  L2369             ;link to (
+2434 QUIT            .wrd  DOCOL
+2435                 .wrd  ZERO
+2436                 .wrd  BLK
+2437                 .wrd  STORE
+2438                 .wrd  LBRAC
+2439 L2388           .wrd  RPSTO
+2440                 .wrd  CR
+2441                 .wrd  QUERY
+2442                 .wrd  INTER
+2443                 .wrd  STATE
+2444                 .wrd  AT
+2445                 .wrd  ZEQU
+2446                 .wrd  ZBRAN
+2447 L2396           .wrd  L2399-L2396       ;0x7
+2448                 .wrd  PDOTQ
+2449                 .byt  2,"OK"
+2450 L2399           .wrd  BRAN
+2451 L2400           .wrd  L2388-L2400       ;0xFFE7
+2452                 .wrd  SEMIS
+2457 L2406           .byt  0x85,"ABOR",0xD4
+2458                 .wrd  L2381             ;link to QUIT
+2459 ABORT           .wrd  DOCOL
+2460                 .wrd  SPSTO
+2461                 .wrd  DECIM
+2462                 .wrd  DR0
+2463                 .wrd  CR
+2464                 .wrd  PDOTQ
+2465                 .byt  14,"fig-FORTH 1.0a"
+2466                 .wrd  FORTH
+2467                 .wrd  DEFIN
+2468                 .wrd  QUIT
+2473 L2423           .byt  0x84,"COL",0xC4
+2474                 .wrd  L2406             ;link to ABORT
+2475 COLD            .wrd  $+2
+2476                 lda   ORIG+0x0C         ;from cold start area
+2477                 sta   FORTH+6
+2478                 lda   ORIG+0x0D
+2479                 sta   FORTH+7
+2480                 ldy   #0x15
+2481                 bne   L2433
+2482 WARM            ldy   #0x0F
+2483 L2433           lda   ORIG+0x10
+2484                 sta   UP
+2485                 lda   ORIG+0x11
+2486                 sta   UP+1
+2487 L2437           lda   ORIG+0x0C,Y
+2488                 sta   (UP),Y
+2489                 dey
+2490                 bpl   L2437
+2491                 lda   #((ABORT + 2) >> 8) & 0xFF        ;actually #>(ABORT+2)
+2492                 sta   IP+1
+2493                 lda   #(ABORT + 2) & 0xFF
+2494                 sta   IP
+2495                 cld
+2496                 lda   #0x6C              ;ind jump opcode
+2497                 sta   W-1
+2498                 jmp   RPSTO+2           ;And off we go !
+2503 L2453           .byt  0x84,"S->",0xC4
+2504                 .wrd  L2423             ;link to COLD
+2505 STOD            .wrd  DOCOL
+2506                 .wrd  DUP
+2507                 .wrd  ZLESS
+2508                 .wrd  MINUS
+2509                 .wrd  SEMIS
+2514 L2464           .byt  0x82,"+",0xAD
+2515                 .wrd  L2453             ;link to S->D
+2516 PM              .wrd  DOCOL
+2517                 .wrd  ZLESS
+2518                 .wrd  ZBRAN
+2519 L2469           .wrd  4
+2520                 .wrd  MINUS
+2521 L2471           .wrd  SEMIS
+2526 L2476           .byt  0x83,"D+",0xAD
+2527                 .wrd  L2464             ;link to +-
+2528 DPM             .wrd  DOCOL
+2529                 .wrd  ZLESS
+2530                 .wrd  ZBRAN
+2531 L2481           .wrd  L2483-L2481       ;0x4
+2532                 .wrd  DMINU
+2533 L2483           .wrd  SEMIS
+2538 L2488           .byt  0x83,"AB",0xD3
+2539                 .wrd  L2476             ;link to D+-
+2540 ABS             .wrd  DOCOL
+2541                 .wrd  DUP
+2542                 .wrd  PM
+2543                 .wrd  SEMIS
+2548 L2498           .byt  0x84,"DAB",0xD3
+2549                 .wrd  L2488             ;link to ABS
+2550 DABS            .wrd  DOCOL
+2551                 .wrd  DUP
+2552                 .wrd  DPM
+2553                 .wrd  SEMIS
+2558 L2508           .byt  0x83,"MI",0xCE
+2559                 .wrd  L2498             ;link to DABS
+2560 MIN             .wrd  DOCOL
+2561                 .wrd  OVER
+2562                 .wrd  OVER
+2563                 .wrd  GREAT
+2564                 .wrd  ZBRAN
+2565 L2515           .wrd  L2517-L2515       ;0x4
+2566                 .wrd  SWAP
+2567 L2517           .wrd  DROP
+2568                 .wrd  SEMIS
+2573 L2523           .byt  0x83,"MA",0xD8
+2574                 .wrd  L2508             ;link to MIN
+2575 MAX             .wrd  DOCOL
+2576                 .wrd  OVER
+2577                 .wrd  OVER
+2578                 .wrd  LESS
+2579                 .wrd  ZBRAN
+2580 L2530           .wrd  L2532-L2530       ;0x4
+2581                 .wrd  SWAP
+2582 L2532           .wrd  DROP
+2583                 .wrd  SEMIS
+2588 L2538           .byt  0x82,"M",0xAA
+2589                 .wrd  L2523             ;link to MAX
+2590 MSTAR           .wrd  DOCOL
+2591                 .wrd  OVER
+2592                 .wrd  OVER
+2593                 .wrd  XOR
+2594                 .wrd  TOR
 2595                 .wrd  ABS
-2596                 .wrd  USTAR
-2597                 .wrd  RFROM
-2598                 .wrd  DPM
-2599                 .wrd  SEMIS
-2604 L2556           .byt  0x82,"M",0xAF
-2605                 .wrd  L2538             ;link to M*
-2606 MSLAS           .wrd  DOCOL
-2607                 .wrd  OVER
-2608                 .wrd  TOR
-2609                 .wrd  TOR
-2610                 .wrd  DABS
-2611                 .wrd  R
-2612                 .wrd  ABS
-2613                 .wrd  USLAS
-2614                 .wrd  RFROM
-2615                 .wrd  R
-2616                 .wrd  XOR
-2617                 .wrd  PM
-2618                 .wrd  SWAP
-2619                 .wrd  RFROM
-2620                 .wrd  PM
-2621                 .wrd  SWAP
-2622                 .wrd  SEMIS
-2627 L2579           .byt  0x81,0xAA
-2628                 .wrd  L2556             ;link to M/
-2629 STAR            .wrd  DOCOL
-2630                 .wrd  USTAR
-2631                 .wrd  DROP
-2632                 .wrd  SEMIS
-2637 L2589           .byt  0x84,"/MO",0xC4
-2638                 .wrd  L2579             ;link to *
-2639 SLMOD           .wrd  DOCOL
-2640                 .wrd  TOR
-2641                 .wrd  STOD
-2642                 .wrd  RFROM
-2643                 .wrd  MSLAS
-2644                 .wrd  SEMIS
-2649 L2601           .byt  0x81,0xAF
-2650                 .wrd  L2589             ;link to /MOD
-2651 SLASH           .wrd  DOCOL
-2652                 .wrd  SLMOD
-2653                 .wrd  SWAP
-2654                 .wrd  DROP
-2655                 .wrd  SEMIS
-2660 L2612           .byt  0x83,"MO",0xC4
-2661                 .wrd  L2601             ;link to /
-2662 MOD             .wrd  DOCOL
-2663                 .wrd  SLMOD
-2664                 .wrd  DROP
-2665                 .wrd  SEMIS
-2670 L2622           .byt  0x85,"*/MO",0xC4
-2671                 .wrd  L2612             ;link to MOD
-2672 SSMOD           .wrd  DOCOL
-2673                 .wrd  TOR
-2674                 .wrd  MSTAR
-2675                 .wrd  RFROM
-2676                 .wrd  MSLAS
-2677                 .wrd  SEMIS
-2682 L2634           .byt  0x82,"*",0xAF
-2683                 .wrd  L2622             ;link to */MOD
-2684 SSLAS           .wrd  DOCOL
-2685                 .wrd  SSMOD
-2686                 .wrd  SWAP
-2687                 .wrd  DROP
-2688                 .wrd  SEMIS
-2693 L2645           .byt  0x85,"M/MO",0xC4
-2694                 .wrd  L2634             ;link to */
-2695 MSMOD           .wrd  DOCOL
-2696                 .wrd  TOR
-2697                 .wrd  ZERO
-2698                 .wrd  R
-2699                 .wrd  USLAS
-2700                 .wrd  RFROM
-2701                 .wrd  SWAP
-2702                 .wrd  TOR
-2703                 .wrd  USLAS
-2704                 .wrd  RFROM
-2705                 .wrd  SEMIS
-2710 L2662           .byt  0x83,"US",0xC5
-2711                 .wrd  L2645             ;link to M/MOD
-2712 USE             .wrd  DOVAR
-2713                 .wrd  DAREA
-2718 L2670           .byt  0x84,"PRE",0xD6
-2719                 .wrd  L2662             ;link to USE
-2720 PREV            .wrd  DOVAR
-2721                 .wrd  DAREA
-2727 L2678           .byt  0x84,"+BU",0xC6
-2728                 .wrd  L2670             ;link to PREV
-2729 PBUF            .wrd  DOCOL
-2730                 .wrd  LIT
-2731                 .wrd  SSIZE+4           ;hold block #, one sector two num
-2732                 .wrd  PLUS
-2733                 .wrd  DUP
-2734                 .wrd  LIMIT
-2735                 .wrd  EQUAL
-2736                 .wrd  ZBRAN
-2737 L2688           .wrd  L2691-L2688       ;0x6
-2738                 .wrd  DROP
-2739                 .wrd  FIRST
-2740 L2691           .wrd  DUP
-2741                 .wrd  PREV
-2742                 .wrd  AT
-2743                 .wrd  SUB
-2744                 .wrd  SEMIS
-2749 L2700           .byt  0x86,"UPDAT",0xC5
-2750                 .wrd  L2678             ;link to +BUF
-2751 UPDAT           .wrd  DOCOL
-2752                 .wrd  PREV
-2753                 .wrd  AT
-2754                 .wrd  AT
-2755                 .wrd  LIT,0x8000
-2756                 .wrd  OR
-2757                 .wrd  PREV
-2758                 .wrd  AT
-2759                 .wrd  STORE
-2760                 .wrd  SEMIS
-2764 L2705           .byt  0x85,"FLUS",0xC8
-2765                 .wrd  L2700             ;link to UPDATE
-2766                 .wrd  DOCOL
-2767                 .wrd  LIMIT,FIRST,SUB
-2768                 .wrd  BBUF,CLIT
-2769                 .byt  4
-2770                 .wrd  PLUS,SLASH,ONEP
-2771                 .wrd  ZERO,PDO
-2772 L2835           .wrd  LIT,0x7FFF,BUFFR
-2773                 .wrd  DROP,PLOOP
-2774 L2839           .wrd  L2835-L2839       ;0xFFF6
-2775                 .wrd  SEMIS
-2780 L2716           .byt  0x8D,"EMPTY-BUFFER",0xD3
-2781                 .wrd  L2705             ;link to FLUSH
-2782                 .wrd  DOCOL
-2783                 .wrd  FIRST
-2784                 .wrd  LIMIT
-2785                 .wrd  OVER
-2786                 .wrd  SUB
-2787                 .wrd  ERASE
-2788                 .wrd  SEMIS
-2793 L2729           .byt  0x83,"DR",0xB0
-2794                 .wrd  L2716             ;link to EMPTY-BUFFERS
-2795 DR0             .wrd  DOCOL
-2796                 .wrd  ZERO
-2797                 .wrd  OFSET
-2798                 .wrd  STORE
-2799                 .wrd  SEMIS
-2804 L2740           .byt  0x83,"DR",0xB1
-2805                 .wrd  L2729             ;link to DR0
-2806                 .wrd  DOCOL
-2807                 .wrd  LIT,SECTR         ;sectors per drive
-2808                 .wrd  OFSET
-2809                 .wrd  STORE
-2810                 .wrd  SEMIS
-2815 L2751           .byt  0x86,"BUFFE",0xD2
-2816                 .wrd  L2740             ;link to DR1
-2817 BUFFR           .wrd  DOCOL
-2818                 .wrd  USE
-2819                 .wrd  AT
-2820                 .wrd  DUP
-2821                 .wrd  TOR
-2822 L2758           .wrd  PBUF
-2823                 .wrd  ZBRAN
-2824 L2760           .wrd  L2758-L2760       ;0xFFFC
-2825                 .wrd  USE
-2826                 .wrd  STORE
-2827                 .wrd  R
-2828                 .wrd  AT
-2829                 .wrd  ZLESS
-2830                 .wrd  ZBRAN
-2831 L2767           .wrd  L2776-L2767       ;0x14
-2832                 .wrd  R
-2833                 .wrd  TWOP
+2596                 .wrd  SWAP
+2597                 .wrd  ABS
+2598                 .wrd  USTAR
+2599                 .wrd  RFROM
+2600                 .wrd  DPM
+2601                 .wrd  SEMIS
+2606 L2556           .byt  0x82,"M",0xAF
+2607                 .wrd  L2538             ;link to M*
+2608 MSLAS           .wrd  DOCOL
+2609                 .wrd  OVER
+2610                 .wrd  TOR
+2611                 .wrd  TOR
+2612                 .wrd  DABS
+2613                 .wrd  R
+2614                 .wrd  ABS
+2615                 .wrd  USLAS
+2616                 .wrd  RFROM
+2617                 .wrd  R
+2618                 .wrd  XOR
+2619                 .wrd  PM
+2620                 .wrd  SWAP
+2621                 .wrd  RFROM
+2622                 .wrd  PM
+2623                 .wrd  SWAP
+2624                 .wrd  SEMIS
+2629 L2579           .byt  0x81,0xAA
+2630                 .wrd  L2556             ;link to M/
+2631 STAR            .wrd  DOCOL
+2632                 .wrd  USTAR
+2633                 .wrd  DROP
+2634                 .wrd  SEMIS
+2639 L2589           .byt  0x84,"/MO",0xC4
+2640                 .wrd  L2579             ;link to *
+2641 SLMOD           .wrd  DOCOL
+2642                 .wrd  TOR
+2643                 .wrd  STOD
+2644                 .wrd  RFROM
+2645                 .wrd  MSLAS
+2646                 .wrd  SEMIS
+2651 L2601           .byt  0x81,0xAF
+2652                 .wrd  L2589             ;link to /MOD
+2653 SLASH           .wrd  DOCOL
+2654                 .wrd  SLMOD
+2655                 .wrd  SWAP
+2656                 .wrd  DROP
+2657                 .wrd  SEMIS
+2662 L2612           .byt  0x83,"MO",0xC4
+2663                 .wrd  L2601             ;link to /
+2664 MOD             .wrd  DOCOL
+2665                 .wrd  SLMOD
+2666                 .wrd  DROP
+2667                 .wrd  SEMIS
+2672 L2622           .byt  0x85,"*/MO",0xC4
+2673                 .wrd  L2612             ;link to MOD
+2674 SSMOD           .wrd  DOCOL
+2675                 .wrd  TOR
+2676                 .wrd  MSTAR
+2677                 .wrd  RFROM
+2678                 .wrd  MSLAS
+2679                 .wrd  SEMIS
+2684 L2634           .byt  0x82,"*",0xAF
+2685                 .wrd  L2622             ;link to */MOD
+2686 SSLAS           .wrd  DOCOL
+2687                 .wrd  SSMOD
+2688                 .wrd  SWAP
+2689                 .wrd  DROP
+2690                 .wrd  SEMIS
+2695 L2645           .byt  0x85,"M/MO",0xC4
+2696                 .wrd  L2634             ;link to */
+2697 MSMOD           .wrd  DOCOL
+2698                 .wrd  TOR
+2699                 .wrd  ZERO
+2700                 .wrd  R
+2701                 .wrd  USLAS
+2702                 .wrd  RFROM
+2703                 .wrd  SWAP
+2704                 .wrd  TOR
+2705                 .wrd  USLAS
+2706                 .wrd  RFROM
+2707                 .wrd  SEMIS
+2712 L2662           .byt  0x83,"US",0xC5
+2713                 .wrd  L2645             ;link to M/MOD
+2714 USE             .wrd  DOVAR
+2715                 .wrd  DAREA
+2720 L2670           .byt  0x84,"PRE",0xD6
+2721                 .wrd  L2662             ;link to USE
+2722 PREV            .wrd  DOVAR
+2723                 .wrd  DAREA
+2729 L2678           .byt  0x84,"+BU",0xC6
+2730                 .wrd  L2670             ;link to PREV
+2731 PBUF            .wrd  DOCOL
+2732                 .wrd  LIT
+2733                 .wrd  SSIZE+4           ;hold block #, one sector two num
+2734                 .wrd  PLUS
+2735                 .wrd  DUP
+2736                 .wrd  LIMIT
+2737                 .wrd  EQUAL
+2738                 .wrd  ZBRAN
+2739 L2688           .wrd  L2691-L2688       ;0x6
+2740                 .wrd  DROP
+2741                 .wrd  FIRST
+2742 L2691           .wrd  DUP
+2743                 .wrd  PREV
+2744                 .wrd  AT
+2745                 .wrd  SUB
+2746                 .wrd  SEMIS
+2751 L2700           .byt  0x86,"UPDAT",0xC5
+2752                 .wrd  L2678             ;link to +BUF
+2753 UPDAT           .wrd  DOCOL
+2754                 .wrd  PREV
+2755                 .wrd  AT
+2756                 .wrd  AT
+2757                 .wrd  LIT,0x8000
+2758                 .wrd  OR
+2759                 .wrd  PREV
+2760                 .wrd  AT
+2761                 .wrd  STORE
+2762                 .wrd  SEMIS
+2766 L2705           .byt  0x85,"FLUS",0xC8
+2767                 .wrd  L2700             ;link to UPDATE
+2768                 .wrd  DOCOL
+2769                 .wrd  LIMIT,FIRST,SUB
+2770                 .wrd  BBUF,CLIT
+2771                 .byt  4
+2772                 .wrd  PLUS,SLASH,ONEP
+2773                 .wrd  ZERO,PDO
+2774 L2835           .wrd  LIT,0x7FFF,BUFFR
+2775                 .wrd  DROP,PLOOP
+2776 L2839           .wrd  L2835-L2839       ;0xFFF6
+2777                 .wrd  SEMIS
+2782 L2716           .byt  0x8D,"EMPTY-BUFFER",0xD3
+2783                 .wrd  L2705             ;link to FLUSH
+2784                 .wrd  DOCOL
+2785                 .wrd  FIRST
+2786                 .wrd  LIMIT
+2787                 .wrd  OVER
+2788                 .wrd  SUB
+2789                 .wrd  ERASE
+2790                 .wrd  SEMIS
+2795 L2729           .byt  0x83,"DR",0xB0
+2796                 .wrd  L2716             ;link to EMPTY-BUFFERS
+2797 DR0             .wrd  DOCOL
+2798                 .wrd  ZERO
+2799                 .wrd  OFSET
+2800                 .wrd  STORE
+2801                 .wrd  SEMIS
+2806 L2740           .byt  0x83,"DR",0xB1
+2807                 .wrd  L2729             ;link to DR0
+2808                 .wrd  DOCOL
+2809                 .wrd  LIT,SECTR         ;sectors per drive
+2810                 .wrd  OFSET
+2811                 .wrd  STORE
+2812                 .wrd  SEMIS
+2817 L2751           .byt  0x86,"BUFFE",0xD2
+2818                 .wrd  L2740             ;link to DR1
+2819 BUFFR           .wrd  DOCOL
+2820                 .wrd  USE
+2821                 .wrd  AT
+2822                 .wrd  DUP
+2823                 .wrd  TOR
+2824 L2758           .wrd  PBUF
+2825                 .wrd  ZBRAN
+2826 L2760           .wrd  L2758-L2760       ;0xFFFC
+2827                 .wrd  USE
+2828                 .wrd  STORE
+2829                 .wrd  R
+2830                 .wrd  AT
+2831                 .wrd  ZLESS
+2832                 .wrd  ZBRAN
+2833 L2767           .wrd  L2776-L2767       ;0x14
 2834                 .wrd  R
-2835                 .wrd  AT
-2836                 .wrd  LIT
-2837                 .wrd  0x7FFF
-2838                 .wrd  ANDD
-2839                 .wrd  ZERO
-2841                 .wrd  RSW
-2842 L2776           .wrd  R
-2843                 .wrd  STORE
-2844                 .wrd  R
-2845                 .wrd  PREV
-2846                 .wrd  STORE
-2847                 .wrd  RFROM
-2848                 .wrd  TWOP
-2849                 .wrd  SEMIS
-2854 L2788           .byt  0x85,"BLOC",0xCB
-2855                 .wrd  L2751             ;link to BUFFER
-2856 BLOCK           .wrd  DOCOL
-2857                 .wrd  OFSET
-2858                 .wrd  AT
-2859                 .wrd  PLUS
-2860                 .wrd  TOR
-2861                 .wrd  PREV
-2862                 .wrd  AT
-2863                 .wrd  DUP
+2835                 .wrd  TWOP
+2836                 .wrd  R
+2837                 .wrd  AT
+2838                 .wrd  LIT
+2839                 .wrd  0x7FFF
+2840                 .wrd  ANDD
+2841                 .wrd  ZERO
+2843                 .wrd  RSW
+2844 L2776           .wrd  R
+2845                 .wrd  STORE
+2846                 .wrd  R
+2847                 .wrd  PREV
+2848                 .wrd  STORE
+2849                 .wrd  RFROM
+2850                 .wrd  TWOP
+2851                 .wrd  SEMIS
+2856 L2788           .byt  0x85,"BLOC",0xCB
+2857                 .wrd  L2751             ;link to BUFFER
+2858 BLOCK           .wrd  DOCOL
+2859                 .wrd  OFSET
+2860                 .wrd  AT
+2861                 .wrd  PLUS
+2862                 .wrd  TOR
+2863                 .wrd  PREV
 2864                 .wrd  AT
-2865                 .wrd  R
-2866                 .wrd  SUB
-2867                 .wrd  DUP
-2868                 .wrd  PLUS
-2869                 .wrd  ZBRAN
-2870 L2804           .wrd  L2830-L2804       ;0x34
-2871 L2805           .wrd  PBUF
-2872                 .wrd  ZEQU
-2873                 .wrd  ZBRAN
-2874 L2808           .wrd  L2818-L2808       ;0x14
-2875                 .wrd  DROP
-2876                 .wrd  R
-2877                 .wrd  BUFFR
-2878                 .wrd  DUP
-2879                 .wrd  R
-2880                 .wrd  ONE
-2882                 .wrd  RSW
-2883                 .wrd  TWO
-2884                 .wrd  SUB
-2885 L2818           .wrd  DUP
-2886                 .wrd  AT
-2887                 .wrd  R
-2888                 .wrd  SUB
-2889                 .wrd  DUP
-2890                 .wrd  PLUS
-2891                 .wrd  ZEQU
-2892                 .wrd  ZBRAN
-2893 L2826           .wrd  L2805-L2826       ;0xFFD6
-2894                 .wrd  DUP
-2895                 .wrd  PREV
-2896                 .wrd  STORE
-2897 L2830           .wrd  RFROM
-2898                 .wrd  DROP
-2899                 .wrd  TWOP
-2900                 .wrd  SEMIS             ;end of BLOCK
-2906 L2838           .byt  0x86,"(LINE",0xA9
-2907                 .wrd  L2788             ;link to BLOCK
-2908 PLINE           .wrd  DOCOL
-2909                 .wrd  TOR
-2910                 .wrd  CSLL
-2911                 .wrd  BBUF
-2912                 .wrd  SSMOD
-2913                 .wrd  RFROM
-2914                 .wrd  BSCR
-2915                 .wrd  STAR
-2916                 .wrd  PLUS
-2917                 .wrd  BLOCK
+2865                 .wrd  DUP
+2866                 .wrd  AT
+2867                 .wrd  R
+2868                 .wrd  SUB
+2869                 .wrd  DUP
+2870                 .wrd  PLUS
+2871                 .wrd  ZBRAN
+2872 L2804           .wrd  L2830-L2804       ;0x34
+2873 L2805           .wrd  PBUF
+2874                 .wrd  ZEQU
+2875                 .wrd  ZBRAN
+2876 L2808           .wrd  L2818-L2808       ;0x14
+2877                 .wrd  DROP
+2878                 .wrd  R
+2879                 .wrd  BUFFR
+2880                 .wrd  DUP
+2881                 .wrd  R
+2882                 .wrd  ONE
+2884                 .wrd  RSW
+2885                 .wrd  TWO
+2886                 .wrd  SUB
+2887 L2818           .wrd  DUP
+2888                 .wrd  AT
+2889                 .wrd  R
+2890                 .wrd  SUB
+2891                 .wrd  DUP
+2892                 .wrd  PLUS
+2893                 .wrd  ZEQU
+2894                 .wrd  ZBRAN
+2895 L2826           .wrd  L2805-L2826       ;0xFFD6
+2896                 .wrd  DUP
+2897                 .wrd  PREV
+2898                 .wrd  STORE
+2899 L2830           .wrd  RFROM
+2900                 .wrd  DROP
+2901                 .wrd  TWOP
+2902                 .wrd  SEMIS             ;end of BLOCK
+2908 L2838           .byt  0x86,"(LINE",0xA9
+2909                 .wrd  L2788             ;link to BLOCK
+2910 PLINE           .wrd  DOCOL
+2911                 .wrd  TOR
+2912                 .wrd  CSLL
+2913                 .wrd  BBUF
+2914                 .wrd  SSMOD
+2915                 .wrd  RFROM
+2916                 .wrd  BSCR
+2917                 .wrd  STAR
 2918                 .wrd  PLUS
-2919                 .wrd  CSLL
-2920                 .wrd  SEMIS
-2925 L2857           .byt  0x85,".LIN",0xC5
-2926                 .wrd  L2838             ;link to (LINE)
-2927 DLINE           .wrd  DOCOL
-2928                 .wrd  PLINE
-2929                 .wrd  DTRAI
-2930                 .wrd  TYPE
-2931                 .wrd  SEMIS
-2936 L2868           .byt  0x87,"MESSAG",0xC5
-2937                 .wrd  L2857             ;link to .LINE
-2938 MESS            .wrd  DOCOL
-2939                 .wrd  WARN
-2940                 .wrd  AT
-2941                 .wrd  ZBRAN
-2942 L2874           .wrd  L2888-L2874       ;0x1B
-2943                 .wrd  DDUP
-2944                 .wrd  ZBRAN
-2945 L2877           .wrd  L2886-L2877       ;0x11
-2946                 .wrd  CLIT
-2947                 .byt  4
-2948                 .wrd  OFSET
-2949                 .wrd  AT
-2950                 .wrd  BSCR
-2951                 .wrd  SLASH
-2952                 .wrd  SUB
-2953                 .wrd  DLINE
-2954 L2886           .wrd  BRAN
-2955 L2887           .wrd  L2891-L2887           ;0xD
-2956 L2888           .wrd  PDOTQ
-2957                 .byt  6,"MSG # "
-2958                 .wrd  DOT
-2959 L2891           .wrd  SEMIS
-2964 L2896           .byt  0x84,"LOA",0xC4
-2965                 .wrd  L2868             ;link to MESSAGE
-2966 LOAD            .wrd  DOCOL
-2967                 .wrd  BLK
-2968                 .wrd  AT
-2969                 .wrd  TOR
-2970                 .wrd  IN
-2971                 .wrd  AT
-2972                 .wrd  TOR
-2973                 .wrd  ZERO
-2974                 .wrd  IN
-2975                 .wrd  STORE
-2976                 .wrd  BSCR
-2977                 .wrd  STAR
-2978                 .wrd  BLK
-2979                 .wrd  STORE
-2980                 .wrd  INTER
-2981                 .wrd  RFROM
-2982                 .wrd  IN
-2983                 .wrd  STORE
-2984                 .wrd  RFROM
-2985                 .wrd  BLK
-2986                 .wrd  STORE
-2987                 .wrd  SEMIS
-2992 L2924           .byt  0xC3,"--",0xBE
-2993                 .wrd  L2896             ;link to LOAD
-2994                 .wrd  DOCOL
-2995                 .wrd  QLOAD
-2996                 .wrd  ZERO
-2997                 .wrd  IN
-2998                 .wrd  STORE
-2999                 .wrd  BSCR
-3000                 .wrd  BLK
-3001                 .wrd  AT
-3002                 .wrd  OVER
-3003                 .wrd  MOD
-3004                 .wrd  SUB
-3005                 .wrd  BLK
-3006                 .wrd  PSTOR
-3007                 .wrd  SEMIS
-3021 XEMIT           lda     0,X         ; fetch character to output
-3023                 and     #0x7F
-3024                 jsr     cout        ; and display it
-3026                  jmp    POP
-3032 XKEY            jsr     cin         ; might otherwise clobber it while
-3034                 jmp     PUSHOA
-3040 XQTER           clc
-3041                 lda     #0x00        ; 0
-3042                 rol     a           ; move carry to bit 0
-3043                 jmp     PUSHOA
-3049 XCR             jsr     crout               ;use monitor call
-3051                 jmp     NEXT
-3083 L3050           .byt  0x84,"-BC",0xC4
-3084                 .wrd  L2924             ;link to -DISC
-3085 DBCD            .wrd  DOCOL
-3086                 .wrd  ZERO
-3087                 .wrd  CLIT
-3088                 .byt  10
-3089                 .wrd  USLAS
-3090                 .wrd  CLIT
-3091                 .byt  16
-3092                 .wrd  STAR
-3093                 .wrd  OR
-3094                 .wrd  SEMIS
-3122 L3070           .byt  0x83,"RS",0xD7
-3123                 .wrd  L3050             ;link to R/W
-3124 RSW             .wrd  DOCOL
-3125                 .wrd  TOR
-3126                 .wrd  BBUF
-3127                 .wrd  STAR
-3128                 .wrd  LIT
-3129                 .wrd  0x4000
-3130                 .wrd  PLUS
-3131                 .wrd  DUP
-3132                 .wrd  LIT
-3133                 .wrd  0x6800
-3134                 .wrd  GREAT
-3135                 .wrd  LIT
-3136                 .wrd  0x6
-3137                 .wrd  QERR
-3138                 .wrd  RFROM
-3139                 .wrd  ZBRAN
-3140                 .wrd  0x4
-3141                 .wrd  SWAP
-3142                 .wrd  BBUF
-3143                 .wrd  CMOVE
-3144                 .wrd  SEMIS
-3150 L3202           .byt  0xC1,0xA7
-3151                 .wrd  L3070             ;link to RSW
-3152 TICK            .wrd  DOCOL
-3153                 .wrd  DFIND
-3154                 .wrd  ZEQU
-3155                 .wrd  ZERO
-3156                 .wrd  QERR
-3157                 .wrd  DROP
-3158                 .wrd  LITER
-3159                 .wrd  SEMIS
-3165 L3217           .byt  0x86,"FORGE",0xD4
-3166                 .wrd  L3202             ;link to ' TICK
-3167 FORG            .wrd  DOCOL
-3168                 .wrd  TICK
-3169                 .wrd  NFA
-3170                 .wrd  DUP
-3171                 .wrd  FENCE
-3172                 .wrd  AT
-3173                 .wrd  ULESS
-3174                 .wrd  CLIT
-3175                 .byt  0x15
-3176                 .wrd  QERR
-3177                 .wrd  TOR
-3178                 .wrd  VOCL
-3179                 .wrd  AT
-3180 L3220           .wrd  R
-3181                 .wrd  OVER
-3182                 .wrd  ULESS
-3183                 .wrd  ZBRAN
-3184                 .wrd  L3225-$
-3185                 .wrd  FORTH
-3186                 .wrd  DEFIN
-3187                 .wrd  AT
-3188                 .wrd  DUP
-3189                 .wrd  VOCL
-3190                 .wrd  STORE
-3191                 .wrd  BRAN
-3192                 .wrd  L3220-$           ;0xFFFF-24+1
-3193 L3225           .wrd  DUP
-3194                 .wrd  CLIT
-3195                 .byt  4
-3196                 .wrd  SUB
-3197 L3228           .wrd  PFA
-3198                 .wrd  LFA
-3199                 .wrd  AT
-3200                 .wrd  DUP
-3201                 .wrd  R
-3202                 .wrd  ULESS
-3203                 .wrd  ZBRAN
-3204                 .wrd  L3228-$           ;0xFFFF-14+1
-3205                 .wrd  OVER
-3206                 .wrd  TWO
-3207                 .wrd  SUB
-3208                 .wrd  STORE
-3209                 .wrd  AT
-3210                 .wrd  DDUP
-3211                 .wrd  ZEQU
-3212                 .wrd  ZBRAN
-3213                 .wrd  L3225-$           ;0xFFFF-39+1
-3214                 .wrd  RFROM
-3215                 .wrd  DP
-3216                 .wrd  STORE
-3217                 .wrd  SEMIS
-3222 L3250           .byt  0x84,"BAC",0xCB
-3223                 .wrd  L3217             ;link to FORGET
-3224 BACK            .wrd  DOCOL
-3225                 .wrd  HERE
-3226                 .wrd  SUB
-3227                 .wrd  COMMA
-3228                 .wrd  SEMIS
-3233 L3261           .byt  0xC5,"BEGI",0xCE
-3234                 .wrd  L3250             ;link to BACK
-3235                 .wrd  DOCOL
-3236                 .wrd  QCOMP
-3237                 .wrd  HERE
-3238                 .wrd  ONE
-3239                 .wrd  SEMIS
-3244 L3273           .byt  0xC5,"ENDI",0xC6
-3245                 .wrd  L3261             ;link to BEGIN
-3246 ENDIF           .wrd  DOCOL
-3247                 .wrd  QCOMP
-3248                 .wrd  TWO
-3249                 .wrd  QPAIR
-3250                 .wrd  HERE
-3251                 .wrd  OVER
-3252                 .wrd  SUB
-3253                 .wrd  SWAP
-3254                 .wrd  STORE
-3255                 .wrd  SEMIS
-3260 L3290           .byt  0xC4,"THE",0xCE
-3261                 .wrd  L3273             ;link to ENDIF
-3262                 .wrd  DOCOL
-3263                 .wrd  ENDIF
-3264                 .wrd  SEMIS
-3269 L3300           .byt  0xC2,"D",0xCF
-3270                 .wrd  L3290             ;link to THEN
-3271                 .wrd  DOCOL
-3272                 .wrd  COMP
-3273                 .wrd  PDO
-3274                 .wrd  HERE
-3275                 .wrd  THREE
-3276                 .wrd  SEMIS
-3282 L3313           .byt  0xC4,"LOO",0xD0
-3283                 .wrd  L3300             ;link to DO
-3284                 .wrd  DOCOL
-3285                 .wrd  THREE
-3286                 .wrd  QPAIR
-3287                 .wrd  COMP
-3288                 .wrd  PLOOP
-3289                 .wrd  BACK
-3290                 .wrd  SEMIS
-3295 L3327           .byt  0xC5,"+LOO",0xD0
-3296                 .wrd  L3313             ;link to LOOP
-3297                 .wrd  DOCOL
-3298                 .wrd  THREE
-3299                 .wrd  QPAIR
-3300                 .wrd  COMP
-3301                 .wrd  PPLOO
-3302                 .wrd  BACK
-3303                 .wrd  SEMIS
-3308 L3341           .byt  0xC5,"UNTI",0xCC
-3309                 .wrd  L3327             ;link to +LOOP
-3310 UNTIL           .wrd  DOCOL
-3311                 .wrd  ONE
-3312                 .wrd  QPAIR
-3313                 .wrd  COMP
-3314                 .wrd  ZBRAN
-3315                 .wrd  BACK
-3316                 .wrd  SEMIS
-3321 L3355           .byt  0xC3,"EN",0xC4
-3322                 .wrd  L3341             ;link to UNTIL
-3323                 .wrd  DOCOL
-3324                 .wrd  UNTIL
-3325                 .wrd  SEMIS
-3330 L3365           .byt  0xC5,"AGAI",0xCE
-3331                 .wrd  L3355             ;link to END
-3332 AGAIN           .wrd  DOCOL
-3333                 .wrd  ONE
-3334                 .wrd  QPAIR
-3335                 .wrd  COMP
-3336                 .wrd  BRAN
-3337                 .wrd  BACK
-3338                 .wrd  SEMIS
-3343 L3379           .byt  0xC6,"REPEA",0xD4
-3344                 .wrd  L3365             ;link to AGAIN
-3345                 .wrd  DOCOL
-3346                 .wrd  TOR
-3347                 .wrd  TOR
-3348                 .wrd  AGAIN
-3349                 .wrd  RFROM
-3350                 .wrd  RFROM
-3351                 .wrd  TWO
-3352                 .wrd  SUB
-3353                 .wrd  ENDIF
-3354                 .wrd  SEMIS
-3359 L3396           .byt  0xC2,"I",0xC6
-3360                 .wrd  L3379             ;link to REPEAT
-3361 IF              .wrd  DOCOL
-3362                 .wrd  COMP
-3363                 .wrd  ZBRAN
-3364                 .wrd  HERE
-3365                 .wrd  ZERO
-3366                 .wrd  COMMA
-3367                 .wrd  TWO
-3368                 .wrd  SEMIS
-3373 L3411           .byt  0xC4,"ELS",0xC5
-3374                 .wrd  L3396             ;link to IF
-3375                 .wrd  DOCOL
-3376                 .wrd  TWO
-3377                 .wrd  QPAIR
-3378                 .wrd  COMP
-3379                 .wrd  BRAN
-3380                 .wrd  HERE
-3381                 .wrd  ZERO
-3382                 .wrd  COMMA
-3383                 .wrd  SWAP
-3384                 .wrd  TWO
-3385                 .wrd  ENDIF
+2919                 .wrd  BLOCK
+2920                 .wrd  PLUS
+2921                 .wrd  CSLL
+2922                 .wrd  SEMIS
+2927 L2857           .byt  0x85,".LIN",0xC5
+2928                 .wrd  L2838             ;link to (LINE)
+2929 DLINE           .wrd  DOCOL
+2930                 .wrd  PLINE
+2931                 .wrd  DTRAI
+2932                 .wrd  TYPE
+2933                 .wrd  SEMIS
+2938 L2868           .byt  0x87,"MESSAG",0xC5
+2939                 .wrd  L2857             ;link to .LINE
+2940 MESS            .wrd  DOCOL
+2941                 .wrd  WARN
+2942                 .wrd  AT
+2943                 .wrd  ZBRAN
+2944 L2874           .wrd  L2888-L2874       ;0x1B
+2945                 .wrd  DDUP
+2946                 .wrd  ZBRAN
+2947 L2877           .wrd  L2886-L2877       ;0x11
+2948                 .wrd  CLIT
+2949                 .byt  4
+2950                 .wrd  OFSET
+2951                 .wrd  AT
+2952                 .wrd  BSCR
+2953                 .wrd  SLASH
+2954                 .wrd  SUB
+2955                 .wrd  DLINE
+2956 L2886           .wrd  BRAN
+2957 L2887           .wrd  L2891-L2887           ;0xD
+2958 L2888           .wrd  PDOTQ
+2959                 .byt  6,"MSG # "
+2960                 .wrd  DOT
+2961 L2891           .wrd  SEMIS
+2966 L2896           .byt  0x84,"LOA",0xC4
+2967                 .wrd  L2868             ;link to MESSAGE
+2968 LOAD            .wrd  DOCOL
+2969                 .wrd  BLK
+2970                 .wrd  AT
+2971                 .wrd  TOR
+2972                 .wrd  IN
+2973                 .wrd  AT
+2974                 .wrd  TOR
+2975                 .wrd  ZERO
+2976                 .wrd  IN
+2977                 .wrd  STORE
+2978                 .wrd  BSCR
+2979                 .wrd  STAR
+2980                 .wrd  BLK
+2981                 .wrd  STORE
+2982                 .wrd  INTER
+2983                 .wrd  RFROM
+2984                 .wrd  IN
+2985                 .wrd  STORE
+2986                 .wrd  RFROM
+2987                 .wrd  BLK
+2988                 .wrd  STORE
+2989                 .wrd  SEMIS
+2994 L2924           .byt  0xC3,"--",0xBE
+2995                 .wrd  L2896             ;link to LOAD
+2996                 .wrd  DOCOL
+2997                 .wrd  QLOAD
+2998                 .wrd  ZERO
+2999                 .wrd  IN
+3000                 .wrd  STORE
+3001                 .wrd  BSCR
+3002                 .wrd  BLK
+3003                 .wrd  AT
+3004                 .wrd  OVER
+3005                 .wrd  MOD
+3006                 .wrd  SUB
+3007                 .wrd  BLK
+3008                 .wrd  PSTOR
+3009                 .wrd  SEMIS
+3023 XEMIT           lda     0,X         ; fetch character to output
+3025                 and     #0x7F
+3026                 jsr     cout        ; and display it
+3028                  jmp    POP
+3034 XKEY            jsr     cin         ; might otherwise clobber it while
+3036                 jmp     PUSHOA
+3042 XQTER           clc
+3043                 lda     #0x00        ; 0
+3044                 rol     a           ; move carry to bit 0
+3045                 jmp     PUSHOA
+3051 XCR             jsr     crout               ;use monitor call
+3053                 jmp     NEXT
+3085 L3050           .byt  0x84,"-BC",0xC4
+3086                 .wrd  L2924             ;link to -DISC
+3087 DBCD            .wrd  DOCOL
+3088                 .wrd  ZERO
+3089                 .wrd  CLIT
+3090                 .byt  10
+3091                 .wrd  USLAS
+3092                 .wrd  CLIT
+3093                 .byt  16
+3094                 .wrd  STAR
+3095                 .wrd  OR
+3096                 .wrd  SEMIS
+3124 L3070           .byt  0x83,"RS",0xD7
+3125                 .wrd  L3050             ;link to R/W
+3126 RSW             .wrd  DOCOL
+3127                 .wrd  TOR
+3128                 .wrd  BBUF
+3129                 .wrd  STAR
+3130                 .wrd  LIT
+3131                 .wrd  0x4000
+3132                 .wrd  PLUS
+3133                 .wrd  DUP
+3134                 .wrd  LIT
+3135                 .wrd  0x6800
+3136                 .wrd  GREAT
+3137                 .wrd  LIT
+3138                 .wrd  0x6
+3139                 .wrd  QERR
+3140                 .wrd  RFROM
+3141                 .wrd  ZBRAN
+3142                 .wrd  0x4
+3143                 .wrd  SWAP
+3144                 .wrd  BBUF
+3145                 .wrd  CMOVE
+3146                 .wrd  SEMIS
+3152 L3202           .byt  0xC1,0xA7
+3153                 .wrd  L3070             ;link to RSW
+3154 TICK            .wrd  DOCOL
+3155                 .wrd  DFIND
+3156                 .wrd  ZEQU
+3157                 .wrd  ZERO
+3158                 .wrd  QERR
+3159                 .wrd  DROP
+3160                 .wrd  LITER
+3161                 .wrd  SEMIS
+3167 L3217           .byt  0x86,"FORGE",0xD4
+3168                 .wrd  L3202             ;link to ' TICK
+3169 FORG            .wrd  DOCOL
+3170                 .wrd  TICK
+3171                 .wrd  NFA
+3172                 .wrd  DUP
+3173                 .wrd  FENCE
+3174                 .wrd  AT
+3175                 .wrd  ULESS
+3176                 .wrd  CLIT
+3177                 .byt  0x15
+3178                 .wrd  QERR
+3179                 .wrd  TOR
+3180                 .wrd  VOCL
+3181                 .wrd  AT
+3182 L3220           .wrd  R
+3183                 .wrd  OVER
+3184                 .wrd  ULESS
+3185                 .wrd  ZBRAN
+3186                 .wrd  L3225-$
+3187                 .wrd  FORTH
+3188                 .wrd  DEFIN
+3189                 .wrd  AT
+3190                 .wrd  DUP
+3191                 .wrd  VOCL
+3192                 .wrd  STORE
+3193                 .wrd  BRAN
+3194                 .wrd  L3220-$           ;0xFFFF-24+1
+3195 L3225           .wrd  DUP
+3196                 .wrd  CLIT
+3197                 .byt  4
+3198                 .wrd  SUB
+3199 L3228           .wrd  PFA
+3200                 .wrd  LFA
+3201                 .wrd  AT
+3202                 .wrd  DUP
+3203                 .wrd  R
+3204                 .wrd  ULESS
+3205                 .wrd  ZBRAN
+3206                 .wrd  L3228-$           ;0xFFFF-14+1
+3207                 .wrd  OVER
+3208                 .wrd  TWO
+3209                 .wrd  SUB
+3210                 .wrd  STORE
+3211                 .wrd  AT
+3212                 .wrd  DDUP
+3213                 .wrd  ZEQU
+3214                 .wrd  ZBRAN
+3215                 .wrd  L3225-$           ;0xFFFF-39+1
+3216                 .wrd  RFROM
+3217                 .wrd  DP
+3218                 .wrd  STORE
+3219                 .wrd  SEMIS
+3224 L3250           .byt  0x84,"BAC",0xCB
+3225                 .wrd  L3217             ;link to FORGET
+3226 BACK            .wrd  DOCOL
+3227                 .wrd  HERE
+3228                 .wrd  SUB
+3229                 .wrd  COMMA
+3230                 .wrd  SEMIS
+3235 L3261           .byt  0xC5,"BEGI",0xCE
+3236                 .wrd  L3250             ;link to BACK
+3237                 .wrd  DOCOL
+3238                 .wrd  QCOMP
+3239                 .wrd  HERE
+3240                 .wrd  ONE
+3241                 .wrd  SEMIS
+3246 L3273           .byt  0xC5,"ENDI",0xC6
+3247                 .wrd  L3261             ;link to BEGIN
+3248 ENDIF           .wrd  DOCOL
+3249                 .wrd  QCOMP
+3250                 .wrd  TWO
+3251                 .wrd  QPAIR
+3252                 .wrd  HERE
+3253                 .wrd  OVER
+3254                 .wrd  SUB
+3255                 .wrd  SWAP
+3256                 .wrd  STORE
+3257                 .wrd  SEMIS
+3262 L3290           .byt  0xC4,"THE",0xCE
+3263                 .wrd  L3273             ;link to ENDIF
+3264                 .wrd  DOCOL
+3265                 .wrd  ENDIF
+3266                 .wrd  SEMIS
+3271 L3300           .byt  0xC2,"D",0xCF
+3272                 .wrd  L3290             ;link to THEN
+3273                 .wrd  DOCOL
+3274                 .wrd  COMP
+3275                 .wrd  PDO
+3276                 .wrd  HERE
+3277                 .wrd  THREE
+3278                 .wrd  SEMIS
+3284 L3313           .byt  0xC4,"LOO",0xD0
+3285                 .wrd  L3300             ;link to DO
+3286                 .wrd  DOCOL
+3287                 .wrd  THREE
+3288                 .wrd  QPAIR
+3289                 .wrd  COMP
+3290                 .wrd  PLOOP
+3291                 .wrd  BACK
+3292                 .wrd  SEMIS
+3297 L3327           .byt  0xC5,"+LOO",0xD0
+3298                 .wrd  L3313             ;link to LOOP
+3299                 .wrd  DOCOL
+3300                 .wrd  THREE
+3301                 .wrd  QPAIR
+3302                 .wrd  COMP
+3303                 .wrd  PPLOO
+3304                 .wrd  BACK
+3305                 .wrd  SEMIS
+3310 L3341           .byt  0xC5,"UNTI",0xCC
+3311                 .wrd  L3327             ;link to +LOOP
+3312 UNTIL           .wrd  DOCOL
+3313                 .wrd  ONE
+3314                 .wrd  QPAIR
+3315                 .wrd  COMP
+3316                 .wrd  ZBRAN
+3317                 .wrd  BACK
+3318                 .wrd  SEMIS
+3323 L3355           .byt  0xC3,"EN",0xC4
+3324                 .wrd  L3341             ;link to UNTIL
+3325                 .wrd  DOCOL
+3326                 .wrd  UNTIL
+3327                 .wrd  SEMIS
+3332 L3365           .byt  0xC5,"AGAI",0xCE
+3333                 .wrd  L3355             ;link to END
+3334 AGAIN           .wrd  DOCOL
+3335                 .wrd  ONE
+3336                 .wrd  QPAIR
+3337                 .wrd  COMP
+3338                 .wrd  BRAN
+3339                 .wrd  BACK
+3340                 .wrd  SEMIS
+3345 L3379           .byt  0xC6,"REPEA",0xD4
+3346                 .wrd  L3365             ;link to AGAIN
+3347                 .wrd  DOCOL
+3348                 .wrd  TOR
+3349                 .wrd  TOR
+3350                 .wrd  AGAIN
+3351                 .wrd  RFROM
+3352                 .wrd  RFROM
+3353                 .wrd  TWO
+3354                 .wrd  SUB
+3355                 .wrd  ENDIF
+3356                 .wrd  SEMIS
+3361 L3396           .byt  0xC2,"I",0xC6
+3362                 .wrd  L3379             ;link to REPEAT
+3363 IF              .wrd  DOCOL
+3364                 .wrd  COMP
+3365                 .wrd  ZBRAN
+3366                 .wrd  HERE
+3367                 .wrd  ZERO
+3368                 .wrd  COMMA
+3369                 .wrd  TWO
+3370                 .wrd  SEMIS
+3375 L3411           .byt  0xC4,"ELS",0xC5
+3376                 .wrd  L3396             ;link to IF
+3377                 .wrd  DOCOL
+3378                 .wrd  TWO
+3379                 .wrd  QPAIR
+3380                 .wrd  COMP
+3381                 .wrd  BRAN
+3382                 .wrd  HERE
+3383                 .wrd  ZERO
+3384                 .wrd  COMMA
+3385                 .wrd  SWAP
 3386                 .wrd  TWO
-3387                 .wrd  SEMIS
-3392 L3431           .byt  0xC5,"WHIL",0xC5
-3393                 .wrd  L3411             ;link to ELSE
-3394                 .wrd  DOCOL
-3395                 .wrd  IF
-3396                 .wrd  TWOP
-3397                 .wrd  SEMIS
-3402 L3442           .byt  0x86,"SPACE",0xD3
-3403                 .wrd  L3431             ;link to WHILE
-3404 SPACS           .wrd  DOCOL
-3405                 .wrd  ZERO
-3406                 .wrd  MAX
-3407                 .wrd  DDUP
-3408                 .wrd  ZBRAN
-3409 L3449           .wrd  L3455-L3449       ;0x0C
-3410                 .wrd  ZERO
-3411                 .wrd  PDO
-3412 L3452           .wrd  SPACE
-3413                 .wrd  PLOOP
-3414 L3454           .wrd  L3452-L3454       ;0xFFFC
-3415 L3455           .wrd  SEMIS
-3420 L3460           .byt  0x82,"<",0xA3
-3421                 .wrd  L3442             ;link to SPACES
-3422 BDIGS           .wrd  DOCOL
-3423                 .wrd  PAD
-3424                 .wrd  HLD
-3425                 .wrd  STORE
-3426                 .wrd  SEMIS
-3431 L3471           .byt  0x82,"#",0xBE
-3432                 .wrd  L3460             ;link to <#
-3433 EDIGS           .wrd  DOCOL
-3434                 .wrd  DROP
-3435                 .wrd  DROP
-3436                 .wrd  HLD
-3437                 .wrd  AT
-3438                 .wrd  PAD
-3439                 .wrd  OVER
-3440                 .wrd  SUB
-3441                 .wrd  SEMIS
-3446 L3486           .byt  0x84,"SIG",0xCE
-3447                 .wrd  L3471             ;link to #>
-3448 SIGN            .wrd  DOCOL
-3449                 .wrd  ROT
-3450                 .wrd  ZLESS
-3451                 .wrd  ZBRAN
-3452 L3492           .wrd  L3496-L3492       ;0x7
-3453                 .wrd  CLIT
-3454                 .byt  0x2D
-3455                 .wrd  HOLD
-3456 L3496           .wrd  SEMIS
-3461 L3501           .byt  0x81,0xA3
-3462                 .wrd  L3486             ;link to SIGN
-3463 DIG             .wrd  DOCOL
-3464                 .wrd  BASE
-3465                 .wrd  AT
-3466                 .wrd  MSMOD
-3467                 .wrd  ROT
-3468                 .wrd  CLIT
-3469                 .byt  9
-3470                 .wrd  OVER
-3471                 .wrd  LESS
-3472                 .wrd  ZBRAN
-3473 L3513           .wrd  L3517-L3513       ;0x7
-3474                 .wrd  CLIT
-3475                 .byt  7
-3476                 .wrd  PLUS
-3477 L3517           .wrd  CLIT
-3478                 .byt  0x30
-3479                 .wrd  PLUS
-3480                 .wrd  HOLD
-3481                 .wrd  SEMIS
-3486 L3526           .byt  0x82,"#",0xD3
-3487                 .wrd  L3501             ;link to #
-3488 DIGS            .wrd  DOCOL
-3489 L3529           .wrd  DIG
-3490                 .wrd  OVER
-3491                 .wrd  OVER
-3492                 .wrd  OR
-3493                 .wrd  ZEQU
-3494                 .wrd  ZBRAN
-3495 L3535           .wrd  L3529-L3535       ;0xFFF4
-3496                 .wrd  SEMIS
-3501 L3541           .byt  0x83,"D.",0xD2
-3502                 .wrd  L3526             ;link to #S
-3503 DDOTR           .wrd  DOCOL
-3504                 .wrd  TOR
-3505                 .wrd  SWAP
-3506                 .wrd  OVER
-3507                 .wrd  DABS
-3508                 .wrd  BDIGS
-3509                 .wrd  DIGS
-3510                 .wrd  SIGN
-3511                 .wrd  EDIGS
-3512                 .wrd  RFROM
-3513                 .wrd  OVER
-3514                 .wrd  SUB
-3515                 .wrd  SPACS
-3516                 .wrd  TYPE
-3517                 .wrd  SEMIS
-3522 L3562           .byt  0x82,"D",0xAE
-3523                 .wrd  L3541             ;link to D.R
-3524 DDOT            .wrd  DOCOL
-3525                 .wrd  ZERO
-3526                 .wrd  DDOTR
-3527                 .wrd  SPACE
-3528                 .wrd  SEMIS
-3533 L3573           .byt  0x82,".",0xD2
-3534                 .wrd  L3562             ;link to D.
-3535 DOTR            .wrd  DOCOL
-3536                 .wrd  TOR
-3537                 .wrd  STOD
-3538                 .wrd  RFROM
-3539                 .wrd  DDOTR
-3540                 .wrd  SEMIS
-3545 L3585           .byt  0x81,0xAE
-3546                 .wrd  L3573             ;link to .R
-3547 DOT             .wrd  DOCOL
-3548                 .wrd  STOD
-3549                 .wrd  DDOT
-3550                 .wrd  SEMIS
-3555 L3595           .byt  0x81,0xBF
-3556                 .wrd  L3585             ;link to .
-3557 QUES            .wrd  DOCOL
-3558                 .wrd  AT
-3559                 .wrd  DOT
-3560                 .wrd  SEMIS
-3565 L3605           .byt  0x84,"LIS",0xD4
-3566                 .wrd  L3595             ;link to ?
-3567 LIST            .wrd  DOCOL
-3568                 .wrd  DECIM
-3569                 .wrd  CR
-3570                 .wrd  DUP
-3571                 .wrd  SCR
-3572                 .wrd  STORE
-3573                 .wrd  PDOTQ
-3574                 .byt  6,"SCR # "
-3575                 .wrd  DOT
-3576                 .wrd  CLIT
-3577                 .byt  16
-3578                 .wrd  ZERO
-3579                 .wrd  PDO
-3580 L3620           .wrd  CR
-3581                 .wrd  I
-3582                 .wrd  THREE
-3583                 .wrd  DOTR
-3584                 .wrd  SPACE
-3585                 .wrd  I
-3586                 .wrd  SCR
-3587                 .wrd  AT
-3588                 .wrd  DLINE
-3589                 .wrd  PLOOP
-3590 L3630           .wrd  L3620-L3630       ;0xFFEC
-3591                 .wrd  CR
-3592                 .wrd  SEMIS
-3597 L3637           .byt  0x85,"INDE",0xD8
-3598                 .wrd  L3605             ;link to LIST
-3599                 .wrd  DOCOL
-3600                 .wrd  CR
-3601                 .wrd  ONEP
-3602                 .wrd  SWAP
-3603                 .wrd  PDO
-3604 L3647           .wrd  CR
-3605                 .wrd  I
-3606                 .wrd  THREE
-3607                 .wrd  DOTR
-3608                 .wrd  SPACE
-3609                 .wrd  ZERO
-3610                 .wrd  I
-3611                 .wrd  DLINE
-3612                 .wrd  QTERM
-3613                 .wrd  ZBRAN
-3614 L3657           .wrd  L3659-L3657       ;0x4
-3615                 .wrd  LEAVE
-3616 L3659           .wrd  PLOOP
-3617 L3660           .wrd  L3647-L3660       ;0xFFE6
-3618                 .wrd  CLIT
-3619                 .byt  0x0C              ;form feed for printer
-3620                 .wrd  EMIT
-3621                 .wrd  SEMIS
-3626 L3666           .byt  0x85,"TRIA",0xC4
-3627                 .wrd  L3637             ;link to INDEX
-3628                 .wrd  DOCOL
-3629                 .wrd  THREE
-3630                 .wrd  SLASH
+3387                 .wrd  ENDIF
+3388                 .wrd  TWO
+3389                 .wrd  SEMIS
+3394 L3431           .byt  0xC5,"WHIL",0xC5
+3395                 .wrd  L3411             ;link to ELSE
+3396                 .wrd  DOCOL
+3397                 .wrd  IF
+3398                 .wrd  TWOP
+3399                 .wrd  SEMIS
+3404 L3442           .byt  0x86,"SPACE",0xD3
+3405                 .wrd  L3431             ;link to WHILE
+3406 SPACS           .wrd  DOCOL
+3407                 .wrd  ZERO
+3408                 .wrd  MAX
+3409                 .wrd  DDUP
+3410                 .wrd  ZBRAN
+3411 L3449           .wrd  L3455-L3449       ;0x0C
+3412                 .wrd  ZERO
+3413                 .wrd  PDO
+3414 L3452           .wrd  SPACE
+3415                 .wrd  PLOOP
+3416 L3454           .wrd  L3452-L3454       ;0xFFFC
+3417 L3455           .wrd  SEMIS
+3422 L3460           .byt  0x82,"<",0xA3
+3423                 .wrd  L3442             ;link to SPACES
+3424 BDIGS           .wrd  DOCOL
+3425                 .wrd  PAD
+3426                 .wrd  HLD
+3427                 .wrd  STORE
+3428                 .wrd  SEMIS
+3433 L3471           .byt  0x82,"#",0xBE
+3434                 .wrd  L3460             ;link to <#
+3435 EDIGS           .wrd  DOCOL
+3436                 .wrd  DROP
+3437                 .wrd  DROP
+3438                 .wrd  HLD
+3439                 .wrd  AT
+3440                 .wrd  PAD
+3441                 .wrd  OVER
+3442                 .wrd  SUB
+3443                 .wrd  SEMIS
+3448 L3486           .byt  0x84,"SIG",0xCE
+3449                 .wrd  L3471             ;link to #>
+3450 SIGN            .wrd  DOCOL
+3451                 .wrd  ROT
+3452                 .wrd  ZLESS
+3453                 .wrd  ZBRAN
+3454 L3492           .wrd  L3496-L3492       ;0x7
+3455                 .wrd  CLIT
+3456                 .byt  0x2D
+3457                 .wrd  HOLD
+3458 L3496           .wrd  SEMIS
+3463 L3501           .byt  0x81,0xA3
+3464                 .wrd  L3486             ;link to SIGN
+3465 DIG             .wrd  DOCOL
+3466                 .wrd  BASE
+3467                 .wrd  AT
+3468                 .wrd  MSMOD
+3469                 .wrd  ROT
+3470                 .wrd  CLIT
+3471                 .byt  9
+3472                 .wrd  OVER
+3473                 .wrd  LESS
+3474                 .wrd  ZBRAN
+3475 L3513           .wrd  L3517-L3513       ;0x7
+3476                 .wrd  CLIT
+3477                 .byt  7
+3478                 .wrd  PLUS
+3479 L3517           .wrd  CLIT
+3480                 .byt  0x30
+3481                 .wrd  PLUS
+3482                 .wrd  HOLD
+3483                 .wrd  SEMIS
+3488 L3526           .byt  0x82,"#",0xD3
+3489                 .wrd  L3501             ;link to #
+3490 DIGS            .wrd  DOCOL
+3491 L3529           .wrd  DIG
+3492                 .wrd  OVER
+3493                 .wrd  OVER
+3494                 .wrd  OR
+3495                 .wrd  ZEQU
+3496                 .wrd  ZBRAN
+3497 L3535           .wrd  L3529-L3535       ;0xFFF4
+3498                 .wrd  SEMIS
+3503 L3541           .byt  0x83,"D.",0xD2
+3504                 .wrd  L3526             ;link to #S
+3505 DDOTR           .wrd  DOCOL
+3506                 .wrd  TOR
+3507                 .wrd  SWAP
+3508                 .wrd  OVER
+3509                 .wrd  DABS
+3510                 .wrd  BDIGS
+3511                 .wrd  DIGS
+3512                 .wrd  SIGN
+3513                 .wrd  EDIGS
+3514                 .wrd  RFROM
+3515                 .wrd  OVER
+3516                 .wrd  SUB
+3517                 .wrd  SPACS
+3518                 .wrd  TYPE
+3519                 .wrd  SEMIS
+3524 L3562           .byt  0x82,"D",0xAE
+3525                 .wrd  L3541             ;link to D.R
+3526 DDOT            .wrd  DOCOL
+3527                 .wrd  ZERO
+3528                 .wrd  DDOTR
+3529                 .wrd  SPACE
+3530                 .wrd  SEMIS
+3535 L3573           .byt  0x82,".",0xD2
+3536                 .wrd  L3562             ;link to D.
+3537 DOTR            .wrd  DOCOL
+3538                 .wrd  TOR
+3539                 .wrd  STOD
+3540                 .wrd  RFROM
+3541                 .wrd  DDOTR
+3542                 .wrd  SEMIS
+3547 L3585           .byt  0x81,0xAE
+3548                 .wrd  L3573             ;link to .R
+3549 DOT             .wrd  DOCOL
+3550                 .wrd  STOD
+3551                 .wrd  DDOT
+3552                 .wrd  SEMIS
+3557 L3595           .byt  0x81,0xBF
+3558                 .wrd  L3585             ;link to .
+3559 QUES            .wrd  DOCOL
+3560                 .wrd  AT
+3561                 .wrd  DOT
+3562                 .wrd  SEMIS
+3567 L3605           .byt  0x84,"LIS",0xD4
+3568                 .wrd  L3595             ;link to ?
+3569 LIST            .wrd  DOCOL
+3570                 .wrd  DECIM
+3571                 .wrd  CR
+3572                 .wrd  DUP
+3573                 .wrd  SCR
+3574                 .wrd  STORE
+3575                 .wrd  PDOTQ
+3576                 .byt  6,"SCR # "
+3577                 .wrd  DOT
+3578                 .wrd  CLIT
+3579                 .byt  16
+3580                 .wrd  ZERO
+3581                 .wrd  PDO
+3582 L3620           .wrd  CR
+3583                 .wrd  I
+3584                 .wrd  THREE
+3585                 .wrd  DOTR
+3586                 .wrd  SPACE
+3587                 .wrd  I
+3588                 .wrd  SCR
+3589                 .wrd  AT
+3590                 .wrd  DLINE
+3591                 .wrd  PLOOP
+3592 L3630           .wrd  L3620-L3630       ;0xFFEC
+3593                 .wrd  CR
+3594                 .wrd  SEMIS
+3599 L3637           .byt  0x85,"INDE",0xD8
+3600                 .wrd  L3605             ;link to LIST
+3601                 .wrd  DOCOL
+3602                 .wrd  CR
+3603                 .wrd  ONEP
+3604                 .wrd  SWAP
+3605                 .wrd  PDO
+3606 L3647           .wrd  CR
+3607                 .wrd  I
+3608                 .wrd  THREE
+3609                 .wrd  DOTR
+3610                 .wrd  SPACE
+3611                 .wrd  ZERO
+3612                 .wrd  I
+3613                 .wrd  DLINE
+3614                 .wrd  QTERM
+3615                 .wrd  ZBRAN
+3616 L3657           .wrd  L3659-L3657       ;0x4
+3617                 .wrd  LEAVE
+3618 L3659           .wrd  PLOOP
+3619 L3660           .wrd  L3647-L3660       ;0xFFE6
+3620                 .wrd  CLIT
+3621                 .byt  0x0C              ;form feed for printer
+3622                 .wrd  EMIT
+3623                 .wrd  SEMIS
+3628 L3666           .byt  0x85,"TRIA",0xC4
+3629                 .wrd  L3637             ;link to INDEX
+3630                 .wrd  DOCOL
 3631                 .wrd  THREE
-3632                 .wrd  STAR
+3632                 .wrd  SLASH
 3633                 .wrd  THREE
-3634                 .wrd  OVER
-3635                 .wrd  PLUS
-3636                 .wrd  SWAP
-3637                 .wrd  PDO
-3638 L3681           .wrd  CR
-3639                 .wrd  I
-3640                 .wrd  LIST
-3641                 .wrd  PLOOP
-3642 L3685           .wrd  L3681-L3685       ;0xFFF8
-3643                 .wrd  CR
-3644                 .wrd  CLIT
-3645                 .byt  0xF
-3646                 .wrd  MESS
-3647                 .wrd  CR
-3648                 .wrd  CLIT
-3649                 .byt  0x0C               ;form feed for printer
-3650                 .wrd  EMIT
-3651                 .wrd  SEMIS
-3657 L3696           .byt  0x85,"VLIS",0xD4
-3658                 .wrd  L3666             ;link to TRIAD
-3659 VLIST           .wrd  DOCOL
-3660                 .wrd  CLIT
-3661                 .byt  0x80
-3662                 .wrd  OUT
-3663                 .wrd  STORE
-3664                 .wrd  CON
-3665                 .wrd  AT
-3666                 .wrd  AT
-3667 L3706           .wrd  OUT
+3634                 .wrd  STAR
+3635                 .wrd  THREE
+3636                 .wrd  OVER
+3637                 .wrd  PLUS
+3638                 .wrd  SWAP
+3639                 .wrd  PDO
+3640 L3681           .wrd  CR
+3641                 .wrd  I
+3642                 .wrd  LIST
+3643                 .wrd  PLOOP
+3644 L3685           .wrd  L3681-L3685       ;0xFFF8
+3645                 .wrd  CR
+3646                 .wrd  CLIT
+3647                 .byt  0xF
+3648                 .wrd  MESS
+3649                 .wrd  CR
+3650                 .wrd  CLIT
+3651                 .byt  0x0C               ;form feed for printer
+3652                 .wrd  EMIT
+3653                 .wrd  SEMIS
+3659 L3696           .byt  0x85,"VLIS",0xD4
+3660                 .wrd  L3666             ;link to TRIAD
+3661 VLIST           .wrd  DOCOL
+3662                 .wrd  CLIT
+3663                 .byt  0x80
+3664                 .wrd  OUT
+3665                 .wrd  STORE
+3666                 .wrd  CON
+3667                 .wrd  AT
 3668                 .wrd  AT
-3669                 .wrd  CSLL
-3670                 .wrd  GREAT
-3671                 .wrd  ZBRAN
-3672 L3711           .wrd  L3716-L3711       ;0xA
-3673                 .wrd  CR
-3674                 .wrd  ZERO
-3675                 .wrd  OUT
-3676                 .wrd  STORE
-3677 L3716           .wrd  DUP
-3678                 .wrd  IDDOT
-3679                 .wrd  SPACE
-3680                 .wrd  SPACE
-3681                 .wrd  PFA
-3682                 .wrd  LFA
-3683                 .wrd  AT
-3684                 .wrd  DUP
-3685                 .wrd  ZEQU
-3686                 .wrd  QTERM
-3687                 .wrd  OR
-3688                 .wrd  ZBRAN
-3689 L3728           .wrd  L3706-L3728       ;0xFFD4
-3690                 .wrd  DROP
-3691                 .wrd  SEMIS
-3696 NTOP            .byt    0x83,"MO",0xCE
-3697                 .wrd    L3696             ;link to VLIST
-3698 MON             .wrd    $+2
-3699                 brk
-3701                 jmp     NEXT
-3707             .endp                                     ;end of listing
-3709 TOP         .end
+3669 L3706           .wrd  OUT
+3670                 .wrd  AT
+3671                 .wrd  CSLL
+3672                 .wrd  GREAT
+3673                 .wrd  ZBRAN
+3674 L3711           .wrd  L3716-L3711       ;0xA
+3675                 .wrd  CR
+3676                 .wrd  ZERO
+3677                 .wrd  OUT
+3678                 .wrd  STORE
+3679 L3716           .wrd  DUP
+3680                 .wrd  IDDOT
+3681                 .wrd  SPACE
+3682                 .wrd  SPACE
+3683                 .wrd  PFA
+3684                 .wrd  LFA
+3685                 .wrd  AT
+3686                 .wrd  DUP
+3687                 .wrd  ZEQU
+3688                 .wrd  QTERM
+3689                 .wrd  OR
+3690                 .wrd  ZBRAN
+3691 L3728           .wrd  L3706-L3728       ;0xFFD4
+3692                 .wrd  DROP
+3693                 .wrd  SEMIS
+3698 NTOP            .byt    0x83,"MO",0xCE
+3699                 .wrd    L3696             ;link to VLIST
+3700 MON             .wrd    $+2
+3701                 brk
+3703                 jmp     NEXT
+3709             .endp                                     ;end of listing
+3711 TOP         .end
