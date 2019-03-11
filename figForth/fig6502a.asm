@@ -94,6 +94,21 @@ RESTART     nop                     ; User Warm entry point
             nop
             nop
 ;
+;   This routine pulls words from the PS and stores to working space at N.
+;   On input, the number of words to copy from PS is in a, and y is 0. The value
+;   in a is multiplied 2, and stored in temporary location N-1. Y is compared to
+;   this value. When y == [N-1], the copy operation is complete.
+;
+SETUP       asl     a           ; multiply input by 2 and store in N-1
+            sta     N-1
+L63         pla.w               ; pull value from PS and store in temporary area
+            sta.w   N,Y
+            iny                 ; increment loop count
+            iny
+            cpy     N-1         ; if y < (N-1), loop, else finish
+            bne     L63
+            rts.s
+;
 ;           LIT
 ;           SCREEN 13 LINE 1
 ;
@@ -114,18 +129,6 @@ CLIT        .wrd    $+2
             lda     0,I++
             pha.w
             inxt
-;
-;
-SETUP       asl     a
-            sta     N-1
-L63         lda     0,X
-            sta     N,Y
-            inx
-            iny
-            cpy     N-1
-            bne     L63
-            ldy     #0
-            rts.s
 ;
 ;           EXCECUTE
 ;           SCREEN 14 LINE 11
@@ -240,28 +243,29 @@ I           .wrd    R+2         ;share the code for R
 L214        .byt    0x85,"DIGI",0xD4
             .wrd    L207        ;link to I
 DIGIT       .wrd    $+2
+;
             sec
-            lda     2,X
-            sbc     #0x30
-            bmi     L234
-            cmp     #0xA
+            lda     3,S         ; load character to convert
+            sbc     #0x30       ; subtract '0'
+            bmi     L234        ; error if a < 0
+            cmp     #0x0A       ; if a < 0x0A, conversion complete
             bmi     L227
             sec
-            sbc     #7
-            cmp     #0xA
+            sbc     #7          ; adjust hex(A-F)
+            cmp     #0x0A       ; if a < 0x0A, conversion error
             bmi     L234
-L227        cmp     0,X
+L227        cmp     1,S         ; compare a to number base, if a > base, error 
             bpl     L234
-            sta     2,X
-            lda     #1
-            pha
-            tya
-            jmp     PUT         ;SEMIStrue with converted value
-L234        tya
-            pha
-            inx
-            inx
-            jmp     PUT         ;SEMISfalse with bad conversion
+            sta     3,S         ; store converted character value
+;
+            lda     #1          ; SEMIS true with converted value
+            sta.w   1,S         ; store true flag on top PS
+            inxt
+            
+L234        lda     #0          ; SEMIS false with bad conversion
+            sta.w   3,S         ; store false flag over character to convert
+            adj     #2          ; remove number base from PS
+            inxt
 ;
 ;           (FIND)
 ;           SCREEN 19 LINE 1
@@ -269,154 +273,146 @@ L234        tya
 L243        .byt    0x86,"(FIND",0xA8
             .wrd    L214        ;Link to DIGIT
 PFIND       .wrd    $+2
-            lda     #2
-            jsr     SETUP
-            stx     XSAVE
-L249        ldy     #0
-            lda     (N),Y
-            eor     (N+2),Y
 ;
-            and     #0x3F
-            bne     L281
-L254        iny
-            lda     (N),Y
+            ;lda     #2          ; pull two words from PS into temporary area
+            ;jsr.s   SETUP
+            pul.w   N
+            pul.w   N+2
+;
+L249        ldy     #0          ; reset y register
+            lda     (N),Y       ; (N)   => ptr to first dictionary name field
+            eor     (N+2),Y     ; (N+2) => ptr to name field being searched for
+            and     #0x3F       ; mask off msb and nsb (smudge bit)
+            bne     L281        ; xor, and results in 0 if name lengths equal
+L254        iny                 ; increment y offset into name field
+            lda     (N),Y       ; load and test name field characters
             eor     (N+2),Y
-            asl     a
-            bne     L280
-            bcc     L254
-            ldx     XSAVE
-            dex
-            dex
-            dex
-            dex
-            clc
-            tya
+            asl     a           ; shift out msb, msb last char of dict name = 1
+            bne     L280        ; eor/asl != 0 ? check nxt name
+            bcc     L254        ; match && msb ? match, exit SUCCESS : continue
+;
+            clc                 ; set up to calculate offset to PFA
+            tya                 ; offset from last name field byte to PFA is 5                 
             adc     #5
-            adc     N
-            sta     2,X
-            ldy     #0
-            tya
-            adc     N+1
-            sta     3,X
-            sty     1,X
-            lda     (N),Y
-            sta     0,X
-            lda     #1
-            pha
-            jmp     PUSH
-L280        bcs     L284
-L281        iny
-            lda     (N),Y
+            adc.w   N           ; calculate PFA
+            pha.w               ; push PFA onto PS
+;
+            lda     (N)         ; load name length and push onto PS
+            pha.w               
+;
+            lda     #1          ; push success flag onto PS
+            pha.w
+            inxt                ; NEXT
+;
+L280        bcs     L284        ; partial match, skip to end to find link 
+L281        iny                 ; loop until last char (msb == 1) found
+            lda     (N),Y       
             bpl     L281
-L284        iny
-            lda     (N),Y
+L284        iny                 ; load link to next word (follows the name fld)
+            lda.w   (N),Y
+            sta.w   N           ; store link to next dictionary entry in (N)
+            bne     L249        ; link != 0 ? check new name : exit FAIL
+;
+            lda     #0          ; push failure flag to PS
+            pha.w
+            inxt                ; NEXT
+;
+;           ENCLOSE
+;           SCREEN 20 LINE 1
+;
+L301        .byt    0x87,"ENCLOS",0xC5
+            .wrd    L243        ;link to (FIND)
+ENCL        .wrd    $+2
+;
+            ;lda     #2
+            ;jsr.s   SETUP
+            pul.w   N
+            pul.w   N+2
+;
+;   Start Here
+;
+            txa
+            sec
+            sbc     #8
             tax
+;
+            sty     3,X
+            sty     1,X
+            dey
+L313        iny
+            lda     (N+2),Y
+            cmp     N
+            beq     L313
+            sty     4,X
+L318        lda     (N+2),Y
+            bne     L327
+            sty     2,X
+            sty     0,X
+            tya
+            cmp     4,X
+            bne     L326
+            inc     2,X
+L326        jmp     NEXT
+L327        sty     2,X
             iny
-            lda     (N),Y
-            sta     N+1
-            stx     N
-            ora     N
-            bne     L249
-            ldx     XSAVE
-            lda     #0
-            pha
-            jmp     PUSH        ;SEMISfalse upon reading null link
+            cmp     N
+            bne     L318
+            sty     0,X
+            jmp     NEXT
 ;
-;                                       ENCLOSE
-;                                       SCREEN 20 LINE 1
+;           EMIT
+;           SCREEN 21 LINE 5
 ;
-L301            .byt  0x87,"ENCLOS",0xC5
-                .wrd  L243              ;link to (FIND)
-ENCL            .wrd  $+2
-                lda   #2
-                jsr   SETUP
-                txa
-                sec
-                sbc   #8
-                tax
-                sty   3,X
-                sty   1,X
-                dey
-L313            iny
-                lda   (N+2),Y
-                cmp   N
-                beq   L313
-                sty   4,X
-L318            lda   (N+2),Y
-                bne   L327
-                sty   2,X
-                sty   0,X
-                tya
-                cmp   4,X
-                bne   L326
-                inc   2,X
-L326            jmp   NEXT
-L327            sty   2,X
-                iny
-                cmp   N
-                bne   L318
-                sty   0,X
-                jmp   NEXT
+L337        .byt    0x84,"EMI",0xD4
+            .wrd    L301        ;link to ENCLOSE
+EMIT        .wrd    XEMIT       ;Vector to code for KEY
 ;
-;                                       EMIT
-;                                       SCREEN 21 LINE 5
+;           KEY
+;           SCREEN 21 LINE 7
 ;
-L337            .byt  0x84,"EMI",0xD4
-                .wrd  L301              ;link to ENCLOSE
-EMIT            .wrd  XEMIT             ;Vector to code for KEY
+L344        .byt    0x83,"KE",0xD9
+            .wrd    L337        ;link to EMIT
+KEY         .wrd    XKEY        ;Vector to code for KEY
 ;
-;                                       KEY
-;                                       SCREEN 21 LINE 7
+;           ?TERMINAL
+;           SCREEN 21 LINE 9
 ;
-L344            .byt  0x83,"KE",0xD9
-                .wrd  L337              ;link to EMIT
-KEY             .wrd  XKEY              ;Vector to code for KEY
+L351        .byt    0x89,"?TERMINA",0xCC
+            .wrd    L344        ;link to KEY
+QTERM       .wrd    XQTER       ;Vector to code for ?TERMINAL
 ;
-;                                       ?TERMINAL
-;                                       SCREEN 21 LINE 9
+;           CR
+;           SCREEN 21 LINE 11
 ;
-L351            .byt  0x89,"?TERMINA",0xCC
-                .wrd  L344              ;link to KEY
-QTERM           .wrd  XQTER             ;Vector to code for ?TERMINAL
+L358        .byt    0x82,"C",0xD2
+            .wrd    L351        ;link to ?TERMINAL
+CR          .wrd    XCR         ;Vector to code for CR
 ;
+;           CMOVE
+;           SCREEN 22 LINE 1
 ;
+L365        .byt    0x85,"CMOV",0xC5
+            .wrd    L358        ;link to CR
+CMOVE       .wrd    $+2
 ;
+            dup     x           ; save RSP
 ;
+            pla.w               ; pull count into a
+            ply.w               ; pull dst pointer into y
+            plx.w               ; pull src pointer into x
 ;
-;                                       CR
-;                                       SCREEN 21 LINE 11
+            mov     #0x0F       ; block move inc src/dst pointers
 ;
-L358            .byt  0x82,"C",0xD2
-                .wrd  L351              ;link to ?TERMINAL
-CR              .wrd  XCR               ;Vector to code for CR
+            rot     x           ; restore RSP
 ;
-;                                       CMOVE
-;                                       SCREEN 22 LINE 1
+            inxt                ; NEXT
 ;
-L365            .byt  0x85,"CMOV",0xC5
-                .wrd  L358              ;link to CR
-CMOVE           .wrd  $+2
-                lda   #3
-                jsr   SETUP
-L370            cpy   N
-                bne   L375
-                dec   N+1
-                bpl   L375
-                inxt
-L375            lda   (N+4),Y
-                sta   (N+2),Y
-                iny
-                bne   L370
-                inc   N+5
-                inc   N+3
-                jmp   L370
+;           U*
+;           SCREEN 23 LINE 1
 ;
-;                                       U*
-;                                       SCREEN 23 LINE 1
-;
-L386            .byt  0x82,"U",0xAA
-                .wrd  L365              ;link to CMOVE
-USTAR           .wrd  $+2
+L386        .byt    0x82,"U",0xAA
+            .wrd    L365        ;link to CMOVE
+USTAR       .wrd    $+2
 ;
 ; replacement code from 6502.org - http://forum.6502.org/viewtopic.php?t=689
 ;
@@ -445,12 +441,12 @@ L2              ror   a
                 jmp   NEXT
 
 ;
-;                                       U/
-;                                       SCREEN 24 LINE 1
+;           U/
+;           SCREEN 24 LINE 1
 ;
-L418            .byt  0x82,"U",0xAF
-                .wrd  L386              ;link to U*
-USLAS           .wrd  $+2
+L418        .byt    0x82,"U",0xAF
+            .wrd    L386        ;link to U*
+USLAS       .wrd    $+2
 ;
 ; updated code from 6502.org  - source code repository 32bit division
 ;
