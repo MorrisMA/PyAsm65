@@ -495,335 +495,335 @@ endd            inx                     ;When you're done, show one less cell on
                 jmp   SWAP+2            ;and swap the two top cells to put quotient on top.
 
 ;
-;                                       AND
-;                                       SCREEN 25 LINE 2
+;           AND
+;           SCREEN 25 LINE 2
 ;
-L453            .byt  0x83,"AN",0xC4
-                .wrd  L418              ;link to U/
-ANDD            .wrd  $+2
+L453        .byt    0x83,"AN",0xC4
+            .wrd    L418        ;link to U/
+ANDD        .wrd    $+2
 ;
-                pla.w
-                and.w   1,S
-                sta.w   1,S
-                inxt
+            pla.w
+            and.w   1,S
+            sta.w   1,S
+            inxt
 ;
-;                                       OR
-;                                       SCREEN 25 LINE 7
+;           OR
+;           SCREEN 25 LINE 7
 ;
-L469            .byt  0x82,"O",0xD2
-                .wrd  L453              ;link to AND
-OR              .wrd  $+2
+L469        .byt    0x82,"O",0xD2
+            .wrd    L453        ;link to AND
+OR          .wrd    $+2
 ;
-                pla.w
-                ora.w   1,S
-                sta.w   1,S
-                inxt
+            pla.w
+            ora.w   1,S
+            sta.w   1,S
+            inxt
 ;
-;                                       XOR
-;                                       SCREEN 25 LINE 11
+;           XOR
+;           SCREEN 25 LINE 11
 ;
-L484            .byt  0x83,"XO",0xD2
-                .wrd  L469              ;link to OR
-XOR             .wrd  $+2
+L484        .byt    0x83,"XO",0xD2
+            .wrd    L469        ;link to OR
+XOR         .wrd    $+2
 ;
-                pla.w
-                eor.w   1,S
-                sta.w   1,S
-                inxt
+            pla.w
+            eor.w   1,S
+            sta.w   1,S
+            inxt
 ;
-;                                       SP@
-;                                       SCREEN 26 LINE 1
+;           SP@
+;           SCREEN 26 LINE 1
 ;
-L499            .byt  0x83,"SP",0xC0
-                .wrd  L484              ;link  to XOR
-SPAT            .wrd  $+2
+L499        .byt    0x83,"SP",0xC0
+            .wrd    L484        ;link  to XOR
+SPAT        .wrd    $+2
 ;
-                tsa
-PUSHOA          pha.sw
-                inxt
+            tsa
+PUSHOA      pha.sw
+            inxt
 ;
-;                                       SP!
-;                                       SCREEN 26 LINE 5
+;           SP!
+;           SCREEN 26 LINE 5
 ;
 ;
-L511            .byt  0x83,"SP",0xA1
-                .wrd  L499              ;link to SP@
-SPSTO           .wrd  $+2
+L511        .byt    0x83,"SP",0xA1
+            .wrd    L499        ;link to SP@
+SPSTO       .wrd    $+2
 ;
-                ldy     #6              ; set y to User Area offset of S0
-                lda     (UP),Y          ; load data stack pointer (X reg) from
-                tas                     ; silent user variable S0.
-                inxt
+            ldy     #6          ; load PSP (S) from user area variable S0.
+            lda     (UP),Y      
+            tas
+            inxt
 ;
-;                                       RP!
-;                                       SCREEN 26 LINE 8
+;           RP!
+;           SCREEN 26 LINE 8
 ;
-L522            .byt  0x83,"RP",0xA1
-                .wrd  L511              ;link to SP!
-RPSTO           .wrd  $+2
+L522        .byt    0x83,"RP",0xA1
+            .wrd    L511        ;link to SP!
+RPSTO       .wrd    $+2
 ;
-                ldy     #8              ; stack pointer) from silent user
-                lda     (UP),Y          ; VARIABLE R0
-                tax
-                inxt
+            ldy     #8          ; Load RSP (X) from user area variable R0
+            lda     (UP),Y
+            tax
+            inxt
 ;
-;                                       ;S
-;                                       SCREEN 26 LINE 12
+;           ;S
+;           SCREEN 26 LINE 12
 ;
-L536            .byt  0x82,";",0xD3
-                .wrd  L522              ;link to RP!
-SEMIS           .wrd  $+2
-;
-                pli
-                inxt
-;
-;                                       LEAVE
-;                                       SCREEN 27 LINE  1
-;
-L548            .byt  0x85,"LEAV",0xC5
-                .wrd  L536              ;link to ;S
-LEAVE           .wrd  $+2
-;
-                lda.w   1,X
-                sta.w   3,X
-                inxt
-;
-;                                       >R
-;                                       SCREEN 27 LINE 5
-;
-L563            .byt  0x82,">",0xD2
-                .wrd  L548              ;link to LEAVE
-TOR             .wrd  $+2
-;
-                pla.w
-                pha.sw
-                inxt
-;
-;                                       R>
-;                                       SCREEN 27 LINE 8
-;
-L577            .byt  0x82,"R",0xBE
-                .wrd  L563              ;link to >R
-RFROM           .wrd  $+2
-;
-                pla.sw
-                pha.w
-                inxt
-;
-;                                       R
-;                                       SCREEN 27 LINE 11
-;
-L591            .byt  0x81,0xD2
-                .wrd  L577              ;link to R>
-R               .wrd  $+2
-;
-                lda.w 1,X
-                pha.w
-                inxt
-;
-;                                       0=
-;                                       SCREEN 28 LINE 2
-;
-L605            .byt  0x82,"0",0xBD
-                .wrd  L591              ;link to R
-ZEQU            .wrd  $+2
-;
-                lda.w   1,S
-                stz.w   1,S
-                bne     L613
-                inc     1,S
-L613            inxt
-;
-;                                       0<
-;                                       SCREEN 28 LINE 6
-;
-L619            .byt  0x82,"0",0xBC
-                .wrd  L605              ;link to 0=
-ZLESS           .wrd  $+2
-;
-                lda.w   1,S
-                stz.w   1,S
-                bpl     L620
-                inc     1,S
-L620            inxt
-;
-;                                       +
-;                                       SCREEN 29 LINE 1
-;
-L632            .byt  0x81,0xAB
-                .wrd  L619              ;link to V-ADJ
-PLUS            .wrd  $+2
-;
-                clc
-                pla.w
-                adc.w   1,S
-                sta.w   1,S
-                inxt
-;
-;                                       D+
-;                                       SCREEN 29 LINE 4
-;
-L649            .byt  0x82,"D",0xAB
-                .wrd  L632              ;LINK TO +
-DPLUS           .wrd  $+2
-;
-                clc
-                lda.w   3,S
-                adc.w   7,S
-                sta.w   7,S
-                lda.w   1,S
-                adc.w   5,S
-                sta.w   5,S
-                adj     #4
-                inxt
-;
-;                                       MINUS
-;                                       SCREEN 29 LINE 9
-;
-L670            .byt  0x85,"MINU",0xD3
-                .wrd  L649              ;link to D+
-MINUS           .wrd  $+2
-;
-                sec
-                lda     #0
-                sbc.w   1,S
-                sta.w   1,S
-                inxt
-;
-;                                       DMINUS
-;                                       SCREEN 29 LINE 12
-;
-L685            .byt  0x86,"DMINU",0xD3
-                .wrd  L670              ;link to  MINUS
-DMINU           .wrd  $+2
-;
-                sec
-                lda     #0
-                dup     a
-                sbc.w   3,S
-                sta.w   3,S
-                rot     a
-                sbc.w   1,S
-                sta.w   1,S
-                inxt
-;
-;                                       OVER
-;                                       SCREEN 30 LINE 1
-;
-L700            .byt  0x84,"OVE",0xD2
-                .wrd  L685              ;link to DMINUS
-OVER            .wrd  $+2
-;
-                lda.w   3,S
-                pha.w
-                inxt
-;
-;                                       DROP
-;                                       SCREEN 30 LINE 4
-;
-L711            .byt  0x84,"DRO",0xD0
-                .wrd  L700              ;link to OVER
-DROP            .wrd  POP
-;
-;                                       SWAP
-;                                       SCREEN 30 LINE 8
-;
-L718            .byt  0x84,"SWA",0xD0
-                .wrd  L711              ;link to DROP
-SWAP            .wrd  $+2
-;
-                pla.w
-                dup     a
-                pla.w
-                swp     a
-                pha.w
-                rot     a
-                pha.w
-                inxt
-;
-;                                       DUP
-;                                       SCREEN 30 LINE 21
-;
-L733            .byt  0x83,"DU",0xD0
-                .wrd  L718              ;link to SWAP
-DUP             .wrd  $+2
-;
-                lda.w   1,S
-                pha.w
-                inxt
-;
-;                                       +!
-;                                       SCREEN 31 LINE 2
-;
-L744            .byt  0x82,"+",0xA1
-                .wrd  L733              ;link to DUP
-PSTOR           .wrd  $+2
-;
-                clc
-                lda.w   (1,S)
-                adc.w   3,S
-                sta.w   (1,S)
-                adj     #4
-                inxt
-;
-;                                       TOGGLE
-;                                       SCREEN 31 LINE 7
-;
-L762            .byt  0x86,"TOGGL",0xC5
-                .wrd  L744              ;link to +!
-TOGGL           .wrd  $+2
-;
-                lda     (3,S)
-                eor     1,S
-                sta     (3,S)
-                adj     #4
-                inxt
-;
-;                                       @
-;                                       SCREEN 32 LINE 1
-;
-L773            .byt  0x81,0xC0
-                .wrd  L762              ;link to TOGGLE
-AT              .wrd  $+2
-;
-                lda.w   (1,S)
-                sta.w   1,S
-                inxt
-;
-;                                       C@
-;                                       SCREEN 32 LINE 5
-;
-L787            .byt  0x82,"C",0xC0
-                .wrd  L773              ;link to @
-CAT             .wrd  $+2
-;
-                lda     (1,S)
-                sta.w   1,S
-                inxt
-;
-;                                       !
-;                                       SCREEN 32 LINE 8
-;
-L798            .byt  0x81,0xA1
-                .wrd  L787              ;link to C@
-STORE           .wrd  $+2
-;
-                lda.w   3,S
-                sta.w   (1,S)
-                adj     #4
-                inxt
-;
-;                                       C!
-;                                       SCREEN 32 LINE 12
-;
-L813            .byt  0x82,"C",0xA1
-                .wrd  L798              ;link to !
-CSTOR           .wrd  $+2
-;
-                lda     3,S
-                sta     (1,S)
-                adj     #4
-                inxt
+L536        .byt    0x82,";",0xD3
+            .wrd    L522        ;link to RP!
+SEMIS       .wrd    $+2
+;
+            pli                 ; Exit / Return to previous WORD
+            inxt
+;
+;           LEAVE
+;           SCREEN 27 LINE  1
+;
+L548        .byt    0x85,"LEAV",0xC5
+            .wrd    L536        ;link to ;S
+LEAVE       .wrd    $+2
+;
+            lda.w   1,X
+            sta.w   3,X
+            inxt
+;
+;           >R
+;           SCREEN 27 LINE 5
+;
+L563        .byt    0x82,">",0xD2
+            .wrd    L548        ;link to LEAVE
+TOR         .wrd    $+2
+;
+            pla.w
+            pha.sw
+            inxt
+;
+;           R>
+;           SCREEN 27 LINE 8
+;
+L577        .byt    0x82,"R",0xBE
+            .wrd    L563        ;link to >R
+RFROM       .wrd    $+2
+;
+            pla.sw
+            pha.w
+            inxt
+;
+;           R
+;           SCREEN 27 LINE 11
+;
+L591        .byt    0x81,0xD2
+            .wrd    L577        ;link to R>
+R           .wrd    $+2
+;
+            lda.w   1,X
+            pha.w
+            inxt
+;
+;           0=
+;           SCREEN 28 LINE 2
+;
+L605        .byt    0x82,"0",0xBD
+            .wrd    L591        ;link to R
+ZEQU        .wrd    $+2
+;
+            lda.w   1,S
+            stz.w   1,S
+            bne     L613
+            inc     1,S
+L613        inxt
+;
+;           0<
+;           SCREEN 28 LINE 6
+;   
+L619        .byt    0x82,"0",0xBC
+            .wrd    L605        ;link to 0=
+ZLESS       .wrd    $+2
+;
+            lda.w   1,S
+            stz.w   1,S
+            bpl     L620
+            inc     1,S
+L620        inxt
+;
+;           +
+;           SCREEN 29 LINE 1
+;
+L632        .byt    0x81,0xAB
+            .wrd    L619        ;link to V-ADJ
+PLUS        .wrd    $+2
+;
+            clc
+            pla.w
+            adc.w   1,S
+            sta.w   1,S
+            inxt
+;
+;           D+
+;           SCREEN 29 LINE 4
+;
+L649        .byt    0x82,"D",0xAB
+            .wrd    L632        ;LINK TO +
+DPLUS       .wrd    $+2
+;
+            clc
+            lda.w   3,S
+            adc.w   7,S
+            sta.w   7,S
+            lda.w   1,S
+            adc.w   5,S
+            sta.w   5,S
+            adj     #4
+            inxt
+;
+;           MINUS
+;           SCREEN 29 LINE 9
+;
+L670        .byt    0x85,"MINU",0xD3
+            .wrd    L649        ;link to D+
+MINUS       .wrd    $+2
+;
+            sec
+            lda     #0
+            sbc.w   1,S
+            sta.w   1,S
+            inxt
+;
+;           DMINUS
+;           SCREEN 29 LINE 12
+;
+L685        .byt    0x86,"DMINU",0xD3
+            .wrd    L670        ;link to  MINUS
+DMINU       .wrd    $+2
+;
+            sec
+            lda     #0
+            dup     a
+            sbc.w   3,S
+            sta.w   3,S
+            rot     a
+            sbc.w   1,S
+            sta.w   1,S
+            inxt
+;
+;           OVER
+;           SCREEN 30 LINE 1
+;
+L700        .byt    0x84,"OVE",0xD2
+            .wrd    L685        ;link to DMINUS
+OVER        .wrd    $+2
+;
+            lda.w   3,S
+            pha.w
+            inxt
+;
+;           DROP
+;           SCREEN 30 LINE 4
+;
+L711        .byt    0x84,"DRO",0xD0
+            .wrd    L700        ;link to OVER
+DROP        .wrd    POP
+;
+;           SWAP
+;           SCREEN 30 LINE 8
+;
+L718        .byt    0x84,"SWA",0xD0
+            .wrd    L711        ;link to DROP
+SWAP        .wrd    $+2
+;
+            pla.w
+            dup     a
+            pla.w
+            swp     a
+            pha.w
+            rot     a
+            pha.w
+            inxt
+;
+;           DUP
+;           SCREEN 30 LINE 21
+;
+L733        .byt    0x83,"DU",0xD0
+            .wrd    L718        ;link to SWAP
+DUP         .wrd    $+2
+;
+            lda.w   1,S
+            pha.w
+            inxt
+;
+;           +!
+;           SCREEN 31 LINE 2
+;
+L744        .byt    0x82,"+",0xA1
+            .wrd    L733        ;link to DUP
+PSTOR       .wrd    $+2
+;
+            clc
+            lda.w   (1,S)
+            adc.w   3,S
+            sta.w   (1,S)
+            adj     #4
+            inxt
+;
+;           TOGGLE
+;           SCREEN 31 LINE 7
+;
+L762        .byt    0x86,"TOGGL",0xC5
+            .wrd    L744        ;link to +!
+TOGGL       .wrd    $+2
+;
+            lda     (3,S)
+            eor     1,S
+            sta     (3,S)
+            adj     #4
+            inxt
+;
+;           @
+;           SCREEN 32 LINE 1
+;
+L773        .byt    0x81,0xC0
+            .wrd    L762        ;link to TOGGLE
+AT          .wrd    $+2 
+;
+            lda.w   (1,S)
+            sta.w   1,S
+            inxt
+;
+;           C@
+;           SCREEN 32 LINE 5
+;
+L787        .byt    0x82,"C",0xC0
+            .wrd    L773        ;link to @
+CAT         .wrd    $+2
+;
+            lda     (1,S)
+            sta.w   1,S
+            inxt
+;
+;           !
+;           SCREEN 32 LINE 8
+;
+L798        .byt    0x81,0xA1
+            .wrd    L787        ;link to C@
+STORE       .wrd    $+2
+;
+            lda.w   3,S
+            sta.w   (1,S)
+            adj     #4
+            inxt
+;
+;           C!
+;           SCREEN 32 LINE 12
+;
+L813        .byt    0x82,"C",0xA1
+            .wrd    L798        ;link to !
+CSTOR       .wrd    $+2
+;
+            lda     3,S
+            sta     (1,S)
+            adj     #4
+            inxt
 ;
 ;===============================================================================
 ;
@@ -835,30 +835,30 @@ CSTOR           .wrd  $+2
 ;
 ;===============================================================================
 ;
-NEXT            inxt
+NEXT        inxt
 ;
-DOCOL           ient
+DOCOL       ient
 ;
-DOCON           phw.s               ; put address of current CFA onto PS
-                ldy     #2
-                lda.w   (1,S),Y     ; load constant from current word
-                sta.w   1,S         ; overwrite ptr(CFA) with constant
-                inxt
+DOCON       phw.s               ; put address of current CFA onto PS
+            ldy     #2
+            lda.w   (1,S),Y     ; load constant from current word
+            sta.w   1,S         ; overwrite ptr(CFA) with constant
+            inxt
 ;
-DOVAR           phw.s               ; push CFA (W) onto PS
-                pla.w               ; pull CFA from PS into A
-                inc     a           ; adjust to point to Parameter Field 
-                inc     a
-                pha.w               ; push PF address onto PS
-                inxt
+DOVAR       phw.s               ; push CFA (W) onto PS
+            pla.w               ; pull CFA from PS into A
+            inc     a           ; adjust to point to Parameter Field 
+            inc     a
+            pha.w               ; push PF address onto PS
+            inxt
 ;
-DOUSE           phw.s
-                ldy     #2
-                lda     (1,S),Y
-                clc
-                adc.w   UP
-                sta.w   1,S
-                inxt
+DOUSE       phw.s
+            ldy     #2
+            lda     (1,S),Y
+            clc
+            adc.w   UP
+            sta.w   1,S
+            inxt
 ;;
 ;DODOE           lda   IP+1
                 ;pha
@@ -880,22 +880,27 @@ DOUSE           phw.s
 ;;
 ;-------------------------------------------------------------------------------
 ;
-;   DoDoes:     (RSP--) <= IP
-;               IP      <= (W + 2)
-;               (PSP--) <= W + 4
+;   DoDoes: (RSP--) <= IP
+;           IP      <= (W + 2)
+;           (PSP--) <= W + 4
 ;
 ;-------------------------------------------------------------------------------
 ;
-DODOE           phi                 ; push IP on RS
-                ldy     #2          ; set offset to Parameter Field
-                phw.s               ; push W (CFA) to PS
-                lda     (1,S),Y     ; load pointer to Forth word into IP
-                tai
-                clc                 ; prepare to adjust W
-                pla.w               ; load Acc with W
-                adc.w   #4          ; adjust W
-                pha.w               ; push pointer to PS
-                inxt
+DODOE       phi                 ; push IP on RS
+            phw.s               ; push W (CFA) to PS
+;
+            ldy     #2          ; set offset to Parameter Field
+            lda.w   (1,S),Y     ; load pointer to Forth word into IP
+            tai
+;
+            clc                 ; prepare to adjust W
+            ;pla.w               ; load Acc with W
+            ;adc.w   #4          ; adjust W
+            ;pha.w               ; push pointer to PS
+            lda     #4          ; adjust W to point to PFA of new word
+            adc.w   1,S
+            sta.w   1,S
+            inxt
 ;
 ;===============================================================================
 ;
@@ -903,79 +908,86 @@ DODOE           phi                 ; push IP on RS
 ;
 ;===============================================================================
 ;
-;                                       :
-;                                       SCREEN 33 LINE 2
+;           :
+;           SCREEN 33 LINE 2
 ;
-L823            .byt  0xC1,0xBA
-                .wrd  L813              ;link to C!
-COLON           .wrd  DOCOL
-                .wrd  QEXEC
-                .wrd  SCSP
-                .wrd  CURR
-                .wrd  AT
-                .wrd  CON
-                .wrd  STORE
-                .wrd  CREAT
-                .wrd  RBRAC
-                .wrd  PSCOD
+L823        .byt    0xC1,0xBA
+            .wrd    L813        ;link to C!
+COLON       .wrd    DOCOL
 ;
-;                                       ;
-;                                       SCREEN 33 LINE 9
+            .wrd    QEXEC
+            .wrd    SCSP
+            .wrd    CURR
+            .wrd    AT
+            .wrd    CON
+            .wrd    STORE
+            .wrd    CREAT
+            .wrd    RBRAC
+            .wrd    PSCOD
 ;
-L853            .byt  0xC1,0xBB
-                .wrd  L823              ;link to :
-                .wrd  DOCOL
-                .wrd  QCSP
-                .wrd  COMP
-                .wrd  SEMIS
-                .wrd  SMUDG
-                .wrd  LBRAC
-                .wrd  SEMIS
+;           ;
+;           SCREEN 33 LINE 9
 ;
-;                                       CONSTANT
-;                                       SCREEN 34 LINE 1
+L853        .byt    0xC1,0xBB
+            .wrd    L823        ;link to : (COLON)
+SEMICOLON   .wrd    DOCOL
 ;
-L867            .byt  0x88,"CONSTAN",0xD4
-                .wrd  L853              ;link to ;
-CONST           .wrd  DOCOL
-                .wrd  CREAT
-                .wrd  SMUDG
-                .wrd  COMMA
-                .wrd  PSCOD
+            .wrd    QCSP
+            .wrd    COMP
+            .wrd    SEMIS
+            .wrd    SMUDG
+            .wrd    LBRAC
+            .wrd    SEMIS
 ;
-;                                       VARIABLE
-;                                       SCREEN 34 LINE 5
+;           CONSTANT
+;           SCREEN 34 LINE 1
 ;
-L885            .byt  0x88,"VARIABL",0xC5
-                .wrd  L867              ;link to CONSTANT
-VAR             .wrd  DOCOL
-                .wrd  CONST
-                .wrd  PSCOD
+L867        .byt    0x88,"CONSTAN",0xD4
+            .wrd    L853        ;link to ; (SEMICOLON)
+CONST       .wrd    DOCOL
 ;
-;                                       USER
-;                                       SCREEN 34 LINE 10
+            .wrd    CREAT
+            .wrd    SMUDG
+            .wrd    COMMA
+            .wrd    PSCOD
 ;
-L902            .byt  0x84,"USE",0xD2
-                .wrd  L885              ;link to VARIABLE
-USER            .wrd  DOCOL
-                .wrd  CONST
-                .wrd  PSCOD
+;           VARIABLE
+;           SCREEN 34 LINE 5
 ;
-;                                       0
-;                                       SCREEN 35 LINE 2
+L885        .byt    0x88,"VARIABL",0xC5
+            .wrd    L867        ;link to CONSTANT
+VAR         .wrd    DOCOL
 ;
-L920            .byt  0x81,0xB0
-                .wrd  L902              ;link to USER
-ZERO            .wrd  DOCON
-                .wrd  0
+            .wrd    CONST
+            .wrd    PSCOD
 ;
-;                                       1
-;                                       SCREEN 35 LINE 2
+;           USER
+;           SCREEN 34 LINE 10
 ;
-L928            .byt  0x81,0xB1
-                .wrd  L920              ;link to 0
-ONE             .wrd  DOCON
-                .wrd  1
+L902        .byt    0x84,"USE",0xD2
+            .wrd    L885        ;link to VARIABLE
+USER        .wrd    DOCOL
+;
+            .wrd    CONST
+            .wrd    PSCOD
+;
+;           0
+;           SCREEN 35 LINE 2
+;
+L920        .byt    0x81,0xB0
+            .wrd    L902        ;link to USER
+ZERO        .wrd    DOCON
+;
+            .wrd    0
+;
+;           1
+;           SCREEN 35 LINE 2
+;
+L928        .byt    0x81,0xB1
+            .wrd    L920        ;link to 0
+ONE         .wrd    DOCON
+;
+            .wrd    1
 ;
 ;                                       2
 ;                                       SCREEN 35 LINE 3
@@ -1309,25 +1321,32 @@ ULESS           .wrd  DOCOL
                 .wrd  ZLESS             ;test sign
                 .wrd  SEMIS
 ;
-;                                       <
-;                                       Altered from model
-;                                       SCREEN 38 LINE 9
+;           <
+;           Altered from model
+;           SCREEN 38 LINE 9
 ;
-L1254           .byt  0x81,0xBC
-                .wrd  L1246             ;link to U<
-LESS            .wrd  $+2
-                sec
-                lda   2,X
-                sbc   0,X               ;subtract
-                lda   3,X
-                sbc   1,X
-                sty   3,X               ;zero high byte
-                bvc   L1258
-                eor   #0x80              ;correct overflow
-L1258           bpl   L1260
-                iny                     ;invert boolean
-L1260           sty   2,X               ;leave boolean
-                jmp   POP
+L1254       .byt    0x81,0xBC
+            .wrd    L1246       ;link to U<
+LESS        .wrd    $+2
+                ;sec
+                ;lda   2,X
+                ;sbc   0,X               ;subtract
+                ;lda   3,X
+                ;sbc   1,X
+                ;sty   3,X               ;zero high byte
+                ;bvc   L1258
+                ;eor   #0x80              ;correct overflow
+;L1258           bpl   L1260
+                ;iny                     ;invert boolean
+;L1260           sty   2,X               ;leave boolean
+                ;jmp   POP
+            lda.w   3,S
+            cmp.w   1,S         ; signed compare
+            stz.w   3,S         ; set FALSE flag
+L1258       bge     L1260       ; if >=, exit false, else set TRUE flag and exit
+            inc     3,S         ; set TRUE flag
+L1260       adj     #2          ; leave boolean
+            inxt
 ;
 ;                                       >
 ;                                       SCREEN 38 LINE 10
