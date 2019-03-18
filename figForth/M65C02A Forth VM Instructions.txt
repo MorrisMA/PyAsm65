@@ -1,0 +1,55 @@
+opcode mnemonic     description
+ 0x0B    dup        {tos, nos, bos} <= {tos, tos, nos}
+ 0x1B    swp        {tos, nos, bos} <= {nos, tos, bos}
+ 0x2B    rot        {tos, nos, bos} <= {nos, bos, tos}
+ 0x3B    nxt        w <= (ip++); pc <= w
+ 0x4B    phi        (RSP--) <= ip   -- x = default RSP
+ 0x5B    ini        ip += 1
+ 0x6B    pli        ip <= (++RSP)   -- x = default RSP
+ 0x7B    ent        (RSP--) <= ip; ip <= w + 2; w <= (ip++); pc <= w
+ 0x8B    osx        change default stack, override x with s
+ 0x9B    ind        add indirection to address mode, enable alternate function
+ 0xAB    siz        convert alu operation to 16 bits, enable alternate function
+ 0xBB    isz        combined ind and siz
+ 0xCB    osz        combined osx and siz
+ 0xDB    ois        combined osx, ind, and siz
+ 0xEB    oax        override / exchange a and x
+ 0xFB    oay        override / exchange a and y
+ 
+ Alternate functions:
+ 
+ 0x9B 0x3B  inxt    w <= (ip++); pc <= (w)
+ 0x9B 0x4B  phw     (RSP--) <= w
+ 0x9B 0x5B  inw     w += 1
+ 0x9B 0x6B  plw     w <= (++RSP)
+ 0x9B 0x7B  ient    (RSP--) <= ip; ip <= w + 2; w  <= (ip++); pc <= (w)
+ 
+ 0x9B 0x0B  tai     ip <= a
+ 0xAB 0x0B  tia     a <= ip
+ 0xBB 0x0B  xia     a <> ip     -- exchange a and ip
+ 
+ 0x9B 0x1B  swb     a <= {a[7:0], a[15:8]}  -- swap bytes
+ 0x9B 0x2B  rev     a[15:0] <= a[0..15]     -- reverse bit order
+ 
+ ip-relative instructions
+ 
+ 0x03    ora 0,I++  a |= (ip++)
+ 0x13    asl 0,I++  arithmetic shift left, 0 shifted into lsb
+ 0x23    and 0,I++  a &= (ip++)
+ 0x33    rol 0,I++  rotate left through c, c rotated into lsb
+ 0x43    xor 0,I++  a ^= (ip++)
+ 0x53    lsr 0,I++  logical shift right into c, 0 shifted into msb
+ 0x63    adc 0,I++  a <= a + (ip++) + c
+ 0x73    ror 0,I++  rotate right through c, c rotated into msb
+ 0x83    sta 0,I++  (ip++) <= a
+ 0x93    tsb 0,I++  test and set bit indirectly addressed by ip
+ 0xA3    lda 0,I++  a <= (I++)
+ 0xB3    trb 0,I++  test and reset bit indirectly addressed by ip
+ 0xC3    cmp 0,I++  compare a with byte indirectly addressed by ip
+ 0xD3    dec 0,I++  decrement byte indirectly addressed by ip
+ 0xE3    sbc 0,I++  a <= a + ~(ip++) + c
+ 0xF3    inc 0,I++  increment byte indirectly addressed by ip
+ 
+ support ind, siz, isz, oax, and oay prefix instructions
+ 
+ prefix instructions are not interruptable by either NMI or IRQ.

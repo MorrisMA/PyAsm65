@@ -262,8 +262,16 @@ for src in source:
                     addrsMode = 'imm'
                     operand = dt[1:]
                 elif re.match('^.*,[xX]$', dt):
-                    addrsMode = 'zpX'
                     operand = dt.split(',')[0]
+                    try:
+                        val = eval(str(operand), vlc)
+                        if val < 256:
+                            addrsMode = 'zpX'
+                        else: addrsMode = 'absX'
+                    except:
+                        if op == 'sty':
+                            addrsMode = 'zpX'
+                        else: addrsMode = 'absX'
                 elif re.match('^\(.*,[xX]\)$', dt):
                     addrsMode = 'zpXI'
                     operand = dt.split(',')[0][1:]
@@ -301,7 +309,9 @@ for src in source:
                         try:
                             val = eval(str(dt), vlc)
                             if val < 256:
-                                addrsMode = 'zp'
+                                if op in ['jmp', 'jsr']:
+                                    addrsMode = 'abs'
+                                else: addrsMode = 'zp'
                             else: addrsMode = 'abs'
                         except:
                             addrsMode = 'abs'
@@ -360,6 +370,11 @@ for src in source:
                           % (srcLine, op, srcLine, directives[op]))
             elif op in defines:
                 if op == '.eq' or op == '.equ':
+                    if curSegment == 'code':
+                        vlc['_loc_'] = code
+                    else: vlc['_loc_'] = data
+                    if '$' in dt:
+                        dt = '_loc_'.join(dt.split('$'))
                     constants[lbl] = eval(str(dt), vlc)
                     vlc[lbl] = constants[lbl]
                 elif op == '.db' or op == '.byt':
@@ -473,8 +488,16 @@ for src in source:
                     addrsMode = 'imm'
                     operand = dt[1:]
                 elif re.match('^.*,[xX]$', dt):
-                    addrsMode = 'zpX'
                     operand = dt.split(',')[0]
+                    try:
+                        val = eval(str(operand), vlc)
+                        if val < 256:
+                            addrsMode = 'zpX'
+                        else: addrsMode = 'absX'
+                    except:
+                        if op == 'sty':
+                            addrsMode = 'zpX'
+                        else: addrsMode = 'absX'
                 elif re.match('^\(.*,[xX]\)$', dt):
                     addrsMode = 'zpXI'
                     operand = dt.split(',')[0][1:]
@@ -512,7 +535,9 @@ for src in source:
                         try:
                             val = eval(str(dt), vlc)
                             if val < 256:
-                                addrsMode = 'zp'
+                                if op in ['jmp', 'jsr']:
+                                    addrsMode = 'abs'
+                                else: addrsMode = 'zp'
                             else: addrsMode = 'abs'
                         except:
                             addrsMode = 'abs'
@@ -589,6 +614,13 @@ for var in variables:
     #print('%-18s : %s' % (key, vlc[key]))
 #print
 #print('-'*80)
+
+print('-'*80)
+print
+for key in constants:
+    print('%-18s : %8s (0x%04X)' % (key, constants[key], constants[key]))
+print
+print('-'*80)
 
 '''
     Assembler Pass 2
