@@ -70,8 +70,8 @@ REENTR          nop                     ; User Warm entry point
                 .wrd  0x0004            ; 6502 in radix-36
                 .wrd  0x5ED2            ;
                 .wrd  NTOP              ; Name address of MON
-;                .wrd  0x7F               ;Backspace Character
-                .wrd  0x08              ; Backspace Character
+                .wrd  0x7F               ;Backspace Character
+;                .wrd  0x08              ; Backspace Character
                 .wrd  UAREA             ; Initial User Area
                 .wrd  TOS-1             ; Initial Top of Stack
                 .wrd  0x1FF             ; Initial Top of Return Stack
@@ -79,7 +79,7 @@ REENTR          nop                     ; User Warm entry point
 ;
 ;
                 .wrd  31                ; Initial name field width
-                .wrd  1                 ; 0.equnod disk, 1.equdisk
+                .wrd  0                 ; 0.equnod disk, 1.equdisk
                 .wrd  TOP               ; Initial fence address
                 .wrd  TOP               ; Initial top of dictionary
                 .wrd  VL0               ; Initial Vocabulary link ptr.
@@ -170,7 +170,7 @@ L63             lda   0,x
                 ldy   #0
                 rts
 ;
-;                                       EXCECUTE
+;                                       EXECUTE
 ;                                       SCREEN 14 LINE 11
 ;
 L75             .byt  0x87,"EXECUT",0xC5
@@ -631,7 +631,6 @@ oflow           lda   #0xFF              ;If overflow or /0 condition found,
 endd            inx                     ;When you're done, show one less cell on data stack,
                 inx                     ;(INX INX is exactly what the Forth word DROP does)
                 jmp   SWAP+2            ;and swap the two top cells to put quotient on top.
-
 ;
 ;                                       AND
 ;                                       SCREEN 25 LINE 2
@@ -1527,11 +1526,13 @@ L1312           .wrd  OVER
                 .wrd  PLUS
                 .wrd  CLIT
                 .byt  0x7F
+;                .byt  0x80
                 .wrd  OVER
                 .wrd  CAT
                 .wrd  LESS
+;                .wrd  ANDD
                 .wrd  ZBRAN
-L1320           .wrd  0xFFF1             ;L1312-L1320
+L1320           .wrd  L1312-L1320   ;0xFFF1
                 .wrd  SWAP
                 .wrd  DROP
                 .wrd  SEMIS
@@ -1707,7 +1708,7 @@ COMP            .wrd  DOCOL
 ;                                       [
 ;                                       SCREEN 41 LINE 5
 ;
-L1495           .byt  0xC1,0x.byt
+L1495           .byt  0xC1,0xDB
                 .wrd  L1480             ;link to COMPILE
 LBRAC           .wrd  DOCOL
                 .wrd  ZERO
@@ -1768,7 +1769,7 @@ DECIM           .wrd  DOCOL
 ;                                       (;CODE)
 ;                                       SCREEN 42 LINE 2
 ;
-L1555           .byt  0x87,"(            ;CODE",0xA9
+L1555           .byt  0x87,"(;CODE",0xA9
                 .wrd  L1543             ;link to DECIMAL
 PSCOD           .wrd  DOCOL
                 .wrd  RFROM
@@ -2625,7 +2626,33 @@ ABORT           .wrd  DOCOL
                 .byt  14,"fig-FORTH 1.0a"
                 .wrd  FORTH
                 .wrd  DEFIN
-L2408           .wrd  VLIST         ;; Added for debugging
+;
+;L2408           .wrd  VLIST         ;; Added for debugging
+;
+                ;.wrd  LIT
+                ;.wrd  L1308
+                ;.wrd  LIT
+                ;.wrd  0x0001
+                ;.wrd  TRAV
+                ;.wrd  MON
+;
+                ;.wrd  CLIT
+                ;.byt  "9"
+                ;.wrd  CLIT
+                ;.byt  0x0A
+                ;.wrd  DIGIT
+                ;.wrd  MON
+;
+                ;.wrd  CLIT
+                ;.byt  0x7F
+                ;.wrd  CLIT
+                ;.byt  0xD4
+                ;.wrd  LESS
+                ;.wrd  MON
+;
+                ;.wrd  QUERY
+                ;.wrd  MON
+;
                 .wrd  QUIT
 ;
 ;                                       COLD

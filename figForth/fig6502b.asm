@@ -68,15 +68,13 @@ FORM_FEED   .equ    12
 LINE_RTN    .equ    13
 DBL_QUOTE   .equ    34
 HYPHEN      .equ    45
+DEL_CHAR    .equ    127
 ;;
 ;;         Monitor calls for terminal support
 ;;
 ;cin         .equ    0xf818          ; input one ascii char. to term.
 ;cout        .equ    0xf82d          ; output one ascii char. to term.
 ;crout       .equ    0xf8a2          ; terminal return and line feed.
-;
-cin         .equ    0xF004          ; py65 character in location
-cout        .equ    0xF001          ; py65 character out location
 ;
 ;    From DAREA downward to the top of the dictionary is free
 ;    space where the user's applications are compiled.
@@ -92,17 +90,20 @@ START       nop                     ; Vector to COLD entry
             jmp     COLD+2          ; 
 RESTART     nop                     ; User Warm entry point
             jmp     WARM            ; Vector to WARM entry
+;
             .wrd    0x0004          ; 6502 in radix-36
-            .wrd    0x5ED2          ; 0x5ED2
+            .wrd    0x5ED2          ; 0x00045ED2 = 6*36^3+5*36^2+0*36+2
+; COLD / WARM
 INIT_NTOP   .wrd    NTOP            ; Name address of MON
-INIT_BS     .wrd    BK_SPACE        ; Backspace Character
+;INIT_BS     .wrd    BK_SPACE        ; Backspace Character
+INIT_BS     .wrd    DEL_CHAR        ; Backspace Character
 INIT_UAREA  .wrd    UAREA           ; Initial User Area
 INIT_SPTOS  .wrd    SPTOS           ; Initial Top of Parameter Stack
 INIT_RPTOS  .wrd    RPTOS-1         ; Initial Top of Return Stack
 INIT_TIBX   .wrd    TIBX            ; Initial terminal input buffer
-;
 INIT_NMLEN  .wrd    NAME_LENGTH     ; Initial name field width
 INIT_DSKEN  .wrd    0               ; 0=no disk, 1=disk
+; COLD
 INIT_FENCE  .wrd    TOP             ; Initial fence address
 INIT_DICT   .wrd    TOP             ; Initial top of dictionary
 INIT_VL0    .wrd    VL0             ; Initial Vocabulary link ptr.
@@ -124,6 +125,18 @@ FORTH_BKPT3 .wrd    0
 ;
             nop
             nop
+;
+;   Utility routines to send and receive char from console
+;
+cin             lda     0xF004          ; input one ascii char. to term.
+                beq     cin
+                rts
+cout            and     #0x7F           ; output one ascii char. to term.
+                sta     0xF001
+                rts
+crout           lda     #0x0A           ; terminal return and line feed.
+                sta     0xF001
+                rts
 ;
 ;   This routine pulls words from the PS and stores to working space at N.
 ;   On input, the number of words to copy from PS is in a, and y is 0. The value
@@ -161,7 +174,7 @@ CLIT        .wrd    $+2
             pha.w
             inxt
 ;
-;           EXCECUTE
+;           EXECUTE
 ;           SCREEN 14 LINE 11
 ;
 L75         .byt    0x87,"EXECUT",0xC5
@@ -204,7 +217,7 @@ BUMP        ini                 ; skip over the branch offset in thread
 ;           (LOOP)
 ;           SCREEN 16 LINE 1
 ;
-L127        .byt    0x86,"(LOOP",0xA8
+L127        .byt    0x86,"(LOOP",0xA9
             .wrd    L107        ;link to 0BRANCH
 PLOOP       .wrd    $+2
 ;
@@ -224,7 +237,7 @@ PL2         bpl     BRAN+2      ;Loop if Loop Cntr <= Loop Termination
 ;           (+LOOP)
 ;           SCREEN 16 LINE 8
 ;
-L154        .byt    0x87,"(+LOOP",0xA8
+L154        .byt    0x87,"(+LOOP",0xA9
             .wrd    L127        ;link to (loop)
 PPLOO       .wrd    $+2
 ;
@@ -246,7 +259,7 @@ PPLOO       .wrd    $+2
 ;           (DO)
 ;           SCREEN 17 LINE 2
 ;
-L185        .byt    0x84,"(DO",0xA8
+L185        .byt    0x84,"(DO",0xA9
             .wrd    L154        ;link to (+LOOP)
 PDO         .wrd    $+2
 ;
@@ -301,7 +314,7 @@ L234        lda     #0          ; SEMIS false with bad conversion
 ;           (FIND)
 ;           SCREEN 19 LINE 1
 ;
-L243        .byt    0x86,"(FIND",0xA8
+L243        .byt    0x86,"(FIND",0xA9
             .wrd    L214        ;Link to DIGIT
 PFIND       .wrd    $+2
 ;
@@ -357,6 +370,7 @@ ENCL        .wrd    $+2
             pul.w   N+2
 ;
             adj     #-8
+            ldy     #0
 ;
             sty     4,S
             sty     2,S
@@ -375,6 +389,7 @@ L318        lda     (N+2),Y
             bne     L326
             inc     3,S
 L326        inxt
+;
 L327        sty     3,S
             iny
             cmp     N
@@ -417,15 +432,17 @@ L365        .byt    0x85,"CMOV",0xC5
             .wrd    L358        ;link to CR
 CMOVE       .wrd    $+2
 ;
-            dup     x           ; save RSP
+            swp     x           ; save RSP
+            swp     y
 ;
             pla.w               ; pull count into a
             ply.w               ; pull dst pointer into y
             plx.w               ; pull src pointer into x
 ;
-            mov     #0x0F       ; block move inc src/dst pointers
+            mov     #0x0A       ; block move inc src/dst pointers
 ;
-            rot     x           ; restore RSP
+            swp     x           ; restore RSP
+            swp     y
 ;
             inxt                ; NEXT
 ;
@@ -473,44 +490,56 @@ USLAS       .wrd    $+2
 ;
 ; updated code from 6502.org  - source code repository 32bit division
 ;
-            sec                 ;Modified code - dr
-            lda     3,S         ;Subtract hi cell of dividend by
-            sbc     1,S         ;divisor to see if there's an overflow condition.
-            lda     4,S 
-            sbc     2,S 
-            bcs     oflow       ;Branch if /0 or overflow.
-            lda     #0x11        ;Loop 17x.
-            sta     N           ;Use N for loop counter.
-loopp       rol     5,S         ;Rotate dividend lo cell left one bit.
-            rol     6,S 
-            dec     N           ;Decrement loop counter.
-            beq     endd        ;If we're done, then branch to end.
-            rol     3,S         ;Otherwise rotate dividend hi cell left one bit.
-            rol     4,S 
-            stz     N+1  
-            rol     N+1         ;Rotate the bit carried out of above into N+1.
-            sec     
-            lda     3,S         ;Subtract dividend hi cell minus divisor.
-            sbc     1,S 
-            sta     N+2         ;Put result temporarily in N+2 (lo byte)
-            lda     4,S 
-            sbc     2,S 
-            tay                 ;and Y (hi byte).
-            lda     N+1         ;Remember now to bring in the bit carried out above.
-            sbc     #0x00   
-            bcc     loopp   
-            lda     N+2         ;If that didn't cause a borrow,
-            sta     2,S         ;make the result from above to
-            sty     3,S         ;be the new dividend hi cell
-            bcs     loopp       ;and then brach up.  (NMOS 6502 can use BCS here.)
-oflow       lda     #0xFF        ;If overflow or /0 condition found,
-            sta     3,S         ;just put FFFF in both the remainder
-            sta     4,S 
-            sta     5,S         ;and the quotient.
-            sta     6,S 
-endd        adj     #2          ;When you're done, show one less cell on data stack,
-                                ;(INX INX is exactly what the Forth word DROP does)
-            jmp     SWAP+2      ;and swap the two top cells to put quotient on top.
+                sec                     ;Modified code - dr
+                lda   3,S               ;Subtract hi cell of dividend by
+                sbc   1,S               ;divisor to see if there's an overflow condition.
+                lda   4,S
+                sbc   2,S
+                bcs   oflow             ;Branch if /0 or overflow.
+                lda   #0x11              ;Loop 17x.
+                sta   N                 ;Use N for loop counter.
+loopp           rol   5,S              ;Rotate dividend lo cell left one bit.
+                rol   6,S
+                dec   N                 ;Decrement loop counter.
+                beq   endd              ;If we're done, then branch to end.
+                rol   3,S               ;Otherwise rotate dividend hi cell left one bit.
+                rol   4,S
+;
+                stz   N+1
+;;
+                ;pha
+                ;lda #0
+                ;sta N+1
+                ;pla
+;;
+                rol   N+1               ;Rotate the bit carried out of above into N+1.
+                sec
+                lda   3,S               ;Subtract dividend hi cell minus divisor.
+                sbc   1,S
+                sta   N+2               ;Put result temporarily in N+2 (lo byte)
+                lda   4,S
+                sbc   2,S
+                tay                     ;and Y (hi byte).
+                lda   N+1               ;Remember now to bring in the bit carried out above.
+                sbc   #0x00
+                bcc   loopp
+                lda   N+2               ;If that didn't cause a borrow,
+                sta   3,S               ;make the result from above to
+                sty   4,S               ;be the new dividend hi cell
+                bcs   loopp             ;and then brach up.  (NMOS 6502 can use BCS here.)
+oflow           lda   #0xFF              ;If overflow or /0 condition found,
+                sta   3,S               ;just put FFFF in both the remainder
+                sta   4,S
+                sta   5,S               ;and the quotient.
+                sta   6,S
+;;
+;endd            ins                     ;When you're done, show one less cell on data stack,
+                ;ins                     ;(INX INX is exactly what the Forth word DROP does)
+;;
+endd            adj  #2                 ;When you're done, show one less cell on data stack,
+                                        ;(INX INX is exactly what the Forth word DROP does)
+;
+                jmp   SWAP+2            ;and swap the two top cells to put quotient on top.
 ;
 ;           AND
 ;           SCREEN 25 LINE 2
@@ -592,22 +621,7 @@ L536        .byt    0x82,";",0xD3
 SEMIS       .wrd    $+2
 ;
             pli                 ; Exit / Return to previous WORD
-;
-            tia
-            cmp.w   FORTH_BKPT0
-            bne     L537
-            brk
-L537        cmp.w   FORTH_BKPT1
-            bne     L538
-            brk
-L538        cmp.w   FORTH_BKPT2
-            bne     L539
-            brk
-L539        cmp.w   FORTH_BKPT3
-            bne     L540
-            brk
-;
-L540        inxt
+            inxt
 ;
 ;           LEAVE
 ;           SCREEN 27 LINE  1
@@ -731,10 +745,10 @@ DMINU       .wrd    $+2
 ;
             sec
             lda     #0
-            dup     a
+            swp     a
             sbc.w   3,S
             sta.w   3,S
-            rot     a
+            swp     a
             sbc.w   1,S
             sta.w   1,S
             inxt
@@ -769,7 +783,7 @@ SWAP        .wrd    $+2
             pla.w
             swp     a
             pha.w
-            rot     a
+            swp     a
             pha.w
             inxt
 ;
@@ -1059,7 +1073,7 @@ PORIG       .wrd    DOCOL
 L1010       .byt    0x83,"TI",0xC2
             .wrd    L1000       ;link to +ORIGIN
 TIB         .wrd    DOUSE
-            .byt    8
+            .byt    0xA
 ;       
 ;           WIDTH
 ;           SCREEN 36 LINE 5
@@ -1828,7 +1842,7 @@ L1736       .wrd    KEY
 L1744       .wrd    L1760-L1744 ; 0x1F
             .wrd    DROP
             .wrd    CLIT
-            .byt    BK_SPACE    ;0x08, Backspace!
+            .byt    0x08
             .wrd    OVER
             .wrd    I
             .wrd    EQUAL
@@ -1843,7 +1857,7 @@ L1744       .wrd    L1760-L1744 ; 0x1F
 L1759       .wrd    L1779-L1759 ;0x27
 L1760       .wrd    DUP
             .wrd    CLIT
-            .byt    NEW_LINE    ;0x0A, was 0x0D
+            .byt    0x0D
             .wrd    EQUAL
             .wrd    ZBRAN
 L1765       .wrd    L1772-L1765 ;0x0E
@@ -2007,7 +2021,7 @@ L1916       .wrd    IN
             .wrd    ENCL
             .wrd    HERE
             .wrd    CLIT
-            .byt    DBL_QUOTE   ;0x22
+            .byt    0x22    ; Working space for name to find. 32 (name) + 2
             .wrd    BLANK
             .wrd    IN
             .wrd    PSTOR
@@ -2501,6 +2515,7 @@ ABORT       .wrd    DOCOL
             .byt    14,"fig-FORTH 1.0b"
             .wrd    FORTH
             .wrd    DEFIN
+;
             .wrd    QUIT
 ;       
 ;           COLD
@@ -3059,62 +3074,25 @@ DDASHG      .wrd    DOCOL
 ;
 ;           XEMIT writes one ascii character to terminal
 ;
-;
-;XEMIT       TYA
-;            SEC
-;            LDY    #$1A
-;            ADC    (UP),Y
-;            STA    (UP),Y
-;            INY                 ; bump user variable OUT
-;            LDA    #0
-;            ADC    (UP),Y
-;            STA    (UP),Y
-;XEMIT       lda    0,X         ; fetch character to output
-;            STX    XSAVE
-;            and    #0x7F
-;            jsr    cout        ; and display it
-;            LDX    XSAVE
-;            jmp    POP
-;
-XEMIT       pla.w               ; fetch character to output
+XEMIT       pla.w               ; load character to output
             and     #0x7F
-            sta     cout        ; and display it
+            jsr     cout        ; use monitor call
             inxt
 ;
 ;           XKEY reads one terminal keystroke to stack
 ;
-;
-;XKEY        STX     XSAVE
-;XKEY        jsr     cin         ; might otherwise clobber it while
-;            LDX     XSAVE       ; inputting a char to accumulator
-;            jmp     PUSHOA
-;
-XKEY        lda     cin          ; might otherwise clobber it while
+XKEY        jsr     cin         ; use monitor call
             pha.w
             inxt
 ;   
 ;           XQTER leaves a boolean representing terminal break
 ;   
-;   
-;XQTER       jsr     cbrk         ;if Ctrl-c, set C else clear C
-;XQTER       clc
-;            lda     #0x00        ; 0
-;            rol     a            ; move carry to bit 0
-;            jmp     PUSHOA
-;
 XQTER       psh.w   #0
             inxt
 ;   
 ;           XCR displays a CR and LF to terminal
 ;   
-;   
-;XCR         STX     XSAVE
-;XCR         jsr     crout       ;use monitor call
-;            LDX     XSAVE
-;            jmp     NEXT
-;
-XCR         lda     #NEW_LINE    ; py65 putch memory location
-            sta     cout
+XCR         jsr     crout       ; use monitor call
             inxt
 ;   
 ; ***       -DISC

@@ -44,7 +44,7 @@ _udiv_Exit
             ora.w #0
             bpl _udiv_Finish
             clc
-            adc.w 3,S
+            adc.w _D,S
 ;
 _udiv_Finish
             swp a
