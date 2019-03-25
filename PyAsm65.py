@@ -261,6 +261,30 @@ for src in source:
                 elif re.match('^#', dt):
                     addrsMode = 'imm'
                     operand = dt[1:]
+                elif re.match('^\(.*,[xX]\)$', dt):
+                    addrsMode = 'zpXI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*,[sS]\)$', dt):
+                    addrsMode = 'zpSI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*,[sS]\),[yY]$', dt):
+                    addrsMode = 'zpSIY'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*\),[yY]$', dt):
+                    addrsMode = 'zpIY'
+                    operand = dt.split(')')[0][1:]
+                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
+                    addrsMode = 'ippI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^[(]{2}.*,[sS][)]{2},[aA]$', dt):
+                    addrsMode = 'zpSIIA'
+                    operand = dt.split(',')[0][2:]
+                elif re.match('^\(.*,[aA]\)$', dt):
+                    addrsMode = 'absAI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*\)$', dt):
+                    addrsMode = 'zpI'
+                    operand = dt.split(')')[0][1:]
                 elif re.match('^.*,[xX]$', dt):
                     operand = dt.split(',')[0]
                     try:
@@ -272,36 +296,15 @@ for src in source:
                         if op == 'sty':
                             addrsMode = 'zpX'
                         else: addrsMode = 'absX'
-                elif re.match('^\(.*,[xX]\)$', dt):
-                    addrsMode = 'zpXI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^.*,[sS]$', dt):
-                    addrsMode = 'zpS'
-                    operand = dt.split(',')[0]
-                elif re.match('^\(.*,[sS]\)$', dt):
-                    addrsMode = 'zpSI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^\(.*,[sS]\),[yY]$', dt):
-                    addrsMode = 'zpSIY'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^\(.*\),[yY]$', dt):
-                    addrsMode = 'zpIY'
-                    operand = dt.split(')')[0][1:]
-                elif re.match('^.*,[iI][+]{2}$', dt):
-                    addrsMode = 'ipp'
-                    operand = dt.split(',')[0]
-                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
-                    addrsMode = 'ippI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^[(]{2}.*,[sS][)]{2},[aA]$', dt):
-                    addrsMode = 'zpSIIA'
-                    operand = dt.split(',')[0][2:]
                 elif re.match('^.*,[yY]$', dt):
                     addrsMode = 'absY'
                     operand = dt.split(',')[0]
-                elif re.match('^\(.*,[aA]\)$', dt):
-                    addrsMode = 'absAI'
-                    operand = dt.split(',')[0][1:]
+                elif re.match('^.*,[sS]$', dt):
+                    addrsMode = 'zpS'
+                    operand = dt.split(',')[0]
+                elif re.match('^.*,[iI][+]{2}$', dt):
+                    addrsMode = 'ipp'
+                    operand = dt.split(',')[0]
                 elif re.match('^.*$', dt):
                     if op in relative:
                         addrsMode = 'rel'
@@ -487,6 +490,30 @@ for src in source:
                 elif re.match('^#', dt):
                     addrsMode = 'imm'
                     operand = dt[1:]
+                elif re.match('^\(.*,[xX]\)$', dt):
+                    addrsMode = 'zpXI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*,[sS]\)$', dt):
+                    addrsMode = 'zpSI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*,[sS]\),[yY]$', dt):
+                    addrsMode = 'zpSIY'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*\),[yY]$', dt):
+                    addrsMode = 'zpIY'
+                    operand = dt.split(')')[0][1:]
+                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
+                    addrsMode = 'ippI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^[(]{2}.*,[sS][)]{2},[aA]$', dt):
+                    addrsMode = 'zpSIIA'
+                    operand = dt.split(',')[0][2:]
+                elif re.match('^\(.*,[aA]\)$', dt):
+                    addrsMode = 'absAI'
+                    operand = dt.split(',')[0][1:]
+                elif re.match('^\(.*\)$', dt):
+                    addrsMode = 'zpI'
+                    operand = dt.split(')')[0][1:]
                 elif re.match('^.*,[xX]$', dt):
                     operand = dt.split(',')[0]
                     try:
@@ -498,36 +525,15 @@ for src in source:
                         if op == 'sty':
                             addrsMode = 'zpX'
                         else: addrsMode = 'absX'
-                elif re.match('^\(.*,[xX]\)$', dt):
-                    addrsMode = 'zpXI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^.*,[sS]$', dt):
-                    addrsMode = 'zpS'
-                    operand = dt.split(',')[0]
-                elif re.match('^\(.*,[sS]\)$', dt):
-                    addrsMode = 'zpSI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^\(.*,[sS]\),[yY]$', dt):
-                    addrsMode = 'zpSIY'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^\(.*\),[yY]$', dt):
-                    addrsMode = 'zpIY'
-                    operand = dt.split(')')[0][1:]
-                elif re.match('^.*,[iI][+]{2}$', dt):
-                    addrsMode = 'ipp'
-                    operand = dt.split(',')[0]
-                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
-                    addrsMode = 'ippI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^[(]{2}.*,[sS][)]{2},[aA]$', dt):
-                    addrsMode = 'zpSIIA'
-                    operand = dt.split(',')[0][2:]
                 elif re.match('^.*,[yY]$', dt):
                     addrsMode = 'absY'
                     operand = dt.split(',')[0]
-                elif re.match('^\(.*,[aA]\)$', dt):
-                    addrsMode = 'absAI'
-                    operand = dt.split(',')[0][1:]
+                elif re.match('^.*,[sS]$', dt):
+                    addrsMode = 'zpS'
+                    operand = dt.split(',')[0]
+                elif re.match('^.*,[iI][+]{2}$', dt):
+                    addrsMode = 'ipp'
+                    operand = dt.split(',')[0]
                 elif re.match('^.*$', dt):
                     if op in relative:
                         addrsMode = 'rel'

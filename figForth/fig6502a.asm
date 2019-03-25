@@ -28,13 +28,13 @@
 ;
 SSIZE           .equ     128               ;sector size in bytes
 NBUF            .equ     8                 ;number of buffers desired in RAM
-;                             (SSIZE*NBUF >.equ 1024 bytes)
+;                                          ; (SSIZE*NBUF >.equ 1024 bytes)
 SECTR           .equ     800               ;sector per drive
-;                              forcing high drive to zero
+;                                          ; forcing high drive to zero
 SECTL           .equ     1600              ;sector limit for two drives
-;                              of 800 per drive.
+;                                          ; of 800 per drive.
 BMAG            .equ     1056              ;total buffer magnitude, in bytes
-;                              expressed by SSIZE+4*NBUF
+;                                          ; expressed by SSIZE+4*NBUF
 ;
 BOS             .equ     0x20              ;bottom of data stack, in zero-page.
 TOS             .equ     0xA0              ;top of data stack, in zero-page.
@@ -44,9 +44,9 @@ W               .equ     IP+3              ;code field pointer.
 UP              .equ     W+2               ;user area pointer.
 XSAVE           .equ     UP+2              ;temporary for X register.
 ;
-TIBX            .equ     0x0100             ;terminal input buffer of 84 bytes.
-ORIG            .equ     0x0400             ;origin of FORTH's Dictionary.
-MEM             .equ     0x4000             ;top of assigned memory+1 byte.
+TIBX            .equ     0x0100            ;terminal input buffer of 84 bytes.
+ORIG            .equ     0x0400            ;origin of FORTH's Dictionary.
+MEM             .equ     0x4000            ;top of assigned memory+1 byte.
 UAREA           .equ     MEM-128           ;128 bytes of user area
 DAREA           .equ     UAREA-BMAG        ;disk buffer space.
 ;
@@ -70,7 +70,7 @@ REENTR          nop                     ; User Warm entry point
                 .wrd  0x0004            ; 6502 in radix-36
                 .wrd  0x5ED2            ;
                 .wrd  NTOP              ; Name address of MON
-                .wrd  0x7F               ;Backspace Character
+                .wrd  0x7F              ;Backspace Character
 ;                .wrd  0x08              ; Backspace Character
                 .wrd  UAREA             ; Initial User Area
                 .wrd  TOS-1             ; Initial Top of Stack

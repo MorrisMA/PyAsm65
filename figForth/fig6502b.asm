@@ -48,7 +48,7 @@ XSAVE       .equ    UP+2            ;UP+2            ;temporary for X register.
 TIBX        .equ    0x100           ;terminal input buffer of 84 bytes.
 TIBX_LENGTH .equ    84
 ORIG        .equ    0x400           ;origin of FORTH's Dictionary.
-MEM         .equ    0x10000-0x1000  ;top of assigned memory+1 byte.
+MEM         .equ    0x4000          ;top of assigned memory+1 byte.
 UAREA       .equ    MEM-128         ;MEM-128         ;128 bytes of user area
 DAREA       .equ    UAREA-BMAG      ;UAREA-BMAG      ;disk buffer space.
 ;
@@ -745,10 +745,10 @@ DMINU       .wrd    $+2
 ;
             sec
             lda     #0
-            swp     a
+            dup     a
             sbc.w   3,S
             sta.w   3,S
-            swp     a
+            rot     a
             sbc.w   1,S
             sta.w   1,S
             inxt
