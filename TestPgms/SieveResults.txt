@@ -1,0 +1,13 @@
+.load Sieve2.bin 200
+Wrote +3867 bytes from $0200 to $111A
+
+.cycles
+Total = 757961, Num Inst = 258034, Pgm Rd = 573375, Data Rd = 109668, Data Wr = 74246, Dummy Cycles = 672
+  CPI = 2.94, Avg Inst Len = 2.22
+
+.load Sieve3.bin 200
+Wrote +1864 bytes from $0200 to $0947
+
+.cycles
+Total = 492976, Num Inst = 176845, Pgm Rd = 383580, Data Rd = 70824, Data Wr = 37900, Dummy Cycles = 672
+  CPI = 2.79, Avg Inst Len = 2.17
