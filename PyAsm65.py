@@ -492,20 +492,22 @@ for src in source:
                     if curSegment == 'code':
                         vlc['_loc_'] = code
                         vlc[lbl] = code
+                        dt = dt[1:-1]
                         siz = len(dt); val = str()
                         for ch in dt: val += '%02X' % ord(ch)
                         labels[lbl] = code
-                        
+
                         cod.append([code, '.str', 'ds', val,
                                     0, siz, '', srcLine, ' ; ' + srcText])
                         code += siz
                     else:
                         vlc['_loc_'] = data
                         vlc[lbl] = data
+                        dt = dt[1:-1]
                         siz = len(dt); val = str()
                         for ch in dt: val += '%02X' % ord(ch)
                         variables[lbl] = (data, siz, val)
-                        
+
                         dat.append([data, '.str', 'ds', val,
                                     0, siz, '', srcLine, ' ; ' + srcText])
                         data += siz
@@ -601,8 +603,9 @@ for src in source:
                                 ' '*bufLen + ' ; ' + srcText])
                     code += opLen + dtLen
                 else:
-                    print('Error. Unknown opcode: %s. Line #%d.' \
-                          % (opcode, srcLine))
+                    if opcode != '_imp':
+                        print('Error. Unknown opcode: %s. Line #%d.' \
+                              % (opcode, srcLine))
     line += 1
 
 '''
@@ -617,22 +620,25 @@ for src in source:
 
 for ln in dat:
     addrs, op, md, operand, opLen, dtLen, opStr, srcText, srcLine = ln
-    if addrs < code:
-        cod.append([code + addrs, op, md, operand,
-                    opLen, dtLen, opStr, srcText, srcLine])
-    else:
-        cod.append([addrs, op, md, operand,
-                    opLen, dtLen, opStr, srcText, srcLine])
+    cod.append([code + addrs, op, md, operand,
+                opLen, dtLen, opStr, srcText, srcLine])
+    #if addrs < code:
+        #cod.append([code + addrs, op, md, operand,
+                    #opLen, dtLen, opStr, srcText, srcLine])
+    #else:
+        #cod.append([addrs, op, md, operand,
+                    #opLen, dtLen, opStr, srcText, srcLine])
 
 '''
     Adjust addresses of variables{}
 '''
 
 for key in variables.keys():
-    addr, siz, dt = variables[key]
-    if addrs < code:
-        variables[key] = (code + addr, siz, dt)
-    else: variables[key] = (addr, siz, dt)
+    addrs, siz, dt = variables[key]
+    variables[key] = (code + addrs, siz, dt)
+    #if addrs < code:
+        #variables[key] = (code + addrs, siz, dt)
+    #else: variables[key] = (addrs, siz, dt)
 
 '''
     Create a common dictionary for variables, labels, and constants that will be
@@ -653,12 +659,12 @@ for var in variables:
 #print
 #print('-'*80)
 
-print('-'*80)
-print
-for key in constants:
-    print('%-18s : %8s (0x%04X)' % (key, constants[key], constants[key]))
-print
-print('-'*80)
+#print('-'*80)
+#print
+#for key in constants:
+    #print('%-18s : %8s (0x%04X)' % (key, constants[key], constants[key]))
+#print
+#print('-'*80)
 
 '''
     Assembler Pass 2
@@ -819,6 +825,9 @@ for ln in cod:
             if siz == dtLen:
                 out[addrs] = [siz, outStr, srcTxt, srcLine]
             else: print('=== Error(evalLng) ==>', 'returned siz does not match dtLen')
+        elif md == 'ds':
+            siz = dtLen; outStr = dt
+            out[addrs] = [siz, outStr, srcTxt, srcLine]
 
 '''
     Print results of Pass 2
@@ -923,8 +932,6 @@ with open(filename+'.lst', 'rt') as lst:
                                 print('(%4d)' % (srcLine), ' '*16,
                                       ';', asmInp[:-1], file=prn)
                             break
-#                        elif lstInp[0:1] == ' ':
-#                            print("Extended line")
                         elif lstInp == '':
                             print('(%4d)' % (srcLine), ' '*16,
                                   ';', asmInp[:-1], file=prn)

@@ -4,8 +4,8 @@
    5 RETURN_VALUE .equ -3
    6 HIGH_RETURN_VALUE .equ -1
    7 _start
-   8 	tsx.w
-   9 	lds.w #_stk_top
+   8 	tsx.w		; Preserve original stack pointer
+   9 	lds.w #_stk_top	; Initialize program stack pointer
   10 	stz _bss_start
   11 	ldx.w #_bss_start
   12 	ldy.w #_bss_start+1
@@ -17,8 +17,10 @@
   27 _pc65_main .sub
   28 	phx.w
   29 	tsx.w
-  31 	psh.w #1000
-  33 	psh.w #2
+  31 	lda.w #1000
+  32 	pha.w
+  33 	lda #2
+  34 	pha.w
   35 	jsr _idiv
   36 	adj #4
   37 	sta.w limit_005
@@ -88,7 +90,8 @@
  112 	sta.w prime_006
  113 	jmp L_013
  114 L_015
- 117 	psh.w #2
+ 117 	lda #2
+ 118 	pha.w
  119 	lda.w prime_006
  120 	pha.w
  121 	jsr _imul
@@ -186,7 +189,8 @@
  228 L_027
  230 	lda.w prime_006
  231 	pha.w
- 232 	psh.w #3
+ 232 	lda #3
+ 233 	pha.w
  234 	jsr _iwrite
  235 	adj #4
  237 	jmp L_029
@@ -241,3 +245,4 @@
  294 _bss_end .byt 1
  295 _stk .byt 1023
  296 _stk_top .byt 1
+ 298 	.end

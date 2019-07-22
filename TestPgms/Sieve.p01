@@ -4,8 +4,8 @@
    5 RETURN_VALUE .equ -3
    6 HIGH_RETURN_VALUE .equ -1
    7 _start
-   8 	tsx.w
-   9 	lds.w #_stk_top
+   8 	tsx.w		; Preserve original stack pointer
+   9 	lds.w #_stk_top	; Initialize program stack pointer
   10 	stz _bss_start
   11 	ldx.w #_bss_start
   12 	ldy.w #_bss_start+1

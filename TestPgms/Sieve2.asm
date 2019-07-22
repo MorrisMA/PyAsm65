@@ -529,15 +529,15 @@ _iwrite_Exit
 
 S_030 .str "   "
 S_021 .str "Sieve of Eratosthenes"
-_bss_start .byt 1
-sieve_002 .byt 2000
-i_003 .wrd 1
-j_004 .wrd 1
-limit_005 .wrd 1
-prime_006 .wrd 1
-factor_007 .wrd 1
-_bss_end .byt 1
-_stk .byt 1023
-_stk_top .byt 1
+_bss_start .byt 85
+sieve_002 .byt 0[2000]
+i_003 .wrd 0
+j_004 .wrd 0
+limit_005 .wrd 0
+prime_006 .wrd 0
+factor_007 .wrd 0
+_bss_end .byt 85
+_stk .byt 0[1023]
+_stk_top .byt 0
 
 	.end
