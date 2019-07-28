@@ -4,8 +4,8 @@
    5 RETURN_VALUE .equ -3
    6 HIGH_RETURN_VALUE .equ -1
    7 _start
-   8 	tsx.w
-   9 	lds.w #_stk_top
+   8 	tsx.w		; Preserve original stack pointer
+   9 	lds.w #_stk_top	; Initialize program stack pointer
   10 	stz _bss_start
   11 	ldx.w #_bss_start
   12 	ldy.w #_bss_start+1
@@ -30,7 +30,7 @@
   43 	sta.w 0,I++
   44 	swp a
   45 	sta.w 0,I++
-  48 	lda.w number_002+2
+  48 	lda.w number_002+2	;emit_load_value
   49 	swp a
   50 	lda.w number_002
   51 	swp a
@@ -58,7 +58,7 @@
   73 	beq L_008
   74 	jmp L_009
   75 L_008
-  77 	lda.w number_002+2
+  77 	lda.w number_002+2	;emit_load_value
   78 	swp a
   79 	lda.w number_002
   80 	swp a
@@ -71,7 +71,7 @@
   87 	pha.w
   88 	jsr _fwrite
   89 	adj #8
-  90 	lda.w F_011+2
+  90 	lda.w F_011+2	;float_literal
   91 	swp a
   92 	lda.w F_011
   93 	swp a
@@ -87,7 +87,7 @@
  103 	jsr _writeln
  106 	jmp L_012
  107 L_009
- 108 	lda.w number_002+2
+ 108 	lda.w number_002+2	;emit_load_value
  109 	swp a
  110 	lda.w number_002
  111 	swp a
@@ -123,7 +123,7 @@
  142 	jsr _writeln
  145 	jmp L_017
  146 L_014
- 148 	lda.w number_002+2
+ 148 	lda.w number_002+2	;emit_load_value
  149 	swp a
  150 	lda.w number_002
  151 	swp a
@@ -134,8 +134,8 @@
  156 	adj #4
  157 	sta.w sqroot_004
  158 	swp a
- 159 	sta.w sqroot_004+2
- 161 	lda.w number_002+2
+ 159 	sta.w sqroot_004+2	;assgnment_statement
+ 161 	lda.w number_002+2	;emit_load_value
  162 	swp a
  163 	lda.w number_002
  164 	swp a
@@ -148,7 +148,7 @@
  171 	pha.w
  172 	jsr _fwrite
  173 	adj #8
- 174 	lda.w sqroot_004+2
+ 174 	lda.w sqroot_004+2	;emit_load_value
  175 	swp a
  176 	lda.w sqroot_004
  177 	swp a
@@ -169,16 +169,16 @@
  195 	adj #2
  196 	sta.w root_003
  197 	swp a
- 198 	sta.w root_003+2
+ 198 	sta.w root_003+2	;assgnment_statement
  200 L_018
- 202 	lda.w number_002+2
+ 202 	lda.w number_002+2	;emit_load_value
  203 	swp a
  204 	lda.w number_002
  205 	swp a
  206 	pha.w
  207 	swp a
  208 	pha.w
- 209 	lda.w root_003+2
+ 209 	lda.w root_003+2	;emit_load_value
  210 	swp a
  211 	lda.w root_003
  212 	swp a
@@ -191,7 +191,7 @@
  219 	pha.w
  220 	swp a
  221 	pha.w
- 222 	lda.w root_003+2
+ 222 	lda.w root_003+2	;emit_load_value
  223 	swp a
  224 	lda.w root_003
  225 	swp a
@@ -216,8 +216,8 @@
  244 	adj #8
  245 	sta.w root_003
  246 	swp a
- 247 	sta.w root_003+2
- 249 	lda.w root_003+2
+ 247 	sta.w root_003+2	;assgnment_statement
+ 249 	lda.w root_003+2	;emit_load_value
  250 	swp a
  251 	lda.w root_003
  252 	swp a
@@ -232,14 +232,14 @@
  261 	adj #8
  263 	lda #100
  264 	pha.w
- 265 	lda.w root_003+2
+ 265 	lda.w root_003+2	;emit_load_value
  266 	swp a
  267 	lda.w root_003
  268 	swp a
  269 	pha.w
  270 	swp a
  271 	pha.w
- 272 	lda.w sqroot_004+2
+ 272 	lda.w sqroot_004+2	;emit_load_value
  273 	swp a
  274 	lda.w sqroot_004
  275 	swp a
@@ -284,7 +284,7 @@
  314 	pha.w
  315 	swp a
  316 	pha.w
- 317 	lda.w sqroot_004+2
+ 317 	lda.w sqroot_004+2	;emit_load_value
  318 	swp a
  319 	lda.w sqroot_004
  320 	swp a
@@ -309,14 +309,14 @@
  340 	jsr _cwrite
  341 	adj #4
  343 	jsr _writeln
- 344 	lda.w number_002+2
+ 344 	lda.w number_002+2	;emit_load_value
  345 	swp a
  346 	lda.w number_002
  347 	swp a
  348 	pha.w
  349 	swp a
  350 	pha.w
- 351 	lda.w root_003+2
+ 351 	lda.w root_003+2	;emit_load_value
  352 	swp a
  353 	lda.w root_003
  354 	swp a
@@ -359,7 +359,7 @@
  391 	pha.w
  392 	swp a
  393 	pha.w
- 394 	lda.w F_020+2
+ 394 	lda.w F_020+2	;float_literal
  395 	swp a
  396 	lda.w F_020
  397 	swp a
@@ -381,7 +381,7 @@
  413 L_019
  416 L_017
  417 L_012
- 418 	lda.w number_002+2
+ 418 	lda.w number_002+2	;emit_load_value
  419 	swp a
  420 	lda.w number_002
  421 	swp a

@@ -4,15 +4,15 @@
    5 RETURN_VALUE .equ -3
    6 HIGH_RETURN_VALUE .equ -1
    7 _start
-   8 	tsx.w
-   9 	lds.w #_stk_top
+   8 	tsx.w		; Preserve original stack pointer
+   9 	lds.w #_stk_top	; Initialize program stack pointer
   10 	stz _bss_start
   11 	ldx.w #_bss_start
   12 	ldy.w #_bss_start+1
   13 	lda.w #_stk_top
   14 	sec
   15 	sbc.w #_bss_start
-  16 	mov #15
+  16 	mov #10
   17 	jmp _pc65_main
   44 n_004 .equ +7
   45 partbefore_005 .equ -1
@@ -28,7 +28,7 @@
   73 	tsx.w
   75 	lda.w digit_014,X
   77 	cmp.w #1
-  78 	bne L_017
+  78 	jne L_017
   79 L_016
   80 	psh.w #S_018
   81 	psh.w #0
@@ -38,7 +38,7 @@
   85 	jmp L_015
   86 L_017
   88 	cmp.w #2
-  89 	bne L_020
+  89 	jne L_020
   90 L_019
   91 	psh.w #S_021
   92 	psh.w #0
@@ -48,7 +48,7 @@
   96 	jmp L_015
   97 L_020
   99 	cmp.w #3
- 100 	bne L_023
+ 100 	jne L_023
  101 L_022
  102 	psh.w #S_024
  103 	psh.w #0
@@ -58,7 +58,7 @@
  107 	jmp L_015
  108 L_023
  110 	cmp.w #4
- 111 	bne L_026
+ 111 	jne L_026
  112 L_025
  113 	psh.w #S_027
  114 	psh.w #0
@@ -68,7 +68,7 @@
  118 	jmp L_015
  119 L_026
  121 	cmp.w #5
- 122 	bne L_029
+ 122 	jne L_029
  123 L_028
  124 	psh.w #S_030
  125 	psh.w #0
@@ -78,7 +78,7 @@
  129 	jmp L_015
  130 L_029
  132 	cmp.w #6
- 133 	bne L_032
+ 133 	jne L_032
  134 L_031
  135 	psh.w #S_033
  136 	psh.w #0
@@ -88,7 +88,7 @@
  140 	jmp L_015
  141 L_032
  143 	cmp.w #7
- 144 	bne L_035
+ 144 	jne L_035
  145 L_034
  146 	psh.w #S_036
  147 	psh.w #0
@@ -98,7 +98,7 @@
  151 	jmp L_015
  152 L_035
  154 	cmp.w #8
- 155 	bne L_038
+ 155 	jne L_038
  156 L_037
  157 	psh.w #S_039
  158 	psh.w #0
@@ -108,7 +108,7 @@
  162 	jmp L_015
  163 L_038
  165 	cmp.w #9
- 166 	bne L_041
+ 166 	jne L_041
  167 L_040
  168 	psh.w #S_042
  169 	psh.w #0
@@ -128,7 +128,7 @@
  193 	tsx.w
  195 	lda.w teens_044,X
  197 	cmp.w #10
- 198 	bne L_047
+ 198 	jne L_047
  199 L_046
  200 	psh.w #S_048
  201 	psh.w #0
@@ -138,7 +138,7 @@
  205 	jmp L_045
  206 L_047
  208 	cmp.w #11
- 209 	bne L_050
+ 209 	jne L_050
  210 L_049
  211 	psh.w #S_051
  212 	psh.w #0
@@ -148,7 +148,7 @@
  216 	jmp L_045
  217 L_050
  219 	cmp.w #12
- 220 	bne L_053
+ 220 	jne L_053
  221 L_052
  222 	psh.w #S_054
  223 	psh.w #0
@@ -158,7 +158,7 @@
  227 	jmp L_045
  228 L_053
  230 	cmp.w #13
- 231 	bne L_056
+ 231 	jne L_056
  232 L_055
  233 	psh.w #S_057
  234 	psh.w #0
@@ -168,7 +168,7 @@
  238 	jmp L_045
  239 L_056
  241 	cmp.w #14
- 242 	bne L_059
+ 242 	jne L_059
  243 L_058
  244 	psh.w #S_060
  245 	psh.w #0
@@ -178,7 +178,7 @@
  249 	jmp L_045
  250 L_059
  252 	cmp.w #15
- 253 	bne L_062
+ 253 	jne L_062
  254 L_061
  255 	psh.w #S_063
  256 	psh.w #0
@@ -188,7 +188,7 @@
  260 	jmp L_045
  261 L_062
  263 	cmp.w #16
- 264 	bne L_065
+ 264 	jne L_065
  265 L_064
  266 	psh.w #S_066
  267 	psh.w #0
@@ -198,7 +198,7 @@
  271 	jmp L_045
  272 L_065
  274 	cmp.w #17
- 275 	bne L_068
+ 275 	jne L_068
  276 L_067
  277 	psh.w #S_069
  278 	psh.w #0
@@ -208,7 +208,7 @@
  282 	jmp L_045
  283 L_068
  285 	cmp.w #18
- 286 	bne L_071
+ 286 	jne L_071
  287 L_070
  288 	psh.w #S_072
  289 	psh.w #0
@@ -218,7 +218,7 @@
  293 	jmp L_045
  294 L_071
  296 	cmp.w #19
- 297 	bne L_074
+ 297 	jne L_074
  298 L_073
  299 	psh.w #S_075
  300 	psh.w #0
@@ -238,7 +238,7 @@
  324 	tsx.w
  326 	lda.w digit_077,X
  328 	cmp.w #2
- 329 	bne L_080
+ 329 	jne L_080
  330 L_079
  331 	psh.w #S_081
  332 	psh.w #0
@@ -248,7 +248,7 @@
  336 	jmp L_078
  337 L_080
  339 	cmp.w #3
- 340 	bne L_083
+ 340 	jne L_083
  341 L_082
  342 	psh.w #S_084
  343 	psh.w #0
@@ -258,7 +258,7 @@
  347 	jmp L_078
  348 L_083
  350 	cmp.w #4
- 351 	bne L_086
+ 351 	jne L_086
  352 L_085
  353 	psh.w #S_087
  354 	psh.w #0
@@ -268,7 +268,7 @@
  358 	jmp L_078
  359 L_086
  361 	cmp.w #5
- 362 	bne L_089
+ 362 	jne L_089
  363 L_088
  364 	psh.w #S_090
  365 	psh.w #0
@@ -278,7 +278,7 @@
  369 	jmp L_078
  370 L_089
  372 	cmp.w #6
- 373 	bne L_092
+ 373 	jne L_092
  374 L_091
  375 	psh.w #S_093
  376 	psh.w #0
@@ -288,7 +288,7 @@
  380 	jmp L_078
  381 L_092
  383 	cmp.w #7
- 384 	bne L_095
+ 384 	jne L_095
  385 L_094
  386 	psh.w #S_096
  387 	psh.w #0
@@ -298,7 +298,7 @@
  391 	jmp L_078
  392 L_095
  394 	cmp.w #8
- 395 	bne L_098
+ 395 	jne L_098
  396 L_097
  397 	psh.w #S_099
  398 	psh.w #0
@@ -308,7 +308,7 @@
  402 	jmp L_078
  403 L_098
  405 	cmp.w #9
- 406 	bne L_101
+ 406 	jne L_101
  407 L_100
  408 	psh.w #S_102
  409 	psh.w #0
@@ -698,9 +698,9 @@
  861 S_024 .str " three"
  862 S_021 .str " two"
  863 S_018 .str " one"
- 864 _bss_start .byt 1
- 865 number_002 .wrd 1
- 866 _bss_end .byt 1
- 867 _stk .byt 1023
- 868 _stk_top .byt 1
+ 864 _bss_start .byt 0
+ 865 number_002 .wrd 0
+ 866 _bss_end .byt 0
+ 867 _stk .byt 0[1023]
+ 868 _stk_top .byt -1
  870 	.end

@@ -4,29 +4,37 @@ import array
 
 from PyAsm65Utilities import *
 
-directives = {'.stack' : '.stack', \
-              '.stk'   : '.stk', \
-              '.code'  : '.code', \
-              '.cod'   : '.cod', \
-              '.data'  : '.data', \
-              '.dat'   : '.dat', \
-              '.proc'  : '.proc', \
-              '.sub'   : '.sub', \
-              '.fnc'   : '.fnc', \
-              '.endp'  : '.endp', \
+directives = {'.stack' : '.stack', 
+              '.stk'   : '.stk', 
+              '.code'  : '.code',
+              '.cod'   : '.cod', 
+              '.data'  : '.data',
+              '.dat'   : '.dat', 
+              '.proc'  : '.proc',
+              '.sub'   : '.sub', 
+              '.fnc'   : '.fnc', 
+              '.endp'  : '.endp',
               '.end'   : '.end', }
 
-defines    = ('.eq', '.equ', \
-              '.db', '.byt', \
-              '.dw', '.wrd', \
-              '.dl', '.lng', '.flt', \
+defines    = ('.eq', '.equ', 
+              '.db', '.byt', 
+              '.dw', '.wrd', 
+              '.dl', '.lng', '.flt', 
               '.ds', '.str', )
 
-relative   = ('bpl', 'bmi', 'bvc', 'bvs', 'bcc', 'bcs', 'bne', 'beq', \
-              'bra', \
-              'bge', 'bgt', 'ble', 'blt', 'bhs', 'bhi', 'bls', 'blo', \
-              'jge', 'jgt', 'jle', 'jlt', 'jhs', 'jhi', 'jls', 'jlo', \
-              'jra', \
+             # ---    IND    SIZ    ISZ
+relative   = ('bpl', 'jpl', 'bgt', 'jgt',   #10
+              'bmi', 'jmi', 'ble', 'jle',   #30
+              'bvc', 'jvc', 'blt', 'jlt',   #50
+              'bvs', 'jvs', 'bge', 'jge',   #70
+              # -------------------------
+              'bra', 'jra',                 #80
+              # -------------------------
+              'bcc', 'jcc', 'bls', 'jls',   #90
+              'bcs', 'jne', 'bhi', 'jhi',   #B0
+              'bne', 'jcs', 'blo', 'jlo',   #D0
+              'beq', 'jeq', 'bhs', 'jhs',   #F0
+              # -------------------------
               'phr', 'csr', )
 
 opcodes = dict()
@@ -111,10 +119,7 @@ for src in source:
         dt  = str()
         for i in src[1][2:]:
             dt += i
-#        print('Warning: combining %d fields' % (numFields - 2) \
-#              + ' into single "dt" field in line #%d' % (srcLine))
-    
-#    print(code, lbl, op, dt)
+
     vlc['_loc_'] = code
     
     if lbl == '':

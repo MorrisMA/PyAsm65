@@ -13,7 +13,7 @@ _start
 	lda.w #_stk_top
 	sec
 	sbc.w #_bss_start
-	mov #15
+	mov #10
 	jmp _pc65_main
 ;    2: 
 ;    3: {   Translate a list of integers from numeric form into
@@ -75,7 +75,7 @@ doones_013 .sub
 	lda.w digit_014,X
 ;   47:                     1:  write (' one');
 	cmp.w #1
-	bne L_017
+	jne L_017
 L_016
 	psh.w #S_018
 	psh.w #0
@@ -86,7 +86,7 @@ L_016
 L_017
 ;   48:                     2:  write (' two');
 	cmp.w #2
-	bne L_020
+	jne L_020
 L_019
 	psh.w #S_021
 	psh.w #0
@@ -97,7 +97,7 @@ L_019
 L_020
 ;   49:                     3:  write (' three');
 	cmp.w #3
-	bne L_023
+	jne L_023
 L_022
 	psh.w #S_024
 	psh.w #0
@@ -108,7 +108,7 @@ L_022
 L_023
 ;   50:                     4:  write (' four');
 	cmp.w #4
-	bne L_026
+	jne L_026
 L_025
 	psh.w #S_027
 	psh.w #0
@@ -119,7 +119,7 @@ L_025
 L_026
 ;   51:                     5:  write (' five');
 	cmp.w #5
-	bne L_029
+	jne L_029
 L_028
 	psh.w #S_030
 	psh.w #0
@@ -130,7 +130,7 @@ L_028
 L_029
 ;   52:                     6:  write (' six');
 	cmp.w #6
-	bne L_032
+	jne L_032
 L_031
 	psh.w #S_033
 	psh.w #0
@@ -141,7 +141,7 @@ L_031
 L_032
 ;   53:                     7:  write (' seven');
 	cmp.w #7
-	bne L_035
+	jne L_035
 L_034
 	psh.w #S_036
 	psh.w #0
@@ -152,7 +152,7 @@ L_034
 L_035
 ;   54:                     8:  write (' eight');
 	cmp.w #8
-	bne L_038
+	jne L_038
 L_037
 	psh.w #S_039
 	psh.w #0
@@ -163,7 +163,7 @@ L_037
 L_038
 ;   55:                     9:  write (' nine');
 	cmp.w #9
-	bne L_041
+	jne L_041
 L_040
 	psh.w #S_042
 	psh.w #0
@@ -195,7 +195,7 @@ doteens_043 .sub
 	lda.w teens_044,X
 ;   67:                     10:  write (' ten');
 	cmp.w #10
-	bne L_047
+	jne L_047
 L_046
 	psh.w #S_048
 	psh.w #0
@@ -206,7 +206,7 @@ L_046
 L_047
 ;   68:                     11:  write (' eleven');
 	cmp.w #11
-	bne L_050
+	jne L_050
 L_049
 	psh.w #S_051
 	psh.w #0
@@ -217,7 +217,7 @@ L_049
 L_050
 ;   69:                     12:  write (' twelve');
 	cmp.w #12
-	bne L_053
+	jne L_053
 L_052
 	psh.w #S_054
 	psh.w #0
@@ -228,7 +228,7 @@ L_052
 L_053
 ;   70:                     13:  write (' thirteen');
 	cmp.w #13
-	bne L_056
+	jne L_056
 L_055
 	psh.w #S_057
 	psh.w #0
@@ -239,7 +239,7 @@ L_055
 L_056
 ;   71:                     14:  write (' fourteen');
 	cmp.w #14
-	bne L_059
+	jne L_059
 L_058
 	psh.w #S_060
 	psh.w #0
@@ -250,7 +250,7 @@ L_058
 L_059
 ;   72:                     15:  write (' fifteen');
 	cmp.w #15
-	bne L_062
+	jne L_062
 L_061
 	psh.w #S_063
 	psh.w #0
@@ -261,7 +261,7 @@ L_061
 L_062
 ;   73:                     16:  write (' sixteen');
 	cmp.w #16
-	bne L_065
+	jne L_065
 L_064
 	psh.w #S_066
 	psh.w #0
@@ -272,7 +272,7 @@ L_064
 L_065
 ;   74:                     17:  write (' seventeen');
 	cmp.w #17
-	bne L_068
+	jne L_068
 L_067
 	psh.w #S_069
 	psh.w #0
@@ -283,7 +283,7 @@ L_067
 L_068
 ;   75:                     18:  write (' eighteen');
 	cmp.w #18
-	bne L_071
+	jne L_071
 L_070
 	psh.w #S_072
 	psh.w #0
@@ -294,7 +294,7 @@ L_070
 L_071
 ;   76:                     19:  write (' nineteen');
 	cmp.w #19
-	bne L_074
+	jne L_074
 L_073
 	psh.w #S_075
 	psh.w #0
@@ -326,7 +326,7 @@ dotens_076 .sub
 	lda.w digit_077,X
 ;   88:                     2:  write (' twenty');
 	cmp.w #2
-	bne L_080
+	jne L_080
 L_079
 	psh.w #S_081
 	psh.w #0
@@ -337,7 +337,7 @@ L_079
 L_080
 ;   89:                     3:  write (' thirty');
 	cmp.w #3
-	bne L_083
+	jne L_083
 L_082
 	psh.w #S_084
 	psh.w #0
@@ -348,7 +348,7 @@ L_082
 L_083
 ;   90:                     4:  write (' forty');
 	cmp.w #4
-	bne L_086
+	jne L_086
 L_085
 	psh.w #S_087
 	psh.w #0
@@ -359,7 +359,7 @@ L_085
 L_086
 ;   91:                     5:  write (' fifty');
 	cmp.w #5
-	bne L_089
+	jne L_089
 L_088
 	psh.w #S_090
 	psh.w #0
@@ -370,7 +370,7 @@ L_088
 L_089
 ;   92:                     6:  write (' sixty');
 	cmp.w #6
-	bne L_092
+	jne L_092
 L_091
 	psh.w #S_093
 	psh.w #0
@@ -381,7 +381,7 @@ L_091
 L_092
 ;   93:                     7:  write (' seventy');
 	cmp.w #7
-	bne L_095
+	jne L_095
 L_094
 	psh.w #S_096
 	psh.w #0
@@ -392,7 +392,7 @@ L_094
 L_095
 ;   94:                     8:  write (' eighty');
 	cmp.w #8
-	bne L_098
+	jne L_098
 L_097
 	psh.w #S_099
 	psh.w #0
@@ -403,7 +403,7 @@ L_097
 L_098
 ;   95:                     9:  write (' ninety');
 	cmp.w #9
-	bne L_101
+	jne L_101
 L_100
 	psh.w #S_102
 	psh.w #0
@@ -861,10 +861,10 @@ S_027 .str " four"
 S_024 .str " three"
 S_021 .str " two"
 S_018 .str " one"
-_bss_start .byt 1
-number_002 .wrd 1
-_bss_end .byt 1
-_stk .byt 1023
-_stk_top .byt 1
+_bss_start .byt 0
+number_002 .wrd 0
+_bss_end .byt 0
+_stk .byt 0[1023]
+_stk_top .byt -1
 
 	.end
