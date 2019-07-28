@@ -11,15 +11,19 @@ directives = {'.stack' : '.stack',
               '.data'  : '.data',
               '.dat'   : '.dat', 
               '.proc'  : '.proc',
-              '.sub'   : '.sub', 
-              '.fnc'   : '.fnc', 
               '.endp'  : '.endp',
+              '.sub'   : '.sub', 
+              '.ends'  : '.ends',
+              '.fnc'   : '.fnc', 
+              '.endf'  : '.endf',
               '.end'   : '.end', }
 
 defines    = ('.eq', '.equ', 
               '.db', '.byt', 
               '.dw', '.wrd', 
-              '.dl', '.lng', '.flt', 
+              '.dl', '.lng',
+              '.df', '.flt',
+              '.dd', '.dbl', 
               '.ds', '.str', )
 
              # ---    IND    SIZ    ISZ
@@ -35,7 +39,7 @@ relative   = ('bpl', 'jpl', 'bgt', 'jgt',   #10
               'bne', 'jcs', 'blo', 'jlo',   #D0
               'beq', 'jeq', 'bhs', 'jhs',   #F0
               # -------------------------
-              'phr', 'csr', )
+              'phr', 'csr', )               #5C
 
 opcodes = dict()
 
