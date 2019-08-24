@@ -4,46 +4,7 @@ import array
 
 from PyAsm65Utilities import *
 
-directives = {'.stack' : '.stack', 
-              '.stk'   : '.stk', 
-              '.code'  : '.code',
-              '.cod'   : '.cod', 
-              '.data'  : '.data',
-              '.dat'   : '.dat', 
-              '.proc'  : '.proc',
-              '.endp'  : '.endp',
-              '.sub'   : '.sub', 
-              '.ends'  : '.ends',
-              '.fnc'   : '.fnc', 
-              '.endf'  : '.endf',
-              '.end'   : '.end', }
-
-defines    = ('.eq', '.equ', 
-              '.db', '.byt', 
-              '.dw', '.wrd', 
-              '.dl', '.lng',
-              '.df', '.flt',
-              '.dd', '.dbl', 
-              '.ds', '.str', )
-
-             # ---    IND    SIZ    ISZ
-relative   = ('bpl', 'jpl', 'bgt', 'jgt',   #10
-              'bmi', 'jmi', 'ble', 'jle',   #30
-              'bvc', 'jvc', 'blt', 'jlt',   #50
-              'bvs', 'jvs', 'bge', 'jge',   #70
-              # -------------------------
-              'bra', 'jra',                 #80
-              # -------------------------
-              'bcc', 'jcc', 'bls', 'jls',   #90
-              'bcs', 'jne', 'bhi', 'jhi',   #B0
-              'bne', 'jcs', 'blo', 'jlo',   #D0
-              'beq', 'jeq', 'bhs', 'jhs',   #F0
-              # -------------------------
-              'phr', 'csr', )               #5C
-
-opcodes = dict()
-
-opcodes = loadOpcodeTable(opcodes,genOpcodeLst=True) # Load default opcode table
+opcodes = loadOpcodeTable(genOpcodeLst=True)    # Load default opcode table
 
 filename = input('Enter base name of file to process: ')
 libpath  = input('Enter path to library: ')
@@ -823,17 +784,20 @@ for ln in cod:
             siz, outStr = evalByt(dt, vlc)
             if siz == dtLen:
                 out[addrs] = [siz, outStr, srcTxt, srcLine]
-            else: print('=== Error(evalByt) ==>', 'returned siz does not match dtLen')
+            else: print('=== Error(evalByt) ==>', 
+                        'returned siz does not match dtLen')
         elif md == 'dw':
             siz, outStr = evalWrd(dt, vlc)
             if siz == dtLen:
                 out[addrs] = [siz, outStr, srcTxt, srcLine]
-            else: print('=== Error(evalWrd) ==>', 'returned siz does not match dtLen')
+            else: print('=== Error(evalWrd) ==>', 
+                        'returned siz does not match dtLen')
         elif md == 'dl':
             siz, outStr = evalLng(dt, vlc)
             if siz == dtLen:
                 out[addrs] = [siz, outStr, srcTxt, srcLine]
-            else: print('=== Error(evalLng) ==>', 'returned siz does not match dtLen')
+            else: print('=== Error(evalLng) ==>',
+                        'returned siz does not match dtLen')
         elif md == 'ds':
             siz = dtLen; outStr = dt
             out[addrs] = [siz, outStr, srcTxt, srcLine]

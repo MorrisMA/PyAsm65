@@ -63,8 +63,7 @@ L_013
     dey.w
     lda (1,S),Y
     adj #2
-    beq L_014
-    bra L_015
+    bne L_015
 L_014
 ;   22:             prime := prime + 1;
     inc.w prime_006
@@ -80,8 +79,7 @@ L_015
 L_016
     lda.w factor_007
     cmp.w #1000
-    ble L_017
-    bra L_018
+    bgt L_018
 L_017
 ;   27:             sieve[factor] := FALSE;
     psh.w #sieve_002
@@ -101,8 +99,7 @@ L_017
 L_018
     lda.w prime_006
     cmp.w limit_005
-    bgt L_012
-    jmp L_011
+    jle L_011
 L_012
 ;   31:
 ;   32:     writeln('Sieve of Eratosthenes');
@@ -126,8 +123,7 @@ L_022
 L_024
     lda #19
     cmp.w j_004
-    bge L_025
-    bra L_026
+    blt L_026
 L_025
 ;   38:             prime := i + j;
     lda.w i_003
@@ -140,8 +136,7 @@ L_025
     dey.w
     lda (1,S),Y
     adj #2
-    bne L_027
-    bra L_028
+    beq L_028
 L_027
 ;   40:                 write(prime:3)
     lda.w prime_006
@@ -173,8 +168,7 @@ L_026
     sta.w i_003
 ;   46:     UNTIL i > max
     cmp.w #1000
-    bgt L_023
-    bra L_022
+    ble L_022
 ;   47: END.
 L_023
     plx.w

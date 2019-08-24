@@ -5,7 +5,46 @@
 import os
 import re
 
-def loadOpcodeTable(opcodes, fn = 'OpcodeTbl', genOpcodeLst = False):
+directives = {'.stack' : '.stack', 
+              '.stk'   : '.stk', 
+              '.code'  : '.code',
+              '.cod'   : '.cod', 
+              '.data'  : '.data',
+              '.dat'   : '.dat', 
+              '.proc'  : '.proc',
+              '.endp'  : '.endp',
+              '.sub'   : '.sub', 
+              '.ends'  : '.ends',
+              '.fnc'   : '.fnc', 
+              '.endf'  : '.endf',
+              '.end'   : '.end', }
+
+defines    = ('.eq', '.equ', 
+              '.db', '.byt', 
+              '.dw', '.wrd', 
+              '.dl', '.lng',
+              '.df', '.flt',
+              '.dd', '.dbl', 
+              '.ds', '.str', )
+
+             # ---    IND    SIZ    ISZ
+relative   = ('bpl', 'jpl', 'bgt', 'jgt',   #10
+              'bmi', 'jmi', 'ble', 'jle',   #30
+              'bvc', 'jvc', 'blt', 'jlt',   #50
+              'bvs', 'jvs', 'bge', 'jge',   #70
+             # --------------------------
+              'bra', 'jra',                 #80
+             # --------------------------
+              'bcc', 'jcc', 'bls', 'jls',   #90
+              'bcs', 'jne', 'bhi', 'jhi',   #B0
+              'bne', 'jcs', 'blo', 'jlo',   #D0
+              'beq', 'jeq', 'bhs', 'jhs',   #F0
+             # --------------------------
+              'phr', 'csr', )               #5C
+
+def loadOpcodeTable(fn = 'OpcodeTbl', genOpcodeLst = False):
+    opcodes = dict()
+    
     '''
         Read Opcodes Table
     '''
@@ -117,27 +156,39 @@ def pho_ldaImmPha_to_pshImm(source):
     while i < length:
         newLine = source[i]
         inpLine, *_ = newLine[0]
-        try:
+        
+        lbl = op = dt = ''
+        numFlds = len(newLine[1])
+        
+        if numFlds > 2:
             lbl, op, dt, *_ = newLine[1]
-        except:
-            try:
-                lbl, op = newLine[1]
-                dt = ''
-            except:
-                print('ERROR: line=%d, %s' % (i, newLine))
+        elif numFlds > 1:
+            lbl, op = newLine[1]
+        else: lbl = newLine[1]
+        
         if op in ['lda', 'lda.w'] and dt[0] == '#':
             nxtLine = source[i+1]
-            try:
-                nxtLbl, nxtOp, *_ = nxtLine[1]
-            except:
+            
+            nxtLbl = nxtOp = nxtDt = ''
+            numFlds = len(nxtLine[1])
+            
+            if numFlds > 2:
+                nxtLbl, nxtOp, nxtDt, *_ = nxtLine[1]
+            elif numFlds > 1:
                 nxtLbl, nxtOp = nxtLine[1]
+            else: NxtLbl = nxtLine[1]
+            
             if nxtOp in ['pha', 'pha.w', 'pha.s', 'pha.sw'] and nxtLbl == '':
+                #print('======> %d, %s, %s' %(i, source[i][1], nxtLine[1]), end='')
                 op = 'psh'+'.'+nxtOp.split('.')[1]
                 newLine = [[inpLine, lbl+'\t'+op+' '+dt], \
                            [lbl, op, dt]]
                 i += 1
+                #print(' =>> %d, %s' % (i, newLine[1]))
+        
         newSrc.append(newLine)
         i += 1
+        
     return newSrc
 
 def numVal(dt):
@@ -152,6 +203,7 @@ def numVal(dt):
         elif radix == 'x':
             val = int(dt, base=16)
         else:
+            val = 0
             print('Error. Unknown numeric representation.')
     else:
         val = int(dt)
