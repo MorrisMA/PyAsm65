@@ -1,706 +1,820 @@
-   2 	.stk 1024
-   3 	.cod 512
-   4 STATIC_LINK .equ +5
-   5 RETURN_VALUE .equ -3
-   6 HIGH_RETURN_VALUE .equ -1
-   7 _start
-   8 	tsx.w		; Preserve original stack pointer
-   9 	lds.w #_stk_top	; Initialize program stack pointer
-  10 	stz _bss_start
-  11 	ldx.w #_bss_start
-  12 	ldy.w #_bss_start+1
-  13 	lda.w #_stk_top
-  14 	sec
-  15 	sbc.w #_bss_start
-  16 	mov #10
-  17 	jmp _pc65_main
-  44 n_004 .equ +7
-  45 partbefore_005 .equ -1
-  46 partafter_006 .equ -3
-  60 part_008 .equ +7
-  61 hundredsdigit_009 .equ -1
-  62 tenspart_010 .equ -3
-  63 tensdigit_011 .equ -5
-  64 onesdigit_012 .equ -7
-  70 digit_014 .equ +7
-  71 doones_013 .sub
-  72 	phx.w
-  73 	tsx.w
-  75 	lda.w digit_014,X
-  77 	cmp.w #1
-  78 	jne L_017
-  79 L_016
-  80 	psh.w #S_018
-  81 	psh.w #0
-  82 	psh.w #4
-  83 	jsr _swrite
-  84 	adj #6
-  85 	jmp L_015
-  86 L_017
-  88 	cmp.w #2
-  89 	jne L_020
-  90 L_019
-  91 	psh.w #S_021
-  92 	psh.w #0
-  93 	psh.w #4
-  94 	jsr _swrite
-  95 	adj #6
-  96 	jmp L_015
-  97 L_020
-  99 	cmp.w #3
- 100 	jne L_023
- 101 L_022
- 102 	psh.w #S_024
- 103 	psh.w #0
- 104 	psh.w #6
- 105 	jsr _swrite
- 106 	adj #6
- 107 	jmp L_015
- 108 L_023
- 110 	cmp.w #4
- 111 	jne L_026
- 112 L_025
- 113 	psh.w #S_027
- 114 	psh.w #0
- 115 	psh.w #5
- 116 	jsr _swrite
- 117 	adj #6
- 118 	jmp L_015
- 119 L_026
- 121 	cmp.w #5
- 122 	jne L_029
- 123 L_028
- 124 	psh.w #S_030
- 125 	psh.w #0
- 126 	psh.w #5
- 127 	jsr _swrite
- 128 	adj #6
- 129 	jmp L_015
- 130 L_029
- 132 	cmp.w #6
- 133 	jne L_032
- 134 L_031
- 135 	psh.w #S_033
- 136 	psh.w #0
- 137 	psh.w #4
- 138 	jsr _swrite
- 139 	adj #6
- 140 	jmp L_015
- 141 L_032
- 143 	cmp.w #7
- 144 	jne L_035
- 145 L_034
- 146 	psh.w #S_036
- 147 	psh.w #0
- 148 	psh.w #6
- 149 	jsr _swrite
- 150 	adj #6
- 151 	jmp L_015
- 152 L_035
- 154 	cmp.w #8
- 155 	jne L_038
- 156 L_037
- 157 	psh.w #S_039
- 158 	psh.w #0
- 159 	psh.w #6
- 160 	jsr _swrite
- 161 	adj #6
- 162 	jmp L_015
- 163 L_038
- 165 	cmp.w #9
- 166 	jne L_041
- 167 L_040
- 168 	psh.w #S_042
- 169 	psh.w #0
- 170 	psh.w #5
- 171 	jsr _swrite
- 172 	adj #6
- 173 	jmp L_015
- 174 L_041
- 176 L_015
- 178 	txs.w
- 179 	plx.w
- 180 	rts
- 181 	.end doones_013
- 190 teens_044 .equ +7
- 191 doteens_043 .sub
- 192 	phx.w
- 193 	tsx.w
- 195 	lda.w teens_044,X
- 197 	cmp.w #10
- 198 	jne L_047
- 199 L_046
- 200 	psh.w #S_048
- 201 	psh.w #0
- 202 	psh.w #4
- 203 	jsr _swrite
- 204 	adj #6
- 205 	jmp L_045
- 206 L_047
- 208 	cmp.w #11
- 209 	jne L_050
- 210 L_049
- 211 	psh.w #S_051
- 212 	psh.w #0
- 213 	psh.w #7
- 214 	jsr _swrite
- 215 	adj #6
- 216 	jmp L_045
- 217 L_050
- 219 	cmp.w #12
- 220 	jne L_053
- 221 L_052
- 222 	psh.w #S_054
- 223 	psh.w #0
- 224 	psh.w #7
- 225 	jsr _swrite
- 226 	adj #6
- 227 	jmp L_045
- 228 L_053
- 230 	cmp.w #13
- 231 	jne L_056
- 232 L_055
- 233 	psh.w #S_057
- 234 	psh.w #0
- 235 	psh.w #9
- 236 	jsr _swrite
- 237 	adj #6
- 238 	jmp L_045
- 239 L_056
- 241 	cmp.w #14
- 242 	jne L_059
- 243 L_058
- 244 	psh.w #S_060
- 245 	psh.w #0
- 246 	psh.w #9
- 247 	jsr _swrite
- 248 	adj #6
- 249 	jmp L_045
- 250 L_059
- 252 	cmp.w #15
- 253 	jne L_062
- 254 L_061
- 255 	psh.w #S_063
- 256 	psh.w #0
- 257 	psh.w #8
- 258 	jsr _swrite
- 259 	adj #6
- 260 	jmp L_045
- 261 L_062
- 263 	cmp.w #16
- 264 	jne L_065
- 265 L_064
- 266 	psh.w #S_066
- 267 	psh.w #0
- 268 	psh.w #8
- 269 	jsr _swrite
- 270 	adj #6
- 271 	jmp L_045
- 272 L_065
- 274 	cmp.w #17
- 275 	jne L_068
- 276 L_067
- 277 	psh.w #S_069
- 278 	psh.w #0
- 279 	psh.w #10
- 280 	jsr _swrite
- 281 	adj #6
- 282 	jmp L_045
- 283 L_068
- 285 	cmp.w #18
- 286 	jne L_071
- 287 L_070
- 288 	psh.w #S_072
- 289 	psh.w #0
- 290 	psh.w #9
- 291 	jsr _swrite
- 292 	adj #6
- 293 	jmp L_045
- 294 L_071
- 296 	cmp.w #19
- 297 	jne L_074
- 298 L_073
- 299 	psh.w #S_075
- 300 	psh.w #0
- 301 	psh.w #9
- 302 	jsr _swrite
- 303 	adj #6
- 304 	jmp L_045
- 305 L_074
- 307 L_045
- 309 	txs.w
- 310 	plx.w
- 311 	rts
- 312 	.end doteens_043
- 321 digit_077 .equ +7
- 322 dotens_076 .sub
- 323 	phx.w
- 324 	tsx.w
- 326 	lda.w digit_077,X
- 328 	cmp.w #2
- 329 	jne L_080
- 330 L_079
- 331 	psh.w #S_081
- 332 	psh.w #0
- 333 	psh.w #7
- 334 	jsr _swrite
- 335 	adj #6
- 336 	jmp L_078
- 337 L_080
- 339 	cmp.w #3
- 340 	jne L_083
- 341 L_082
- 342 	psh.w #S_084
- 343 	psh.w #0
- 344 	psh.w #7
- 345 	jsr _swrite
- 346 	adj #6
- 347 	jmp L_078
- 348 L_083
- 350 	cmp.w #4
- 351 	jne L_086
- 352 L_085
- 353 	psh.w #S_087
- 354 	psh.w #0
- 355 	psh.w #6
- 356 	jsr _swrite
- 357 	adj #6
- 358 	jmp L_078
- 359 L_086
- 361 	cmp.w #5
- 362 	jne L_089
- 363 L_088
- 364 	psh.w #S_090
- 365 	psh.w #0
- 366 	psh.w #6
- 367 	jsr _swrite
- 368 	adj #6
- 369 	jmp L_078
- 370 L_089
- 372 	cmp.w #6
- 373 	jne L_092
- 374 L_091
- 375 	psh.w #S_093
- 376 	psh.w #0
- 377 	psh.w #6
- 378 	jsr _swrite
- 379 	adj #6
- 380 	jmp L_078
- 381 L_092
- 383 	cmp.w #7
- 384 	jne L_095
- 385 L_094
- 386 	psh.w #S_096
- 387 	psh.w #0
- 388 	psh.w #8
- 389 	jsr _swrite
- 390 	adj #6
- 391 	jmp L_078
- 392 L_095
- 394 	cmp.w #8
- 395 	jne L_098
- 396 L_097
- 397 	psh.w #S_099
- 398 	psh.w #0
- 399 	psh.w #7
- 400 	jsr _swrite
- 401 	adj #6
- 402 	jmp L_078
- 403 L_098
- 405 	cmp.w #9
- 406 	jne L_101
- 407 L_100
- 408 	psh.w #S_102
- 409 	psh.w #0
- 410 	psh.w #7
- 411 	jsr _swrite
- 412 	adj #6
- 413 	jmp L_078
- 414 L_101
- 416 L_078
- 418 	txs.w
- 419 	plx.w
- 420 	rts
- 421 	.end dotens_076
- 424 dopart_007 .sub
- 425 	phx.w
- 426 	tsx.w
- 427 	adj #-8
- 431 	lda.w part_008,X
- 432 	pha.w
- 433 	lda #100
- 434 	pha.w
- 435 	jsr _idiv
- 436 	adj #4
- 437 	sta.w hundredsdigit_009,X
- 439 	lda.w part_008,X
- 440 	pha.w
- 441 	lda #100
- 442 	pha.w
- 443 	jsr _idiv
- 444 	adj #4
- 445 	swp a
- 446 	sta.w tenspart_010,X
- 450 	lda.w hundredsdigit_009,X
- 451 	pha.w
- 452 	lda #0
- 453 	xma.w 1,S
- 454 	cmp.w 1,S
- 455 	adj #2
- 456 	php
- 457 	lda #1
- 458 	plp
- 459 	bgt L_105
- 460 	lda #0
- 461 L_105
- 462 	cmp.w #1
- 463 	beq L_103
- 464 	jmp L_104
- 465 L_103
- 467 	lda.w hundredsdigit_009,X
- 468 	pha.w
- 469 	phx.w
- 470 	jsr doones_013
- 471 	adj #4
- 473 	psh.w #S_106
- 474 	psh.w #0
- 475 	psh.w #8
- 476 	jsr _swrite
- 477 	adj #6
- 479 L_104
- 483 	lda.w tenspart_010,X
- 484 	pha.w
- 485 	lda #10
- 486 	xma.w 1,S
- 487 	cmp.w 1,S
- 488 	adj #2
- 489 	php
- 490 	lda #1
- 491 	plp
- 492 	bge L_109
- 493 	lda #0
- 494 L_109
- 495 	pha.w
- 496 	lda.w tenspart_010,X
- 497 	pha.w
- 498 	lda #19
- 499 	xma.w 1,S
- 500 	cmp.w 1,S
- 501 	adj #2
- 502 	php
- 503 	lda #1
- 504 	plp
- 505 	ble L_110
- 506 	lda #0
- 507 L_110
- 508 	and.w 1,S
- 509 	adj #2
- 510 	cmp.w #1
- 511 	beq L_107
- 512 	jmp L_108
- 513 L_107
- 515 	lda.w tenspart_010,X
- 516 	pha.w
- 517 	phx.w
- 518 	jsr doteens_043
- 519 	adj #4
- 522 	jmp L_111
- 523 L_108
- 525 	lda.w tenspart_010,X
- 526 	pha.w
- 527 	lda #10
- 528 	pha.w
- 529 	jsr _idiv
- 530 	adj #4
- 531 	sta.w tensdigit_011,X
- 533 	lda.w tenspart_010,X
- 534 	pha.w
- 535 	lda #10
- 536 	pha.w
- 537 	jsr _idiv
- 538 	adj #4
- 539 	swp a
- 540 	sta.w onesdigit_012,X
- 543 	lda.w tensdigit_011,X
- 544 	pha.w
- 545 	lda #0
- 546 	xma.w 1,S
- 547 	cmp.w 1,S
- 548 	adj #2
- 549 	php
- 550 	lda #1
- 551 	plp
- 552 	bgt L_114
- 553 	lda #0
- 554 L_114
- 555 	cmp.w #1
- 556 	beq L_112
- 557 	jmp L_113
- 558 L_112
- 559 	lda.w tensdigit_011,X
- 560 	pha.w
- 561 	phx.w
- 562 	jsr dotens_076
- 563 	adj #4
- 564 L_113
- 566 	lda.w onesdigit_012,X
- 567 	pha.w
- 568 	lda #0
- 569 	xma.w 1,S
- 570 	cmp.w 1,S
- 571 	adj #2
- 572 	php
- 573 	lda #1
- 574 	plp
- 575 	bgt L_117
- 576 	lda #0
- 577 L_117
- 578 	cmp.w #1
- 579 	beq L_115
- 580 	jmp L_116
- 581 L_115
- 582 	lda.w onesdigit_012,X
- 583 	pha.w
- 584 	phx.w
- 585 	jsr doones_013
- 586 	adj #4
- 587 L_116
- 589 L_111
- 591 	txs.w
- 592 	plx.w
- 593 	rts
- 594 	.end dopart_007
- 597 translate_003 .sub
- 598 	phx.w
- 599 	tsx.w
- 600 	adj #-4
- 604 	lda.w n_004,X
- 605 	pha.w
- 606 	lda.w #1000
- 607 	pha.w
- 608 	jsr _idiv
- 609 	adj #4
- 610 	sta.w partbefore_005,X
- 612 	lda.w n_004,X
- 613 	pha.w
- 614 	lda.w #1000
- 615 	pha.w
- 616 	jsr _idiv
- 617 	adj #4
- 618 	swp a
- 619 	sta.w partafter_006,X
- 622 	lda.w partbefore_005,X
- 623 	pha.w
- 624 	lda #0
- 625 	xma.w 1,S
- 626 	cmp.w 1,S
- 627 	adj #2
- 628 	php
- 629 	lda #1
- 630 	plp
- 631 	bgt L_120
- 632 	lda #0
- 633 L_120
- 634 	cmp.w #1
- 635 	beq L_118
- 636 	jmp L_119
- 637 L_118
- 639 	lda.w partbefore_005,X
- 640 	pha.w
- 641 	phx.w
- 642 	jsr dopart_007
- 643 	adj #4
- 645 	psh.w #S_121
- 646 	psh.w #0
- 647 	psh.w #9
- 648 	jsr _swrite
- 649 	adj #6
- 651 L_119
- 654 	lda.w partafter_006,X
- 655 	pha.w
- 656 	lda #0
- 657 	xma.w 1,S
- 658 	cmp.w 1,S
- 659 	adj #2
- 660 	php
- 661 	lda #1
- 662 	plp
- 663 	bgt L_124
- 664 	lda #0
- 665 L_124
- 666 	cmp.w #1
- 667 	beq L_122
- 668 	jmp L_123
- 669 L_122
- 670 	lda.w partafter_006,X
- 671 	pha.w
- 672 	phx.w
- 673 	jsr dopart_007
- 674 	adj #4
- 675 L_123
- 677 	txs.w
- 678 	plx.w
- 679 	rts
- 680 	.end translate_003
- 684 _pc65_main .sub
- 685 	phx.w
- 686 	tsx.w
- 690 L_125
- 692 	psh.w #number_002
- 693 	jsr _iread
- 694 	pli.s
- 695 	sta.w 0,I++
- 697 	lda.w number_002
- 698 	pha.w
- 699 	lda #6
- 700 	pha.w
- 701 	jsr _iwrite
- 702 	adj #4
- 703 	psh.w #S_127
- 704 	psh.w #0
- 705 	psh.w #2
- 706 	jsr _swrite
- 707 	adj #6
- 710 	lda.w number_002
- 711 	pha.w
- 712 	lda #0
- 713 	xma.w 1,S
- 714 	cmp.w 1,S
- 715 	adj #2
- 716 	php
- 717 	lda #1
- 718 	plp
- 719 	blt L_130
- 720 	lda #0
- 721 L_130
- 722 	cmp.w #1
- 723 	beq L_128
- 724 	jmp L_129
- 725 L_128
- 727 	psh.w #S_131
- 728 	psh.w #0
- 729 	psh.w #26
- 730 	jsr _swrite
- 731 	adj #6
- 734 	jmp L_132
- 735 L_129
- 736 	lda.w number_002
- 737 	pha.w
- 738 	lda.w #30000
- 739 	xma.w 1,S
- 740 	cmp.w 1,S
- 741 	adj #2
- 742 	php
- 743 	lda #1
- 744 	plp
- 745 	bgt L_135
- 746 	lda #0
- 747 L_135
- 748 	cmp.w #1
- 749 	beq L_133
- 750 	jmp L_134
- 751 L_133
- 753 	psh.w #S_136
- 754 	psh.w #0
- 755 	psh.w #25
- 756 	jsr _swrite
- 757 	adj #6
- 758 	lda.w #30000
- 759 	pha.w
- 760 	lda #1
- 761 	pha.w
- 762 	jsr _iwrite
- 763 	adj #4
- 766 	jmp L_137
- 767 L_134
- 768 	lda.w number_002
- 769 	pha.w
- 770 	lda #0
- 771 	xma.w 1,S
- 772 	cmp.w 1,S
- 773 	adj #2
- 774 	php
- 775 	lda #1
- 776 	plp
- 777 	beq L_140
- 778 	lda #0
- 779 L_140
- 780 	cmp.w #1
- 781 	beq L_138
- 782 	jmp L_139
- 783 L_138
- 785 	psh.w #S_141
- 786 	psh.w #0
- 787 	psh.w #5
- 788 	jsr _swrite
- 789 	adj #6
- 792 	jmp L_142
- 793 L_139
- 795 	lda.w number_002
- 796 	pha.w
- 797 	phx.w
- 798 	jsr translate_003
- 799 	adj #4
- 801 L_142
- 802 L_137
- 803 L_132
- 806 	jsr _writeln
- 808 	lda.w number_002
- 809 	pha.w
- 810 	lda #0
- 811 	xma.w 1,S
- 812 	cmp.w 1,S
- 813 	adj #2
- 814 	php
- 815 	lda #1
- 816 	plp
- 817 	beq L_143
- 818 	lda #0
- 819 L_143
- 820 	cmp.w #1
- 821 	beq L_126
- 822 	jmp L_125
- 823 L_126
- 825 	plx.w
- 826 	rts
- 827 	.end _pc65_main
- 829 	.dat
- 831 S_141 .str " zero"
- 832 S_136 .str " ***** Error -- number > "
- 833 S_131 .str " ***** Error -- number < 0"
- 834 S_127 .str " :"
- 835 S_121 .str " thousand"
- 836 S_106 .str " hundred"
- 837 S_102 .str " ninety"
- 838 S_099 .str " eighty"
- 839 S_096 .str " seventy"
- 840 S_093 .str " sixty"
- 841 S_090 .str " fifty"
- 842 S_087 .str " forty"
- 843 S_084 .str " thirty"
- 844 S_081 .str " twenty"
- 845 S_075 .str " nineteen"
- 846 S_072 .str " eighteen"
- 847 S_069 .str " seventeen"
- 848 S_066 .str " sixteen"
- 849 S_063 .str " fifteen"
- 850 S_060 .str " fourteen"
- 851 S_057 .str " thirteen"
- 852 S_054 .str " twelve"
- 853 S_051 .str " eleven"
- 854 S_048 .str " ten"
- 855 S_042 .str " nine"
- 856 S_039 .str " eight"
- 857 S_036 .str " seven"
- 858 S_033 .str " six"
- 859 S_030 .str " five"
- 860 S_027 .str " four"
- 861 S_024 .str " three"
- 862 S_021 .str " two"
- 863 S_018 .str " one"
- 864 _bss_start .byt 0
- 865 number_002 .wrd 0
- 866 _bss_end .byt 0
- 867 _stk .byt 0[1023]
- 868 _stk_top .byt -1
- 870 	.end
+[   0]    2 	.stk 1024
+[   1]    3 	.cod 512
+[   2]    4 STATIC_LINK .equ +5
+[   3]    5 RETURN_VALUE .equ -3
+[   4]    6 HIGH_RETURN_VALUE .equ -1
+[   5]    7 _start
+[   6]    8 	tsx.w		; Preserve original stack pointer
+[   7]    9 	lds.w #_stk_top	; Initialize program stack pointer
+[   8]   10 	stz _bss_start
+[   9]   11 	ldx.w #_bss_start
+[  10]   12 	ldy.w #_bss_start+1
+[  11]   13 	lda.w #_stk_top
+[  12]   14 	sec
+[  13]   15 	sbc.w #_bss_start
+[  14]   16 	mov #10
+[  15]   17 	jmp _pc65_main
+[  16]   44 n_004 .equ +7
+[  17]   45 partbefore_005 .equ -1
+[  18]   46 partafter_006 .equ -3
+[  19]   60 part_008 .equ +7
+[  20]   61 hundredsdigit_009 .equ -1
+[  21]   62 tenspart_010 .equ -3
+[  22]   63 tensdigit_011 .equ -5
+[  23]   64 onesdigit_012 .equ -7
+[  24]   70 digit_014 .equ +7
+[  25]   71 doones_013 .sub
+[  26]   72 	phx.w
+[  27]   73 	tsx.w
+[  28]   75 	lda.w digit_014,X
+[  29]   77 	cmp.w #1
+[  30]   78 	bne L_017
+[  31]   79 L_016
+[  32]   80 	psh.w #S_018
+[  33]   81 	psh.w #0
+[  34]   82 	psh.w #4
+[  35]   83 	jsr _swrite
+[  36]   84 	adj #6
+[  37]   85 	jmp L_015
+[  38]   86 L_017
+[  39]   88 	cmp.w #2
+[  40]   89 	bne L_020
+[  41]   90 L_019
+[  42]   91 	psh.w #S_021
+[  43]   92 	psh.w #0
+[  44]   93 	psh.w #4
+[  45]   94 	jsr _swrite
+[  46]   95 	adj #6
+[  47]   96 	jmp L_015
+[  48]   97 L_020
+[  49]   99 	cmp.w #3
+[  50]  100 	bne L_023
+[  51]  101 L_022
+[  52]  102 	psh.w #S_024
+[  53]  103 	psh.w #0
+[  54]  104 	psh.w #6
+[  55]  105 	jsr _swrite
+[  56]  106 	adj #6
+[  57]  107 	jmp L_015
+[  58]  108 L_023
+[  59]  110 	cmp.w #4
+[  60]  111 	bne L_026
+[  61]  112 L_025
+[  62]  113 	psh.w #S_027
+[  63]  114 	psh.w #0
+[  64]  115 	psh.w #5
+[  65]  116 	jsr _swrite
+[  66]  117 	adj #6
+[  67]  118 	jmp L_015
+[  68]  119 L_026
+[  69]  121 	cmp.w #5
+[  70]  122 	bne L_029
+[  71]  123 L_028
+[  72]  124 	psh.w #S_030
+[  73]  125 	psh.w #0
+[  74]  126 	psh.w #5
+[  75]  127 	jsr _swrite
+[  76]  128 	adj #6
+[  77]  129 	jmp L_015
+[  78]  130 L_029
+[  79]  132 	cmp.w #6
+[  80]  133 	bne L_032
+[  81]  134 L_031
+[  82]  135 	psh.w #S_033
+[  83]  136 	psh.w #0
+[  84]  137 	psh.w #4
+[  85]  138 	jsr _swrite
+[  86]  139 	adj #6
+[  87]  140 	jmp L_015
+[  88]  141 L_032
+[  89]  143 	cmp.w #7
+[  90]  144 	bne L_035
+[  91]  145 L_034
+[  92]  146 	psh.w #S_036
+[  93]  147 	psh.w #0
+[  94]  148 	psh.w #6
+[  95]  149 	jsr _swrite
+[  96]  150 	adj #6
+[  97]  151 	jmp L_015
+[  98]  152 L_035
+[  99]  154 	cmp.w #8
+[ 100]  155 	bne L_038
+[ 101]  156 L_037
+[ 102]  157 	psh.w #S_039
+[ 103]  158 	psh.w #0
+[ 104]  159 	psh.w #6
+[ 105]  160 	jsr _swrite
+[ 106]  161 	adj #6
+[ 107]  162 	jmp L_015
+[ 108]  163 L_038
+[ 109]  165 	cmp.w #9
+[ 110]  166 	bne L_041
+[ 111]  167 L_040
+[ 112]  168 	psh.w #S_042
+[ 113]  169 	psh.w #0
+[ 114]  170 	psh.w #5
+[ 115]  171 	jsr _swrite
+[ 116]  172 	adj #6
+[ 117]  173 	jmp L_015
+[ 118]  174 L_041
+[ 119]  176 L_015
+[ 120]  178 	txs.w
+[ 121]  179 	plx.w
+[ 122]  180 	rts
+[ 123]  181 	.end doones_013
+[ 124]  190 teens_044 .equ +7
+[ 125]  191 doteens_043 .sub
+[ 126]  192 	phx.w
+[ 127]  193 	tsx.w
+[ 128]  195 	lda.w teens_044,X
+[ 129]  197 	cmp.w #10
+[ 130]  198 	bne L_047
+[ 131]  199 L_046
+[ 132]  200 	psh.w #S_048
+[ 133]  201 	psh.w #0
+[ 134]  202 	psh.w #4
+[ 135]  203 	jsr _swrite
+[ 136]  204 	adj #6
+[ 137]  205 	jmp L_045
+[ 138]  206 L_047
+[ 139]  208 	cmp.w #11
+[ 140]  209 	bne L_050
+[ 141]  210 L_049
+[ 142]  211 	psh.w #S_051
+[ 143]  212 	psh.w #0
+[ 144]  213 	psh.w #7
+[ 145]  214 	jsr _swrite
+[ 146]  215 	adj #6
+[ 147]  216 	jmp L_045
+[ 148]  217 L_050
+[ 149]  219 	cmp.w #12
+[ 150]  220 	bne L_053
+[ 151]  221 L_052
+[ 152]  222 	psh.w #S_054
+[ 153]  223 	psh.w #0
+[ 154]  224 	psh.w #7
+[ 155]  225 	jsr _swrite
+[ 156]  226 	adj #6
+[ 157]  227 	jmp L_045
+[ 158]  228 L_053
+[ 159]  230 	cmp.w #13
+[ 160]  231 	bne L_056
+[ 161]  232 L_055
+[ 162]  233 	psh.w #S_057
+[ 163]  234 	psh.w #0
+[ 164]  235 	psh.w #9
+[ 165]  236 	jsr _swrite
+[ 166]  237 	adj #6
+[ 167]  238 	jmp L_045
+[ 168]  239 L_056
+[ 169]  241 	cmp.w #14
+[ 170]  242 	bne L_059
+[ 171]  243 L_058
+[ 172]  244 	psh.w #S_060
+[ 173]  245 	psh.w #0
+[ 174]  246 	psh.w #9
+[ 175]  247 	jsr _swrite
+[ 176]  248 	adj #6
+[ 177]  249 	jmp L_045
+[ 178]  250 L_059
+[ 179]  252 	cmp.w #15
+[ 180]  253 	bne L_062
+[ 181]  254 L_061
+[ 182]  255 	psh.w #S_063
+[ 183]  256 	psh.w #0
+[ 184]  257 	psh.w #8
+[ 185]  258 	jsr _swrite
+[ 186]  259 	adj #6
+[ 187]  260 	jmp L_045
+[ 188]  261 L_062
+[ 189]  263 	cmp.w #16
+[ 190]  264 	bne L_065
+[ 191]  265 L_064
+[ 192]  266 	psh.w #S_066
+[ 193]  267 	psh.w #0
+[ 194]  268 	psh.w #8
+[ 195]  269 	jsr _swrite
+[ 196]  270 	adj #6
+[ 197]  271 	jmp L_045
+[ 198]  272 L_065
+[ 199]  274 	cmp.w #17
+[ 200]  275 	bne L_068
+[ 201]  276 L_067
+[ 202]  277 	psh.w #S_069
+[ 203]  278 	psh.w #0
+[ 204]  279 	psh.w #10
+[ 205]  280 	jsr _swrite
+[ 206]  281 	adj #6
+[ 207]  282 	jmp L_045
+[ 208]  283 L_068
+[ 209]  285 	cmp.w #18
+[ 210]  286 	bne L_071
+[ 211]  287 L_070
+[ 212]  288 	psh.w #S_072
+[ 213]  289 	psh.w #0
+[ 214]  290 	psh.w #9
+[ 215]  291 	jsr _swrite
+[ 216]  292 	adj #6
+[ 217]  293 	jmp L_045
+[ 218]  294 L_071
+[ 219]  296 	cmp.w #19
+[ 220]  297 	bne L_074
+[ 221]  298 L_073
+[ 222]  299 	psh.w #S_075
+[ 223]  300 	psh.w #0
+[ 224]  301 	psh.w #9
+[ 225]  302 	jsr _swrite
+[ 226]  303 	adj #6
+[ 227]  304 	jmp L_045
+[ 228]  305 L_074
+[ 229]  307 L_045
+[ 230]  309 	txs.w
+[ 231]  310 	plx.w
+[ 232]  311 	rts
+[ 233]  312 	.end doteens_043
+[ 234]  321 digit_077 .equ +7
+[ 235]  322 dotens_076 .sub
+[ 236]  323 	phx.w
+[ 237]  324 	tsx.w
+[ 238]  326 	lda.w digit_077,X
+[ 239]  328 	cmp.w #2
+[ 240]  329 	bne L_080
+[ 241]  330 L_079
+[ 242]  331 	psh.w #S_081
+[ 243]  332 	psh.w #0
+[ 244]  333 	psh.w #7
+[ 245]  334 	jsr _swrite
+[ 246]  335 	adj #6
+[ 247]  336 	jmp L_078
+[ 248]  337 L_080
+[ 249]  339 	cmp.w #3
+[ 250]  340 	bne L_083
+[ 251]  341 L_082
+[ 252]  342 	psh.w #S_084
+[ 253]  343 	psh.w #0
+[ 254]  344 	psh.w #7
+[ 255]  345 	jsr _swrite
+[ 256]  346 	adj #6
+[ 257]  347 	jmp L_078
+[ 258]  348 L_083
+[ 259]  350 	cmp.w #4
+[ 260]  351 	bne L_086
+[ 261]  352 L_085
+[ 262]  353 	psh.w #S_087
+[ 263]  354 	psh.w #0
+[ 264]  355 	psh.w #6
+[ 265]  356 	jsr _swrite
+[ 266]  357 	adj #6
+[ 267]  358 	jmp L_078
+[ 268]  359 L_086
+[ 269]  361 	cmp.w #5
+[ 270]  362 	bne L_089
+[ 271]  363 L_088
+[ 272]  364 	psh.w #S_090
+[ 273]  365 	psh.w #0
+[ 274]  366 	psh.w #6
+[ 275]  367 	jsr _swrite
+[ 276]  368 	adj #6
+[ 277]  369 	jmp L_078
+[ 278]  370 L_089
+[ 279]  372 	cmp.w #6
+[ 280]  373 	bne L_092
+[ 281]  374 L_091
+[ 282]  375 	psh.w #S_093
+[ 283]  376 	psh.w #0
+[ 284]  377 	psh.w #6
+[ 285]  378 	jsr _swrite
+[ 286]  379 	adj #6
+[ 287]  380 	jmp L_078
+[ 288]  381 L_092
+[ 289]  383 	cmp.w #7
+[ 290]  384 	bne L_095
+[ 291]  385 L_094
+[ 292]  386 	psh.w #S_096
+[ 293]  387 	psh.w #0
+[ 294]  388 	psh.w #8
+[ 295]  389 	jsr _swrite
+[ 296]  390 	adj #6
+[ 297]  391 	jmp L_078
+[ 298]  392 L_095
+[ 299]  394 	cmp.w #8
+[ 300]  395 	bne L_098
+[ 301]  396 L_097
+[ 302]  397 	psh.w #S_099
+[ 303]  398 	psh.w #0
+[ 304]  399 	psh.w #7
+[ 305]  400 	jsr _swrite
+[ 306]  401 	adj #6
+[ 307]  402 	jmp L_078
+[ 308]  403 L_098
+[ 309]  405 	cmp.w #9
+[ 310]  406 	bne L_101
+[ 311]  407 L_100
+[ 312]  408 	psh.w #S_102
+[ 313]  409 	psh.w #0
+[ 314]  410 	psh.w #7
+[ 315]  411 	jsr _swrite
+[ 316]  412 	adj #6
+[ 317]  413 	jmp L_078
+[ 318]  414 L_101
+[ 319]  416 L_078
+[ 320]  418 	txs.w
+[ 321]  419 	plx.w
+[ 322]  420 	rts
+[ 323]  421 	.end dotens_076
+[ 324]  424 dopart_007 .sub
+[ 325]  425 	phx.w
+[ 326]  426 	tsx.w
+[ 327]  427 	adj #-8
+[ 328]  431 	lda.w part_008,X
+[ 329]  432 	pha.w
+[ 330]  434 	psh.w #100
+[ 331]  435 	jsr _idiv
+[ 332]  436 	adj #4
+[ 333]  437 	sta.w hundredsdigit_009,X
+[ 334]  439 	lda.w part_008,X
+[ 335]  440 	pha.w
+[ 336]  442 	psh.w #100
+[ 337]  443 	jsr _idiv
+[ 338]  444 	adj #4
+[ 339]  445 	swp a
+[ 340]  446 	sta.w tenspart_010,X
+[ 341]  450 	lda.w hundredsdigit_009,X
+[ 342]  454 	cmp.w #0
+[ 343]  456 	bgt L_105T
+[ 344]  457 	lda #0
+[ 345]  458 	bra L_105
+[ 346]  459 L_105T lda #1
+[ 347]  461 L_105
+[ 348]  462 	cmp.w #1
+[ 349]  463 	beq L_103
+[ 350]  464 	jmp L_104
+[ 351]  465 L_103
+[ 352]  467 	lda.w hundredsdigit_009,X
+[ 353]  468 	pha.w
+[ 354]  469 	phx.w
+[ 355]  470 	jsr doones_013
+[ 356]  471 	adj #4
+[ 357]  473 	psh.w #S_106
+[ 358]  474 	psh.w #0
+[ 359]  475 	psh.w #8
+[ 360]  476 	jsr _swrite
+[ 361]  477 	adj #6
+[ 362]  479 L_104
+[ 363]  483 	lda.w tenspart_010,X
+[ 364]  487 	cmp.w #10
+[ 365]  489 	bge L_109T
+[ 366]  490 	lda #0
+[ 367]  491 	bra L_109
+[ 368]  492 L_109T lda #1
+[ 369]  494 L_109
+[ 370]  495 	pha.w
+[ 371]  496 	lda.w tenspart_010,X
+[ 372]  500 	cmp.w #19
+[ 373]  502 	ble L_110T
+[ 374]  503 	lda #0
+[ 375]  504 	bra L_110
+[ 376]  505 L_110T lda #1
+[ 377]  507 L_110
+[ 378]  508 	and.w 1,S
+[ 379]  509 	adj #2
+[ 380]  510 	cmp.w #1
+[ 381]  511 	beq L_107
+[ 382]  512 	jmp L_108
+[ 383]  513 L_107
+[ 384]  515 	lda.w tenspart_010,X
+[ 385]  516 	pha.w
+[ 386]  517 	phx.w
+[ 387]  518 	jsr doteens_043
+[ 388]  519 	adj #4
+[ 389]  522 	jmp L_111
+[ 390]  523 L_108
+[ 391]  525 	lda.w tenspart_010,X
+[ 392]  526 	pha.w
+[ 393]  528 	psh.w #10
+[ 394]  529 	jsr _idiv
+[ 395]  530 	adj #4
+[ 396]  531 	sta.w tensdigit_011,X
+[ 397]  533 	lda.w tenspart_010,X
+[ 398]  534 	pha.w
+[ 399]  536 	psh.w #10
+[ 400]  537 	jsr _idiv
+[ 401]  538 	adj #4
+[ 402]  539 	swp a
+[ 403]  540 	sta.w onesdigit_012,X
+[ 404]  543 	lda.w tensdigit_011,X
+[ 405]  547 	cmp.w #0
+[ 406]  549 	bgt L_114T
+[ 407]  550 	lda #0
+[ 408]  551 	bra L_114
+[ 409]  552 L_114T lda #1
+[ 410]  554 L_114
+[ 411]  555 	cmp.w #1
+[ 412]  556 	beq L_112
+[ 413]  557 	jmp L_113
+[ 414]  558 L_112
+[ 415]  559 	lda.w tensdigit_011,X
+[ 416]  560 	pha.w
+[ 417]  561 	phx.w
+[ 418]  562 	jsr dotens_076
+[ 419]  563 	adj #4
+[ 420]  564 L_113
+[ 421]  566 	lda.w onesdigit_012,X
+[ 422]  570 	cmp.w #0
+[ 423]  572 	bgt L_117T
+[ 424]  573 	lda #0
+[ 425]  574 	bra L_117
+[ 426]  575 L_117T lda #1
+[ 427]  577 L_117
+[ 428]  578 	cmp.w #1
+[ 429]  579 	beq L_115
+[ 430]  580 	jmp L_116
+[ 431]  581 L_115
+[ 432]  582 	lda.w onesdigit_012,X
+[ 433]  583 	pha.w
+[ 434]  584 	phx.w
+[ 435]  585 	jsr doones_013
+[ 436]  586 	adj #4
+[ 437]  587 L_116
+[ 438]  589 L_111
+[ 439]  591 	txs.w
+[ 440]  592 	plx.w
+[ 441]  593 	rts
+[ 442]  594 	.end dopart_007
+[ 443]  597 translate_003 .sub
+[ 444]  598 	phx.w
+[ 445]  599 	tsx.w
+[ 446]  600 	adj #-4
+[ 447]  604 	lda.w n_004,X
+[ 448]  605 	pha.w
+[ 449]  607 	psh.w #1000
+[ 450]  608 	jsr _idiv
+[ 451]  609 	adj #4
+[ 452]  610 	sta.w partbefore_005,X
+[ 453]  612 	lda.w n_004,X
+[ 454]  613 	pha.w
+[ 455]  615 	psh.w #1000
+[ 456]  616 	jsr _idiv
+[ 457]  617 	adj #4
+[ 458]  618 	swp a
+[ 459]  619 	sta.w partafter_006,X
+[ 460]  622 	lda.w partbefore_005,X
+[ 461]  626 	cmp.w #0
+[ 462]  628 	bgt L_120T
+[ 463]  629 	lda #0
+[ 464]  630 	bra L_120
+[ 465]  631 L_120T lda #1
+[ 466]  633 L_120
+[ 467]  634 	cmp.w #1
+[ 468]  635 	beq L_118
+[ 469]  636 	jmp L_119
+[ 470]  637 L_118
+[ 471]  639 	lda.w partbefore_005,X
+[ 472]  640 	pha.w
+[ 473]  641 	phx.w
+[ 474]  642 	jsr dopart_007
+[ 475]  643 	adj #4
+[ 476]  645 	psh.w #S_121
+[ 477]  646 	psh.w #0
+[ 478]  647 	psh.w #9
+[ 479]  648 	jsr _swrite
+[ 480]  649 	adj #6
+[ 481]  651 L_119
+[ 482]  654 	lda.w partafter_006,X
+[ 483]  658 	cmp.w #0
+[ 484]  660 	bgt L_124T
+[ 485]  661 	lda #0
+[ 486]  662 	bra L_124
+[ 487]  663 L_124T lda #1
+[ 488]  665 L_124
+[ 489]  666 	cmp.w #1
+[ 490]  667 	beq L_122
+[ 491]  668 	jmp L_123
+[ 492]  669 L_122
+[ 493]  670 	lda.w partafter_006,X
+[ 494]  671 	pha.w
+[ 495]  672 	phx.w
+[ 496]  673 	jsr dopart_007
+[ 497]  674 	adj #4
+[ 498]  675 L_123
+[ 499]  677 	txs.w
+[ 500]  678 	plx.w
+[ 501]  679 	rts
+[ 502]  680 	.end translate_003
+[ 503]  684 _pc65_main .sub
+[ 504]  685 	phx.w
+[ 505]  686 	tsx.w
+[ 506]  690 L_125
+[ 507]  692 	psh.w #number_002
+[ 508]  693 	jsr _iread
+[ 509]  694 	pli.s
+[ 510]  695 	sta.w 0,I++
+[ 511]  697 	lda.w number_002
+[ 512]  698 	pha.w
+[ 513]  700 	psh.w #6
+[ 514]  701 	jsr _iwrite
+[ 515]  702 	adj #4
+[ 516]  703 	psh.w #S_127
+[ 517]  704 	psh.w #0
+[ 518]  705 	psh.w #2
+[ 519]  706 	jsr _swrite
+[ 520]  707 	adj #6
+[ 521]  710 	lda.w number_002
+[ 522]  714 	cmp.w #0
+[ 523]  716 	blt L_130T
+[ 524]  717 	lda #0
+[ 525]  718 	bra L_130
+[ 526]  719 L_130T lda #1
+[ 527]  721 L_130
+[ 528]  722 	cmp.w #1
+[ 529]  723 	beq L_128
+[ 530]  724 	jmp L_129
+[ 531]  725 L_128
+[ 532]  727 	psh.w #S_131
+[ 533]  728 	psh.w #0
+[ 534]  729 	psh.w #26
+[ 535]  730 	jsr _swrite
+[ 536]  731 	adj #6
+[ 537]  734 	jmp L_132
+[ 538]  735 L_129
+[ 539]  736 	lda.w number_002
+[ 540]  740 	cmp.w #30000
+[ 541]  742 	bgt L_135T
+[ 542]  743 	lda #0
+[ 543]  744 	bra L_135
+[ 544]  745 L_135T lda #1
+[ 545]  747 L_135
+[ 546]  748 	cmp.w #1
+[ 547]  749 	beq L_133
+[ 548]  750 	jmp L_134
+[ 549]  751 L_133
+[ 550]  753 	psh.w #S_136
+[ 551]  754 	psh.w #0
+[ 552]  755 	psh.w #25
+[ 553]  756 	jsr _swrite
+[ 554]  757 	adj #6
+[ 555]  759 	psh.w #30000
+[ 556]  761 	psh.w #1
+[ 557]  762 	jsr _iwrite
+[ 558]  763 	adj #4
+[ 559]  766 	jmp L_137
+[ 560]  767 L_134
+[ 561]  768 	lda.w number_002
+[ 562]  772 	cmp.w #0
+[ 563]  774 	beq L_140T
+[ 564]  775 	lda #0
+[ 565]  776 	bra L_140
+[ 566]  777 L_140T lda #1
+[ 567]  779 L_140
+[ 568]  780 	cmp.w #1
+[ 569]  781 	beq L_138
+[ 570]  782 	jmp L_139
+[ 571]  783 L_138
+[ 572]  785 	psh.w #S_141
+[ 573]  786 	psh.w #0
+[ 574]  787 	psh.w #5
+[ 575]  788 	jsr _swrite
+[ 576]  789 	adj #6
+[ 577]  792 	jmp L_142
+[ 578]  793 L_139
+[ 579]  795 	lda.w number_002
+[ 580]  796 	pha.w
+[ 581]  797 	phx.w
+[ 582]  798 	jsr translate_003
+[ 583]  799 	adj #4
+[ 584]  801 L_142
+[ 585]  802 L_137
+[ 586]  803 L_132
+[ 587]  806 	jsr _writeln
+[ 588]  808 	lda.w number_002
+[ 589]  812 	cmp.w #0
+[ 590]  814 	beq L_143T
+[ 591]  815 	lda #0
+[ 592]  816 	bra L_143
+[ 593]  817 L_143T lda #1
+[ 594]  819 L_143
+[ 595]  820 	cmp.w #1
+[ 596]  821 	beq L_126
+[ 597]  822 	jmp L_125
+[ 598]  823 L_126
+[ 599]  825 	plx.w
+[ 600]  826 	rts
+[ 601]  827 	.end _pc65_main
+[ 602]  832             .cod
+[ 603]  834 _Q          .equ    5
+[ 604]  835 _D          .equ    3
+[ 605]  837 _idiv       .proc
+[ 606]  838             lda #0          ; clear remainder (A)
+[ 607]  839             dup a           ; push
+[ 608]  840             lda.w _Q,S      ; load dividend (Q)
+[ 609]  841             ldy #16         ; bit counter
+[ 610]  843 _idiv_Lp
+[ 611]  844             clc
+[ 612]  845             asl.w a         ; shift AQ left
+[ 613]  846             swp a
+[ 614]  847             rol.w a
+[ 615]  849             bcs _idiv_Plus  ; if A < 0 then A = A + D else A = A - D
+[ 616]  851 _idiv_Minus
+[ 617]  852             sec
+[ 618]  853             sbc.w _D,S      ; subtract divisor (D)
+[ 619]  855             bra _idiv_Next
+[ 620]  857 _idiv_Plus
+[ 621]  858             clc
+[ 622]  859             adc.w _D,S      ; add divisor (D)
+[ 623]  861 _idiv_Next
+[ 624]  862             swp a           ; restore order of Acc stack {Q, A, -}
+[ 625]  863             bmi _idiv_Dec   ; if A < 0 then Q[0] = 0 else Q[0] = 1
+[ 626]  864             inc.w a
+[ 627]  866 _idiv_Dec
+[ 628]  867             dey             ; loop until loop counter == 0
+[ 629]  868             bne _idiv_Lp
+[ 630]  870 _idiv_Exit
+[ 631]  871             swp a           ; Test remainder
+[ 632]  872             ora.w #0
+[ 633]  873             bpl _idiv_Finish
+[ 634]  874             clc
+[ 635]  875             adc.w 3,S
+[ 636]  876 _idiv_Finish
+[ 637]  877             swp a
+[ 638]  879             rts
+[ 639]  881             .endp _idiv
+[ 640]  886             .cod
+[ 641]  888 _M          .equ    5
+[ 642]  889 _R          .equ    3
+[ 643]  891 _imul       .proc
+[ 644]  892             ldy #16             ; y = bit count
+[ 645]  893             lda #0              ; A = { 0,  x,  x} - clear product
+[ 646]  894             dup a               ; A = { 0,  0,  x}
+[ 647]  895             dup a               ; A = { 0,  0,  0}
+[ 648]  896             lda.w _R,S          ; A = { R,  0,  0} - load multiplier (R)
+[ 649]  897             rev                 ; A = {`R,  0,  0} - reverse multiplier (`R)
+[ 650]  898             ora.w #0            ; set N flag if msb ATOS == 1
+[ 651]  899             clc                 ; initialize Booth recoding bit
+[ 652]  900             rot a               ; A = {PH, PL, `R}
+[ 653]  902             bra _imul_TstB
+[ 654]  904 _imul_Lp
+[ 655]  905             asl.w a             ; A = {`R << 1, PH, PL}
+[ 656]  906             rot a               ; A = {PH, PL, `R}
+[ 657]  907 _imul_TstB
+[ 658]  908             bcc _imul_SubShft   ; (C, x) ? Add_Shift : Sub_Shift
+[ 659]  910 _imul_AddShft
+[ 660]  911             bmi _imul_ShftP     ; (1, N) ? P >> 1 : (P += M) >> 1
+[ 661]  912 _imul_AddM
+[ 662]  913             clc
+[ 663]  914             adc.w _M,S          ; PH += M
+[ 664]  915             bra _imul_ShftP
+[ 665]  917 _imul_SubShft
+[ 666]  918             bpl _imul_ShftP     ; (0, N) ? (P -= M) >> 1 : P >> 1
+[ 667]  919 _imul_SubM
+[ 668]  920             sec
+[ 669]  921             sbc.w _M,S          ; PH -= M
+[ 670]  923 _imul_ShftP
+[ 671]  924             asr.w a             ; A = {PH >> 1, PL, `R}
+[ 672]  925             rot a               ; A = {PL, `R, PH}
+[ 673]  926             ror.w a             ; A = {PL >> 2, `R, PH}
+[ 674]  927             rot a               ; A = {`R, PH, PL}
+[ 675]  929 _imul_Dec
+[ 676]  930             dey
+[ 677]  931             bne _imul_Lp
+[ 678]  933 _imul_Exit
+[ 679]  934             rot a               ; A = {PH, PL, `R}
+[ 680]  935             swp a               ; A = {PL, PH, `R}
+[ 681]  937             rts
+[ 682]  939             .endp _imul
+[ 683]  944             .cod
+[ 684]  946 _newLine    .equ    0x0A
+[ 685]  947 _putChar    .equ    0xF001
+[ 686]  949 _writeln    .proc
+[ 687]  950             lda #_newLine
+[ 688]  951             sta _putChar
+[ 689]  953             rts
+[ 690]  955             .endp _writeln
+[ 691]  959             .cod
+[ 692]  961 _sPtrOff    .equ    7
+[ 693]  962 _sLenOff    .equ    3
+[ 694]  964 _swrite     .proc
+[ 695]  965             ldy.w _sLenOff,S        ; load string length
+[ 696]  966             lda.w _sPtrOff,S        ; load string pointer
+[ 697]  967             tai                     ; transfer sptr to IP
+[ 698]  969 _swrite_Lp
+[ 699]  970             lda 0,I++               ; load char from strig
+[ 700]  971             sta _putChar            ; write char to output
+[ 701]  973             dey.w                   ; loop while string length <> 0
+[ 702]  974             bne _swrite_Lp
+[ 703]  976             rts
+[ 704]  978             .endp _swrite
+[ 705]  982             .cod
+[ 706]  984 _iValOff    .equ    7
+[ 707]  985 _fLenOff    .equ    5
+[ 708]  986 _iCntOff    .equ    -1
+[ 709]  988 _iwrite     .proc
+[ 710]  989             phx.w                   ; save current base pointer
+[ 711]  990             tsx.w                   ; assign new base pointer
+[ 712]  992             lda _fLenOff,X          ; load field width specifier
+[ 713]  993             cmp #5                  ; compare against max integer digit count
+[ 714]  994             ble _iwrite_SetCnt
+[ 715]  995             lda #5
+[ 716]  997 _iwrite_SetCnt
+[ 717]  998             pha.w                   ; set iteration count to fld width
+[ 718]  999             lda.w _iValOff,X        ; load a with integer value
+[ 719] 1001 _iwrite_Lp
+[ 720] 1002             pha.w                   ; push dividend argument to _idiv
+[ 721] 1003             psh.w #10               ; push divisor argument to _idiv
+[ 722] 1004             csr _idiv               ; determine the remainder,
+[ 723] 1005             adj #4                  ; remove arguments passed to _idiv from stk
+[ 724] 1006             swp a                   ; put the remainder into ATOS
+[ 725] 1008             clc                     ; convert remainder into ASCII character
+[ 726] 1009             adc #48
+[ 727] 1010             pha                     ; push LS digit of integer onto stack
+[ 728] 1012             rot a                   ; rotate quotient into ATOS position
+[ 729] 1014             dec.w _iCntOff,X        ; decrement digit iteration count
+[ 730] 1015             bne _iwrite_Lp
+[ 731] 1017             dup a                   ; save integer part of the conversion
+[ 732] 1019 _iwrite_Fill
+[ 733] 1020             lda _fLenOff,X          ; load field width specifier
+[ 734] 1021             cmp #5                  ; compare against max integer digit count
+[ 735] 1022             ble _iwrite_GenPtr
+[ 736] 1023             sec                     ; subtract max integer length from fld len
+[ 737] 1024             sbc #5
+[ 738] 1025             tay                     ; set difference as loop counter
+[ 739] 1026             lda #48                 ; fill remaining field with '0'
+[ 740] 1028 _iwrite_Fill_Lp                     ; increase string on stack with fill data
+[ 741] 1029             pha
+[ 742] 1030             dey
+[ 743] 1031             bne _iwrite_Fill_Lp
+[ 744] 1033 _iwrite_GenPtr
+[ 745] 1034             tsa.w                   ; transfer current stk pointer to A
+[ 746] 1035             inc.w a                 ; remove stack pointer write bias
+[ 747] 1036             pha.w                   ; push string pointer to stack
+[ 748] 1038             rot a                   ; restore integer part of the conversion
+[ 749] 1040             cmp.w #0                ; test for 0. If not 0, int > 10^fld
+[ 750] 1041             beq _iwrite_Sup0
+[ 751] 1042             ldy #0
+[ 752] 1043 _iwrite_ErrLp
+[ 753] 1044             lda #0x2A               ; fill integer field with '*'
+[ 754] 1045             sta (1,S),Y
+[ 755] 1046             iny
+[ 756] 1047             cmp.y _fLenOff,X
+[ 757] 1048             bne _iwrite_ErrLp
+[ 758] 1049             bra _iwrite_Exit
+[ 759] 1051 _iwrite_Sup0
+[ 760] 1052             ldy #0                  ; initialize string index
+[ 761] 1053 _iwrite_Sup0_Lp
+[ 762] 1054             lda (1,S),Y
+[ 763] 1055             cmp #48                 ; if leading position == 0, replace with ' '
+[ 764] 1056             bne _iwrite_Exit        ; exit loop on first non-0 digit
+[ 765] 1057             lda #32                 ; replace leading 0 with ' '
+[ 766] 1058             sta (1,S),Y
+[ 767] 1059             iny                     ; increment string index and compare to fLen
+[ 768] 1060             cmp.y _fLenOff,X
+[ 769] 1061             bne _iwrite_Sup0_Lp     ; loop until Y == fLen
+[ 770] 1063 _iwrite_Exit
+[ 771] 1064             psh.w #0                ; NULL argument
+[ 772] 1065             lda _fLenOff,X          ; push field width specifier
+[ 773] 1066             pha.w
+[ 774] 1067             csr _swrite             ; write integer value string using _swrite()
+[ 775] 1068             adj #6                  ; remove parameters to _swrite() from stack
+[ 776] 1070             txs.w                   ; deallocate stack variables
+[ 777] 1071             plx.w                   ; restore previous base pointer
+[ 778] 1072             rts
+[ 779] 1074             .endp _iwrite
+[ 780] 1075 	.dat
+[ 781] 1077 S_141 .str " zero"
+[ 782] 1078 S_136 .str " ***** Error -- number > "
+[ 783] 1079 S_131 .str " ***** Error -- number < 0"
+[ 784] 1080 S_127 .str " :"
+[ 785] 1081 S_121 .str " thousand"
+[ 786] 1082 S_106 .str " hundred"
+[ 787] 1083 S_102 .str " ninety"
+[ 788] 1084 S_099 .str " eighty"
+[ 789] 1085 S_096 .str " seventy"
+[ 790] 1086 S_093 .str " sixty"
+[ 791] 1087 S_090 .str " fifty"
+[ 792] 1088 S_087 .str " forty"
+[ 793] 1089 S_084 .str " thirty"
+[ 794] 1090 S_081 .str " twenty"
+[ 795] 1091 S_075 .str " nineteen"
+[ 796] 1092 S_072 .str " eighteen"
+[ 797] 1093 S_069 .str " seventeen"
+[ 798] 1094 S_066 .str " sixteen"
+[ 799] 1095 S_063 .str " fifteen"
+[ 800] 1096 S_060 .str " fourteen"
+[ 801] 1097 S_057 .str " thirteen"
+[ 802] 1098 S_054 .str " twelve"
+[ 803] 1099 S_051 .str " eleven"
+[ 804] 1100 S_048 .str " ten"
+[ 805] 1101 S_042 .str " nine"
+[ 806] 1102 S_039 .str " eight"
+[ 807] 1103 S_036 .str " seven"
+[ 808] 1104 S_033 .str " six"
+[ 809] 1105 S_030 .str " five"
+[ 810] 1106 S_027 .str " four"
+[ 811] 1107 S_024 .str " three"
+[ 812] 1108 S_021 .str " two"
+[ 813] 1109 S_018 .str " one"
+[ 814] 1110 _bss_start .byt 0
+[ 815] 1111 number_002 .wrd 0
+[ 816] 1112 _bss_end .byt 0
+[ 817] 1113 _stk .byt 0[1023]
+[ 818] 1114 _stk_top .byt -1
+[ 819] 1116 	.end

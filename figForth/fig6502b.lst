@@ -21,15 +21,15 @@
 ( 119) 0428 0000        ; FORTH_BKPT3 .wrd    0
 ( 126) 042A EA          ;             nop
 ( 127) 042B EA          ;             nop
-( 131) 042C AD04F0      ; cin             lda     0xF004          ; input one ascii char. to term.
-( 132) 042F F0FB        ;                 beq     cin
-( 133) 0431 60          ;                 rts
-( 134) 0432 297F        ; cout            and     #0x7F           ; output one ascii char. to term.
-( 135) 0434 8D01F0      ;                 sta     0xF001
-( 136) 0437 60          ;                 rts
-( 137) 0438 A90A        ; crout           lda     #0x0A           ; terminal return and line feed.
-( 138) 043A 8D01F0      ;                 sta     0xF001
-( 139) 043D 60          ;                 rts
+( 131) 042C AD04F0      ; cin         lda     0xF004      ; input one ascii char. to term.
+( 132) 042F F0FB        ;             beq     cin
+( 133) 0431 60          ;             rts
+( 134) 0432 297F        ; cout        and     #0x7F       ; output one ascii char. to term.
+( 135) 0434 8D01F0      ;             sta     0xF001
+( 136) 0437 60          ;             rts
+( 137) 0438 A90A        ; crout       lda     #0x0A       ; terminal return and line feed.
+( 138) 043A 8D01F0      ;             sta     0xF001
+( 139) 043D 60          ;             rts
 ( 146) 043E 0A          ; SETUP       asl     a           ; multiply input by 2 and store in N-1
 ( 147) 043F 85A7        ;             sta     N-1
 ( 148) 0441 AB68        ; L63         pla.w               ; pull value from PS and store in temporary area
@@ -269,43 +269,43 @@
 ( 487) 0656 8255AF      ; L418        .byt    0x82,"U",0xAF
 ( 488) 0659 1C06        ;             .wrd    L386        ;link to U*
 ( 489) 065B 5D06        ; USLAS       .wrd    $+2
-( 493) 065D 38          ;                 sec                     ;Modified code - dr
-( 494) 065E 8BB503      ;                 lda   3,S               ;Subtract hi cell of dividend by
-( 495) 0661 8BF501      ;                 sbc   1,S               ;divisor to see if there's an overflow condition.
-( 496) 0664 8BB504      ;                 lda   4,S
-( 497) 0667 8BF502      ;                 sbc   2,S
-( 498) 066A B038        ;                 bcs   oflow             ;Branch if /0 or overflow.
-( 499) 066C A911        ;                 lda   #0x11              ;Loop 17x.
-( 500) 066E 85A8        ;                 sta   N                 ;Use N for loop counter.
-( 501) 0670 8B3605      ; loopp           rol   5,S              ;Rotate dividend lo cell left one bit.
-( 502) 0673 8B3606      ;                 rol   6,S
-( 503) 0676 C6A8        ;                 dec   N                 ;Decrement loop counter.
-( 504) 0678 F038        ;                 beq   endd              ;If we're done, then branch to end.
-( 505) 067A 8B3603      ;                 rol   3,S               ;Otherwise rotate dividend hi cell left one bit.
-( 506) 067D 8B3604      ;                 rol   4,S
-( 508) 0680 64A9        ;                 stz   N+1
-( 515) 0682 26A9        ;                 rol   N+1               ;Rotate the bit carried out of above into N+1.
-( 516) 0684 38          ;                 sec
-( 517) 0685 8BB503      ;                 lda   3,S               ;Subtract dividend hi cell minus divisor.
-( 518) 0688 8BF501      ;                 sbc   1,S
-( 519) 068B 85AA        ;                 sta   N+2               ;Put result temporarily in N+2 (lo byte)
-( 520) 068D 8BB504      ;                 lda   4,S
-( 521) 0690 8BF502      ;                 sbc   2,S
-( 522) 0693 A8          ;                 tay                     ;and Y (hi byte).
-( 523) 0694 A5A9        ;                 lda   N+1               ;Remember now to bring in the bit carried out above.
-( 524) 0696 E900        ;                 sbc   #0x00
-( 525) 0698 90D6        ;                 bcc   loopp
-( 526) 069A A5AA        ;                 lda   N+2               ;If that didn't cause a borrow,
-( 527) 069C 8B9503      ;                 sta   3,S               ;make the result from above to
-( 528) 069F 8B9404      ;                 sty   4,S               ;be the new dividend hi cell
-( 529) 06A2 B0CC        ;                 bcs   loopp             ;and then brach up.  (NMOS 6502 can use BCS here.)
-( 530) 06A4 A9FF        ; oflow           lda   #0xFF              ;If overflow or /0 condition found,
-( 531) 06A6 8B9503      ;                 sta   3,S               ;just put FFFF in both the remainder
-( 532) 06A9 8B9504      ;                 sta   4,S
-( 533) 06AC 8B9505      ;                 sta   5,S               ;and the quotient.
-( 534) 06AF 8B9506      ;                 sta   6,S
-( 539) 06B2 C202        ; endd            adj  #2                 ;When you're done, show one less cell on data stack,
-( 542) 06B4 4C0808      ;                 jmp   SWAP+2            ;and swap the two top cells to put quotient on top.
+( 493) 065D 38          ;             sec                 ;Modified code - dr
+( 494) 065E 8BB503      ;             lda     3,S         ;Subtract hi cell of dividend by
+( 495) 0661 8BF501      ;             sbc     1,S         ;divisor to see if there's an overflow condition.
+( 496) 0664 8BB504      ;             lda     4,S
+( 497) 0667 8BF502      ;             sbc     2,S
+( 498) 066A B038        ;             bcs     oflow       ;Branch if /0 or overflow.
+( 499) 066C A911        ;             lda     #0x11       ;Loop 17x.
+( 500) 066E 85A8        ;             sta     N           ;Use N for loop counter.
+( 501) 0670 8B3605      ; loopp       rol     5,S         ;Rotate dividend lo cell left one bit.
+( 502) 0673 8B3606      ;             rol     6,S
+( 503) 0676 C6A8        ;             dec     N           ;Decrement loop counter.
+( 504) 0678 F038        ;             beq     endd        ;If we're done, then branch to end.
+( 505) 067A 8B3603      ;             rol     3,S         ;Otherwise rotate dividend hi cell left one bit.
+( 506) 067D 8B3604      ;             rol     4,S
+( 508) 0680 64A9        ;             stz     N+1
+( 515) 0682 26A9        ;             rol     N+1         ;Rotate the bit carried out of above into N+1.
+( 516) 0684 38          ;             sec
+( 517) 0685 8BB503      ;             lda     3,S         ;Subtract dividend hi cell minus divisor.
+( 518) 0688 8BF501      ;             sbc     1,S
+( 519) 068B 85AA        ;             sta     N+2         ;Put result temporarily in N+2 (lo byte)
+( 520) 068D 8BB504      ;             lda     4,S
+( 521) 0690 8BF502      ;             sbc     2,S
+( 522) 0693 A8          ;             tay                 ;and Y (hi byte).
+( 523) 0694 A5A9        ;             lda     N+1         ;Remember now to bring in the bit carried out above.
+( 524) 0696 E900        ;             sbc     #0x00
+( 525) 0698 90D6        ;             bcc     loopp
+( 526) 069A A5AA        ;             lda     N+2         ;If that didn't cause a borrow,
+( 527) 069C 8B9503      ;             sta     3,S         ;make the result from above to
+( 528) 069F 8B9404      ;             sty     4,S         ;be the new dividend hi cell
+( 529) 06A2 B0CC        ;             bcs     loopp       ;and then brach up.  (NMOS 6502 can use BCS here.)
+( 530) 06A4 A9FF        ; oflow       lda     #0xFF       ;If overflow or /0 condition found,
+( 531) 06A6 8B9503      ;             sta     3,S         ;just put FFFF in both the remainder
+( 532) 06A9 8B9504      ;             sta     4,S
+( 533) 06AC 8B9505      ;             sta     5,S         ;and the quotient.
+( 534) 06AF 8B9506      ;             sta     6,S
+( 539) 06B2 C202        ; endd        adj     #2          ;When you're done, show one less cell on data stack,
+( 542) 06B4 4C0808      ;             jmp     SWAP+2      ;and swap the two top cells to put quotient on top.
 ( 547) 06B7 83414EC4    ; L453        .byt    0x83,"AN",0xC4
 ( 548) 06BB 5606        ;             .wrd    L418        ;link to U/
 ( 549) 06BD BF06        ; ANDD        .wrd    $+2
@@ -1094,7 +1094,7 @@
 (1777) 0D9A B404        ; L1678       .wrd    PLOOP
 (1778) 0D9C E0FF        ; L1679       .wrd    L1663-L1679 ;0xFFE0
 (1779) 0D9E 1E07        ;             .wrd    SEMIS
-(1784) 0DA0 84282E22    ; L1685       .byt    0x84,"(.",0x22,0xA9  ;$84 (." $A9
+(1784) 0DA0 84282E22    ; L1685       .byt    0x84,"(.",0x22,0xA9  ;$84 (." $A9"
        0DA4 A9
 (1785) 0DA5 680D        ;             .wrd    L1657       ;link to -TRAILING
 (1786) 0DA7 A708        ; PDOTQ       .wrd    DOCOL
@@ -1132,7 +1132,7 @@
 (1822) 0DE7 1E07        ; L1723       .wrd    SEMIS
 (1827) 0DE9 86455850    ; L1729       .byt    0x86,"EXPEC",0xD4
        0DED 4543D4
-(1828) 0DF0 BB0D        ;             .wrd    L1701       ; link to ."
+(1828) 0DF0 BB0D        ;             .wrd    L1701       ; link to ." "
 (1829) 0DF2 A708        ; EXPEC       .wrd    DOCOL
 (1830) 0DF4 ED07        ;             .wrd    OVER
 (1831) 0DF6 8807        ;             .wrd    PLUS
@@ -1300,7 +1300,7 @@
 (2021) 0F41 9B05        ;             .wrd    ENCL
 (2022) 0F43 7B0A        ;             .wrd    HERE
 (2023) 0F45 6504        ;             .wrd    CLIT
-(2024) 0F47 22          ;             .byt    0x22    ; Working space for name to find. 32 (name) + 2
+(2024) 0F47 22          ;             .byt    0x22        ; Working space for name to find. 32 (name) + 2
 (2025) 0F48 E80E        ;             .wrd    BLANK
 (2026) 0F4A DE09        ;             .wrd    IN
 (2027) 0F4C 2908        ;             .wrd    PSTOR
@@ -1320,8 +1320,8 @@
        0F6A 45D2
 (2045) 0F6C 1A0F        ;             .wrd    L1902       ;link to WORD
 (2046) 0F6E A708        ; UPPER       .wrd    DOCOL
-(2047) 0F70 ED07        ;             .wrd    OVER        ;This routine converts text to U case
-(2048) 0F72 8807        ;             .wrd    PLUS        ;It allows interpretation from a term.
+(2047) 0F70 ED07        ;             .wrd    OVER        ;This routine converts text to Upper case
+(2048) 0F72 8807        ;             .wrd    PLUS        ;It allows interpretation from a terminal
 (2049) 0F74 0608        ;             .wrd    SWAP        ;without a shift-lock.
 (2050) 0F76 F404        ;             .wrd    PDO
 (2051) 0F78 0C05        ; L1950       .wrd    I

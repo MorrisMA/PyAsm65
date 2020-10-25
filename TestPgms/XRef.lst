@@ -1,1536 +1,1547 @@
-(   8) 0200 ABBA        ; 	tsx.w
-(   9) 0202 CBA2E74E    ; 	lds.w #_stk_top
-(  10) 0206 9C540C      ; 	stz _bss_start
-(  11) 0209 ABA2540C    ; 	ldx.w #_bss_start
-(  12) 020D ABA0550C    ; 	ldy.w #_bss_start+1
-(  13) 0211 ABA9E74E    ; 	lda.w #_stk_top
+(   8) 0200 ABBA        ; 	tsx.w		; Preserve original stack pointer
+(   9) 0202 CBA2FF4E    ; 	lds.w #_stk_top	; Initialize program stack pointer
+(  10) 0206 9C6C0C      ; 	stz _bss_start
+(  11) 0209 ABA26C0C    ; 	ldx.w #_bss_start
+(  12) 020D ABA06D0C    ; 	ldy.w #_bss_start+1
+(  13) 0211 ABA9FF4E    ; 	lda.w #_stk_top
 (  14) 0215 38          ; 	sec
-(  15) 0216 ABE9540C    ; 	sbc.w #_bss_start
-(  16) 021A 540F        ; 	mov #15
-(  17) 021C 4C5B0A      ; 	jmp _pc65_main
+(  15) 0216 ABE96C0C    ; 	sbc.w #_bss_start
+(  16) 021A 540A        ; 	mov #10
+(  17) 021C 4C7F09      ; 	jmp _pc65_main
 (  81) 021F ABDA        ; 	phx.w
 (  82) 0221 ABBA        ; 	tsx.w
 (  83) 0223 C2FC        ; 	adj #-4
 (  84) 0225 C2FE        ; 	adj #-2
 (  86) 0227 20FFFF      ; 	jsr _eol
-(  87) 022A AB8DE34A    ; 	sta.w newline_014
-(  89) 022E ABADE34A    ; 	lda.w newline_014
+(  87) 022A AB8DFB4A    ; 	sta.w newline_014
+(  89) 022E ABADFB4A    ; 	lda.w newline_014
 (  90) 0232 ABC90100    ; 	cmp.w #1
 (  91) 0236 F003        ; 	beq L_018
-(  92) 0238 4C7302      ; 	jmp L_019
+(  92) 0238 4C6502      ; 	jmp L_019
 (  95) 023B 20FFFF      ; 	jsr _readln
-(  97) 023E 20FFFF      ; 	jsr _writeln
-(  99) 0241 ABADDD4A    ; 	lda.w linenumber_011
-( 100) 0245 AB48        ; 	pha.w
-( 101) 0247 A901        ; 	lda #1
-( 102) 0249 18          ; 	clc
-( 103) 024A CB7501      ; 	adc.w 1,S
-( 104) 024D C202        ; 	adj #2
-( 105) 024F AB8DDD4A    ; 	sta.w linenumber_011
-( 107) 0253 ABADDD4A    ; 	lda.w linenumber_011
-( 108) 0257 AB48        ; 	pha.w
-( 109) 0259 ABE20500    ; 	psh.w #5
-( 111) 025D 20FFFF      ; 	jsr _iwrite
-( 112) 0260 C204        ; 	adj #4
-( 113) 0262 ABE2510C    ; 	psh.w #S_020
-( 114) 0266 ABE20000    ; 	psh.w #0
-( 115) 026A ABE20300    ; 	psh.w #3
-( 116) 026E 20FFFF      ; 	jsr _swrite
-( 117) 0271 C206        ; 	adj #6
-( 121) 0273 ABADE34A    ; 	lda.w newline_014
-( 122) 0277 AB48        ; 	pha.w
-( 123) 0279 20FFFF      ; 	jsr _eof
-( 124) 027C CB1501      ; 	ora.w 1,S
-( 125) 027F C202        ; 	adj #2
-( 126) 0281 ABC90100    ; 	cmp.w #1
-( 127) 0285 F003        ; 	beq L_021
-( 128) 0287 4C9202      ; 	jmp L_022
-( 131) 028A A920        ; 	lda #32
-( 132) 028C 8DFBFF      ; 	sta ch_017
-( 135) 028F 4CAF02      ; 	jmp L_023
-( 138) 0292 AB8A        ; 	txa.w
-( 139) 0294 18          ; 	clc
-( 140) 0295 AB69FBFF    ; 	adc.w #ch_017
-( 141) 0299 AB48        ; 	pha.w
-( 142) 029B 20FFFF      ; 	jsr _cread
-( 143) 029E 8B6B        ; 	pli.s
-( 144) 02A0 8300        ; 	sta 0,I++
-( 146) 02A2 B5FB        ; 	lda ch_017,X
-( 147) 02A4 AB48        ; 	pha.w
-( 148) 02A6 ABE20000    ; 	psh.w #0
-( 149) 02AA 20FFFF      ; 	jsr _cwrite
-( 150) 02AD C204        ; 	adj #4
-( 154) 02AF B5FB        ; 	lda ch_017,X
-( 155) 02B1 A8          ; 	tay
-( 156) 02B2 98          ; 	tya
-( 157) 02B3 AB95FD      ; 	sta.w RETURN_VALUE,X
-( 159) 02B6 ABB5FD      ; 	lda.w RETURN_VALUE,X
-( 160) 02B9 AB9A        ; 	txs.w
-( 161) 02BB ABFA        ; 	plx.w
-( 162) 02BD 60          ; 	rts
-( 173) 02BE ABDA        ; 	phx.w
-( 174) 02C0 ABBA        ; 	tsx.w
-( 175) 02C2 C2FC        ; 	adj #-4
-( 177) 02C4 B507        ; 	lda ch_025,X
-( 178) 02C6 AB48        ; 	pha.w
-( 179) 02C8 A961        ; 	lda #97
-( 180) 02CA CB4401      ; 	xma.w 1,S
-( 181) 02CD CBD501      ; 	cmp.w 1,S
-( 182) 02D0 C202        ; 	adj #2
-( 183) 02D2 08          ; 	php
-( 184) 02D3 A901        ; 	lda #1
-( 185) 02D5 28          ; 	plp
-( 186) 02D6 AB5002      ; 	bge L_026
-( 187) 02D9 A900        ; 	lda #0
-( 189) 02DB AB48        ; 	pha.w
-( 190) 02DD B507        ; 	lda ch_025,X
-( 191) 02DF AB48        ; 	pha.w
-( 192) 02E1 A97A        ; 	lda #122
-( 193) 02E3 CB4401      ; 	xma.w 1,S
-( 194) 02E6 CBD501      ; 	cmp.w 1,S
-( 195) 02E9 C202        ; 	adj #2
-( 196) 02EB 08          ; 	php
-( 197) 02EC A901        ; 	lda #1
-( 198) 02EE 28          ; 	plp
-( 199) 02EF AB3002      ; 	ble L_027
-( 200) 02F2 A900        ; 	lda #0
-( 202) 02F4 CB3501      ; 	and.w 1,S
-( 203) 02F7 C202        ; 	adj #2
-( 205) 02F9 AB48        ; 	pha.w
-( 206) 02FB B507        ; 	lda ch_025,X
-( 207) 02FD AB48        ; 	pha.w
-( 208) 02FF A941        ; 	lda #65
-( 209) 0301 CB4401      ; 	xma.w 1,S
-( 210) 0304 CBD501      ; 	cmp.w 1,S
-( 211) 0307 C202        ; 	adj #2
-( 212) 0309 08          ; 	php
-( 213) 030A A901        ; 	lda #1
-( 214) 030C 28          ; 	plp
-( 215) 030D AB5002      ; 	bge L_028
-( 216) 0310 A900        ; 	lda #0
-( 218) 0312 AB48        ; 	pha.w
-( 219) 0314 B507        ; 	lda ch_025,X
-( 220) 0316 AB48        ; 	pha.w
-( 221) 0318 A95A        ; 	lda #90
-( 222) 031A CB4401      ; 	xma.w 1,S
-( 223) 031D CBD501      ; 	cmp.w 1,S
-( 224) 0320 C202        ; 	adj #2
-( 225) 0322 08          ; 	php
-( 226) 0323 A901        ; 	lda #1
-( 227) 0325 28          ; 	plp
-( 228) 0326 AB3002      ; 	ble L_029
-( 229) 0329 A900        ; 	lda #0
-( 231) 032B CB3501      ; 	and.w 1,S
-( 232) 032E C202        ; 	adj #2
-( 233) 0330 CB1501      ; 	ora.w 1,S
-( 234) 0333 C202        ; 	adj #2
-( 235) 0335 AB95FD      ; 	sta.w RETURN_VALUE,X
-( 237) 0338 ABB5FD      ; 	lda.w RETURN_VALUE,X
-( 238) 033B AB9A        ; 	txs.w
-( 239) 033D ABFA        ; 	plx.w
-( 240) 033F 60          ; 	rts
-( 260) 0340 ABDA        ; 	phx.w
-( 261) 0342 ABBA        ; 	tsx.w
-( 262) 0344 C2FC        ; 	adj #-4
-( 264) 0346 A900        ; 	lda #0
-( 265) 0348 AB8DE54A    ; 	sta.w gotword_015
-( 269) 034C 20FFFF      ; 	jsr _eof
-( 270) 034F 4901        ; 	eor #1
-( 271) 0351 ABC90100    ; 	cmp.w #1
-( 272) 0355 F003        ; 	beq L_034
-( 273) 0357 4C8803      ; 	jmp L_035
-( 278) 035A ABB505      ; 	lda.w STATIC_LINK,X
-( 279) 035D AB48        ; 	pha.w
-( 280) 035F 201F02      ; 	jsr nextchar_016
-( 281) 0362 C202        ; 	adj #2
-( 282) 0364 8DFDFF      ; 	sta ch_033
-( 284) 0367 20FFFF      ; 	jsr _eof
-( 285) 036A AB48        ; 	pha.w
-( 286) 036C B5FD        ; 	lda ch_033,X
-( 287) 036E AB48        ; 	pha.w
-( 288) 0370 ABB505      ; 	lda.w STATIC_LINK,X
-( 289) 0373 AB48        ; 	pha.w
-( 290) 0375 20BE02      ; 	jsr isletter_024
-( 291) 0378 C204        ; 	adj #4
-( 292) 037A CB1501      ; 	ora.w 1,S
-( 293) 037D C202        ; 	adj #2
-( 294) 037F ABC90100    ; 	cmp.w #1
-( 295) 0383 F003        ; 	beq L_037
-( 296) 0385 4C5A03      ; 	jmp L_036
-( 303) 0388 20FFFF      ; 	jsr _eof
-( 304) 038B 4901        ; 	eor #1
-( 305) 038D ABC90100    ; 	cmp.w #1
-( 306) 0391 F003        ; 	beq L_038
-( 307) 0393 4CA504      ; 	jmp L_039
-( 310) 0396 A900        ; 	lda #0
-( 311) 0398 AB95FF      ; 	sta.w charcount_032,X
-( 317) 039B B5FD        ; 	lda ch_033,X
-( 318) 039D AB48        ; 	pha.w
-( 319) 039F ABB505      ; 	lda.w STATIC_LINK,X
-( 320) 03A2 AB48        ; 	pha.w
-( 321) 03A4 20BE02      ; 	jsr isletter_024
-( 322) 03A7 C204        ; 	adj #4
-( 323) 03A9 ABC90100    ; 	cmp.w #1
-( 324) 03AD F003        ; 	beq L_041
-( 325) 03AF 4C6404      ; 	jmp L_042
-( 328) 03B2 ABB5FF      ; 	lda.w charcount_032,X
-( 329) 03B5 AB48        ; 	pha.w
-( 330) 03B7 A914        ; 	lda #20
-( 331) 03B9 CB4401      ; 	xma.w 1,S
-( 332) 03BC CBD501      ; 	cmp.w 1,S
-( 333) 03BF C202        ; 	adj #2
-( 334) 03C1 08          ; 	php
-( 335) 03C2 A901        ; 	lda #1
-( 336) 03C4 28          ; 	plp
-( 337) 03C5 AB7002      ; 	blt L_045
-( 338) 03C8 A900        ; 	lda #0
-( 340) 03CA ABC90100    ; 	cmp.w #1
-( 341) 03CE F003        ; 	beq L_043
-( 342) 03D0 4C5404      ; 	jmp L_044
-( 345) 03D3 B5FD        ; 	lda ch_033,X
-( 346) 03D5 AB48        ; 	pha.w
-( 347) 03D7 A941        ; 	lda #65
-( 348) 03D9 CB4401      ; 	xma.w 1,S
-( 349) 03DC CBD501      ; 	cmp.w 1,S
-( 350) 03DF C202        ; 	adj #2
-( 351) 03E1 08          ; 	php
-( 352) 03E2 A901        ; 	lda #1
-( 353) 03E4 28          ; 	plp
-( 354) 03E5 AB5002      ; 	bge L_048
-( 355) 03E8 A900        ; 	lda #0
-( 357) 03EA AB48        ; 	pha.w
-( 358) 03EC B5FD        ; 	lda ch_033,X
-( 359) 03EE AB48        ; 	pha.w
-( 360) 03F0 A95A        ; 	lda #90
-( 361) 03F2 CB4401      ; 	xma.w 1,S
-( 362) 03F5 CBD501      ; 	cmp.w 1,S
-( 363) 03F8 C202        ; 	adj #2
-( 364) 03FA 08          ; 	php
-( 365) 03FB A901        ; 	lda #1
-( 366) 03FD 28          ; 	plp
-( 367) 03FE AB3002      ; 	ble L_049
-( 368) 0401 A900        ; 	lda #0
-( 370) 0403 CB3501      ; 	and.w 1,S
-( 371) 0406 C202        ; 	adj #2
-( 372) 0408 ABC90100    ; 	cmp.w #1
-( 373) 040C F003        ; 	beq L_046
-( 374) 040E 4C2D04      ; 	jmp L_047
-( 377) 0411 B5FD        ; 	lda ch_033,X
-( 378) 0413 AB48        ; 	pha.w
-( 379) 0415 ABE26100    ; 	psh.w #97
-( 381) 0419 A941        ; 	lda #65
-( 382) 041B CB4401      ; 	xma.w 1,S
-( 383) 041E 38          ; 	sec
-( 384) 041F CBF501      ; 	sbc.w 1,S
-( 385) 0422 C202        ; 	adj #2
-( 386) 0424 18          ; 	clc
-( 387) 0425 CB7501      ; 	adc.w 1,S
-( 388) 0428 C202        ; 	adj #2
-( 389) 042A 8DFDFF      ; 	sta ch_033
-( 393) 042D ABB5FF      ; 	lda.w charcount_032,X
-( 394) 0430 AB48        ; 	pha.w
-( 395) 0432 A901        ; 	lda #1
-( 396) 0434 18          ; 	clc
-( 397) 0435 CB7501      ; 	adc.w 1,S
-( 398) 0438 C202        ; 	adj #2
-( 399) 043A AB95FF      ; 	sta.w charcount_032,X
-( 401) 043D ABB507      ; 	lda.w buffer_031,X
-( 402) 0440 AB48        ; 	pha.w
-( 403) 0442 ABB5FF      ; 	lda.w charcount_032,X
-( 404) 0445 AB3A        ; 	dec.w a
-( 405) 0447 18          ; 	clc
-( 406) 0448 CB7501      ; 	adc.w 1,S
-( 407) 044B CB9501      ; 	sta.w 1,S
-( 408) 044E B5FD        ; 	lda ch_033,X
-( 409) 0450 8B6B        ; 	pli.s
-( 410) 0452 8300        ; 	sta 0,I++
-( 414) 0454 ABB505      ; 	lda.w STATIC_LINK,X
-( 415) 0457 AB48        ; 	pha.w
-( 416) 0459 201F02      ; 	jsr nextchar_016
-( 417) 045C C202        ; 	adj #2
-( 418) 045E 8DFDFF      ; 	sta ch_033
-( 420) 0461 4C9B03      ; 	jmp L_040
-( 425) 0464 ABB5FF      ; 	lda.w charcount_032,X
-( 426) 0467 AB48        ; 	pha.w
-( 427) 0469 A901        ; 	lda #1
-( 428) 046B 18          ; 	clc
-( 429) 046C CB7501      ; 	adc.w 1,S
-( 430) 046F C202        ; 	adj #2
-( 431) 0471 AB95FF      ; 	sta.w charcount_032,X
-( 433) 0474 A914        ; 	lda #20
-( 434) 0476 ABD5FF      ; 	cmp.w charcount_032,X
-( 435) 0479 AB5003      ; 	bge L_051
-( 436) 047C 4C9C04      ; 	jmp L_052
-( 439) 047F ABB507      ; 	lda.w buffer_031,X
-( 440) 0482 AB48        ; 	pha.w
-( 441) 0484 ABB5FF      ; 	lda.w charcount_032,X
-( 442) 0487 AB3A        ; 	dec.w a
-( 443) 0489 18          ; 	clc
-( 444) 048A CB7501      ; 	adc.w 1,S
-( 445) 048D CB9501      ; 	sta.w 1,S
-( 446) 0490 A920        ; 	lda #32
-( 447) 0492 8B6B        ; 	pli.s
-( 448) 0494 8300        ; 	sta 0,I++
-( 450) 0496 ABF6FF      ; 	inc.w charcount_032,X
-( 451) 0499 4C7404      ; 	jmp L_050
-( 453) 049C ABD6FF      ; 	dec.w charcount_032,X
-( 456) 049F A901        ; 	lda #1
-( 457) 04A1 AB8DE54A    ; 	sta.w gotword_015
-( 461) 04A5 AB9A        ; 	txs.w
-( 462) 04A7 ABFA        ; 	plx.w
-( 463) 04A9 60          ; 	rts
-( 477) 04AA ABDA        ; 	phx.w
-( 478) 04AC ABBA        ; 	tsx.w
-( 479) 04AE C2FC        ; 	adj #-4
-( 481) 04B0 ABADDB4A    ; 	lda.w nextnumberindex_010
-( 482) 04B4 AB48        ; 	pha.w
-( 483) 04B6 ABA9E803    ; 	lda.w #1000
-( 484) 04BA CB4401      ; 	xma.w 1,S
-( 485) 04BD CBD501      ; 	cmp.w 1,S
-( 486) 04C0 C202        ; 	adj #2
-( 487) 04C2 08          ; 	php
-( 488) 04C3 A901        ; 	lda #1
-( 489) 04C5 28          ; 	plp
-( 490) 04C6 AB7002      ; 	blt L_057
-( 491) 04C9 A900        ; 	lda #0
-( 493) 04CB ABC90100    ; 	cmp.w #1
-( 494) 04CF F003        ; 	beq L_055
-( 495) 04D1 4C7C05      ; 	jmp L_056
-( 498) 04D4 ABB507      ; 	lda.w lastnumberindex_054,X
-( 499) 04D7 AB48        ; 	pha.w
-( 500) 04D9 A900        ; 	lda #0
-( 501) 04DB CB4401      ; 	xma.w 1,S
-( 502) 04DE CBD501      ; 	cmp.w 1,S
-( 503) 04E1 C202        ; 	adj #2
-( 504) 04E3 08          ; 	php
-( 505) 04E4 A901        ; 	lda #1
-( 506) 04E6 28          ; 	plp
-( 507) 04E7 D002        ; 	bne L_060
-( 508) 04E9 A900        ; 	lda #0
-( 510) 04EB ABC90100    ; 	cmp.w #1
-( 511) 04EF F003        ; 	beq L_058
-( 512) 04F1 4C1805      ; 	jmp L_059
-( 515) 04F4 ABE2353B    ; 	psh.w #numbertable_008
-( 516) 04F8 ABB507      ; 	lda.w lastnumberindex_054,X
-( 517) 04FB AB0A        ; 	asl.w a
-( 518) 04FD AB0A        ; 	asl.w a
-( 519) 04FF 18          ; 	clc
-( 520) 0500 CB7501      ; 	adc.w 1,S
-( 521) 0503 CB9501      ; 	sta.w 1,S
-( 522) 0506 AB68        ; 	pla.w
-( 523) 0508 18          ; 	clc
-( 524) 0509 AB690200    ; 	adc.w #nextindex_006
-( 525) 050D AB48        ; 	pha.w
-( 526) 050F ABADDB4A    ; 	lda.w nextnumberindex_010
-( 527) 0513 8B6B        ; 	pli.s
-( 528) 0515 AB8300      ; 	sta.w 0,I++
-( 532) 0518 ABE2353B    ; 	psh.w #numbertable_008
-( 533) 051C ABADDB4A    ; 	lda.w nextnumberindex_010
-( 534) 0520 AB0A        ; 	asl.w a
-( 535) 0522 AB0A        ; 	asl.w a
-( 536) 0524 18          ; 	clc
-( 537) 0525 CB7501      ; 	adc.w 1,S
-( 538) 0528 CB9501      ; 	sta.w 1,S
-( 539) 052B AB68        ; 	pla.w
-( 540) 052D 18          ; 	clc
-( 541) 052E AB690000    ; 	adc.w #number_005
-( 542) 0532 AB48        ; 	pha.w
-( 543) 0534 ABADDD4A    ; 	lda.w linenumber_011
-( 544) 0538 8B6B        ; 	pli.s
-( 545) 053A AB8300      ; 	sta.w 0,I++
-( 547) 053D ABE2353B    ; 	psh.w #numbertable_008
-( 548) 0541 ABADDB4A    ; 	lda.w nextnumberindex_010
-( 549) 0545 AB0A        ; 	asl.w a
-( 550) 0547 AB0A        ; 	asl.w a
-( 551) 0549 18          ; 	clc
-( 552) 054A CB7501      ; 	adc.w 1,S
-( 553) 054D CB9501      ; 	sta.w 1,S
-( 554) 0550 AB68        ; 	pla.w
-( 555) 0552 18          ; 	clc
-( 556) 0553 AB690200    ; 	adc.w #nextindex_006
-( 557) 0557 AB48        ; 	pha.w
-( 558) 0559 A900        ; 	lda #0
-( 559) 055B 8B6B        ; 	pli.s
-( 560) 055D AB8300      ; 	sta.w 0,I++
-( 562) 0560 ABADDB4A    ; 	lda.w nextnumberindex_010
-( 563) 0564 AB95FD      ; 	sta.w RETURN_VALUE,X
-( 565) 0567 ABADDB4A    ; 	lda.w nextnumberindex_010
-( 566) 056B AB48        ; 	pha.w
-( 567) 056D A901        ; 	lda #1
-( 568) 056F 18          ; 	clc
-( 569) 0570 CB7501      ; 	adc.w 1,S
-( 570) 0573 C202        ; 	adj #2
-( 571) 0575 AB8DDB4A    ; 	sta.w nextnumberindex_010
-( 574) 0579 4C8705      ; 	jmp L_061
-( 577) 057C A901        ; 	lda #1
-( 578) 057E AB8DE14A    ; 	sta.w numbertablefull_013
-( 580) 0582 A900        ; 	lda #0
-( 581) 0584 AB95FD      ; 	sta.w RETURN_VALUE,X
-( 585) 0587 ABB5FD      ; 	lda.w RETURN_VALUE,X
-( 586) 058A AB9A        ; 	txs.w
-( 587) 058C ABFA        ; 	plx.w
-( 588) 058E 60          ; 	rts
-( 603) 058F ABDA        ; 	phx.w
-( 604) 0591 ABBA        ; 	tsx.w
-( 605) 0593 C2FE        ; 	adj #-2
-( 610) 0595 ABADE34A    ; 	lda.w newline_014
-( 611) 0599 ABC90100    ; 	cmp.w #1
-( 612) 059D F003        ; 	beq L_064
-( 613) 059F 4CB705      ; 	jmp L_065
-( 615) 05A2 ABADDD4A    ; 	lda.w linenumber_011
-( 616) 05A6 AB48        ; 	pha.w
-( 617) 05A8 A901        ; 	lda #1
-( 618) 05AA CB4401      ; 	xma.w 1,S
-( 619) 05AD 38          ; 	sec
-( 620) 05AE CBF501      ; 	sbc.w 1,S
-( 621) 05B1 C202        ; 	adj #2
-( 622) 05B3 AB8DDD4A    ; 	sta.w linenumber_011
-( 627) 05B7 A901        ; 	lda #1
-( 628) 05B9 AB95FF      ; 	sta.w i_063,X
-( 631) 05BC ABE2550C    ; 	psh.w #wordtable_007
-( 632) 05C0 ABB5FF      ; 	lda.w i_063,X
-( 633) 05C3 AB3A        ; 	dec.w a
-( 634) 05C5 AB48        ; 	pha.w
-( 635) 05C7 ABE21800    ; 	psh.w #24
-( 636) 05CB 20FFFF      ; 	jsr _imul
-( 637) 05CE C204        ; 	adj #4
-( 638) 05D0 18          ; 	clc
-( 639) 05D1 CB7501      ; 	adc.w 1,S
-( 640) 05D4 CB9501      ; 	sta.w 1,S
-( 642) 05D7 AB68        ; 	pla.w
-( 643) 05D9 18          ; 	clc
-( 644) 05DA AB690000    ; 	adc.w #word_002
-( 645) 05DE AB48        ; 	pha.w
-( 646) 05E0 ABE2550C    ; 	psh.w #wordtable_007
-( 647) 05E4 ABADD94A    ; 	lda.w nextwordindex_009
-( 648) 05E8 AB3A        ; 	dec.w a
-( 649) 05EA AB48        ; 	pha.w
-( 650) 05EC ABE21800    ; 	psh.w #24
-( 651) 05F0 20FFFF      ; 	jsr _imul
-( 652) 05F3 C204        ; 	adj #4
-( 653) 05F5 18          ; 	clc
-( 654) 05F6 CB7501      ; 	adc.w 1,S
-( 655) 05F9 CB9501      ; 	sta.w 1,S
-( 656) 05FC AB68        ; 	pla.w
-( 657) 05FE 18          ; 	clc
-( 658) 05FF AB690000    ; 	adc.w #word_002
-( 659) 0603 AB48        ; 	pha.w
-( 660) 0605 ABE21400    ; 	psh.w #20
-( 661) 0609 20FFFF      ; 	jsr _cmpsb
-( 662) 060C C206        ; 	adj #+6
-( 663) 060E 08          ; 	php
-( 664) 060F A901        ; 	lda #1
-( 665) 0611 28          ; 	plp
-( 666) 0612 D002        ; 	bne L_069
-( 667) 0614 A900        ; 	lda #0
-( 669) 0616 ABC90100    ; 	cmp.w #1
-( 670) 061A F003        ; 	beq L_067
-( 671) 061C 4C3206      ; 	jmp L_068
-( 674) 061F ABB5FF      ; 	lda.w i_063,X
-( 675) 0622 AB48        ; 	pha.w
-( 676) 0624 A901        ; 	lda #1
-( 677) 0626 18          ; 	clc
-( 678) 0627 CB7501      ; 	adc.w 1,S
-( 679) 062A C202        ; 	adj #2
-( 680) 062C AB95FF      ; 	sta.w i_063,X
-( 682) 062F 4CBC05      ; 	jmp L_066
-( 687) 0632 ABB5FF      ; 	lda.w i_063,X
-( 688) 0635 AB48        ; 	pha.w
-( 689) 0637 ABADD94A    ; 	lda.w nextwordindex_009
-( 690) 063B CB4401      ; 	xma.w 1,S
-( 691) 063E CBD501      ; 	cmp.w 1,S
-( 692) 0641 C202        ; 	adj #2
-( 693) 0643 08          ; 	php
-( 694) 0644 A901        ; 	lda #1
-( 695) 0646 28          ; 	plp
-( 696) 0647 AB7002      ; 	blt L_072
-( 697) 064A A900        ; 	lda #0
-( 699) 064C ABC90100    ; 	cmp.w #1
-( 700) 0650 F003        ; 	beq L_070
-( 701) 0652 4CB606      ; 	jmp L_071
-( 704) 0655 ABE2550C    ; 	psh.w #wordtable_007
-( 705) 0659 ABB5FF      ; 	lda.w i_063,X
-( 706) 065C AB3A        ; 	dec.w a
-( 707) 065E AB48        ; 	pha.w
-( 708) 0660 ABE21800    ; 	psh.w #24
-( 709) 0664 20FFFF      ; 	jsr _imul
-( 710) 0667 C204        ; 	adj #4
-( 711) 0669 18          ; 	clc
-( 712) 066A CB7501      ; 	adc.w 1,S
-( 713) 066D CB9501      ; 	sta.w 1,S
-( 714) 0670 AB68        ; 	pla.w
-( 715) 0672 18          ; 	clc
-( 716) 0673 AB691600    ; 	adc.w #lastnumberindex_004
-( 717) 0677 AB48        ; 	pha.w
-( 719) 0679 ABE2550C    ; 	psh.w #wordtable_007
-( 720) 067D ABB5FF      ; 	lda.w i_063,X
-( 721) 0680 AB3A        ; 	dec.w a
-( 722) 0682 AB48        ; 	pha.w
-( 723) 0684 ABE21800    ; 	psh.w #24
-( 724) 0688 20FFFF      ; 	jsr _imul
-( 725) 068B C204        ; 	adj #4
-( 726) 068D 18          ; 	clc
-( 727) 068E CB7501      ; 	adc.w 1,S
-( 728) 0691 CB9501      ; 	sta.w 1,S
-( 729) 0694 AB68        ; 	pla.w
-( 730) 0696 18          ; 	clc
-( 731) 0697 AB691600    ; 	adc.w #lastnumberindex_004
-( 732) 069B AB48        ; 	pha.w
-( 733) 069D 8B6B        ; 	pli.s
-( 734) 069F ABA300      ; 	lda.w 0,I++
-( 735) 06A2 AB48        ; 	pha.w
-( 736) 06A4 ABB505      ; 	lda.w STATIC_LINK,X
-( 737) 06A7 AB48        ; 	pha.w
-( 738) 06A9 20AA04      ; 	jsr appendlinenumber_053
-( 739) 06AC C204        ; 	adj #4
-( 740) 06AE 8B6B        ; 	pli.s
-( 741) 06B0 AB8300      ; 	sta.w 0,I++
-( 746) 06B3 4C7E07      ; 	jmp L_073
-( 748) 06B6 ABADD94A    ; 	lda.w nextwordindex_009
-( 749) 06BA AB48        ; 	pha.w
-( 750) 06BC ABA9F401    ; 	lda.w #500
-( 751) 06C0 CB4401      ; 	xma.w 1,S
-( 752) 06C3 CBD501      ; 	cmp.w 1,S
-( 753) 06C6 C202        ; 	adj #2
-( 754) 06C8 08          ; 	php
-( 755) 06C9 A901        ; 	lda #1
-( 756) 06CB 28          ; 	plp
-( 757) 06CC AB7002      ; 	blt L_076
-( 758) 06CF A900        ; 	lda #0
-( 760) 06D1 ABC90100    ; 	cmp.w #1
-( 761) 06D5 F003        ; 	beq L_074
-( 762) 06D7 4C7807      ; 	jmp L_075
-( 765) 06DA ABADD94A    ; 	lda.w nextwordindex_009
-( 766) 06DE AB48        ; 	pha.w
-( 767) 06E0 A901        ; 	lda #1
-( 768) 06E2 18          ; 	clc
-( 769) 06E3 CB7501      ; 	adc.w 1,S
-( 770) 06E6 C202        ; 	adj #2
-( 771) 06E8 AB8DD94A    ; 	sta.w nextwordindex_009
-( 773) 06EC ABE2550C    ; 	psh.w #wordtable_007
-( 774) 06F0 ABB5FF      ; 	lda.w i_063,X
-( 775) 06F3 AB3A        ; 	dec.w a
-( 776) 06F5 AB48        ; 	pha.w
-( 777) 06F7 ABE21800    ; 	psh.w #24
-( 778) 06FB 20FFFF      ; 	jsr _imul
-( 779) 06FE C204        ; 	adj #4
-( 780) 0700 18          ; 	clc
-( 781) 0701 CB7501      ; 	adc.w 1,S
-( 782) 0704 CB9501      ; 	sta.w 1,S
-( 783) 0707 AB68        ; 	pla.w
-( 784) 0709 18          ; 	clc
-( 785) 070A AB691400    ; 	adc.w #firstnumberindex_003
-( 786) 070E AB48        ; 	pha.w
-( 787) 0710 ABE20000    ; 	psh.w #0
-( 789) 0714 ABB505      ; 	lda.w STATIC_LINK,X
-( 790) 0717 AB48        ; 	pha.w
-( 791) 0719 20AA04      ; 	jsr appendlinenumber_053
-( 792) 071C C204        ; 	adj #4
-( 793) 071E 8B6B        ; 	pli.s
-( 794) 0720 AB8300      ; 	sta.w 0,I++
-( 796) 0723 ABE2550C    ; 	psh.w #wordtable_007
-( 797) 0727 ABB5FF      ; 	lda.w i_063,X
-( 798) 072A AB3A        ; 	dec.w a
-( 799) 072C AB48        ; 	pha.w
-( 800) 072E ABE21800    ; 	psh.w #24
-( 801) 0732 20FFFF      ; 	jsr _imul
-( 802) 0735 C204        ; 	adj #4
-( 803) 0737 18          ; 	clc
-( 804) 0738 CB7501      ; 	adc.w 1,S
-( 805) 073B CB9501      ; 	sta.w 1,S
-( 806) 073E AB68        ; 	pla.w
-( 807) 0740 18          ; 	clc
-( 808) 0741 AB691600    ; 	adc.w #lastnumberindex_004
-( 809) 0745 AB48        ; 	pha.w
-( 811) 0747 ABE2550C    ; 	psh.w #wordtable_007
-( 812) 074B ABB5FF      ; 	lda.w i_063,X
-( 813) 074E AB3A        ; 	dec.w a
-( 814) 0750 AB48        ; 	pha.w
-( 815) 0752 ABE21800    ; 	psh.w #24
-( 816) 0756 20FFFF      ; 	jsr _imul
-( 817) 0759 C204        ; 	adj #4
-( 818) 075B 18          ; 	clc
-( 819) 075C CB7501      ; 	adc.w 1,S
-( 820) 075F CB9501      ; 	sta.w 1,S
-( 821) 0762 AB68        ; 	pla.w
-( 822) 0764 18          ; 	clc
-( 823) 0765 AB691400    ; 	adc.w #firstnumberindex_003
-( 824) 0769 AB48        ; 	pha.w
-( 825) 076B 8B6B        ; 	pli.s
-( 826) 076D ABA300      ; 	lda.w 0,I++
-( 827) 0770 8B6B        ; 	pli.s
-( 828) 0772 AB8300      ; 	sta.w 0,I++
-( 833) 0775 4C7E07      ; 	jmp L_077
-( 835) 0778 A901        ; 	lda #1
-( 836) 077A AB8DDF4A    ; 	sta.w wordtablefull_012
-( 841) 077E ABADE34A    ; 	lda.w newline_014
-( 842) 0782 ABC90100    ; 	cmp.w #1
-( 843) 0786 F003        ; 	beq L_078
-( 844) 0788 4C9D07      ; 	jmp L_079
-( 846) 078B ABADDD4A    ; 	lda.w linenumber_011
-( 847) 078F AB48        ; 	pha.w
-( 848) 0791 A901        ; 	lda #1
-( 849) 0793 18          ; 	clc
-( 850) 0794 CB7501      ; 	adc.w 1,S
-( 851) 0797 C202        ; 	adj #2
-( 852) 0799 AB8DDD4A    ; 	sta.w linenumber_011
-( 855) 079D AB9A        ; 	txs.w
-( 856) 079F ABFA        ; 	plx.w
-( 857) 07A1 60          ; 	rts
-( 874) 07A2 ABDA        ; 	phx.w
-( 875) 07A4 ABBA        ; 	tsx.w
-( 876) 07A6 C2E4        ; 	adj #-28
-( 878) 07A8 A901        ; 	lda #1
-( 879) 07AA AB95FF      ; 	sta.w i_081,X
-( 881) 07AD ABADD94A    ; 	lda.w nextwordindex_009
-( 882) 07B1 AB48        ; 	pha.w
-( 883) 07B3 A902        ; 	lda #2
-( 884) 07B5 CB4401      ; 	xma.w 1,S
-( 885) 07B8 38          ; 	sec
-( 886) 07B9 CBF501      ; 	sbc.w 1,S
-( 887) 07BC C202        ; 	adj #2
-( 888) 07BE ABD5FF      ; 	cmp.w i_081,X
-( 889) 07C1 AB5003      ; 	bge L_085
-( 890) 07C4 4C0509      ; 	jmp L_086
-( 893) 07C7 ABB5FF      ; 	lda.w i_081,X
-( 894) 07CA AB48        ; 	pha.w
-( 895) 07CC A901        ; 	lda #1
-( 896) 07CE 18          ; 	clc
-( 897) 07CF CB7501      ; 	adc.w 1,S
-( 898) 07D2 C202        ; 	adj #2
-( 899) 07D4 AB95FD      ; 	sta.w j_082,X
-( 901) 07D7 ABADD94A    ; 	lda.w nextwordindex_009
-( 902) 07DB AB48        ; 	pha.w
-( 903) 07DD A901        ; 	lda #1
-( 904) 07DF CB4401      ; 	xma.w 1,S
-( 905) 07E2 38          ; 	sec
-( 906) 07E3 CBF501      ; 	sbc.w 1,S
-( 907) 07E6 C202        ; 	adj #2
-( 908) 07E8 ABD5FD      ; 	cmp.w j_082,X
-( 909) 07EB AB5003      ; 	bge L_088
-( 910) 07EE 4CFC08      ; 	jmp L_089
-( 913) 07F1 ABE2550C    ; 	psh.w #wordtable_007
-( 914) 07F5 ABB5FF      ; 	lda.w i_081,X
-( 915) 07F8 AB3A        ; 	dec.w a
-( 916) 07FA AB48        ; 	pha.w
-( 917) 07FC ABE21800    ; 	psh.w #24
-( 918) 0800 20FFFF      ; 	jsr _imul
-( 919) 0803 C204        ; 	adj #4
-( 920) 0805 18          ; 	clc
-( 921) 0806 CB7501      ; 	adc.w 1,S
-( 922) 0809 CB9501      ; 	sta.w 1,S
-( 923) 080C AB68        ; 	pla.w
-( 924) 080E 18          ; 	clc
-( 925) 080F AB690000    ; 	adc.w #word_002
-( 926) 0813 AB48        ; 	pha.w
-( 927) 0815 ABE2550C    ; 	psh.w #wordtable_007
-( 928) 0819 ABB5FD      ; 	lda.w j_082,X
-( 929) 081C AB3A        ; 	dec.w a
-( 930) 081E AB48        ; 	pha.w
-( 931) 0820 ABE21800    ; 	psh.w #24
-( 932) 0824 20FFFF      ; 	jsr _imul
-( 933) 0827 C204        ; 	adj #4
-( 934) 0829 18          ; 	clc
-( 935) 082A CB7501      ; 	adc.w 1,S
-( 936) 082D CB9501      ; 	sta.w 1,S
-( 937) 0830 AB68        ; 	pla.w
-( 938) 0832 18          ; 	clc
-( 939) 0833 AB690000    ; 	adc.w #word_002
-( 940) 0837 AB48        ; 	pha.w
-( 941) 0839 ABE21400    ; 	psh.w #20
-( 942) 083D 20FFFF      ; 	jsr _cmpsb
-( 943) 0840 C206        ; 	adj #+6
-( 944) 0842 08          ; 	php
-( 945) 0843 A901        ; 	lda #1
-( 946) 0845 28          ; 	plp
-( 947) 0846 AB1002      ; 	bgt L_092
-( 948) 0849 A900        ; 	lda #0
-( 950) 084B ABC90100    ; 	cmp.w #1
-( 951) 084F F003        ; 	beq L_090
-( 952) 0851 4CF608      ; 	jmp L_091
-( 955) 0854 AB8A        ; 	txa.w
-( 956) 0856 18          ; 	clc
-( 957) 0857 AB69E5FF    ; 	adc.w #temp_083
-( 958) 085B AB48        ; 	pha.w
-( 959) 085D ABE2550C    ; 	psh.w #wordtable_007
-( 960) 0861 ABB5FF      ; 	lda.w i_081,X
-( 961) 0864 AB3A        ; 	dec.w a
-( 962) 0866 AB48        ; 	pha.w
-( 963) 0868 ABE21800    ; 	psh.w #24
-( 964) 086C 20FFFF      ; 	jsr _imul
-( 965) 086F C204        ; 	adj #4
-( 966) 0871 18          ; 	clc
-( 967) 0872 CB7501      ; 	adc.w 1,S
-( 968) 0875 CB9501      ; 	sta.w 1,S
-( 969) 0878 EB1B        ; 	swp x
-( 970) 087A A918        ; 	lda #24
-( 971) 087C ABFA        ; 	plx.w
-( 972) 087E AB7A        ; 	ply.w
-( 973) 0880 540F        ; 	mov #15
-( 974) 0882 EB1B        ; 	swp x
-( 976) 0884 ABE2550C    ; 	psh.w #wordtable_007
-( 977) 0888 ABB5FF      ; 	lda.w i_081,X
-( 978) 088B AB3A        ; 	dec.w a
-( 979) 088D AB48        ; 	pha.w
-( 980) 088F ABE21800    ; 	psh.w #24
-( 981) 0893 20FFFF      ; 	jsr _imul
-( 982) 0896 C204        ; 	adj #4
-( 983) 0898 18          ; 	clc
-( 984) 0899 CB7501      ; 	adc.w 1,S
-( 985) 089C CB9501      ; 	sta.w 1,S
-( 986) 089F ABE2550C    ; 	psh.w #wordtable_007
-( 987) 08A3 ABB5FD      ; 	lda.w j_082,X
-( 988) 08A6 AB3A        ; 	dec.w a
-( 989) 08A8 AB48        ; 	pha.w
-( 990) 08AA ABE21800    ; 	psh.w #24
-( 991) 08AE 20FFFF      ; 	jsr _imul
-( 992) 08B1 C204        ; 	adj #4
-( 993) 08B3 18          ; 	clc
-( 994) 08B4 CB7501      ; 	adc.w 1,S
-( 995) 08B7 CB9501      ; 	sta.w 1,S
-( 996) 08BA EB1B        ; 	swp x
-( 997) 08BC A918        ; 	lda #24
-( 998) 08BE ABFA        ; 	plx.w
-( 999) 08C0 AB7A        ; 	ply.w
-(1000) 08C2 540F        ; 	mov #15
-(1001) 08C4 EB1B        ; 	swp x
-(1003) 08C6 ABE2550C    ; 	psh.w #wordtable_007
-(1004) 08CA ABB5FD      ; 	lda.w j_082,X
-(1005) 08CD AB3A        ; 	dec.w a
-(1006) 08CF AB48        ; 	pha.w
-(1007) 08D1 ABE21800    ; 	psh.w #24
-(1008) 08D5 20FFFF      ; 	jsr _imul
-(1009) 08D8 C204        ; 	adj #4
-(1010) 08DA 18          ; 	clc
-(1011) 08DB CB7501      ; 	adc.w 1,S
-(1012) 08DE CB9501      ; 	sta.w 1,S
-(1013) 08E1 AB8A        ; 	txa.w
-(1014) 08E3 18          ; 	clc
-(1015) 08E4 AB69E5FF    ; 	adc.w #temp_083
-(1016) 08E8 AB48        ; 	pha.w
-(1017) 08EA EB1B        ; 	swp x
-(1018) 08EC A918        ; 	lda #24
-(1019) 08EE ABFA        ; 	plx.w
-(1020) 08F0 AB7A        ; 	ply.w
-(1021) 08F2 540F        ; 	mov #15
-(1022) 08F4 EB1B        ; 	swp x
-(1026) 08F6 ABF6FD      ; 	inc.w j_082,X
-(1027) 08F9 4CD707      ; 	jmp L_087
-(1029) 08FC ABD6FD      ; 	dec.w j_082,X
-(1031) 08FF ABF6FF      ; 	inc.w i_081,X
-(1032) 0902 4CAD07      ; 	jmp L_084
-(1034) 0905 ABD6FF      ; 	dec.w i_081,X
-(1036) 0908 AB9A        ; 	txs.w
-(1037) 090A ABFA        ; 	plx.w
-(1038) 090C 60          ; 	rts
-(1049) 090D ABDA        ; 	phx.w
-(1050) 090F ABBA        ; 	tsx.w
-(1054) 0911 ABE2353B    ; 	psh.w #numbertable_008
-(1055) 0915 ABB507      ; 	lda.w i_094,X
-(1056) 0918 AB0A        ; 	asl.w a
-(1057) 091A AB0A        ; 	asl.w a
-(1058) 091C 18          ; 	clc
-(1059) 091D CB7501      ; 	adc.w 1,S
-(1060) 0920 CB9501      ; 	sta.w 1,S
-(1061) 0923 AB68        ; 	pla.w
-(1062) 0925 18          ; 	clc
-(1063) 0926 AB690000    ; 	adc.w #number_005
-(1064) 092A AB48        ; 	pha.w
-(1065) 092C 8B6B        ; 	pli.s
-(1066) 092E ABA300      ; 	lda.w 0,I++
-(1067) 0931 AB48        ; 	pha.w
-(1068) 0933 ABE20400    ; 	psh.w #4
-(1070) 0937 20FFFF      ; 	jsr _iwrite
-(1071) 093A C204        ; 	adj #4
-(1073) 093C ABE2353B    ; 	psh.w #numbertable_008
-(1074) 0940 ABB507      ; 	lda.w i_094,X
-(1075) 0943 AB0A        ; 	asl.w a
-(1076) 0945 AB0A        ; 	asl.w a
-(1077) 0947 18          ; 	clc
-(1078) 0948 CB7501      ; 	adc.w 1,S
-(1079) 094B CB9501      ; 	sta.w 1,S
-(1080) 094E AB68        ; 	pla.w
-(1081) 0950 18          ; 	clc
-(1082) 0951 AB690200    ; 	adc.w #nextindex_006
-(1083) 0955 AB48        ; 	pha.w
-(1084) 0957 8B6B        ; 	pli.s
-(1085) 0959 ABA300      ; 	lda.w 0,I++
-(1086) 095C AB9507      ; 	sta.w i_094,X
-(1088) 095F ABB507      ; 	lda.w i_094,X
-(1089) 0962 AB48        ; 	pha.w
-(1090) 0964 A900        ; 	lda #0
-(1091) 0966 CB4401      ; 	xma.w 1,S
-(1092) 0969 CBD501      ; 	cmp.w 1,S
-(1093) 096C C202        ; 	adj #2
-(1094) 096E 08          ; 	php
-(1095) 096F A901        ; 	lda #1
-(1096) 0971 28          ; 	plp
-(1097) 0972 F002        ; 	beq L_097
-(1098) 0974 A900        ; 	lda #0
-(1100) 0976 ABC90100    ; 	cmp.w #1
-(1101) 097A F003        ; 	beq L_096
-(1102) 097C 4C1109      ; 	jmp L_095
-(1105) 097F 20FFFF      ; 	jsr _writeln
-(1107) 0982 AB9A        ; 	txs.w
-(1108) 0984 ABFA        ; 	plx.w
-(1109) 0986 60          ; 	rts
-(1123) 0987 ABDA        ; 	phx.w
-(1124) 0989 ABBA        ; 	tsx.w
-(1125) 098B C2FE        ; 	adj #-2
-(1127) 098D 20FFFF      ; 	jsr _writeln
-(1129) 0990 20FFFF      ; 	jsr _writeln
-(1131) 0993 ABE2420C    ; 	psh.w #S_100
-(1132) 0997 ABE20000    ; 	psh.w #0
-(1133) 099B ABE20F00    ; 	psh.w #15
-(1134) 099F 20FFFF      ; 	jsr _swrite
-(1135) 09A2 C206        ; 	adj #6
-(1136) 09A4 20FFFF      ; 	jsr _writeln
-(1138) 09A7 ABE2330C    ; 	psh.w #S_101
-(1139) 09AB ABE20000    ; 	psh.w #0
-(1140) 09AF ABE20F00    ; 	psh.w #15
-(1141) 09B3 20FFFF      ; 	jsr _swrite
-(1142) 09B6 C206        ; 	adj #6
-(1143) 09B8 20FFFF      ; 	jsr _writeln
-(1145) 09BB 20FFFF      ; 	jsr _writeln
-(1147) 09BE ABB505      ; 	lda.w STATIC_LINK,X
-(1148) 09C1 AB48        ; 	pha.w
-(1149) 09C3 20A207      ; 	jsr sortwords_080
-(1150) 09C6 C202        ; 	adj #2
-(1152) 09C8 A901        ; 	lda #1
-(1153) 09CA AB95FF      ; 	sta.w i_099,X
-(1155) 09CD ABADD94A    ; 	lda.w nextwordindex_009
-(1156) 09D1 AB48        ; 	pha.w
-(1157) 09D3 A901        ; 	lda #1
-(1158) 09D5 CB4401      ; 	xma.w 1,S
-(1159) 09D8 38          ; 	sec
-(1160) 09D9 CBF501      ; 	sbc.w 1,S
-(1161) 09DC C202        ; 	adj #2
-(1162) 09DE ABD5FF      ; 	cmp.w i_099,X
-(1163) 09E1 AB5003      ; 	bge L_103
-(1164) 09E4 4C530A      ; 	jmp L_104
-(1167) 09E7 ABE2550C    ; 	psh.w #wordtable_007
-(1168) 09EB ABB5FF      ; 	lda.w i_099,X
-(1169) 09EE AB3A        ; 	dec.w a
-(1170) 09F0 AB48        ; 	pha.w
-(1171) 09F2 ABE21800    ; 	psh.w #24
-(1172) 09F6 20FFFF      ; 	jsr _imul
-(1173) 09F9 C204        ; 	adj #4
-(1174) 09FB 18          ; 	clc
-(1175) 09FC CB7501      ; 	adc.w 1,S
-(1176) 09FF CB9501      ; 	sta.w 1,S
-(1177) 0A02 AB68        ; 	pla.w
-(1178) 0A04 18          ; 	clc
-(1179) 0A05 AB690000    ; 	adc.w #word_002
-(1180) 0A09 AB48        ; 	pha.w
-(1181) 0A0B ABE20000    ; 	psh.w #0
-(1182) 0A0F ABE21400    ; 	psh.w #20
-(1183) 0A13 20FFFF      ; 	jsr _swrite
-(1184) 0A16 C206        ; 	adj #6
-(1186) 0A18 ABE2550C    ; 	psh.w #wordtable_007
-(1187) 0A1C ABB5FF      ; 	lda.w i_099,X
-(1188) 0A1F AB3A        ; 	dec.w a
-(1189) 0A21 AB48        ; 	pha.w
-(1190) 0A23 ABE21800    ; 	psh.w #24
-(1191) 0A27 20FFFF      ; 	jsr _imul
-(1192) 0A2A C204        ; 	adj #4
-(1193) 0A2C 18          ; 	clc
-(1194) 0A2D CB7501      ; 	adc.w 1,S
-(1195) 0A30 CB9501      ; 	sta.w 1,S
-(1196) 0A33 AB68        ; 	pla.w
-(1197) 0A35 18          ; 	clc
-(1198) 0A36 AB691400    ; 	adc.w #firstnumberindex_003
-(1199) 0A3A AB48        ; 	pha.w
-(1200) 0A3C 8B6B        ; 	pli.s
-(1201) 0A3E ABA300      ; 	lda.w 0,I++
-(1202) 0A41 AB48        ; 	pha.w
-(1203) 0A43 ABB505      ; 	lda.w STATIC_LINK,X
-(1204) 0A46 AB48        ; 	pha.w
-(1205) 0A48 200D09      ; 	jsr printnumbers_093
-(1206) 0A4B C204        ; 	adj #4
-(1208) 0A4D ABF6FF      ; 	inc.w i_099,X
-(1209) 0A50 4CCD09      ; 	jmp L_102
-(1211) 0A53 ABD6FF      ; 	dec.w i_099,X
-(1213) 0A56 AB9A        ; 	txs.w
-(1214) 0A58 ABFA        ; 	plx.w
-(1215) 0A5A 60          ; 	rts
-(1221) 0A5B ABDA        ; 	phx.w
-(1222) 0A5D ABBA        ; 	tsx.w
-(1224) 0A5F A900        ; 	lda #0
-(1225) 0A61 AB8DDF4A    ; 	sta.w wordtablefull_012
-(1227) 0A65 A900        ; 	lda #0
-(1228) 0A67 AB8DE14A    ; 	sta.w numbertablefull_013
-(1230) 0A6B A901        ; 	lda #1
-(1231) 0A6D AB8DD94A    ; 	sta.w nextwordindex_009
-(1233) 0A71 A901        ; 	lda #1
-(1234) 0A73 AB8DDB4A    ; 	sta.w nextnumberindex_010
-(1236) 0A77 A901        ; 	lda #1
-(1237) 0A79 AB8DDD4A    ; 	sta.w linenumber_011
-(1239) 0A7D ABE22B0C    ; 	psh.w #S_105
-(1240) 0A81 ABE20000    ; 	psh.w #0
-(1241) 0A85 ABE20800    ; 	psh.w #8
-(1242) 0A89 20FFFF      ; 	jsr _swrite
-(1243) 0A8C C206        ; 	adj #6
-(1248) 0A8E 20FFFF      ; 	jsr _eof
-(1249) 0A91 AB48        ; 	pha.w
-(1250) 0A93 ABADDF4A    ; 	lda.w wordtablefull_012
-(1251) 0A97 CB1501      ; 	ora.w 1,S
-(1252) 0A9A C202        ; 	adj #2
-(1253) 0A9C AB48        ; 	pha.w
-(1254) 0A9E ABADE14A    ; 	lda.w numbertablefull_013
-(1255) 0AA2 CB1501      ; 	ora.w 1,S
-(1256) 0AA5 C202        ; 	adj #2
-(1257) 0AA7 4901        ; 	eor #1
-(1258) 0AA9 ABC90100    ; 	cmp.w #1
-(1259) 0AAD F003        ; 	beq L_107
-(1260) 0AAF 4CF50A      ; 	jmp L_108
-(1263) 0AB2 ABE2550C    ; 	psh.w #wordtable_007
-(1264) 0AB6 ABADD94A    ; 	lda.w nextwordindex_009
-(1265) 0ABA AB3A        ; 	dec.w a
-(1266) 0ABC AB48        ; 	pha.w
-(1267) 0ABE ABE21800    ; 	psh.w #24
-(1268) 0AC2 20FFFF      ; 	jsr _imul
-(1269) 0AC5 C204        ; 	adj #4
-(1270) 0AC7 18          ; 	clc
-(1271) 0AC8 CB7501      ; 	adc.w 1,S
-(1272) 0ACB CB9501      ; 	sta.w 1,S
-(1273) 0ACE AB68        ; 	pla.w
-(1274) 0AD0 18          ; 	clc
-(1275) 0AD1 AB690000    ; 	adc.w #word_002
-(1276) 0AD5 AB48        ; 	pha.w
-(1277) 0AD7 ABDA        ; 	phx.w
-(1278) 0AD9 204003      ; 	jsr readword_030
-(1279) 0ADC C204        ; 	adj #4
-(1281) 0ADE ABADE54A    ; 	lda.w gotword_015
-(1282) 0AE2 ABC90100    ; 	cmp.w #1
-(1283) 0AE6 F003        ; 	beq L_109
-(1284) 0AE8 4CF20A      ; 	jmp L_110
-(1286) 0AEB ABDA        ; 	phx.w
-(1287) 0AED 208F05      ; 	jsr enterword_062
-(1288) 0AF0 C202        ; 	adj #2
-(1291) 0AF2 4C8E0A      ; 	jmp L_106
-(1296) 0AF5 ABADDF4A    ; 	lda.w wordtablefull_012
-(1297) 0AF9 ABC90100    ; 	cmp.w #1
-(1298) 0AFD F003        ; 	beq L_111
-(1299) 0AFF 4C1C0B      ; 	jmp L_112
-(1302) 0B02 20FFFF      ; 	jsr _writeln
-(1304) 0B05 ABE2000C    ; 	psh.w #S_113
-(1305) 0B09 ABE20000    ; 	psh.w #0
-(1306) 0B0D ABE22B00    ; 	psh.w #43
-(1307) 0B11 20FFFF      ; 	jsr _swrite
-(1308) 0B14 C206        ; 	adj #6
-(1309) 0B16 20FFFF      ; 	jsr _writeln
-(1312) 0B19 4C4A0B      ; 	jmp L_114
-(1314) 0B1C ABADE14A    ; 	lda.w numbertablefull_013
-(1315) 0B20 ABC90100    ; 	cmp.w #1
-(1316) 0B24 F003        ; 	beq L_115
-(1317) 0B26 4C430B      ; 	jmp L_116
-(1320) 0B29 20FFFF      ; 	jsr _writeln
-(1322) 0B2C ABE2D30B    ; 	psh.w #S_117
-(1323) 0B30 ABE20000    ; 	psh.w #0
-(1324) 0B34 ABE22D00    ; 	psh.w #45
-(1325) 0B38 20FFFF      ; 	jsr _swrite
-(1326) 0B3B C206        ; 	adj #6
-(1327) 0B3D 20FFFF      ; 	jsr _writeln
-(1330) 0B40 4C4A0B      ; 	jmp L_118
-(1333) 0B43 ABDA        ; 	phx.w
-(1334) 0B45 208709      ; 	jsr printxref_098
-(1335) 0B48 C202        ; 	adj #2
-(1342) 0B4A 20FFFF      ; 	jsr _writeln
-(1344) 0B4D ABADD94A    ; 	lda.w nextwordindex_009
-(1345) 0B51 AB48        ; 	pha.w
-(1346) 0B53 A901        ; 	lda #1
-(1347) 0B55 CB4401      ; 	xma.w 1,S
-(1348) 0B58 38          ; 	sec
-(1349) 0B59 CBF501      ; 	sbc.w 1,S
-(1350) 0B5C C202        ; 	adj #2
-(1351) 0B5E AB48        ; 	pha.w
-(1352) 0B60 ABE20500    ; 	psh.w #5
-(1354) 0B64 20FFFF      ; 	jsr _iwrite
-(1355) 0B67 C204        ; 	adj #4
-(1356) 0B69 ABE2C50B    ; 	psh.w #S_119
-(1357) 0B6D ABE20000    ; 	psh.w #0
-(1358) 0B71 ABE20E00    ; 	psh.w #14
-(1359) 0B75 20FFFF      ; 	jsr _swrite
-(1360) 0B78 C206        ; 	adj #6
-(1361) 0B7A 20FFFF      ; 	jsr _writeln
-(1363) 0B7D ABADDB4A    ; 	lda.w nextnumberindex_010
-(1364) 0B81 AB48        ; 	pha.w
-(1365) 0B83 A901        ; 	lda #1
-(1366) 0B85 CB4401      ; 	xma.w 1,S
-(1367) 0B88 38          ; 	sec
-(1368) 0B89 CBF501      ; 	sbc.w 1,S
-(1369) 0B8C C202        ; 	adj #2
-(1370) 0B8E AB48        ; 	pha.w
-(1371) 0B90 ABE20500    ; 	psh.w #5
-(1373) 0B94 20FFFF      ; 	jsr _iwrite
-(1374) 0B97 C204        ; 	adj #4
-(1375) 0B99 ABE2B00B    ; 	psh.w #S_120
-(1376) 0B9D ABE20000    ; 	psh.w #0
-(1377) 0BA1 ABE21500    ; 	psh.w #21
-(1378) 0BA5 20FFFF      ; 	jsr _swrite
-(1379) 0BA8 C206        ; 	adj #6
-(1380) 0BAA 20FFFF      ; 	jsr _writeln
-(1383) 0BAD ABFA        ; 	plx.w
-(1384) 0BAF 60          ; 	rts
-(1389) 0BB0 206C696E    ; S_120 .str " line number entries."
-       0BB4 65206E756D62657220656E74726965732E
-(1390) 0BC5 20776F72    ; S_119 .str " word entries."
-       0BC9 6420656E74726965732E
-(1391) 0BD3 2A2A2A20    ; S_117 .str "*** The number table is not large enough. ***"
-       0BD7 546865206E756D626572207461626C65206973206E6F74206C6172676520656E
-       0BF7 6F7567682E202A2A2A
-(1392) 0C00 2A2A2A20    ; S_113 .str "*** The word table is not large enough. ***"
-       0C04 54686520776F7264207461626C65206973206E6F74206C6172676520656E6F75
-       0C24 67682E202A2A2A
-(1393) 0C2B 20202020    ; S_105 .str "    1 : "
-       0C2F 31203A20
-(1394) 0C33 2D2D2D2D    ; S_101 .str "---------------"
-       0C37 2D2D2D2D2D2D2D2D2D2D2D
-(1395) 0C42 43726F73    ; S_100 .str "Cross-reference"
-       0C46 732D7265666572656E6365
-(1396) 0C51 203A20      ; S_020 .str " : "
-(1397) 0C54 00          ; _bss_start .byt 1
-(1398) 0C55 00000000    ; wordtable_007 .byt 12000
-       0C59 0000000000000000000000000000000000000000000000000000000000000000
-       0C79 0000000000000000000000000000000000000000000000000000000000000000
-       0C99 0000000000000000000000000000000000000000000000000000000000000000
-       0CB9 0000000000000000000000000000000000000000000000000000000000000000
-       0CD9 0000000000000000000000000000000000000000000000000000000000000000
-       0CF9 0000000000000000000000000000000000000000000000000000000000000000
-       0D19 0000000000000000000000000000000000000000000000000000000000000000
-       0D39 0000000000000000000000000000000000000000000000000000000000000000
-       0D59 0000000000000000000000000000000000000000000000000000000000000000
-       0D79 0000000000000000000000000000000000000000000000000000000000000000
-       0D99 0000000000000000000000000000000000000000000000000000000000000000
-       0DB9 0000000000000000000000000000000000000000000000000000000000000000
-       0DD9 0000000000000000000000000000000000000000000000000000000000000000
-       0DF9 0000000000000000000000000000000000000000000000000000000000000000
-       0E19 0000000000000000000000000000000000000000000000000000000000000000
-       0E39 0000000000000000000000000000000000000000000000000000000000000000
-       0E59 0000000000000000000000000000000000000000000000000000000000000000
-       0E79 0000000000000000000000000000000000000000000000000000000000000000
-       0E99 0000000000000000000000000000000000000000000000000000000000000000
-       0EB9 0000000000000000000000000000000000000000000000000000000000000000
-       0ED9 0000000000000000000000000000000000000000000000000000000000000000
-       0EF9 0000000000000000000000000000000000000000000000000000000000000000
-       0F19 0000000000000000000000000000000000000000000000000000000000000000
-       0F39 0000000000000000000000000000000000000000000000000000000000000000
-       0F59 0000000000000000000000000000000000000000000000000000000000000000
-       0F79 0000000000000000000000000000000000000000000000000000000000000000
-       0F99 0000000000000000000000000000000000000000000000000000000000000000
-       0FB9 0000000000000000000000000000000000000000000000000000000000000000
-       0FD9 0000000000000000000000000000000000000000000000000000000000000000
-       0FF9 0000000000000000000000000000000000000000000000000000000000000000
-       1019 0000000000000000000000000000000000000000000000000000000000000000
-       1039 0000000000000000000000000000000000000000000000000000000000000000
-       1059 0000000000000000000000000000000000000000000000000000000000000000
-       1079 0000000000000000000000000000000000000000000000000000000000000000
-       1099 0000000000000000000000000000000000000000000000000000000000000000
-       10B9 0000000000000000000000000000000000000000000000000000000000000000
-       10D9 0000000000000000000000000000000000000000000000000000000000000000
-       10F9 0000000000000000000000000000000000000000000000000000000000000000
-       1119 0000000000000000000000000000000000000000000000000000000000000000
-       1139 0000000000000000000000000000000000000000000000000000000000000000
-       1159 0000000000000000000000000000000000000000000000000000000000000000
-       1179 0000000000000000000000000000000000000000000000000000000000000000
-       1199 0000000000000000000000000000000000000000000000000000000000000000
-       11B9 0000000000000000000000000000000000000000000000000000000000000000
-       11D9 0000000000000000000000000000000000000000000000000000000000000000
-       11F9 0000000000000000000000000000000000000000000000000000000000000000
-       1219 0000000000000000000000000000000000000000000000000000000000000000
-       1239 0000000000000000000000000000000000000000000000000000000000000000
-       1259 0000000000000000000000000000000000000000000000000000000000000000
-       1279 0000000000000000000000000000000000000000000000000000000000000000
-       1299 0000000000000000000000000000000000000000000000000000000000000000
-       12B9 0000000000000000000000000000000000000000000000000000000000000000
-       12D9 0000000000000000000000000000000000000000000000000000000000000000
-       12F9 0000000000000000000000000000000000000000000000000000000000000000
-       1319 0000000000000000000000000000000000000000000000000000000000000000
-       1339 0000000000000000000000000000000000000000000000000000000000000000
-       1359 0000000000000000000000000000000000000000000000000000000000000000
-       1379 0000000000000000000000000000000000000000000000000000000000000000
-       1399 0000000000000000000000000000000000000000000000000000000000000000
-       13B9 0000000000000000000000000000000000000000000000000000000000000000
-       13D9 0000000000000000000000000000000000000000000000000000000000000000
-       13F9 0000000000000000000000000000000000000000000000000000000000000000
-       1419 0000000000000000000000000000000000000000000000000000000000000000
-       1439 0000000000000000000000000000000000000000000000000000000000000000
-       1459 0000000000000000000000000000000000000000000000000000000000000000
-       1479 0000000000000000000000000000000000000000000000000000000000000000
-       1499 0000000000000000000000000000000000000000000000000000000000000000
-       14B9 0000000000000000000000000000000000000000000000000000000000000000
-       14D9 0000000000000000000000000000000000000000000000000000000000000000
-       14F9 0000000000000000000000000000000000000000000000000000000000000000
-       1519 0000000000000000000000000000000000000000000000000000000000000000
-       1539 0000000000000000000000000000000000000000000000000000000000000000
-       1559 0000000000000000000000000000000000000000000000000000000000000000
-       1579 0000000000000000000000000000000000000000000000000000000000000000
-       1599 0000000000000000000000000000000000000000000000000000000000000000
-       15B9 0000000000000000000000000000000000000000000000000000000000000000
-       15D9 0000000000000000000000000000000000000000000000000000000000000000
-       15F9 0000000000000000000000000000000000000000000000000000000000000000
-       1619 0000000000000000000000000000000000000000000000000000000000000000
-       1639 0000000000000000000000000000000000000000000000000000000000000000
-       1659 0000000000000000000000000000000000000000000000000000000000000000
-       1679 0000000000000000000000000000000000000000000000000000000000000000
-       1699 0000000000000000000000000000000000000000000000000000000000000000
-       16B9 0000000000000000000000000000000000000000000000000000000000000000
-       16D9 0000000000000000000000000000000000000000000000000000000000000000
-       16F9 0000000000000000000000000000000000000000000000000000000000000000
-       1719 0000000000000000000000000000000000000000000000000000000000000000
-       1739 0000000000000000000000000000000000000000000000000000000000000000
-       1759 0000000000000000000000000000000000000000000000000000000000000000
-       1779 0000000000000000000000000000000000000000000000000000000000000000
-       1799 0000000000000000000000000000000000000000000000000000000000000000
-       17B9 0000000000000000000000000000000000000000000000000000000000000000
-       17D9 0000000000000000000000000000000000000000000000000000000000000000
-       17F9 0000000000000000000000000000000000000000000000000000000000000000
-       1819 0000000000000000000000000000000000000000000000000000000000000000
-       1839 0000000000000000000000000000000000000000000000000000000000000000
-       1859 0000000000000000000000000000000000000000000000000000000000000000
-       1879 0000000000000000000000000000000000000000000000000000000000000000
-       1899 0000000000000000000000000000000000000000000000000000000000000000
-       18B9 0000000000000000000000000000000000000000000000000000000000000000
-       18D9 0000000000000000000000000000000000000000000000000000000000000000
-       18F9 0000000000000000000000000000000000000000000000000000000000000000
-       1919 0000000000000000000000000000000000000000000000000000000000000000
-       1939 0000000000000000000000000000000000000000000000000000000000000000
-       1959 0000000000000000000000000000000000000000000000000000000000000000
-       1979 0000000000000000000000000000000000000000000000000000000000000000
-       1999 0000000000000000000000000000000000000000000000000000000000000000
-       19B9 0000000000000000000000000000000000000000000000000000000000000000
-       19D9 0000000000000000000000000000000000000000000000000000000000000000
-       19F9 0000000000000000000000000000000000000000000000000000000000000000
-       1A19 0000000000000000000000000000000000000000000000000000000000000000
-       1A39 0000000000000000000000000000000000000000000000000000000000000000
-       1A59 0000000000000000000000000000000000000000000000000000000000000000
-       1A79 0000000000000000000000000000000000000000000000000000000000000000
-       1A99 0000000000000000000000000000000000000000000000000000000000000000
-       1AB9 0000000000000000000000000000000000000000000000000000000000000000
-       1AD9 0000000000000000000000000000000000000000000000000000000000000000
-       1AF9 0000000000000000000000000000000000000000000000000000000000000000
-       1B19 0000000000000000000000000000000000000000000000000000000000000000
-       1B39 0000000000000000000000000000000000000000000000000000000000000000
-       1B59 0000000000000000000000000000000000000000000000000000000000000000
-       1B79 0000000000000000000000000000000000000000000000000000000000000000
-       1B99 0000000000000000000000000000000000000000000000000000000000000000
-       1BB9 0000000000000000000000000000000000000000000000000000000000000000
-       1BD9 0000000000000000000000000000000000000000000000000000000000000000
-       1BF9 0000000000000000000000000000000000000000000000000000000000000000
-       1C19 0000000000000000000000000000000000000000000000000000000000000000
-       1C39 0000000000000000000000000000000000000000000000000000000000000000
-       1C59 0000000000000000000000000000000000000000000000000000000000000000
-       1C79 0000000000000000000000000000000000000000000000000000000000000000
-       1C99 0000000000000000000000000000000000000000000000000000000000000000
-       1CB9 0000000000000000000000000000000000000000000000000000000000000000
-       1CD9 0000000000000000000000000000000000000000000000000000000000000000
-       1CF9 0000000000000000000000000000000000000000000000000000000000000000
-       1D19 0000000000000000000000000000000000000000000000000000000000000000
-       1D39 0000000000000000000000000000000000000000000000000000000000000000
-       1D59 0000000000000000000000000000000000000000000000000000000000000000
-       1D79 0000000000000000000000000000000000000000000000000000000000000000
-       1D99 0000000000000000000000000000000000000000000000000000000000000000
-       1DB9 0000000000000000000000000000000000000000000000000000000000000000
-       1DD9 0000000000000000000000000000000000000000000000000000000000000000
-       1DF9 0000000000000000000000000000000000000000000000000000000000000000
-       1E19 0000000000000000000000000000000000000000000000000000000000000000
-       1E39 0000000000000000000000000000000000000000000000000000000000000000
-       1E59 0000000000000000000000000000000000000000000000000000000000000000
-       1E79 0000000000000000000000000000000000000000000000000000000000000000
-       1E99 0000000000000000000000000000000000000000000000000000000000000000
-       1EB9 0000000000000000000000000000000000000000000000000000000000000000
-       1ED9 0000000000000000000000000000000000000000000000000000000000000000
-       1EF9 0000000000000000000000000000000000000000000000000000000000000000
-       1F19 0000000000000000000000000000000000000000000000000000000000000000
-       1F39 0000000000000000000000000000000000000000000000000000000000000000
-       1F59 0000000000000000000000000000000000000000000000000000000000000000
-       1F79 0000000000000000000000000000000000000000000000000000000000000000
-       1F99 0000000000000000000000000000000000000000000000000000000000000000
-       1FB9 0000000000000000000000000000000000000000000000000000000000000000
-       1FD9 0000000000000000000000000000000000000000000000000000000000000000
-       1FF9 0000000000000000000000000000000000000000000000000000000000000000
-       2019 0000000000000000000000000000000000000000000000000000000000000000
-       2039 0000000000000000000000000000000000000000000000000000000000000000
-       2059 0000000000000000000000000000000000000000000000000000000000000000
-       2079 0000000000000000000000000000000000000000000000000000000000000000
-       2099 0000000000000000000000000000000000000000000000000000000000000000
-       20B9 0000000000000000000000000000000000000000000000000000000000000000
-       20D9 0000000000000000000000000000000000000000000000000000000000000000
-       20F9 0000000000000000000000000000000000000000000000000000000000000000
-       2119 0000000000000000000000000000000000000000000000000000000000000000
-       2139 0000000000000000000000000000000000000000000000000000000000000000
-       2159 0000000000000000000000000000000000000000000000000000000000000000
-       2179 0000000000000000000000000000000000000000000000000000000000000000
-       2199 0000000000000000000000000000000000000000000000000000000000000000
-       21B9 0000000000000000000000000000000000000000000000000000000000000000
-       21D9 0000000000000000000000000000000000000000000000000000000000000000
-       21F9 0000000000000000000000000000000000000000000000000000000000000000
-       2219 0000000000000000000000000000000000000000000000000000000000000000
-       2239 0000000000000000000000000000000000000000000000000000000000000000
-       2259 0000000000000000000000000000000000000000000000000000000000000000
-       2279 0000000000000000000000000000000000000000000000000000000000000000
-       2299 0000000000000000000000000000000000000000000000000000000000000000
-       22B9 0000000000000000000000000000000000000000000000000000000000000000
-       22D9 0000000000000000000000000000000000000000000000000000000000000000
-       22F9 0000000000000000000000000000000000000000000000000000000000000000
-       2319 0000000000000000000000000000000000000000000000000000000000000000
-       2339 0000000000000000000000000000000000000000000000000000000000000000
-       2359 0000000000000000000000000000000000000000000000000000000000000000
-       2379 0000000000000000000000000000000000000000000000000000000000000000
-       2399 0000000000000000000000000000000000000000000000000000000000000000
-       23B9 0000000000000000000000000000000000000000000000000000000000000000
-       23D9 0000000000000000000000000000000000000000000000000000000000000000
-       23F9 0000000000000000000000000000000000000000000000000000000000000000
-       2419 0000000000000000000000000000000000000000000000000000000000000000
-       2439 0000000000000000000000000000000000000000000000000000000000000000
-       2459 0000000000000000000000000000000000000000000000000000000000000000
-       2479 0000000000000000000000000000000000000000000000000000000000000000
-       2499 0000000000000000000000000000000000000000000000000000000000000000
-       24B9 0000000000000000000000000000000000000000000000000000000000000000
-       24D9 0000000000000000000000000000000000000000000000000000000000000000
-       24F9 0000000000000000000000000000000000000000000000000000000000000000
-       2519 0000000000000000000000000000000000000000000000000000000000000000
-       2539 0000000000000000000000000000000000000000000000000000000000000000
-       2559 0000000000000000000000000000000000000000000000000000000000000000
-       2579 0000000000000000000000000000000000000000000000000000000000000000
-       2599 0000000000000000000000000000000000000000000000000000000000000000
-       25B9 0000000000000000000000000000000000000000000000000000000000000000
-       25D9 0000000000000000000000000000000000000000000000000000000000000000
-       25F9 0000000000000000000000000000000000000000000000000000000000000000
-       2619 0000000000000000000000000000000000000000000000000000000000000000
-       2639 0000000000000000000000000000000000000000000000000000000000000000
-       2659 0000000000000000000000000000000000000000000000000000000000000000
-       2679 0000000000000000000000000000000000000000000000000000000000000000
-       2699 0000000000000000000000000000000000000000000000000000000000000000
-       26B9 0000000000000000000000000000000000000000000000000000000000000000
-       26D9 0000000000000000000000000000000000000000000000000000000000000000
-       26F9 0000000000000000000000000000000000000000000000000000000000000000
-       2719 0000000000000000000000000000000000000000000000000000000000000000
-       2739 0000000000000000000000000000000000000000000000000000000000000000
-       2759 0000000000000000000000000000000000000000000000000000000000000000
-       2779 0000000000000000000000000000000000000000000000000000000000000000
-       2799 0000000000000000000000000000000000000000000000000000000000000000
-       27B9 0000000000000000000000000000000000000000000000000000000000000000
-       27D9 0000000000000000000000000000000000000000000000000000000000000000
-       27F9 0000000000000000000000000000000000000000000000000000000000000000
-       2819 0000000000000000000000000000000000000000000000000000000000000000
-       2839 0000000000000000000000000000000000000000000000000000000000000000
-       2859 0000000000000000000000000000000000000000000000000000000000000000
-       2879 0000000000000000000000000000000000000000000000000000000000000000
-       2899 0000000000000000000000000000000000000000000000000000000000000000
-       28B9 0000000000000000000000000000000000000000000000000000000000000000
-       28D9 0000000000000000000000000000000000000000000000000000000000000000
-       28F9 0000000000000000000000000000000000000000000000000000000000000000
-       2919 0000000000000000000000000000000000000000000000000000000000000000
-       2939 0000000000000000000000000000000000000000000000000000000000000000
-       2959 0000000000000000000000000000000000000000000000000000000000000000
-       2979 0000000000000000000000000000000000000000000000000000000000000000
-       2999 0000000000000000000000000000000000000000000000000000000000000000
-       29B9 0000000000000000000000000000000000000000000000000000000000000000
-       29D9 0000000000000000000000000000000000000000000000000000000000000000
-       29F9 0000000000000000000000000000000000000000000000000000000000000000
-       2A19 0000000000000000000000000000000000000000000000000000000000000000
-       2A39 0000000000000000000000000000000000000000000000000000000000000000
-       2A59 0000000000000000000000000000000000000000000000000000000000000000
-       2A79 0000000000000000000000000000000000000000000000000000000000000000
-       2A99 0000000000000000000000000000000000000000000000000000000000000000
-       2AB9 0000000000000000000000000000000000000000000000000000000000000000
-       2AD9 0000000000000000000000000000000000000000000000000000000000000000
-       2AF9 0000000000000000000000000000000000000000000000000000000000000000
-       2B19 0000000000000000000000000000000000000000000000000000000000000000
-       2B39 0000000000000000000000000000000000000000000000000000000000000000
-       2B59 0000000000000000000000000000000000000000000000000000000000000000
-       2B79 0000000000000000000000000000000000000000000000000000000000000000
-       2B99 0000000000000000000000000000000000000000000000000000000000000000
-       2BB9 0000000000000000000000000000000000000000000000000000000000000000
-       2BD9 0000000000000000000000000000000000000000000000000000000000000000
-       2BF9 0000000000000000000000000000000000000000000000000000000000000000
-       2C19 0000000000000000000000000000000000000000000000000000000000000000
-       2C39 0000000000000000000000000000000000000000000000000000000000000000
-       2C59 0000000000000000000000000000000000000000000000000000000000000000
-       2C79 0000000000000000000000000000000000000000000000000000000000000000
-       2C99 0000000000000000000000000000000000000000000000000000000000000000
-       2CB9 0000000000000000000000000000000000000000000000000000000000000000
-       2CD9 0000000000000000000000000000000000000000000000000000000000000000
-       2CF9 0000000000000000000000000000000000000000000000000000000000000000
-       2D19 0000000000000000000000000000000000000000000000000000000000000000
-       2D39 0000000000000000000000000000000000000000000000000000000000000000
-       2D59 0000000000000000000000000000000000000000000000000000000000000000
-       2D79 0000000000000000000000000000000000000000000000000000000000000000
-       2D99 0000000000000000000000000000000000000000000000000000000000000000
-       2DB9 0000000000000000000000000000000000000000000000000000000000000000
-       2DD9 0000000000000000000000000000000000000000000000000000000000000000
-       2DF9 0000000000000000000000000000000000000000000000000000000000000000
-       2E19 0000000000000000000000000000000000000000000000000000000000000000
-       2E39 0000000000000000000000000000000000000000000000000000000000000000
-       2E59 0000000000000000000000000000000000000000000000000000000000000000
-       2E79 0000000000000000000000000000000000000000000000000000000000000000
-       2E99 0000000000000000000000000000000000000000000000000000000000000000
-       2EB9 0000000000000000000000000000000000000000000000000000000000000000
-       2ED9 0000000000000000000000000000000000000000000000000000000000000000
-       2EF9 0000000000000000000000000000000000000000000000000000000000000000
-       2F19 0000000000000000000000000000000000000000000000000000000000000000
-       2F39 0000000000000000000000000000000000000000000000000000000000000000
-       2F59 0000000000000000000000000000000000000000000000000000000000000000
-       2F79 0000000000000000000000000000000000000000000000000000000000000000
-       2F99 0000000000000000000000000000000000000000000000000000000000000000
-       2FB9 0000000000000000000000000000000000000000000000000000000000000000
-       2FD9 0000000000000000000000000000000000000000000000000000000000000000
-       2FF9 0000000000000000000000000000000000000000000000000000000000000000
-       3019 0000000000000000000000000000000000000000000000000000000000000000
-       3039 0000000000000000000000000000000000000000000000000000000000000000
-       3059 0000000000000000000000000000000000000000000000000000000000000000
-       3079 0000000000000000000000000000000000000000000000000000000000000000
-       3099 0000000000000000000000000000000000000000000000000000000000000000
-       30B9 0000000000000000000000000000000000000000000000000000000000000000
-       30D9 0000000000000000000000000000000000000000000000000000000000000000
-       30F9 0000000000000000000000000000000000000000000000000000000000000000
-       3119 0000000000000000000000000000000000000000000000000000000000000000
-       3139 0000000000000000000000000000000000000000000000000000000000000000
-       3159 0000000000000000000000000000000000000000000000000000000000000000
-       3179 0000000000000000000000000000000000000000000000000000000000000000
-       3199 0000000000000000000000000000000000000000000000000000000000000000
-       31B9 0000000000000000000000000000000000000000000000000000000000000000
-       31D9 0000000000000000000000000000000000000000000000000000000000000000
-       31F9 0000000000000000000000000000000000000000000000000000000000000000
-       3219 0000000000000000000000000000000000000000000000000000000000000000
-       3239 0000000000000000000000000000000000000000000000000000000000000000
-       3259 0000000000000000000000000000000000000000000000000000000000000000
-       3279 0000000000000000000000000000000000000000000000000000000000000000
-       3299 0000000000000000000000000000000000000000000000000000000000000000
-       32B9 0000000000000000000000000000000000000000000000000000000000000000
-       32D9 0000000000000000000000000000000000000000000000000000000000000000
-       32F9 0000000000000000000000000000000000000000000000000000000000000000
-       3319 0000000000000000000000000000000000000000000000000000000000000000
-       3339 0000000000000000000000000000000000000000000000000000000000000000
-       3359 0000000000000000000000000000000000000000000000000000000000000000
-       3379 0000000000000000000000000000000000000000000000000000000000000000
-       3399 0000000000000000000000000000000000000000000000000000000000000000
-       33B9 0000000000000000000000000000000000000000000000000000000000000000
-       33D9 0000000000000000000000000000000000000000000000000000000000000000
-       33F9 0000000000000000000000000000000000000000000000000000000000000000
-       3419 0000000000000000000000000000000000000000000000000000000000000000
-       3439 0000000000000000000000000000000000000000000000000000000000000000
-       3459 0000000000000000000000000000000000000000000000000000000000000000
-       3479 0000000000000000000000000000000000000000000000000000000000000000
-       3499 0000000000000000000000000000000000000000000000000000000000000000
-       34B9 0000000000000000000000000000000000000000000000000000000000000000
-       34D9 0000000000000000000000000000000000000000000000000000000000000000
-       34F9 0000000000000000000000000000000000000000000000000000000000000000
-       3519 0000000000000000000000000000000000000000000000000000000000000000
-       3539 0000000000000000000000000000000000000000000000000000000000000000
-       3559 0000000000000000000000000000000000000000000000000000000000000000
-       3579 0000000000000000000000000000000000000000000000000000000000000000
-       3599 0000000000000000000000000000000000000000000000000000000000000000
-       35B9 0000000000000000000000000000000000000000000000000000000000000000
-       35D9 0000000000000000000000000000000000000000000000000000000000000000
-       35F9 0000000000000000000000000000000000000000000000000000000000000000
-       3619 0000000000000000000000000000000000000000000000000000000000000000
-       3639 0000000000000000000000000000000000000000000000000000000000000000
-       3659 0000000000000000000000000000000000000000000000000000000000000000
-       3679 0000000000000000000000000000000000000000000000000000000000000000
-       3699 0000000000000000000000000000000000000000000000000000000000000000
-       36B9 0000000000000000000000000000000000000000000000000000000000000000
-       36D9 0000000000000000000000000000000000000000000000000000000000000000
-       36F9 0000000000000000000000000000000000000000000000000000000000000000
-       3719 0000000000000000000000000000000000000000000000000000000000000000
-       3739 0000000000000000000000000000000000000000000000000000000000000000
-       3759 0000000000000000000000000000000000000000000000000000000000000000
-       3779 0000000000000000000000000000000000000000000000000000000000000000
-       3799 0000000000000000000000000000000000000000000000000000000000000000
-       37B9 0000000000000000000000000000000000000000000000000000000000000000
-       37D9 0000000000000000000000000000000000000000000000000000000000000000
-       37F9 0000000000000000000000000000000000000000000000000000000000000000
-       3819 0000000000000000000000000000000000000000000000000000000000000000
-       3839 0000000000000000000000000000000000000000000000000000000000000000
-       3859 0000000000000000000000000000000000000000000000000000000000000000
-       3879 0000000000000000000000000000000000000000000000000000000000000000
-       3899 0000000000000000000000000000000000000000000000000000000000000000
-       38B9 0000000000000000000000000000000000000000000000000000000000000000
-       38D9 0000000000000000000000000000000000000000000000000000000000000000
-       38F9 0000000000000000000000000000000000000000000000000000000000000000
-       3919 0000000000000000000000000000000000000000000000000000000000000000
-       3939 0000000000000000000000000000000000000000000000000000000000000000
-       3959 0000000000000000000000000000000000000000000000000000000000000000
-       3979 0000000000000000000000000000000000000000000000000000000000000000
-       3999 0000000000000000000000000000000000000000000000000000000000000000
-       39B9 0000000000000000000000000000000000000000000000000000000000000000
-       39D9 0000000000000000000000000000000000000000000000000000000000000000
-       39F9 0000000000000000000000000000000000000000000000000000000000000000
-       3A19 0000000000000000000000000000000000000000000000000000000000000000
-       3A39 0000000000000000000000000000000000000000000000000000000000000000
-       3A59 0000000000000000000000000000000000000000000000000000000000000000
-       3A79 0000000000000000000000000000000000000000000000000000000000000000
-       3A99 0000000000000000000000000000000000000000000000000000000000000000
-       3AB9 0000000000000000000000000000000000000000000000000000000000000000
-       3AD9 0000000000000000000000000000000000000000000000000000000000000000
-       3AF9 0000000000000000000000000000000000000000000000000000000000000000
-       3B19 00000000000000000000000000000000000000000000000000000000
-(1399) 3B35 00000000    ; numbertable_008 .byt 4004
-       3B39 0000000000000000000000000000000000000000000000000000000000000000
-       3B59 0000000000000000000000000000000000000000000000000000000000000000
-       3B79 0000000000000000000000000000000000000000000000000000000000000000
-       3B99 0000000000000000000000000000000000000000000000000000000000000000
-       3BB9 0000000000000000000000000000000000000000000000000000000000000000
-       3BD9 0000000000000000000000000000000000000000000000000000000000000000
-       3BF9 0000000000000000000000000000000000000000000000000000000000000000
-       3C19 0000000000000000000000000000000000000000000000000000000000000000
-       3C39 0000000000000000000000000000000000000000000000000000000000000000
-       3C59 0000000000000000000000000000000000000000000000000000000000000000
-       3C79 0000000000000000000000000000000000000000000000000000000000000000
-       3C99 0000000000000000000000000000000000000000000000000000000000000000
-       3CB9 0000000000000000000000000000000000000000000000000000000000000000
-       3CD9 0000000000000000000000000000000000000000000000000000000000000000
-       3CF9 0000000000000000000000000000000000000000000000000000000000000000
-       3D19 0000000000000000000000000000000000000000000000000000000000000000
-       3D39 0000000000000000000000000000000000000000000000000000000000000000
-       3D59 0000000000000000000000000000000000000000000000000000000000000000
-       3D79 0000000000000000000000000000000000000000000000000000000000000000
-       3D99 0000000000000000000000000000000000000000000000000000000000000000
-       3DB9 0000000000000000000000000000000000000000000000000000000000000000
-       3DD9 0000000000000000000000000000000000000000000000000000000000000000
-       3DF9 0000000000000000000000000000000000000000000000000000000000000000
-       3E19 0000000000000000000000000000000000000000000000000000000000000000
-       3E39 0000000000000000000000000000000000000000000000000000000000000000
-       3E59 0000000000000000000000000000000000000000000000000000000000000000
-       3E79 0000000000000000000000000000000000000000000000000000000000000000
-       3E99 0000000000000000000000000000000000000000000000000000000000000000
-       3EB9 0000000000000000000000000000000000000000000000000000000000000000
-       3ED9 0000000000000000000000000000000000000000000000000000000000000000
-       3EF9 0000000000000000000000000000000000000000000000000000000000000000
-       3F19 0000000000000000000000000000000000000000000000000000000000000000
-       3F39 0000000000000000000000000000000000000000000000000000000000000000
-       3F59 0000000000000000000000000000000000000000000000000000000000000000
-       3F79 0000000000000000000000000000000000000000000000000000000000000000
-       3F99 0000000000000000000000000000000000000000000000000000000000000000
-       3FB9 0000000000000000000000000000000000000000000000000000000000000000
-       3FD9 0000000000000000000000000000000000000000000000000000000000000000
-       3FF9 0000000000000000000000000000000000000000000000000000000000000000
-       4019 0000000000000000000000000000000000000000000000000000000000000000
-       4039 0000000000000000000000000000000000000000000000000000000000000000
-       4059 0000000000000000000000000000000000000000000000000000000000000000
-       4079 0000000000000000000000000000000000000000000000000000000000000000
-       4099 0000000000000000000000000000000000000000000000000000000000000000
-       40B9 0000000000000000000000000000000000000000000000000000000000000000
-       40D9 0000000000000000000000000000000000000000000000000000000000000000
-       40F9 0000000000000000000000000000000000000000000000000000000000000000
-       4119 0000000000000000000000000000000000000000000000000000000000000000
-       4139 0000000000000000000000000000000000000000000000000000000000000000
-       4159 0000000000000000000000000000000000000000000000000000000000000000
-       4179 0000000000000000000000000000000000000000000000000000000000000000
-       4199 0000000000000000000000000000000000000000000000000000000000000000
-       41B9 0000000000000000000000000000000000000000000000000000000000000000
-       41D9 0000000000000000000000000000000000000000000000000000000000000000
-       41F9 0000000000000000000000000000000000000000000000000000000000000000
-       4219 0000000000000000000000000000000000000000000000000000000000000000
-       4239 0000000000000000000000000000000000000000000000000000000000000000
-       4259 0000000000000000000000000000000000000000000000000000000000000000
-       4279 0000000000000000000000000000000000000000000000000000000000000000
-       4299 0000000000000000000000000000000000000000000000000000000000000000
-       42B9 0000000000000000000000000000000000000000000000000000000000000000
-       42D9 0000000000000000000000000000000000000000000000000000000000000000
-       42F9 0000000000000000000000000000000000000000000000000000000000000000
-       4319 0000000000000000000000000000000000000000000000000000000000000000
-       4339 0000000000000000000000000000000000000000000000000000000000000000
-       4359 0000000000000000000000000000000000000000000000000000000000000000
-       4379 0000000000000000000000000000000000000000000000000000000000000000
-       4399 0000000000000000000000000000000000000000000000000000000000000000
-       43B9 0000000000000000000000000000000000000000000000000000000000000000
-       43D9 0000000000000000000000000000000000000000000000000000000000000000
-       43F9 0000000000000000000000000000000000000000000000000000000000000000
-       4419 0000000000000000000000000000000000000000000000000000000000000000
-       4439 0000000000000000000000000000000000000000000000000000000000000000
-       4459 0000000000000000000000000000000000000000000000000000000000000000
-       4479 0000000000000000000000000000000000000000000000000000000000000000
-       4499 0000000000000000000000000000000000000000000000000000000000000000
-       44B9 0000000000000000000000000000000000000000000000000000000000000000
-       44D9 0000000000000000000000000000000000000000000000000000000000000000
-       44F9 0000000000000000000000000000000000000000000000000000000000000000
-       4519 0000000000000000000000000000000000000000000000000000000000000000
-       4539 0000000000000000000000000000000000000000000000000000000000000000
-       4559 0000000000000000000000000000000000000000000000000000000000000000
-       4579 0000000000000000000000000000000000000000000000000000000000000000
-       4599 0000000000000000000000000000000000000000000000000000000000000000
-       45B9 0000000000000000000000000000000000000000000000000000000000000000
-       45D9 0000000000000000000000000000000000000000000000000000000000000000
-       45F9 0000000000000000000000000000000000000000000000000000000000000000
-       4619 0000000000000000000000000000000000000000000000000000000000000000
-       4639 0000000000000000000000000000000000000000000000000000000000000000
-       4659 0000000000000000000000000000000000000000000000000000000000000000
-       4679 0000000000000000000000000000000000000000000000000000000000000000
-       4699 0000000000000000000000000000000000000000000000000000000000000000
-       46B9 0000000000000000000000000000000000000000000000000000000000000000
-       46D9 0000000000000000000000000000000000000000000000000000000000000000
-       46F9 0000000000000000000000000000000000000000000000000000000000000000
-       4719 0000000000000000000000000000000000000000000000000000000000000000
-       4739 0000000000000000000000000000000000000000000000000000000000000000
-       4759 0000000000000000000000000000000000000000000000000000000000000000
-       4779 0000000000000000000000000000000000000000000000000000000000000000
-       4799 0000000000000000000000000000000000000000000000000000000000000000
-       47B9 0000000000000000000000000000000000000000000000000000000000000000
-       47D9 0000000000000000000000000000000000000000000000000000000000000000
-       47F9 0000000000000000000000000000000000000000000000000000000000000000
-       4819 0000000000000000000000000000000000000000000000000000000000000000
-       4839 0000000000000000000000000000000000000000000000000000000000000000
-       4859 0000000000000000000000000000000000000000000000000000000000000000
-       4879 0000000000000000000000000000000000000000000000000000000000000000
-       4899 0000000000000000000000000000000000000000000000000000000000000000
-       48B9 0000000000000000000000000000000000000000000000000000000000000000
-       48D9 0000000000000000000000000000000000000000000000000000000000000000
-       48F9 0000000000000000000000000000000000000000000000000000000000000000
-       4919 0000000000000000000000000000000000000000000000000000000000000000
-       4939 0000000000000000000000000000000000000000000000000000000000000000
-       4959 0000000000000000000000000000000000000000000000000000000000000000
-       4979 0000000000000000000000000000000000000000000000000000000000000000
-       4999 0000000000000000000000000000000000000000000000000000000000000000
-       49B9 0000000000000000000000000000000000000000000000000000000000000000
-       49D9 0000000000000000000000000000000000000000000000000000000000000000
-       49F9 0000000000000000000000000000000000000000000000000000000000000000
-       4A19 0000000000000000000000000000000000000000000000000000000000000000
-       4A39 0000000000000000000000000000000000000000000000000000000000000000
-       4A59 0000000000000000000000000000000000000000000000000000000000000000
-       4A79 0000000000000000000000000000000000000000000000000000000000000000
-       4A99 0000000000000000000000000000000000000000000000000000000000000000
-       4AB9 0000000000000000000000000000000000000000000000000000000000000000
-(1400) 4AD9 0000        ; nextwordindex_009 .wrd 1
-(1401) 4ADB 0000        ; nextnumberindex_010 .wrd 1
-(1402) 4ADD 0000        ; linenumber_011 .wrd 1
-(1403) 4ADF 0000        ; wordtablefull_012 .wrd 1
-(1404) 4AE1 0000        ; numbertablefull_013 .wrd 1
-(1405) 4AE3 0000        ; newline_014 .wrd 1
-(1406) 4AE5 0000        ; gotword_015 .wrd 1
-(1407) 4AE7 00          ; _bss_end .byt 1
-(1408) 4AE8 00000000    ; _stk .byt 1023
-       4AEC 0000000000000000000000000000000000000000000000000000000000000000
-       4B0C 0000000000000000000000000000000000000000000000000000000000000000
-       4B2C 0000000000000000000000000000000000000000000000000000000000000000
-       4B4C 0000000000000000000000000000000000000000000000000000000000000000
-       4B6C 0000000000000000000000000000000000000000000000000000000000000000
-       4B8C 0000000000000000000000000000000000000000000000000000000000000000
-       4BAC 0000000000000000000000000000000000000000000000000000000000000000
-       4BCC 0000000000000000000000000000000000000000000000000000000000000000
-       4BEC 0000000000000000000000000000000000000000000000000000000000000000
-       4C0C 0000000000000000000000000000000000000000000000000000000000000000
-       4C2C 0000000000000000000000000000000000000000000000000000000000000000
-       4C4C 0000000000000000000000000000000000000000000000000000000000000000
-       4C6C 0000000000000000000000000000000000000000000000000000000000000000
-       4C8C 0000000000000000000000000000000000000000000000000000000000000000
-       4CAC 0000000000000000000000000000000000000000000000000000000000000000
-       4CCC 0000000000000000000000000000000000000000000000000000000000000000
-       4CEC 0000000000000000000000000000000000000000000000000000000000000000
-       4D0C 0000000000000000000000000000000000000000000000000000000000000000
-       4D2C 0000000000000000000000000000000000000000000000000000000000000000
-       4D4C 0000000000000000000000000000000000000000000000000000000000000000
-       4D6C 0000000000000000000000000000000000000000000000000000000000000000
-       4D8C 0000000000000000000000000000000000000000000000000000000000000000
-       4DAC 0000000000000000000000000000000000000000000000000000000000000000
-       4DCC 0000000000000000000000000000000000000000000000000000000000000000
-       4DEC 0000000000000000000000000000000000000000000000000000000000000000
-       4E0C 0000000000000000000000000000000000000000000000000000000000000000
-       4E2C 0000000000000000000000000000000000000000000000000000000000000000
-       4E4C 0000000000000000000000000000000000000000000000000000000000000000
-       4E6C 0000000000000000000000000000000000000000000000000000000000000000
-       4E8C 0000000000000000000000000000000000000000000000000000000000000000
-       4EAC 0000000000000000000000000000000000000000000000000000000000000000
-       4ECC 000000000000000000000000000000000000000000000000000000
-(1409) 4EE7 00          ; _stk_top .byt 1
+(  97) 023E 20310B      ; 	jsr _writeln
+( 105) 0241 ABEEF54A    ; 	inc.w linenumber_011
+( 107) 0245 ABADF54A    ; 	lda.w linenumber_011
+( 108) 0249 AB48        ; 	pha.w
+( 110) 024B ABE20500    ; 	psh.w #5
+( 111) 024F 20490B      ; 	jsr _iwrite
+( 112) 0252 C204        ; 	adj #4
+( 113) 0254 ABE2690C    ; 	psh.w #S_020
+( 114) 0258 ABE20000    ; 	psh.w #0
+( 115) 025C ABE20300    ; 	psh.w #3
+( 116) 0260 20370B      ; 	jsr _swrite
+( 117) 0263 C206        ; 	adj #6
+( 121) 0265 ABADFB4A    ; 	lda.w newline_014
+( 122) 0269 AB48        ; 	pha.w
+( 123) 026B 20FFFF      ; 	jsr _eof
+( 124) 026E CB1501      ; 	ora.w 1,S
+( 125) 0271 C202        ; 	adj #2
+( 126) 0273 ABC90100    ; 	cmp.w #1
+( 127) 0277 F003        ; 	beq L_021
+( 128) 0279 4C8302      ; 	jmp L_022
+( 131) 027C A920        ; 	lda #32
+( 132) 027E 85FB        ; 	sta ch_017
+( 135) 0280 4CA002      ; 	jmp L_023
+( 138) 0283 AB8A        ; 	txa.w
+( 139) 0285 18          ; 	clc
+( 140) 0286 AB69FBFF    ; 	adc.w #ch_017
+( 141) 028A AB48        ; 	pha.w
+( 142) 028C 20FFFF      ; 	jsr _cread
+( 143) 028F 8B6B        ; 	pli.s
+( 144) 0291 8300        ; 	sta 0,I++
+( 146) 0293 B5FB        ; 	lda ch_017,X
+( 147) 0295 AB48        ; 	pha.w
+( 148) 0297 ABE20000    ; 	psh.w #0
+( 149) 029B 20FFFF      ; 	jsr _cwrite
+( 150) 029E C204        ; 	adj #4
+( 154) 02A0 B5FB        ; 	lda ch_017,X
+( 155) 02A2 A8          ; 	tay
+( 156) 02A3 98          ; 	tya
+( 157) 02A4 AB95FD      ; 	sta.w RETURN_VALUE,X
+( 159) 02A7 ABB5FD      ; 	lda.w RETURN_VALUE,X
+( 160) 02AA AB9A        ; 	txs.w
+( 161) 02AC ABFA        ; 	plx.w
+( 162) 02AE 60          ; 	rts
+( 173) 02AF ABDA        ; 	phx.w
+( 174) 02B1 ABBA        ; 	tsx.w
+( 175) 02B3 C2FC        ; 	adj #-4
+( 177) 02B5 B507        ; 	lda ch_025,X
+( 181) 02B7 ABC96100    ; 	cmp.w #97
+( 183) 02BB AB5004      ; 	bge L_026T
+( 184) 02BE A900        ; 	lda #0
+( 185) 02C0 8002        ; 	bra L_026
+( 186) 02C2 A901        ; L_026T lda #1
+( 189) 02C4 AB48        ; 	pha.w
+( 190) 02C6 B507        ; 	lda ch_025,X
+( 194) 02C8 ABC97A00    ; 	cmp.w #122
+( 196) 02CC AB3004      ; 	ble L_027T
+( 197) 02CF A900        ; 	lda #0
+( 198) 02D1 8002        ; 	bra L_027
+( 199) 02D3 A901        ; L_027T lda #1
+( 202) 02D5 CB3501      ; 	and.w 1,S
+( 203) 02D8 C202        ; 	adj #2
+( 205) 02DA AB48        ; 	pha.w
+( 206) 02DC B507        ; 	lda ch_025,X
+( 210) 02DE ABC94100    ; 	cmp.w #65
+( 212) 02E2 AB5004      ; 	bge L_028T
+( 213) 02E5 A900        ; 	lda #0
+( 214) 02E7 8002        ; 	bra L_028
+( 215) 02E9 A901        ; L_028T lda #1
+( 218) 02EB AB48        ; 	pha.w
+( 219) 02ED B507        ; 	lda ch_025,X
+( 223) 02EF ABC95A00    ; 	cmp.w #90
+( 225) 02F3 AB3004      ; 	ble L_029T
+( 226) 02F6 A900        ; 	lda #0
+( 227) 02F8 8002        ; 	bra L_029
+( 228) 02FA A901        ; L_029T lda #1
+( 231) 02FC CB3501      ; 	and.w 1,S
+( 232) 02FF C202        ; 	adj #2
+( 233) 0301 CB1501      ; 	ora.w 1,S
+( 234) 0304 C202        ; 	adj #2
+( 235) 0306 AB95FD      ; 	sta.w RETURN_VALUE,X
+( 237) 0309 ABB5FD      ; 	lda.w RETURN_VALUE,X
+( 238) 030C AB9A        ; 	txs.w
+( 239) 030E ABFA        ; 	plx.w
+( 240) 0310 60          ; 	rts
+( 260) 0311 ABDA        ; 	phx.w
+( 261) 0313 ABBA        ; 	tsx.w
+( 262) 0315 C2FC        ; 	adj #-4
+( 265) 0317 AB9CFD4A    ; 	stz.w gotword_015
+( 269) 031B 20FFFF      ; 	jsr _eof
+( 270) 031E 4901        ; 	eor #1
+( 271) 0320 ABC90100    ; 	cmp.w #1
+( 272) 0324 F003        ; 	beq L_034
+( 273) 0326 4C5603      ; 	jmp L_035
+( 278) 0329 ABB505      ; 	lda.w STATIC_LINK,X
+( 279) 032C AB48        ; 	pha.w
+( 280) 032E 201F02      ; 	jsr nextchar_016
+( 281) 0331 C202        ; 	adj #2
+( 282) 0333 85FD        ; 	sta ch_033
+( 284) 0335 20FFFF      ; 	jsr _eof
+( 285) 0338 AB48        ; 	pha.w
+( 286) 033A B5FD        ; 	lda ch_033,X
+( 287) 033C AB48        ; 	pha.w
+( 288) 033E ABB505      ; 	lda.w STATIC_LINK,X
+( 289) 0341 AB48        ; 	pha.w
+( 290) 0343 20AF02      ; 	jsr isletter_024
+( 291) 0346 C204        ; 	adj #4
+( 292) 0348 CB1501      ; 	ora.w 1,S
+( 293) 034B C202        ; 	adj #2
+( 294) 034D ABC90100    ; 	cmp.w #1
+( 295) 0351 F003        ; 	beq L_037
+( 296) 0353 4C2903      ; 	jmp L_036
+( 303) 0356 20FFFF      ; 	jsr _eof
+( 304) 0359 4901        ; 	eor #1
+( 305) 035B ABC90100    ; 	cmp.w #1
+( 306) 035F F003        ; 	beq L_038
+( 307) 0361 4C3D04      ; 	jmp L_039
+( 311) 0364 AB74FF      ; 	stz.w charcount_032,X
+( 317) 0367 B5FD        ; 	lda ch_033,X
+( 318) 0369 AB48        ; 	pha.w
+( 319) 036B ABB505      ; 	lda.w STATIC_LINK,X
+( 320) 036E AB48        ; 	pha.w
+( 321) 0370 20AF02      ; 	jsr isletter_024
+( 322) 0373 C204        ; 	adj #4
+( 323) 0375 ABC90100    ; 	cmp.w #1
+( 324) 0379 F003        ; 	beq L_041
+( 325) 037B 4C0904      ; 	jmp L_042
+( 328) 037E ABB5FF      ; 	lda.w charcount_032,X
+( 332) 0381 ABC91400    ; 	cmp.w #20
+( 334) 0385 AB7004      ; 	blt L_045T
+( 335) 0388 A900        ; 	lda #0
+( 336) 038A 8002        ; 	bra L_045
+( 337) 038C A901        ; L_045T lda #1
+( 340) 038E ABC90100    ; 	cmp.w #1
+( 341) 0392 F003        ; 	beq L_043
+( 342) 0394 4CFA03      ; 	jmp L_044
+( 345) 0397 B5FD        ; 	lda ch_033,X
+( 349) 0399 ABC94100    ; 	cmp.w #65
+( 351) 039D AB5004      ; 	bge L_048T
+( 352) 03A0 A900        ; 	lda #0
+( 353) 03A2 8002        ; 	bra L_048
+( 354) 03A4 A901        ; L_048T lda #1
+( 357) 03A6 AB48        ; 	pha.w
+( 358) 03A8 B5FD        ; 	lda ch_033,X
+( 362) 03AA ABC95A00    ; 	cmp.w #90
+( 364) 03AE AB3004      ; 	ble L_049T
+( 365) 03B1 A900        ; 	lda #0
+( 366) 03B3 8002        ; 	bra L_049
+( 367) 03B5 A901        ; L_049T lda #1
+( 370) 03B7 CB3501      ; 	and.w 1,S
+( 371) 03BA C202        ; 	adj #2
+( 372) 03BC ABC90100    ; 	cmp.w #1
+( 373) 03C0 F003        ; 	beq L_046
+( 374) 03C2 4CE003      ; 	jmp L_047
+( 377) 03C5 B5FD        ; 	lda ch_033,X
+( 378) 03C7 AB48        ; 	pha.w
+( 380) 03C9 ABE26100    ; 	psh.w #97
+( 381) 03CD A941        ; 	lda #65
+( 382) 03CF CB4401      ; 	xma.w 1,S
+( 383) 03D2 38          ; 	sec
+( 384) 03D3 CBF501      ; 	sbc.w 1,S
+( 385) 03D6 C202        ; 	adj #2
+( 386) 03D8 18          ; 	clc
+( 387) 03D9 CB7501      ; 	adc.w 1,S
+( 388) 03DC C202        ; 	adj #2
+( 389) 03DE 85FD        ; 	sta ch_033
+( 399) 03E0 ABF6FF      ; 	inc.w charcount_032,X
+( 401) 03E3 ABB507      ; 	lda.w buffer_031,X
+( 402) 03E6 AB48        ; 	pha.w
+( 403) 03E8 ABB5FF      ; 	lda.w charcount_032,X
+( 404) 03EB AB3A        ; 	dec.w a
+( 405) 03ED 18          ; 	clc
+( 406) 03EE CB7501      ; 	adc.w 1,S
+( 407) 03F1 CB9501      ; 	sta.w 1,S
+( 408) 03F4 B5FD        ; 	lda ch_033,X
+( 409) 03F6 8B6B        ; 	pli.s
+( 410) 03F8 8300        ; 	sta 0,I++
+( 414) 03FA ABB505      ; 	lda.w STATIC_LINK,X
+( 415) 03FD AB48        ; 	pha.w
+( 416) 03FF 201F02      ; 	jsr nextchar_016
+( 417) 0402 C202        ; 	adj #2
+( 418) 0404 85FD        ; 	sta ch_033
+( 420) 0406 4C6703      ; 	jmp L_040
+( 431) 0409 ABF6FF      ; 	inc.w charcount_032,X
+( 433) 040C A914        ; 	lda #20
+( 434) 040E ABD5FF      ; 	cmp.w charcount_032,X
+( 435) 0411 AB5003      ; 	bge L_051
+( 436) 0414 4C3404      ; 	jmp L_052
+( 439) 0417 ABB507      ; 	lda.w buffer_031,X
+( 440) 041A AB48        ; 	pha.w
+( 441) 041C ABB5FF      ; 	lda.w charcount_032,X
+( 442) 041F AB3A        ; 	dec.w a
+( 443) 0421 18          ; 	clc
+( 444) 0422 CB7501      ; 	adc.w 1,S
+( 445) 0425 CB9501      ; 	sta.w 1,S
+( 446) 0428 A920        ; 	lda #32
+( 447) 042A 8B6B        ; 	pli.s
+( 448) 042C 8300        ; 	sta 0,I++
+( 450) 042E ABF6FF      ; 	inc.w charcount_032,X
+( 451) 0431 4C0C04      ; 	jmp L_050
+( 453) 0434 ABD6FF      ; 	dec.w charcount_032,X
+( 456) 0437 A901        ; 	lda #1
+( 457) 0439 AB8DFD4A    ; 	sta.w gotword_015
+( 461) 043D AB9A        ; 	txs.w
+( 462) 043F ABFA        ; 	plx.w
+( 463) 0441 60          ; 	rts
+( 477) 0442 ABDA        ; 	phx.w
+( 478) 0444 ABBA        ; 	tsx.w
+( 479) 0446 C2FC        ; 	adj #-4
+( 481) 0448 ABADF34A    ; 	lda.w nextnumberindex_010
+( 485) 044C ABC9E803    ; 	cmp.w #1000
+( 487) 0450 AB7004      ; 	blt L_057T
+( 488) 0453 A900        ; 	lda #0
+( 489) 0455 8002        ; 	bra L_057
+( 490) 0457 A901        ; L_057T lda #1
+( 493) 0459 ABC90100    ; 	cmp.w #1
+( 494) 045D F003        ; 	beq L_055
+( 495) 045F 4CF404      ; 	jmp L_056
+( 498) 0462 ABB507      ; 	lda.w lastnumberindex_054,X
+( 502) 0465 ABC90000    ; 	cmp.w #0
+( 504) 0469 D004        ; 	bne L_060T
+( 505) 046B A900        ; 	lda #0
+( 506) 046D 8002        ; 	bra L_060
+( 507) 046F A901        ; L_060T lda #1
+( 510) 0471 ABC90100    ; 	cmp.w #1
+( 511) 0475 F003        ; 	beq L_058
+( 512) 0477 4C9E04      ; 	jmp L_059
+( 515) 047A ABE24D3B    ; 	psh.w #numbertable_008
+( 516) 047E ABB507      ; 	lda.w lastnumberindex_054,X
+( 517) 0481 AB0A        ; 	asl.w a
+( 518) 0483 AB0A        ; 	asl.w a
+( 519) 0485 18          ; 	clc
+( 520) 0486 CB7501      ; 	adc.w 1,S
+( 521) 0489 CB9501      ; 	sta.w 1,S
+( 522) 048C AB68        ; 	pla.w
+( 523) 048E 18          ; 	clc
+( 524) 048F AB690200    ; 	adc.w #nextindex_006
+( 525) 0493 AB48        ; 	pha.w
+( 526) 0495 ABADF34A    ; 	lda.w nextnumberindex_010
+( 527) 0499 8B6B        ; 	pli.s
+( 528) 049B AB8300      ; 	sta.w 0,I++
+( 532) 049E ABE24D3B    ; 	psh.w #numbertable_008
+( 533) 04A2 ABADF34A    ; 	lda.w nextnumberindex_010
+( 534) 04A6 AB0A        ; 	asl.w a
+( 535) 04A8 AB0A        ; 	asl.w a
+( 536) 04AA 18          ; 	clc
+( 537) 04AB CB7501      ; 	adc.w 1,S
+( 538) 04AE CB9501      ; 	sta.w 1,S
+( 539) 04B1 AB68        ; 	pla.w
+( 540) 04B3 18          ; 	clc
+( 541) 04B4 AB690000    ; 	adc.w #number_005
+( 542) 04B8 AB48        ; 	pha.w
+( 543) 04BA ABADF54A    ; 	lda.w linenumber_011
+( 544) 04BE 8B6B        ; 	pli.s
+( 545) 04C0 AB8300      ; 	sta.w 0,I++
+( 547) 04C3 ABE24D3B    ; 	psh.w #numbertable_008
+( 548) 04C7 ABADF34A    ; 	lda.w nextnumberindex_010
+( 549) 04CB AB0A        ; 	asl.w a
+( 550) 04CD AB0A        ; 	asl.w a
+( 551) 04CF 18          ; 	clc
+( 552) 04D0 CB7501      ; 	adc.w 1,S
+( 553) 04D3 CB9501      ; 	sta.w 1,S
+( 554) 04D6 AB68        ; 	pla.w
+( 555) 04D8 18          ; 	clc
+( 556) 04D9 AB690200    ; 	adc.w #nextindex_006
+( 557) 04DD AB48        ; 	pha.w
+( 558) 04DF A900        ; 	lda #0
+( 559) 04E1 8B6B        ; 	pli.s
+( 560) 04E3 AB8300      ; 	sta.w 0,I++
+( 562) 04E6 ABADF34A    ; 	lda.w nextnumberindex_010
+( 563) 04EA AB95FD      ; 	sta.w RETURN_VALUE,X
+( 571) 04ED ABEEF34A    ; 	inc.w nextnumberindex_010
+( 574) 04F1 4CFD04      ; 	jmp L_061
+( 577) 04F4 A901        ; 	lda #1
+( 578) 04F6 AB8DF94A    ; 	sta.w numbertablefull_013
+( 581) 04FA AB74FD      ; 	stz.w RETURN_VALUE,X
+( 585) 04FD ABB5FD      ; 	lda.w RETURN_VALUE,X
+( 586) 0500 AB9A        ; 	txs.w
+( 587) 0502 ABFA        ; 	plx.w
+( 588) 0504 60          ; 	rts
+( 603) 0505 ABDA        ; 	phx.w
+( 604) 0507 ABBA        ; 	tsx.w
+( 605) 0509 C2FE        ; 	adj #-2
+( 610) 050B ABADFB4A    ; 	lda.w newline_014
+( 611) 050F ABC90100    ; 	cmp.w #1
+( 612) 0513 F003        ; 	beq L_064
+( 613) 0515 4C2D05      ; 	jmp L_065
+( 615) 0518 ABADF54A    ; 	lda.w linenumber_011
+( 616) 051C AB48        ; 	pha.w
+( 617) 051E A901        ; 	lda #1
+( 618) 0520 CB4401      ; 	xma.w 1,S
+( 619) 0523 38          ; 	sec
+( 620) 0524 CBF501      ; 	sbc.w 1,S
+( 621) 0527 C202        ; 	adj #2
+( 622) 0529 AB8DF54A    ; 	sta.w linenumber_011
+( 627) 052D A901        ; 	lda #1
+( 628) 052F AB95FF      ; 	sta.w i_063,X
+( 631) 0532 ABE26D0C    ; 	psh.w #wordtable_007
+( 632) 0536 ABB5FF      ; 	lda.w i_063,X
+( 633) 0539 AB3A        ; 	dec.w a
+( 634) 053B AB48        ; 	pha.w
+( 635) 053D ABE21800    ; 	psh.w #24
+( 636) 0541 20FF0A      ; 	jsr _imul
+( 637) 0544 C204        ; 	adj #4
+( 638) 0546 18          ; 	clc
+( 639) 0547 CB7501      ; 	adc.w 1,S
+( 640) 054A CB9501      ; 	sta.w 1,S
+( 642) 054D AB68        ; 	pla.w
+( 643) 054F 18          ; 	clc
+( 644) 0550 AB690000    ; 	adc.w #word_002
+( 645) 0554 AB48        ; 	pha.w
+( 646) 0556 ABE26D0C    ; 	psh.w #wordtable_007
+( 647) 055A ABADF14A    ; 	lda.w nextwordindex_009
+( 648) 055E AB3A        ; 	dec.w a
+( 649) 0560 AB48        ; 	pha.w
+( 650) 0562 ABE21800    ; 	psh.w #24
+( 651) 0566 20FF0A      ; 	jsr _imul
+( 652) 0569 C204        ; 	adj #4
+( 653) 056B 18          ; 	clc
+( 654) 056C CB7501      ; 	adc.w 1,S
+( 655) 056F CB9501      ; 	sta.w 1,S
+( 656) 0572 AB68        ; 	pla.w
+( 657) 0574 18          ; 	clc
+( 658) 0575 AB690000    ; 	adc.w #word_002
+( 659) 0579 AB48        ; 	pha.w
+( 660) 057B ABE21400    ; 	psh.w #20
+( 661) 057F 20FFFF      ; 	jsr _cmpsb
+( 662) 0582 C206        ; 	adj #+6
+( 663) 0584 D004        ; 	bne L_069T
+( 664) 0586 A900        ; 	lda #0
+( 665) 0588 8002        ; 	bra L_069
+( 666) 058A A901        ; L_069T lda #1
+( 669) 058C ABC90100    ; 	cmp.w #1
+( 670) 0590 F003        ; 	beq L_067
+( 671) 0592 4C9B05      ; 	jmp L_068
+( 680) 0595 ABF6FF      ; 	inc.w i_063,X
+( 682) 0598 4C3205      ; 	jmp L_066
+( 687) 059B ABB5FF      ; 	lda.w i_063,X
+( 691) 059E ABCDF14A    ; 	cmp.w nextwordindex_009
+( 693) 05A2 AB7004      ; 	blt L_072T
+( 694) 05A5 A900        ; 	lda #0
+( 695) 05A7 8002        ; 	bra L_072
+( 696) 05A9 A901        ; L_072T lda #1
+( 699) 05AB ABC90100    ; 	cmp.w #1
+( 700) 05AF F003        ; 	beq L_070
+( 701) 05B1 4C1506      ; 	jmp L_071
+( 704) 05B4 ABE26D0C    ; 	psh.w #wordtable_007
+( 705) 05B8 ABB5FF      ; 	lda.w i_063,X
+( 706) 05BB AB3A        ; 	dec.w a
+( 707) 05BD AB48        ; 	pha.w
+( 708) 05BF ABE21800    ; 	psh.w #24
+( 709) 05C3 20FF0A      ; 	jsr _imul
+( 710) 05C6 C204        ; 	adj #4
+( 711) 05C8 18          ; 	clc
+( 712) 05C9 CB7501      ; 	adc.w 1,S
+( 713) 05CC CB9501      ; 	sta.w 1,S
+( 714) 05CF AB68        ; 	pla.w
+( 715) 05D1 18          ; 	clc
+( 716) 05D2 AB691600    ; 	adc.w #lastnumberindex_004
+( 717) 05D6 AB48        ; 	pha.w
+( 719) 05D8 ABE26D0C    ; 	psh.w #wordtable_007
+( 720) 05DC ABB5FF      ; 	lda.w i_063,X
+( 721) 05DF AB3A        ; 	dec.w a
+( 722) 05E1 AB48        ; 	pha.w
+( 723) 05E3 ABE21800    ; 	psh.w #24
+( 724) 05E7 20FF0A      ; 	jsr _imul
+( 725) 05EA C204        ; 	adj #4
+( 726) 05EC 18          ; 	clc
+( 727) 05ED CB7501      ; 	adc.w 1,S
+( 728) 05F0 CB9501      ; 	sta.w 1,S
+( 729) 05F3 AB68        ; 	pla.w
+( 730) 05F5 18          ; 	clc
+( 731) 05F6 AB691600    ; 	adc.w #lastnumberindex_004
+( 732) 05FA AB48        ; 	pha.w
+( 733) 05FC 8B6B        ; 	pli.s
+( 734) 05FE ABA300      ; 	lda.w 0,I++
+( 735) 0601 AB48        ; 	pha.w
+( 736) 0603 ABB505      ; 	lda.w STATIC_LINK,X
+( 737) 0606 AB48        ; 	pha.w
+( 738) 0608 204204      ; 	jsr appendlinenumber_053
+( 739) 060B C204        ; 	adj #4
+( 740) 060D 8B6B        ; 	pli.s
+( 741) 060F AB8300      ; 	sta.w 0,I++
+( 746) 0612 4CC506      ; 	jmp L_073
+( 748) 0615 ABADF14A    ; 	lda.w nextwordindex_009
+( 752) 0619 ABC9F401    ; 	cmp.w #500
+( 754) 061D AB7004      ; 	blt L_076T
+( 755) 0620 A900        ; 	lda #0
+( 756) 0622 8002        ; 	bra L_076
+( 757) 0624 A901        ; L_076T lda #1
+( 760) 0626 ABC90100    ; 	cmp.w #1
+( 761) 062A F003        ; 	beq L_074
+( 762) 062C 4CBF06      ; 	jmp L_075
+( 771) 062F ABEEF14A    ; 	inc.w nextwordindex_009
+( 773) 0633 ABE26D0C    ; 	psh.w #wordtable_007
+( 774) 0637 ABB5FF      ; 	lda.w i_063,X
+( 775) 063A AB3A        ; 	dec.w a
+( 776) 063C AB48        ; 	pha.w
+( 777) 063E ABE21800    ; 	psh.w #24
+( 778) 0642 20FF0A      ; 	jsr _imul
+( 779) 0645 C204        ; 	adj #4
+( 780) 0647 18          ; 	clc
+( 781) 0648 CB7501      ; 	adc.w 1,S
+( 782) 064B CB9501      ; 	sta.w 1,S
+( 783) 064E AB68        ; 	pla.w
+( 784) 0650 18          ; 	clc
+( 785) 0651 AB691400    ; 	adc.w #firstnumberindex_003
+( 786) 0655 AB48        ; 	pha.w
+( 788) 0657 ABE20000    ; 	psh.w #0
+( 789) 065B ABB505      ; 	lda.w STATIC_LINK,X
+( 790) 065E AB48        ; 	pha.w
+( 791) 0660 204204      ; 	jsr appendlinenumber_053
+( 792) 0663 C204        ; 	adj #4
+( 793) 0665 8B6B        ; 	pli.s
+( 794) 0667 AB8300      ; 	sta.w 0,I++
+( 796) 066A ABE26D0C    ; 	psh.w #wordtable_007
+( 797) 066E ABB5FF      ; 	lda.w i_063,X
+( 798) 0671 AB3A        ; 	dec.w a
+( 799) 0673 AB48        ; 	pha.w
+( 800) 0675 ABE21800    ; 	psh.w #24
+( 801) 0679 20FF0A      ; 	jsr _imul
+( 802) 067C C204        ; 	adj #4
+( 803) 067E 18          ; 	clc
+( 804) 067F CB7501      ; 	adc.w 1,S
+( 805) 0682 CB9501      ; 	sta.w 1,S
+( 806) 0685 AB68        ; 	pla.w
+( 807) 0687 18          ; 	clc
+( 808) 0688 AB691600    ; 	adc.w #lastnumberindex_004
+( 809) 068C AB48        ; 	pha.w
+( 811) 068E ABE26D0C    ; 	psh.w #wordtable_007
+( 812) 0692 ABB5FF      ; 	lda.w i_063,X
+( 813) 0695 AB3A        ; 	dec.w a
+( 814) 0697 AB48        ; 	pha.w
+( 815) 0699 ABE21800    ; 	psh.w #24
+( 816) 069D 20FF0A      ; 	jsr _imul
+( 817) 06A0 C204        ; 	adj #4
+( 818) 06A2 18          ; 	clc
+( 819) 06A3 CB7501      ; 	adc.w 1,S
+( 820) 06A6 CB9501      ; 	sta.w 1,S
+( 821) 06A9 AB68        ; 	pla.w
+( 822) 06AB 18          ; 	clc
+( 823) 06AC AB691400    ; 	adc.w #firstnumberindex_003
+( 824) 06B0 AB48        ; 	pha.w
+( 825) 06B2 8B6B        ; 	pli.s
+( 826) 06B4 ABA300      ; 	lda.w 0,I++
+( 827) 06B7 8B6B        ; 	pli.s
+( 828) 06B9 AB8300      ; 	sta.w 0,I++
+( 833) 06BC 4CC506      ; 	jmp L_077
+( 835) 06BF A901        ; 	lda #1
+( 836) 06C1 AB8DF74A    ; 	sta.w wordtablefull_012
+( 841) 06C5 ABADFB4A    ; 	lda.w newline_014
+( 842) 06C9 ABC90100    ; 	cmp.w #1
+( 843) 06CD F003        ; 	beq L_078
+( 844) 06CF 4CD606      ; 	jmp L_079
+( 852) 06D2 ABEEF54A    ; 	inc.w linenumber_011
+( 855) 06D6 AB9A        ; 	txs.w
+( 856) 06D8 ABFA        ; 	plx.w
+( 857) 06DA 60          ; 	rts
+( 874) 06DB ABDA        ; 	phx.w
+( 875) 06DD ABBA        ; 	tsx.w
+( 876) 06DF C2E4        ; 	adj #-28
+( 878) 06E1 A901        ; 	lda #1
+( 879) 06E3 AB95FF      ; 	sta.w i_081,X
+( 881) 06E6 ABADF14A    ; 	lda.w nextwordindex_009
+( 882) 06EA AB48        ; 	pha.w
+( 883) 06EC A902        ; 	lda #2
+( 884) 06EE CB4401      ; 	xma.w 1,S
+( 885) 06F1 38          ; 	sec
+( 886) 06F2 CBF501      ; 	sbc.w 1,S
+( 887) 06F5 C202        ; 	adj #2
+( 888) 06F7 ABD5FF      ; 	cmp.w i_081,X
+( 889) 06FA AB5003      ; 	bge L_085
+( 890) 06FD 4C3108      ; 	jmp L_086
+( 899) 0700 ABF6FD      ; 	inc.w j_082,X
+( 901) 0703 ABADF14A    ; 	lda.w nextwordindex_009
+( 902) 0707 AB48        ; 	pha.w
+( 903) 0709 A901        ; 	lda #1
+( 904) 070B CB4401      ; 	xma.w 1,S
+( 905) 070E 38          ; 	sec
+( 906) 070F CBF501      ; 	sbc.w 1,S
+( 907) 0712 C202        ; 	adj #2
+( 908) 0714 ABD5FD      ; 	cmp.w j_082,X
+( 909) 0717 AB5003      ; 	bge L_088
+( 910) 071A 4C2808      ; 	jmp L_089
+( 913) 071D ABE26D0C    ; 	psh.w #wordtable_007
+( 914) 0721 ABB5FF      ; 	lda.w i_081,X
+( 915) 0724 AB3A        ; 	dec.w a
+( 916) 0726 AB48        ; 	pha.w
+( 917) 0728 ABE21800    ; 	psh.w #24
+( 918) 072C 20FF0A      ; 	jsr _imul
+( 919) 072F C204        ; 	adj #4
+( 920) 0731 18          ; 	clc
+( 921) 0732 CB7501      ; 	adc.w 1,S
+( 922) 0735 CB9501      ; 	sta.w 1,S
+( 923) 0738 AB68        ; 	pla.w
+( 924) 073A 18          ; 	clc
+( 925) 073B AB690000    ; 	adc.w #word_002
+( 926) 073F AB48        ; 	pha.w
+( 927) 0741 ABE26D0C    ; 	psh.w #wordtable_007
+( 928) 0745 ABB5FD      ; 	lda.w j_082,X
+( 929) 0748 AB3A        ; 	dec.w a
+( 930) 074A AB48        ; 	pha.w
+( 931) 074C ABE21800    ; 	psh.w #24
+( 932) 0750 20FF0A      ; 	jsr _imul
+( 933) 0753 C204        ; 	adj #4
+( 934) 0755 18          ; 	clc
+( 935) 0756 CB7501      ; 	adc.w 1,S
+( 936) 0759 CB9501      ; 	sta.w 1,S
+( 937) 075C AB68        ; 	pla.w
+( 938) 075E 18          ; 	clc
+( 939) 075F AB690000    ; 	adc.w #word_002
+( 940) 0763 AB48        ; 	pha.w
+( 941) 0765 ABE21400    ; 	psh.w #20
+( 942) 0769 20FFFF      ; 	jsr _cmpsb
+( 943) 076C C206        ; 	adj #+6
+( 944) 076E AB1004      ; 	bgt L_092T
+( 945) 0771 A900        ; 	lda #0
+( 946) 0773 8002        ; 	bra L_092
+( 947) 0775 A901        ; L_092T lda #1
+( 950) 0777 ABC90100    ; 	cmp.w #1
+( 951) 077B F003        ; 	beq L_090
+( 952) 077D 4C2208      ; 	jmp L_091
+( 955) 0780 AB8A        ; 	txa.w
+( 956) 0782 18          ; 	clc
+( 957) 0783 AB69E5FF    ; 	adc.w #temp_083
+( 958) 0787 AB48        ; 	pha.w
+( 959) 0789 ABE26D0C    ; 	psh.w #wordtable_007
+( 960) 078D ABB5FF      ; 	lda.w i_081,X
+( 961) 0790 AB3A        ; 	dec.w a
+( 962) 0792 AB48        ; 	pha.w
+( 963) 0794 ABE21800    ; 	psh.w #24
+( 964) 0798 20FF0A      ; 	jsr _imul
+( 965) 079B C204        ; 	adj #4
+( 966) 079D 18          ; 	clc
+( 967) 079E CB7501      ; 	adc.w 1,S
+( 968) 07A1 CB9501      ; 	sta.w 1,S
+( 969) 07A4 EB0B        ; 	dup x
+( 970) 07A6 A918        ; 	lda #24
+( 971) 07A8 ABFA        ; 	plx.w
+( 972) 07AA AB7A        ; 	ply.w
+( 973) 07AC 540A        ; 	mov #10
+( 974) 07AE EB2B        ; 	rot x
+( 976) 07B0 ABE26D0C    ; 	psh.w #wordtable_007
+( 977) 07B4 ABB5FF      ; 	lda.w i_081,X
+( 978) 07B7 AB3A        ; 	dec.w a
+( 979) 07B9 AB48        ; 	pha.w
+( 980) 07BB ABE21800    ; 	psh.w #24
+( 981) 07BF 20FF0A      ; 	jsr _imul
+( 982) 07C2 C204        ; 	adj #4
+( 983) 07C4 18          ; 	clc
+( 984) 07C5 CB7501      ; 	adc.w 1,S
+( 985) 07C8 CB9501      ; 	sta.w 1,S
+( 986) 07CB ABE26D0C    ; 	psh.w #wordtable_007
+( 987) 07CF ABB5FD      ; 	lda.w j_082,X
+( 988) 07D2 AB3A        ; 	dec.w a
+( 989) 07D4 AB48        ; 	pha.w
+( 990) 07D6 ABE21800    ; 	psh.w #24
+( 991) 07DA 20FF0A      ; 	jsr _imul
+( 992) 07DD C204        ; 	adj #4
+( 993) 07DF 18          ; 	clc
+( 994) 07E0 CB7501      ; 	adc.w 1,S
+( 995) 07E3 CB9501      ; 	sta.w 1,S
+( 996) 07E6 EB0B        ; 	dup x
+( 997) 07E8 A918        ; 	lda #24
+( 998) 07EA ABFA        ; 	plx.w
+( 999) 07EC AB7A        ; 	ply.w
+(1000) 07EE 540A        ; 	mov #10
+(1001) 07F0 EB2B        ; 	rot x
+(1003) 07F2 ABE26D0C    ; 	psh.w #wordtable_007
+(1004) 07F6 ABB5FD      ; 	lda.w j_082,X
+(1005) 07F9 AB3A        ; 	dec.w a
+(1006) 07FB AB48        ; 	pha.w
+(1007) 07FD ABE21800    ; 	psh.w #24
+(1008) 0801 20FF0A      ; 	jsr _imul
+(1009) 0804 C204        ; 	adj #4
+(1010) 0806 18          ; 	clc
+(1011) 0807 CB7501      ; 	adc.w 1,S
+(1012) 080A CB9501      ; 	sta.w 1,S
+(1013) 080D AB8A        ; 	txa.w
+(1014) 080F 18          ; 	clc
+(1015) 0810 AB69E5FF    ; 	adc.w #temp_083
+(1016) 0814 AB48        ; 	pha.w
+(1017) 0816 EB0B        ; 	dup x
+(1018) 0818 A918        ; 	lda #24
+(1019) 081A ABFA        ; 	plx.w
+(1020) 081C AB7A        ; 	ply.w
+(1021) 081E 540A        ; 	mov #10
+(1022) 0820 EB2B        ; 	rot x
+(1026) 0822 ABF6FD      ; 	inc.w j_082,X
+(1027) 0825 4C0307      ; 	jmp L_087
+(1029) 0828 ABD6FD      ; 	dec.w j_082,X
+(1031) 082B ABF6FF      ; 	inc.w i_081,X
+(1032) 082E 4CE606      ; 	jmp L_084
+(1034) 0831 ABD6FF      ; 	dec.w i_081,X
+(1036) 0834 AB9A        ; 	txs.w
+(1037) 0836 ABFA        ; 	plx.w
+(1038) 0838 60          ; 	rts
+(1049) 0839 ABDA        ; 	phx.w
+(1050) 083B ABBA        ; 	tsx.w
+(1054) 083D ABE24D3B    ; 	psh.w #numbertable_008
+(1055) 0841 ABB507      ; 	lda.w i_094,X
+(1056) 0844 AB0A        ; 	asl.w a
+(1057) 0846 AB0A        ; 	asl.w a
+(1058) 0848 18          ; 	clc
+(1059) 0849 CB7501      ; 	adc.w 1,S
+(1060) 084C CB9501      ; 	sta.w 1,S
+(1061) 084F AB68        ; 	pla.w
+(1062) 0851 18          ; 	clc
+(1063) 0852 AB690000    ; 	adc.w #number_005
+(1064) 0856 AB48        ; 	pha.w
+(1065) 0858 8B6B        ; 	pli.s
+(1066) 085A ABA300      ; 	lda.w 0,I++
+(1067) 085D AB48        ; 	pha.w
+(1069) 085F ABE20400    ; 	psh.w #4
+(1070) 0863 20490B      ; 	jsr _iwrite
+(1071) 0866 C204        ; 	adj #4
+(1073) 0868 ABE24D3B    ; 	psh.w #numbertable_008
+(1074) 086C ABB507      ; 	lda.w i_094,X
+(1075) 086F AB0A        ; 	asl.w a
+(1076) 0871 AB0A        ; 	asl.w a
+(1077) 0873 18          ; 	clc
+(1078) 0874 CB7501      ; 	adc.w 1,S
+(1079) 0877 CB9501      ; 	sta.w 1,S
+(1080) 087A AB68        ; 	pla.w
+(1081) 087C 18          ; 	clc
+(1082) 087D AB690200    ; 	adc.w #nextindex_006
+(1083) 0881 AB48        ; 	pha.w
+(1084) 0883 8B6B        ; 	pli.s
+(1085) 0885 ABA300      ; 	lda.w 0,I++
+(1086) 0888 AB9507      ; 	sta.w i_094,X
+(1088) 088B ABB507      ; 	lda.w i_094,X
+(1092) 088E ABC90000    ; 	cmp.w #0
+(1094) 0892 F004        ; 	beq L_097T
+(1095) 0894 A900        ; 	lda #0
+(1096) 0896 8002        ; 	bra L_097
+(1097) 0898 A901        ; L_097T lda #1
+(1100) 089A ABC90100    ; 	cmp.w #1
+(1101) 089E F003        ; 	beq L_096
+(1102) 08A0 4C3D08      ; 	jmp L_095
+(1105) 08A3 20310B      ; 	jsr _writeln
+(1107) 08A6 AB9A        ; 	txs.w
+(1108) 08A8 ABFA        ; 	plx.w
+(1109) 08AA 60          ; 	rts
+(1123) 08AB ABDA        ; 	phx.w
+(1124) 08AD ABBA        ; 	tsx.w
+(1125) 08AF C2FE        ; 	adj #-2
+(1127) 08B1 20310B      ; 	jsr _writeln
+(1129) 08B4 20310B      ; 	jsr _writeln
+(1131) 08B7 ABE25A0C    ; 	psh.w #S_100
+(1132) 08BB ABE20000    ; 	psh.w #0
+(1133) 08BF ABE20F00    ; 	psh.w #15
+(1134) 08C3 20370B      ; 	jsr _swrite
+(1135) 08C6 C206        ; 	adj #6
+(1136) 08C8 20310B      ; 	jsr _writeln
+(1138) 08CB ABE24B0C    ; 	psh.w #S_101
+(1139) 08CF ABE20000    ; 	psh.w #0
+(1140) 08D3 ABE20F00    ; 	psh.w #15
+(1141) 08D7 20370B      ; 	jsr _swrite
+(1142) 08DA C206        ; 	adj #6
+(1143) 08DC 20310B      ; 	jsr _writeln
+(1145) 08DF 20310B      ; 	jsr _writeln
+(1147) 08E2 ABB505      ; 	lda.w STATIC_LINK,X
+(1148) 08E5 AB48        ; 	pha.w
+(1149) 08E7 20DB06      ; 	jsr sortwords_080
+(1150) 08EA C202        ; 	adj #2
+(1152) 08EC A901        ; 	lda #1
+(1153) 08EE AB95FF      ; 	sta.w i_099,X
+(1155) 08F1 ABADF14A    ; 	lda.w nextwordindex_009
+(1156) 08F5 AB48        ; 	pha.w
+(1157) 08F7 A901        ; 	lda #1
+(1158) 08F9 CB4401      ; 	xma.w 1,S
+(1159) 08FC 38          ; 	sec
+(1160) 08FD CBF501      ; 	sbc.w 1,S
+(1161) 0900 C202        ; 	adj #2
+(1162) 0902 ABD5FF      ; 	cmp.w i_099,X
+(1163) 0905 AB5003      ; 	bge L_103
+(1164) 0908 4C7709      ; 	jmp L_104
+(1167) 090B ABE26D0C    ; 	psh.w #wordtable_007
+(1168) 090F ABB5FF      ; 	lda.w i_099,X
+(1169) 0912 AB3A        ; 	dec.w a
+(1170) 0914 AB48        ; 	pha.w
+(1171) 0916 ABE21800    ; 	psh.w #24
+(1172) 091A 20FF0A      ; 	jsr _imul
+(1173) 091D C204        ; 	adj #4
+(1174) 091F 18          ; 	clc
+(1175) 0920 CB7501      ; 	adc.w 1,S
+(1176) 0923 CB9501      ; 	sta.w 1,S
+(1177) 0926 AB68        ; 	pla.w
+(1178) 0928 18          ; 	clc
+(1179) 0929 AB690000    ; 	adc.w #word_002
+(1180) 092D AB48        ; 	pha.w
+(1181) 092F ABE20000    ; 	psh.w #0
+(1182) 0933 ABE21400    ; 	psh.w #20
+(1183) 0937 20370B      ; 	jsr _swrite
+(1184) 093A C206        ; 	adj #6
+(1186) 093C ABE26D0C    ; 	psh.w #wordtable_007
+(1187) 0940 ABB5FF      ; 	lda.w i_099,X
+(1188) 0943 AB3A        ; 	dec.w a
+(1189) 0945 AB48        ; 	pha.w
+(1190) 0947 ABE21800    ; 	psh.w #24
+(1191) 094B 20FF0A      ; 	jsr _imul
+(1192) 094E C204        ; 	adj #4
+(1193) 0950 18          ; 	clc
+(1194) 0951 CB7501      ; 	adc.w 1,S
+(1195) 0954 CB9501      ; 	sta.w 1,S
+(1196) 0957 AB68        ; 	pla.w
+(1197) 0959 18          ; 	clc
+(1198) 095A AB691400    ; 	adc.w #firstnumberindex_003
+(1199) 095E AB48        ; 	pha.w
+(1200) 0960 8B6B        ; 	pli.s
+(1201) 0962 ABA300      ; 	lda.w 0,I++
+(1202) 0965 AB48        ; 	pha.w
+(1203) 0967 ABB505      ; 	lda.w STATIC_LINK,X
+(1204) 096A AB48        ; 	pha.w
+(1205) 096C 203908      ; 	jsr printnumbers_093
+(1206) 096F C204        ; 	adj #4
+(1208) 0971 ABF6FF      ; 	inc.w i_099,X
+(1209) 0974 4CF108      ; 	jmp L_102
+(1211) 0977 ABD6FF      ; 	dec.w i_099,X
+(1213) 097A AB9A        ; 	txs.w
+(1214) 097C ABFA        ; 	plx.w
+(1215) 097E 60          ; 	rts
+(1221) 097F ABDA        ; 	phx.w
+(1222) 0981 ABBA        ; 	tsx.w
+(1225) 0983 AB9CF74A    ; 	stz.w wordtablefull_012
+(1228) 0987 AB9CF94A    ; 	stz.w numbertablefull_013
+(1230) 098B A901        ; 	lda #1
+(1231) 098D AB8DF14A    ; 	sta.w nextwordindex_009
+(1233) 0991 A901        ; 	lda #1
+(1234) 0993 AB8DF34A    ; 	sta.w nextnumberindex_010
+(1236) 0997 A901        ; 	lda #1
+(1237) 0999 AB8DF54A    ; 	sta.w linenumber_011
+(1239) 099D ABE2430C    ; 	psh.w #S_105
+(1240) 09A1 ABE20000    ; 	psh.w #0
+(1241) 09A5 ABE20800    ; 	psh.w #8
+(1242) 09A9 20370B      ; 	jsr _swrite
+(1243) 09AC C206        ; 	adj #6
+(1248) 09AE 20FFFF      ; 	jsr _eof
+(1249) 09B1 AB48        ; 	pha.w
+(1250) 09B3 ABADF74A    ; 	lda.w wordtablefull_012
+(1251) 09B7 CB1501      ; 	ora.w 1,S
+(1252) 09BA C202        ; 	adj #2
+(1253) 09BC AB48        ; 	pha.w
+(1254) 09BE ABADF94A    ; 	lda.w numbertablefull_013
+(1255) 09C2 CB1501      ; 	ora.w 1,S
+(1256) 09C5 C202        ; 	adj #2
+(1257) 09C7 4901        ; 	eor #1
+(1258) 09C9 ABC90100    ; 	cmp.w #1
+(1259) 09CD F003        ; 	beq L_107
+(1260) 09CF 4C150A      ; 	jmp L_108
+(1263) 09D2 ABE26D0C    ; 	psh.w #wordtable_007
+(1264) 09D6 ABADF14A    ; 	lda.w nextwordindex_009
+(1265) 09DA AB3A        ; 	dec.w a
+(1266) 09DC AB48        ; 	pha.w
+(1267) 09DE ABE21800    ; 	psh.w #24
+(1268) 09E2 20FF0A      ; 	jsr _imul
+(1269) 09E5 C204        ; 	adj #4
+(1270) 09E7 18          ; 	clc
+(1271) 09E8 CB7501      ; 	adc.w 1,S
+(1272) 09EB CB9501      ; 	sta.w 1,S
+(1273) 09EE AB68        ; 	pla.w
+(1274) 09F0 18          ; 	clc
+(1275) 09F1 AB690000    ; 	adc.w #word_002
+(1276) 09F5 AB48        ; 	pha.w
+(1277) 09F7 ABDA        ; 	phx.w
+(1278) 09F9 201103      ; 	jsr readword_030
+(1279) 09FC C204        ; 	adj #4
+(1281) 09FE ABADFD4A    ; 	lda.w gotword_015
+(1282) 0A02 ABC90100    ; 	cmp.w #1
+(1283) 0A06 F003        ; 	beq L_109
+(1284) 0A08 4C120A      ; 	jmp L_110
+(1286) 0A0B ABDA        ; 	phx.w
+(1287) 0A0D 200505      ; 	jsr enterword_062
+(1288) 0A10 C202        ; 	adj #2
+(1291) 0A12 4CAE09      ; 	jmp L_106
+(1296) 0A15 ABADF74A    ; 	lda.w wordtablefull_012
+(1297) 0A19 ABC90100    ; 	cmp.w #1
+(1298) 0A1D F003        ; 	beq L_111
+(1299) 0A1F 4C3C0A      ; 	jmp L_112
+(1302) 0A22 20310B      ; 	jsr _writeln
+(1304) 0A25 ABE2180C    ; 	psh.w #S_113
+(1305) 0A29 ABE20000    ; 	psh.w #0
+(1306) 0A2D ABE22B00    ; 	psh.w #43
+(1307) 0A31 20370B      ; 	jsr _swrite
+(1308) 0A34 C206        ; 	adj #6
+(1309) 0A36 20310B      ; 	jsr _writeln
+(1312) 0A39 4C6A0A      ; 	jmp L_114
+(1314) 0A3C ABADF94A    ; 	lda.w numbertablefull_013
+(1315) 0A40 ABC90100    ; 	cmp.w #1
+(1316) 0A44 F003        ; 	beq L_115
+(1317) 0A46 4C630A      ; 	jmp L_116
+(1320) 0A49 20310B      ; 	jsr _writeln
+(1322) 0A4C ABE2EB0B    ; 	psh.w #S_117
+(1323) 0A50 ABE20000    ; 	psh.w #0
+(1324) 0A54 ABE22D00    ; 	psh.w #45
+(1325) 0A58 20370B      ; 	jsr _swrite
+(1326) 0A5B C206        ; 	adj #6
+(1327) 0A5D 20310B      ; 	jsr _writeln
+(1330) 0A60 4C6A0A      ; 	jmp L_118
+(1333) 0A63 ABDA        ; 	phx.w
+(1334) 0A65 20AB08      ; 	jsr printxref_098
+(1335) 0A68 C202        ; 	adj #2
+(1342) 0A6A 20310B      ; 	jsr _writeln
+(1344) 0A6D ABADF14A    ; 	lda.w nextwordindex_009
+(1345) 0A71 AB48        ; 	pha.w
+(1346) 0A73 A901        ; 	lda #1
+(1347) 0A75 CB4401      ; 	xma.w 1,S
+(1348) 0A78 38          ; 	sec
+(1349) 0A79 CBF501      ; 	sbc.w 1,S
+(1350) 0A7C C202        ; 	adj #2
+(1351) 0A7E AB48        ; 	pha.w
+(1353) 0A80 ABE20500    ; 	psh.w #5
+(1354) 0A84 20490B      ; 	jsr _iwrite
+(1355) 0A87 C204        ; 	adj #4
+(1356) 0A89 ABE2DD0B    ; 	psh.w #S_119
+(1357) 0A8D ABE20000    ; 	psh.w #0
+(1358) 0A91 ABE20E00    ; 	psh.w #14
+(1359) 0A95 20370B      ; 	jsr _swrite
+(1360) 0A98 C206        ; 	adj #6
+(1361) 0A9A 20310B      ; 	jsr _writeln
+(1363) 0A9D ABADF34A    ; 	lda.w nextnumberindex_010
+(1364) 0AA1 AB48        ; 	pha.w
+(1365) 0AA3 A901        ; 	lda #1
+(1366) 0AA5 CB4401      ; 	xma.w 1,S
+(1367) 0AA8 38          ; 	sec
+(1368) 0AA9 CBF501      ; 	sbc.w 1,S
+(1369) 0AAC C202        ; 	adj #2
+(1370) 0AAE AB48        ; 	pha.w
+(1372) 0AB0 ABE20500    ; 	psh.w #5
+(1373) 0AB4 20490B      ; 	jsr _iwrite
+(1374) 0AB7 C204        ; 	adj #4
+(1375) 0AB9 ABE2C80B    ; 	psh.w #S_120
+(1376) 0ABD ABE20000    ; 	psh.w #0
+(1377) 0AC1 ABE21500    ; 	psh.w #21
+(1378) 0AC5 20370B      ; 	jsr _swrite
+(1379) 0AC8 C206        ; 	adj #6
+(1380) 0ACA 20310B      ; 	jsr _writeln
+(1383) 0ACD ABFA        ; 	plx.w
+(1384) 0ACF 60          ; 	rts
+(1396) 0AD0 A900        ;             lda #0          ; clear remainder (A)
+(1397) 0AD2 0B          ;             dup a           ; push
+(1398) 0AD3 CBB505      ;             lda.w _Q,S      ; load dividend (Q)
+(1399) 0AD6 A010        ;             ldy #16         ; bit counter
+(1402) 0AD8 18          ;             clc
+(1403) 0AD9 AB0A        ;             asl.w a         ; shift AQ left
+(1404) 0ADB 1B          ;             swp a
+(1405) 0ADC AB2A        ;             rol.w a
+(1407) 0ADE B006        ;             bcs _idiv_Plus  ; if A < 0 then A = A + D else A = A - D
+(1410) 0AE0 38          ;             sec
+(1411) 0AE1 CBF503      ;             sbc.w _D,S      ; subtract divisor (D)
+(1413) 0AE4 8004        ;             bra _idiv_Next
+(1416) 0AE6 18          ;             clc
+(1417) 0AE7 CB7503      ;             adc.w _D,S      ; add divisor (D)
+(1420) 0AEA 1B          ;             swp a           ; restore order of Acc stack {Q, A, -}
+(1421) 0AEB 3002        ;             bmi _idiv_Dec   ; if A < 0 then Q[0] = 0 else Q[0] = 1
+(1422) 0AED AB1A        ;             inc.w a
+(1425) 0AEF 88          ;             dey             ; loop until loop counter == 0
+(1426) 0AF0 D0E6        ;             bne _idiv_Lp
+(1429) 0AF2 1B          ;             swp a           ; Test remainder
+(1430) 0AF3 AB090000    ;             ora.w #0
+(1431) 0AF7 1004        ;             bpl _idiv_Finish
+(1432) 0AF9 18          ;             clc
+(1433) 0AFA CB7503      ;             adc.w 3,S
+(1435) 0AFD 1B          ;             swp a
+(1437) 0AFE 60          ;             rts
+(1450) 0AFF A010        ;             ldy #16             ; y = bit count
+(1451) 0B01 A900        ;             lda #0              ; A = { 0,  x,  x} - clear product
+(1452) 0B03 0B          ;             dup a               ; A = { 0,  0,  x}
+(1453) 0B04 0B          ;             dup a               ; A = { 0,  0,  0}
+(1454) 0B05 CBB503      ;             lda.w _R,S          ; A = { R,  0,  0} - load multiplier (R)
+(1455) 0B08 9B2B        ;             rev                 ; A = {`R,  0,  0} - reverse multiplier (`R)
+(1456) 0B0A AB090000    ;             ora.w #0            ; set N flag if msb ATOS == 1
+(1457) 0B0E 18          ;             clc                 ; initialize Booth recoding bit
+(1458) 0B0F 2B          ;             rot a               ; A = {PH, PL, `R}
+(1460) 0B10 8003        ;             bra _imul_TstB
+(1463) 0B12 AB0A        ;             asl.w a             ; A = {`R << 1, PH, PL}
+(1464) 0B14 2B          ;             rot a               ; A = {PH, PL, `R}
+(1466) 0B15 9008        ;             bcc _imul_SubShft   ; (C, x) ? Add_Shift : Sub_Shift
+(1469) 0B17 300C        ;             bmi _imul_ShftP     ; (1, N) ? P >> 1 : (P += M) >> 1
+(1471) 0B19 18          ;             clc
+(1472) 0B1A CB7505      ;             adc.w _M,S          ; PH += M
+(1473) 0B1D 8006        ;             bra _imul_ShftP
+(1476) 0B1F 1004        ;             bpl _imul_ShftP     ; (0, N) ? (P -= M) >> 1 : P >> 1
+(1478) 0B21 38          ;             sec
+(1479) 0B22 CBF505      ;             sbc.w _M,S          ; PH -= M
+(1482) 0B25 BB4A        ;             asr.w a             ; A = {PH >> 1, PL, `R}
+(1483) 0B27 2B          ;             rot a               ; A = {PL, `R, PH}
+(1484) 0B28 AB6A        ;             ror.w a             ; A = {PL >> 2, `R, PH}
+(1485) 0B2A 2B          ;             rot a               ; A = {`R, PH, PL}
+(1488) 0B2B 88          ;             dey
+(1489) 0B2C D0E4        ;             bne _imul_Lp
+(1492) 0B2E 2B          ;             rot a               ; A = {PH, PL, `R}
+(1493) 0B2F 1B          ;             swp a               ; A = {PL, PH, `R}
+(1495) 0B30 60          ;             rts
+(1508) 0B31 A90A        ;             lda #_newLine
+(1509) 0B33 8D01F0      ;             sta _putChar
+(1511) 0B36 60          ;             rts
+(1523) 0B37 CBB403      ;             ldy.w _sLenOff,S        ; load string length
+(1524) 0B3A CBB507      ;             lda.w _sPtrOff,S        ; load string pointer
+(1525) 0B3D 9B0B        ;             tai                     ; transfer sptr to IP
+(1528) 0B3F A300        ;             lda 0,I++               ; load char from strig
+(1529) 0B41 8D01F0      ;             sta _putChar            ; write char to output
+(1531) 0B44 AB88        ;             dey.w                   ; loop while string length <> 0
+(1532) 0B46 D0F7        ;             bne _swrite_Lp
+(1534) 0B48 60          ;             rts
+(1547) 0B49 ABDA        ;             phx.w                   ; save current base pointer
+(1548) 0B4B ABBA        ;             tsx.w                   ; assign new base pointer
+(1550) 0B4D B505        ;             lda _fLenOff,X          ; load field width specifier
+(1551) 0B4F C905        ;             cmp #5                  ; compare against max integer digit count
+(1552) 0B51 AB3002      ;             ble _iwrite_SetCnt
+(1553) 0B54 A905        ;             lda #5
+(1556) 0B56 AB48        ;             pha.w                   ; set iteration count to fld width
+(1557) 0B58 ABB507      ;             lda.w _iValOff,X        ; load a with integer value
+(1560) 0B5B AB48        ;             pha.w                   ; push dividend argument to _idiv
+(1561) 0B5D ABE20A00    ;             psh.w #10               ; push divisor argument to _idiv
+(1562) 0B61 9B5C6BFF    ;             csr _idiv               ; determine the remainder,
+(1563) 0B65 C204        ;             adj #4                  ; remove arguments passed to _idiv from stk
+(1564) 0B67 1B          ;             swp a                   ; put the remainder into ATOS
+(1566) 0B68 18          ;             clc                     ; convert remainder into ASCII character
+(1567) 0B69 6930        ;             adc #48
+(1568) 0B6B 48          ;             pha                     ; push LS digit of integer onto stack
+(1570) 0B6C 2B          ;             rot a                   ; rotate quotient into ATOS position
+(1572) 0B6D ABD6FF      ;             dec.w _iCntOff,X        ; decrement digit iteration count
+(1573) 0B70 D0E9        ;             bne _iwrite_Lp
+(1575) 0B72 0B          ;             dup a                   ; save integer part of the conversion
+(1578) 0B73 B505        ;             lda _fLenOff,X          ; load field width specifier
+(1579) 0B75 C905        ;             cmp #5                  ; compare against max integer digit count
+(1580) 0B77 AB300A      ;             ble _iwrite_GenPtr
+(1581) 0B7A 38          ;             sec                     ; subtract max integer length from fld len
+(1582) 0B7B E905        ;             sbc #5
+(1583) 0B7D A8          ;             tay                     ; set difference as loop counter
+(1584) 0B7E A930        ;             lda #48                 ; fill remaining field with '0'
+(1587) 0B80 48          ;             pha
+(1588) 0B81 88          ;             dey
+(1589) 0B82 D0FC        ;             bne _iwrite_Fill_Lp
+(1592) 0B84 EBABBA      ;             tsa.w                   ; transfer current stk pointer to A
+(1593) 0B87 AB1A        ;             inc.w a                 ; remove stack pointer write bias
+(1594) 0B89 AB48        ;             pha.w                   ; push string pointer to stack
+(1596) 0B8B 2B          ;             rot a                   ; restore integer part of the conversion
+(1598) 0B8C ABC90000    ;             cmp.w #0                ; test for 0. If not 0, int > 10^fld
+(1599) 0B90 F00F        ;             beq _iwrite_Sup0
+(1600) 0B92 A000        ;             ldy #0
+(1602) 0B94 A92A        ;             lda #0x2A               ; fill integer field with '*'
+(1603) 0B96 8B9101      ;             sta (1,S),Y
+(1604) 0B99 C8          ;             iny
+(1605) 0B9A FBD505      ;             cmp.y _fLenOff,X
+(1606) 0B9D D0F5        ;             bne _iwrite_ErrLp
+(1607) 0B9F 8014        ;             bra _iwrite_Exit
+(1610) 0BA1 A000        ;             ldy #0                  ; initialize string index
+(1612) 0BA3 8BB101      ;             lda (1,S),Y
+(1613) 0BA6 C930        ;             cmp #48                 ; if leading position == 0, replace with ' '
+(1614) 0BA8 D00B        ;             bne _iwrite_Exit        ; exit loop on first non-0 digit
+(1615) 0BAA A920        ;             lda #32                 ; replace leading 0 with ' '
+(1616) 0BAC 8B9101      ;             sta (1,S),Y
+(1617) 0BAF C8          ;             iny                     ; increment string index and compare to fLen
+(1618) 0BB0 FBD505      ;             cmp.y _fLenOff,X
+(1619) 0BB3 D0EE        ;             bne _iwrite_Sup0_Lp     ; loop until Y == fLen
+(1622) 0BB5 ABE20000    ;             psh.w #0                ; NULL argument
+(1623) 0BB9 B505        ;             lda _fLenOff,X          ; push field width specifier
+(1624) 0BBB AB48        ;             pha.w
+(1625) 0BBD 9B5C76FF    ;             csr _swrite             ; write integer value string using _swrite()
+(1626) 0BC1 C206        ;             adj #6                  ; remove parameters to _swrite() from stack
+(1628) 0BC3 AB9A        ;             txs.w                   ; deallocate stack variables
+(1629) 0BC5 ABFA        ;             plx.w                   ; restore previous base pointer
+(1630) 0BC7 60          ;             rts
+(1636) 0BC8 206C696E    ; S_120 .str " line number entries."
+       0BCC 65206E756D62657220656E74726965732E
+(1637) 0BDD 20776F72    ; S_119 .str " word entries."
+       0BE1 6420656E74726965732E
+(1638) 0BEB 2A2A2A20    ; S_117 .str "*** The number table is not large enough. ***"
+       0BEF 546865206E756D626572207461626C65206973206E6F74206C6172676520656E
+       0C0F 6F7567682E202A2A2A
+(1639) 0C18 2A2A2A20    ; S_113 .str "*** The word table is not large enough. ***"
+       0C1C 54686520776F7264207461626C65206973206E6F74206C6172676520656E6F75
+       0C3C 67682E202A2A2A
+(1640) 0C43 20202020    ; S_105 .str "    1 : "
+       0C47 31203A20
+(1641) 0C4B 2D2D2D2D    ; S_101 .str "---------------"
+       0C4F 2D2D2D2D2D2D2D2D2D2D2D
+(1642) 0C5A 43726F73    ; S_100 .str "Cross-reference"
+       0C5E 732D7265666572656E6365
+(1643) 0C69 203A20      ; S_020 .str " : "
+(1644) 0C6C 00          ; _bss_start .byt 0
+(1645) 0C6D 00000000    ; wordtable_007 .byt 0[12000]
+       0C71 0000000000000000000000000000000000000000000000000000000000000000
+       0C91 0000000000000000000000000000000000000000000000000000000000000000
+       0CB1 0000000000000000000000000000000000000000000000000000000000000000
+       0CD1 0000000000000000000000000000000000000000000000000000000000000000
+       0CF1 0000000000000000000000000000000000000000000000000000000000000000
+       0D11 0000000000000000000000000000000000000000000000000000000000000000
+       0D31 0000000000000000000000000000000000000000000000000000000000000000
+       0D51 0000000000000000000000000000000000000000000000000000000000000000
+       0D71 0000000000000000000000000000000000000000000000000000000000000000
+       0D91 0000000000000000000000000000000000000000000000000000000000000000
+       0DB1 0000000000000000000000000000000000000000000000000000000000000000
+       0DD1 0000000000000000000000000000000000000000000000000000000000000000
+       0DF1 0000000000000000000000000000000000000000000000000000000000000000
+       0E11 0000000000000000000000000000000000000000000000000000000000000000
+       0E31 0000000000000000000000000000000000000000000000000000000000000000
+       0E51 0000000000000000000000000000000000000000000000000000000000000000
+       0E71 0000000000000000000000000000000000000000000000000000000000000000
+       0E91 0000000000000000000000000000000000000000000000000000000000000000
+       0EB1 0000000000000000000000000000000000000000000000000000000000000000
+       0ED1 0000000000000000000000000000000000000000000000000000000000000000
+       0EF1 0000000000000000000000000000000000000000000000000000000000000000
+       0F11 0000000000000000000000000000000000000000000000000000000000000000
+       0F31 0000000000000000000000000000000000000000000000000000000000000000
+       0F51 0000000000000000000000000000000000000000000000000000000000000000
+       0F71 0000000000000000000000000000000000000000000000000000000000000000
+       0F91 0000000000000000000000000000000000000000000000000000000000000000
+       0FB1 0000000000000000000000000000000000000000000000000000000000000000
+       0FD1 0000000000000000000000000000000000000000000000000000000000000000
+       0FF1 0000000000000000000000000000000000000000000000000000000000000000
+       1011 0000000000000000000000000000000000000000000000000000000000000000
+       1031 0000000000000000000000000000000000000000000000000000000000000000
+       1051 0000000000000000000000000000000000000000000000000000000000000000
+       1071 0000000000000000000000000000000000000000000000000000000000000000
+       1091 0000000000000000000000000000000000000000000000000000000000000000
+       10B1 0000000000000000000000000000000000000000000000000000000000000000
+       10D1 0000000000000000000000000000000000000000000000000000000000000000
+       10F1 0000000000000000000000000000000000000000000000000000000000000000
+       1111 0000000000000000000000000000000000000000000000000000000000000000
+       1131 0000000000000000000000000000000000000000000000000000000000000000
+       1151 0000000000000000000000000000000000000000000000000000000000000000
+       1171 0000000000000000000000000000000000000000000000000000000000000000
+       1191 0000000000000000000000000000000000000000000000000000000000000000
+       11B1 0000000000000000000000000000000000000000000000000000000000000000
+       11D1 0000000000000000000000000000000000000000000000000000000000000000
+       11F1 0000000000000000000000000000000000000000000000000000000000000000
+       1211 0000000000000000000000000000000000000000000000000000000000000000
+       1231 0000000000000000000000000000000000000000000000000000000000000000
+       1251 0000000000000000000000000000000000000000000000000000000000000000
+       1271 0000000000000000000000000000000000000000000000000000000000000000
+       1291 0000000000000000000000000000000000000000000000000000000000000000
+       12B1 0000000000000000000000000000000000000000000000000000000000000000
+       12D1 0000000000000000000000000000000000000000000000000000000000000000
+       12F1 0000000000000000000000000000000000000000000000000000000000000000
+       1311 0000000000000000000000000000000000000000000000000000000000000000
+       1331 0000000000000000000000000000000000000000000000000000000000000000
+       1351 0000000000000000000000000000000000000000000000000000000000000000
+       1371 0000000000000000000000000000000000000000000000000000000000000000
+       1391 0000000000000000000000000000000000000000000000000000000000000000
+       13B1 0000000000000000000000000000000000000000000000000000000000000000
+       13D1 0000000000000000000000000000000000000000000000000000000000000000
+       13F1 0000000000000000000000000000000000000000000000000000000000000000
+       1411 0000000000000000000000000000000000000000000000000000000000000000
+       1431 0000000000000000000000000000000000000000000000000000000000000000
+       1451 0000000000000000000000000000000000000000000000000000000000000000
+       1471 0000000000000000000000000000000000000000000000000000000000000000
+       1491 0000000000000000000000000000000000000000000000000000000000000000
+       14B1 0000000000000000000000000000000000000000000000000000000000000000
+       14D1 0000000000000000000000000000000000000000000000000000000000000000
+       14F1 0000000000000000000000000000000000000000000000000000000000000000
+       1511 0000000000000000000000000000000000000000000000000000000000000000
+       1531 0000000000000000000000000000000000000000000000000000000000000000
+       1551 0000000000000000000000000000000000000000000000000000000000000000
+       1571 0000000000000000000000000000000000000000000000000000000000000000
+       1591 0000000000000000000000000000000000000000000000000000000000000000
+       15B1 0000000000000000000000000000000000000000000000000000000000000000
+       15D1 0000000000000000000000000000000000000000000000000000000000000000
+       15F1 0000000000000000000000000000000000000000000000000000000000000000
+       1611 0000000000000000000000000000000000000000000000000000000000000000
+       1631 0000000000000000000000000000000000000000000000000000000000000000
+       1651 0000000000000000000000000000000000000000000000000000000000000000
+       1671 0000000000000000000000000000000000000000000000000000000000000000
+       1691 0000000000000000000000000000000000000000000000000000000000000000
+       16B1 0000000000000000000000000000000000000000000000000000000000000000
+       16D1 0000000000000000000000000000000000000000000000000000000000000000
+       16F1 0000000000000000000000000000000000000000000000000000000000000000
+       1711 0000000000000000000000000000000000000000000000000000000000000000
+       1731 0000000000000000000000000000000000000000000000000000000000000000
+       1751 0000000000000000000000000000000000000000000000000000000000000000
+       1771 0000000000000000000000000000000000000000000000000000000000000000
+       1791 0000000000000000000000000000000000000000000000000000000000000000
+       17B1 0000000000000000000000000000000000000000000000000000000000000000
+       17D1 0000000000000000000000000000000000000000000000000000000000000000
+       17F1 0000000000000000000000000000000000000000000000000000000000000000
+       1811 0000000000000000000000000000000000000000000000000000000000000000
+       1831 0000000000000000000000000000000000000000000000000000000000000000
+       1851 0000000000000000000000000000000000000000000000000000000000000000
+       1871 0000000000000000000000000000000000000000000000000000000000000000
+       1891 0000000000000000000000000000000000000000000000000000000000000000
+       18B1 0000000000000000000000000000000000000000000000000000000000000000
+       18D1 0000000000000000000000000000000000000000000000000000000000000000
+       18F1 0000000000000000000000000000000000000000000000000000000000000000
+       1911 0000000000000000000000000000000000000000000000000000000000000000
+       1931 0000000000000000000000000000000000000000000000000000000000000000
+       1951 0000000000000000000000000000000000000000000000000000000000000000
+       1971 0000000000000000000000000000000000000000000000000000000000000000
+       1991 0000000000000000000000000000000000000000000000000000000000000000
+       19B1 0000000000000000000000000000000000000000000000000000000000000000
+       19D1 0000000000000000000000000000000000000000000000000000000000000000
+       19F1 0000000000000000000000000000000000000000000000000000000000000000
+       1A11 0000000000000000000000000000000000000000000000000000000000000000
+       1A31 0000000000000000000000000000000000000000000000000000000000000000
+       1A51 0000000000000000000000000000000000000000000000000000000000000000
+       1A71 0000000000000000000000000000000000000000000000000000000000000000
+       1A91 0000000000000000000000000000000000000000000000000000000000000000
+       1AB1 0000000000000000000000000000000000000000000000000000000000000000
+       1AD1 0000000000000000000000000000000000000000000000000000000000000000
+       1AF1 0000000000000000000000000000000000000000000000000000000000000000
+       1B11 0000000000000000000000000000000000000000000000000000000000000000
+       1B31 0000000000000000000000000000000000000000000000000000000000000000
+       1B51 0000000000000000000000000000000000000000000000000000000000000000
+       1B71 0000000000000000000000000000000000000000000000000000000000000000
+       1B91 0000000000000000000000000000000000000000000000000000000000000000
+       1BB1 0000000000000000000000000000000000000000000000000000000000000000
+       1BD1 0000000000000000000000000000000000000000000000000000000000000000
+       1BF1 0000000000000000000000000000000000000000000000000000000000000000
+       1C11 0000000000000000000000000000000000000000000000000000000000000000
+       1C31 0000000000000000000000000000000000000000000000000000000000000000
+       1C51 0000000000000000000000000000000000000000000000000000000000000000
+       1C71 0000000000000000000000000000000000000000000000000000000000000000
+       1C91 0000000000000000000000000000000000000000000000000000000000000000
+       1CB1 0000000000000000000000000000000000000000000000000000000000000000
+       1CD1 0000000000000000000000000000000000000000000000000000000000000000
+       1CF1 0000000000000000000000000000000000000000000000000000000000000000
+       1D11 0000000000000000000000000000000000000000000000000000000000000000
+       1D31 0000000000000000000000000000000000000000000000000000000000000000
+       1D51 0000000000000000000000000000000000000000000000000000000000000000
+       1D71 0000000000000000000000000000000000000000000000000000000000000000
+       1D91 0000000000000000000000000000000000000000000000000000000000000000
+       1DB1 0000000000000000000000000000000000000000000000000000000000000000
+       1DD1 0000000000000000000000000000000000000000000000000000000000000000
+       1DF1 0000000000000000000000000000000000000000000000000000000000000000
+       1E11 0000000000000000000000000000000000000000000000000000000000000000
+       1E31 0000000000000000000000000000000000000000000000000000000000000000
+       1E51 0000000000000000000000000000000000000000000000000000000000000000
+       1E71 0000000000000000000000000000000000000000000000000000000000000000
+       1E91 0000000000000000000000000000000000000000000000000000000000000000
+       1EB1 0000000000000000000000000000000000000000000000000000000000000000
+       1ED1 0000000000000000000000000000000000000000000000000000000000000000
+       1EF1 0000000000000000000000000000000000000000000000000000000000000000
+       1F11 0000000000000000000000000000000000000000000000000000000000000000
+       1F31 0000000000000000000000000000000000000000000000000000000000000000
+       1F51 0000000000000000000000000000000000000000000000000000000000000000
+       1F71 0000000000000000000000000000000000000000000000000000000000000000
+       1F91 0000000000000000000000000000000000000000000000000000000000000000
+       1FB1 0000000000000000000000000000000000000000000000000000000000000000
+       1FD1 0000000000000000000000000000000000000000000000000000000000000000
+       1FF1 0000000000000000000000000000000000000000000000000000000000000000
+       2011 0000000000000000000000000000000000000000000000000000000000000000
+       2031 0000000000000000000000000000000000000000000000000000000000000000
+       2051 0000000000000000000000000000000000000000000000000000000000000000
+       2071 0000000000000000000000000000000000000000000000000000000000000000
+       2091 0000000000000000000000000000000000000000000000000000000000000000
+       20B1 0000000000000000000000000000000000000000000000000000000000000000
+       20D1 0000000000000000000000000000000000000000000000000000000000000000
+       20F1 0000000000000000000000000000000000000000000000000000000000000000
+       2111 0000000000000000000000000000000000000000000000000000000000000000
+       2131 0000000000000000000000000000000000000000000000000000000000000000
+       2151 0000000000000000000000000000000000000000000000000000000000000000
+       2171 0000000000000000000000000000000000000000000000000000000000000000
+       2191 0000000000000000000000000000000000000000000000000000000000000000
+       21B1 0000000000000000000000000000000000000000000000000000000000000000
+       21D1 0000000000000000000000000000000000000000000000000000000000000000
+       21F1 0000000000000000000000000000000000000000000000000000000000000000
+       2211 0000000000000000000000000000000000000000000000000000000000000000
+       2231 0000000000000000000000000000000000000000000000000000000000000000
+       2251 0000000000000000000000000000000000000000000000000000000000000000
+       2271 0000000000000000000000000000000000000000000000000000000000000000
+       2291 0000000000000000000000000000000000000000000000000000000000000000
+       22B1 0000000000000000000000000000000000000000000000000000000000000000
+       22D1 0000000000000000000000000000000000000000000000000000000000000000
+       22F1 0000000000000000000000000000000000000000000000000000000000000000
+       2311 0000000000000000000000000000000000000000000000000000000000000000
+       2331 0000000000000000000000000000000000000000000000000000000000000000
+       2351 0000000000000000000000000000000000000000000000000000000000000000
+       2371 0000000000000000000000000000000000000000000000000000000000000000
+       2391 0000000000000000000000000000000000000000000000000000000000000000
+       23B1 0000000000000000000000000000000000000000000000000000000000000000
+       23D1 0000000000000000000000000000000000000000000000000000000000000000
+       23F1 0000000000000000000000000000000000000000000000000000000000000000
+       2411 0000000000000000000000000000000000000000000000000000000000000000
+       2431 0000000000000000000000000000000000000000000000000000000000000000
+       2451 0000000000000000000000000000000000000000000000000000000000000000
+       2471 0000000000000000000000000000000000000000000000000000000000000000
+       2491 0000000000000000000000000000000000000000000000000000000000000000
+       24B1 0000000000000000000000000000000000000000000000000000000000000000
+       24D1 0000000000000000000000000000000000000000000000000000000000000000
+       24F1 0000000000000000000000000000000000000000000000000000000000000000
+       2511 0000000000000000000000000000000000000000000000000000000000000000
+       2531 0000000000000000000000000000000000000000000000000000000000000000
+       2551 0000000000000000000000000000000000000000000000000000000000000000
+       2571 0000000000000000000000000000000000000000000000000000000000000000
+       2591 0000000000000000000000000000000000000000000000000000000000000000
+       25B1 0000000000000000000000000000000000000000000000000000000000000000
+       25D1 0000000000000000000000000000000000000000000000000000000000000000
+       25F1 0000000000000000000000000000000000000000000000000000000000000000
+       2611 0000000000000000000000000000000000000000000000000000000000000000
+       2631 0000000000000000000000000000000000000000000000000000000000000000
+       2651 0000000000000000000000000000000000000000000000000000000000000000
+       2671 0000000000000000000000000000000000000000000000000000000000000000
+       2691 0000000000000000000000000000000000000000000000000000000000000000
+       26B1 0000000000000000000000000000000000000000000000000000000000000000
+       26D1 0000000000000000000000000000000000000000000000000000000000000000
+       26F1 0000000000000000000000000000000000000000000000000000000000000000
+       2711 0000000000000000000000000000000000000000000000000000000000000000
+       2731 0000000000000000000000000000000000000000000000000000000000000000
+       2751 0000000000000000000000000000000000000000000000000000000000000000
+       2771 0000000000000000000000000000000000000000000000000000000000000000
+       2791 0000000000000000000000000000000000000000000000000000000000000000
+       27B1 0000000000000000000000000000000000000000000000000000000000000000
+       27D1 0000000000000000000000000000000000000000000000000000000000000000
+       27F1 0000000000000000000000000000000000000000000000000000000000000000
+       2811 0000000000000000000000000000000000000000000000000000000000000000
+       2831 0000000000000000000000000000000000000000000000000000000000000000
+       2851 0000000000000000000000000000000000000000000000000000000000000000
+       2871 0000000000000000000000000000000000000000000000000000000000000000
+       2891 0000000000000000000000000000000000000000000000000000000000000000
+       28B1 0000000000000000000000000000000000000000000000000000000000000000
+       28D1 0000000000000000000000000000000000000000000000000000000000000000
+       28F1 0000000000000000000000000000000000000000000000000000000000000000
+       2911 0000000000000000000000000000000000000000000000000000000000000000
+       2931 0000000000000000000000000000000000000000000000000000000000000000
+       2951 0000000000000000000000000000000000000000000000000000000000000000
+       2971 0000000000000000000000000000000000000000000000000000000000000000
+       2991 0000000000000000000000000000000000000000000000000000000000000000
+       29B1 0000000000000000000000000000000000000000000000000000000000000000
+       29D1 0000000000000000000000000000000000000000000000000000000000000000
+       29F1 0000000000000000000000000000000000000000000000000000000000000000
+       2A11 0000000000000000000000000000000000000000000000000000000000000000
+       2A31 0000000000000000000000000000000000000000000000000000000000000000
+       2A51 0000000000000000000000000000000000000000000000000000000000000000
+       2A71 0000000000000000000000000000000000000000000000000000000000000000
+       2A91 0000000000000000000000000000000000000000000000000000000000000000
+       2AB1 0000000000000000000000000000000000000000000000000000000000000000
+       2AD1 0000000000000000000000000000000000000000000000000000000000000000
+       2AF1 0000000000000000000000000000000000000000000000000000000000000000
+       2B11 0000000000000000000000000000000000000000000000000000000000000000
+       2B31 0000000000000000000000000000000000000000000000000000000000000000
+       2B51 0000000000000000000000000000000000000000000000000000000000000000
+       2B71 0000000000000000000000000000000000000000000000000000000000000000
+       2B91 0000000000000000000000000000000000000000000000000000000000000000
+       2BB1 0000000000000000000000000000000000000000000000000000000000000000
+       2BD1 0000000000000000000000000000000000000000000000000000000000000000
+       2BF1 0000000000000000000000000000000000000000000000000000000000000000
+       2C11 0000000000000000000000000000000000000000000000000000000000000000
+       2C31 0000000000000000000000000000000000000000000000000000000000000000
+       2C51 0000000000000000000000000000000000000000000000000000000000000000
+       2C71 0000000000000000000000000000000000000000000000000000000000000000
+       2C91 0000000000000000000000000000000000000000000000000000000000000000
+       2CB1 0000000000000000000000000000000000000000000000000000000000000000
+       2CD1 0000000000000000000000000000000000000000000000000000000000000000
+       2CF1 0000000000000000000000000000000000000000000000000000000000000000
+       2D11 0000000000000000000000000000000000000000000000000000000000000000
+       2D31 0000000000000000000000000000000000000000000000000000000000000000
+       2D51 0000000000000000000000000000000000000000000000000000000000000000
+       2D71 0000000000000000000000000000000000000000000000000000000000000000
+       2D91 0000000000000000000000000000000000000000000000000000000000000000
+       2DB1 0000000000000000000000000000000000000000000000000000000000000000
+       2DD1 0000000000000000000000000000000000000000000000000000000000000000
+       2DF1 0000000000000000000000000000000000000000000000000000000000000000
+       2E11 0000000000000000000000000000000000000000000000000000000000000000
+       2E31 0000000000000000000000000000000000000000000000000000000000000000
+       2E51 0000000000000000000000000000000000000000000000000000000000000000
+       2E71 0000000000000000000000000000000000000000000000000000000000000000
+       2E91 0000000000000000000000000000000000000000000000000000000000000000
+       2EB1 0000000000000000000000000000000000000000000000000000000000000000
+       2ED1 0000000000000000000000000000000000000000000000000000000000000000
+       2EF1 0000000000000000000000000000000000000000000000000000000000000000
+       2F11 0000000000000000000000000000000000000000000000000000000000000000
+       2F31 0000000000000000000000000000000000000000000000000000000000000000
+       2F51 0000000000000000000000000000000000000000000000000000000000000000
+       2F71 0000000000000000000000000000000000000000000000000000000000000000
+       2F91 0000000000000000000000000000000000000000000000000000000000000000
+       2FB1 0000000000000000000000000000000000000000000000000000000000000000
+       2FD1 0000000000000000000000000000000000000000000000000000000000000000
+       2FF1 0000000000000000000000000000000000000000000000000000000000000000
+       3011 0000000000000000000000000000000000000000000000000000000000000000
+       3031 0000000000000000000000000000000000000000000000000000000000000000
+       3051 0000000000000000000000000000000000000000000000000000000000000000
+       3071 0000000000000000000000000000000000000000000000000000000000000000
+       3091 0000000000000000000000000000000000000000000000000000000000000000
+       30B1 0000000000000000000000000000000000000000000000000000000000000000
+       30D1 0000000000000000000000000000000000000000000000000000000000000000
+       30F1 0000000000000000000000000000000000000000000000000000000000000000
+       3111 0000000000000000000000000000000000000000000000000000000000000000
+       3131 0000000000000000000000000000000000000000000000000000000000000000
+       3151 0000000000000000000000000000000000000000000000000000000000000000
+       3171 0000000000000000000000000000000000000000000000000000000000000000
+       3191 0000000000000000000000000000000000000000000000000000000000000000
+       31B1 0000000000000000000000000000000000000000000000000000000000000000
+       31D1 0000000000000000000000000000000000000000000000000000000000000000
+       31F1 0000000000000000000000000000000000000000000000000000000000000000
+       3211 0000000000000000000000000000000000000000000000000000000000000000
+       3231 0000000000000000000000000000000000000000000000000000000000000000
+       3251 0000000000000000000000000000000000000000000000000000000000000000
+       3271 0000000000000000000000000000000000000000000000000000000000000000
+       3291 0000000000000000000000000000000000000000000000000000000000000000
+       32B1 0000000000000000000000000000000000000000000000000000000000000000
+       32D1 0000000000000000000000000000000000000000000000000000000000000000
+       32F1 0000000000000000000000000000000000000000000000000000000000000000
+       3311 0000000000000000000000000000000000000000000000000000000000000000
+       3331 0000000000000000000000000000000000000000000000000000000000000000
+       3351 0000000000000000000000000000000000000000000000000000000000000000
+       3371 0000000000000000000000000000000000000000000000000000000000000000
+       3391 0000000000000000000000000000000000000000000000000000000000000000
+       33B1 0000000000000000000000000000000000000000000000000000000000000000
+       33D1 0000000000000000000000000000000000000000000000000000000000000000
+       33F1 0000000000000000000000000000000000000000000000000000000000000000
+       3411 0000000000000000000000000000000000000000000000000000000000000000
+       3431 0000000000000000000000000000000000000000000000000000000000000000
+       3451 0000000000000000000000000000000000000000000000000000000000000000
+       3471 0000000000000000000000000000000000000000000000000000000000000000
+       3491 0000000000000000000000000000000000000000000000000000000000000000
+       34B1 0000000000000000000000000000000000000000000000000000000000000000
+       34D1 0000000000000000000000000000000000000000000000000000000000000000
+       34F1 0000000000000000000000000000000000000000000000000000000000000000
+       3511 0000000000000000000000000000000000000000000000000000000000000000
+       3531 0000000000000000000000000000000000000000000000000000000000000000
+       3551 0000000000000000000000000000000000000000000000000000000000000000
+       3571 0000000000000000000000000000000000000000000000000000000000000000
+       3591 0000000000000000000000000000000000000000000000000000000000000000
+       35B1 0000000000000000000000000000000000000000000000000000000000000000
+       35D1 0000000000000000000000000000000000000000000000000000000000000000
+       35F1 0000000000000000000000000000000000000000000000000000000000000000
+       3611 0000000000000000000000000000000000000000000000000000000000000000
+       3631 0000000000000000000000000000000000000000000000000000000000000000
+       3651 0000000000000000000000000000000000000000000000000000000000000000
+       3671 0000000000000000000000000000000000000000000000000000000000000000
+       3691 0000000000000000000000000000000000000000000000000000000000000000
+       36B1 0000000000000000000000000000000000000000000000000000000000000000
+       36D1 0000000000000000000000000000000000000000000000000000000000000000
+       36F1 0000000000000000000000000000000000000000000000000000000000000000
+       3711 0000000000000000000000000000000000000000000000000000000000000000
+       3731 0000000000000000000000000000000000000000000000000000000000000000
+       3751 0000000000000000000000000000000000000000000000000000000000000000
+       3771 0000000000000000000000000000000000000000000000000000000000000000
+       3791 0000000000000000000000000000000000000000000000000000000000000000
+       37B1 0000000000000000000000000000000000000000000000000000000000000000
+       37D1 0000000000000000000000000000000000000000000000000000000000000000
+       37F1 0000000000000000000000000000000000000000000000000000000000000000
+       3811 0000000000000000000000000000000000000000000000000000000000000000
+       3831 0000000000000000000000000000000000000000000000000000000000000000
+       3851 0000000000000000000000000000000000000000000000000000000000000000
+       3871 0000000000000000000000000000000000000000000000000000000000000000
+       3891 0000000000000000000000000000000000000000000000000000000000000000
+       38B1 0000000000000000000000000000000000000000000000000000000000000000
+       38D1 0000000000000000000000000000000000000000000000000000000000000000
+       38F1 0000000000000000000000000000000000000000000000000000000000000000
+       3911 0000000000000000000000000000000000000000000000000000000000000000
+       3931 0000000000000000000000000000000000000000000000000000000000000000
+       3951 0000000000000000000000000000000000000000000000000000000000000000
+       3971 0000000000000000000000000000000000000000000000000000000000000000
+       3991 0000000000000000000000000000000000000000000000000000000000000000
+       39B1 0000000000000000000000000000000000000000000000000000000000000000
+       39D1 0000000000000000000000000000000000000000000000000000000000000000
+       39F1 0000000000000000000000000000000000000000000000000000000000000000
+       3A11 0000000000000000000000000000000000000000000000000000000000000000
+       3A31 0000000000000000000000000000000000000000000000000000000000000000
+       3A51 0000000000000000000000000000000000000000000000000000000000000000
+       3A71 0000000000000000000000000000000000000000000000000000000000000000
+       3A91 0000000000000000000000000000000000000000000000000000000000000000
+       3AB1 0000000000000000000000000000000000000000000000000000000000000000
+       3AD1 0000000000000000000000000000000000000000000000000000000000000000
+       3AF1 0000000000000000000000000000000000000000000000000000000000000000
+       3B11 0000000000000000000000000000000000000000000000000000000000000000
+       3B31 00000000000000000000000000000000000000000000000000000000
+(1646) 3B4D 00000000    ; numbertable_008 .byt 0[4004]
+       3B51 0000000000000000000000000000000000000000000000000000000000000000
+       3B71 0000000000000000000000000000000000000000000000000000000000000000
+       3B91 0000000000000000000000000000000000000000000000000000000000000000
+       3BB1 0000000000000000000000000000000000000000000000000000000000000000
+       3BD1 0000000000000000000000000000000000000000000000000000000000000000
+       3BF1 0000000000000000000000000000000000000000000000000000000000000000
+       3C11 0000000000000000000000000000000000000000000000000000000000000000
+       3C31 0000000000000000000000000000000000000000000000000000000000000000
+       3C51 0000000000000000000000000000000000000000000000000000000000000000
+       3C71 0000000000000000000000000000000000000000000000000000000000000000
+       3C91 0000000000000000000000000000000000000000000000000000000000000000
+       3CB1 0000000000000000000000000000000000000000000000000000000000000000
+       3CD1 0000000000000000000000000000000000000000000000000000000000000000
+       3CF1 0000000000000000000000000000000000000000000000000000000000000000
+       3D11 0000000000000000000000000000000000000000000000000000000000000000
+       3D31 0000000000000000000000000000000000000000000000000000000000000000
+       3D51 0000000000000000000000000000000000000000000000000000000000000000
+       3D71 0000000000000000000000000000000000000000000000000000000000000000
+       3D91 0000000000000000000000000000000000000000000000000000000000000000
+       3DB1 0000000000000000000000000000000000000000000000000000000000000000
+       3DD1 0000000000000000000000000000000000000000000000000000000000000000
+       3DF1 0000000000000000000000000000000000000000000000000000000000000000
+       3E11 0000000000000000000000000000000000000000000000000000000000000000
+       3E31 0000000000000000000000000000000000000000000000000000000000000000
+       3E51 0000000000000000000000000000000000000000000000000000000000000000
+       3E71 0000000000000000000000000000000000000000000000000000000000000000
+       3E91 0000000000000000000000000000000000000000000000000000000000000000
+       3EB1 0000000000000000000000000000000000000000000000000000000000000000
+       3ED1 0000000000000000000000000000000000000000000000000000000000000000
+       3EF1 0000000000000000000000000000000000000000000000000000000000000000
+       3F11 0000000000000000000000000000000000000000000000000000000000000000
+       3F31 0000000000000000000000000000000000000000000000000000000000000000
+       3F51 0000000000000000000000000000000000000000000000000000000000000000
+       3F71 0000000000000000000000000000000000000000000000000000000000000000
+       3F91 0000000000000000000000000000000000000000000000000000000000000000
+       3FB1 0000000000000000000000000000000000000000000000000000000000000000
+       3FD1 0000000000000000000000000000000000000000000000000000000000000000
+       3FF1 0000000000000000000000000000000000000000000000000000000000000000
+       4011 0000000000000000000000000000000000000000000000000000000000000000
+       4031 0000000000000000000000000000000000000000000000000000000000000000
+       4051 0000000000000000000000000000000000000000000000000000000000000000
+       4071 0000000000000000000000000000000000000000000000000000000000000000
+       4091 0000000000000000000000000000000000000000000000000000000000000000
+       40B1 0000000000000000000000000000000000000000000000000000000000000000
+       40D1 0000000000000000000000000000000000000000000000000000000000000000
+       40F1 0000000000000000000000000000000000000000000000000000000000000000
+       4111 0000000000000000000000000000000000000000000000000000000000000000
+       4131 0000000000000000000000000000000000000000000000000000000000000000
+       4151 0000000000000000000000000000000000000000000000000000000000000000
+       4171 0000000000000000000000000000000000000000000000000000000000000000
+       4191 0000000000000000000000000000000000000000000000000000000000000000
+       41B1 0000000000000000000000000000000000000000000000000000000000000000
+       41D1 0000000000000000000000000000000000000000000000000000000000000000
+       41F1 0000000000000000000000000000000000000000000000000000000000000000
+       4211 0000000000000000000000000000000000000000000000000000000000000000
+       4231 0000000000000000000000000000000000000000000000000000000000000000
+       4251 0000000000000000000000000000000000000000000000000000000000000000
+       4271 0000000000000000000000000000000000000000000000000000000000000000
+       4291 0000000000000000000000000000000000000000000000000000000000000000
+       42B1 0000000000000000000000000000000000000000000000000000000000000000
+       42D1 0000000000000000000000000000000000000000000000000000000000000000
+       42F1 0000000000000000000000000000000000000000000000000000000000000000
+       4311 0000000000000000000000000000000000000000000000000000000000000000
+       4331 0000000000000000000000000000000000000000000000000000000000000000
+       4351 0000000000000000000000000000000000000000000000000000000000000000
+       4371 0000000000000000000000000000000000000000000000000000000000000000
+       4391 0000000000000000000000000000000000000000000000000000000000000000
+       43B1 0000000000000000000000000000000000000000000000000000000000000000
+       43D1 0000000000000000000000000000000000000000000000000000000000000000
+       43F1 0000000000000000000000000000000000000000000000000000000000000000
+       4411 0000000000000000000000000000000000000000000000000000000000000000
+       4431 0000000000000000000000000000000000000000000000000000000000000000
+       4451 0000000000000000000000000000000000000000000000000000000000000000
+       4471 0000000000000000000000000000000000000000000000000000000000000000
+       4491 0000000000000000000000000000000000000000000000000000000000000000
+       44B1 0000000000000000000000000000000000000000000000000000000000000000
+       44D1 0000000000000000000000000000000000000000000000000000000000000000
+       44F1 0000000000000000000000000000000000000000000000000000000000000000
+       4511 0000000000000000000000000000000000000000000000000000000000000000
+       4531 0000000000000000000000000000000000000000000000000000000000000000
+       4551 0000000000000000000000000000000000000000000000000000000000000000
+       4571 0000000000000000000000000000000000000000000000000000000000000000
+       4591 0000000000000000000000000000000000000000000000000000000000000000
+       45B1 0000000000000000000000000000000000000000000000000000000000000000
+       45D1 0000000000000000000000000000000000000000000000000000000000000000
+       45F1 0000000000000000000000000000000000000000000000000000000000000000
+       4611 0000000000000000000000000000000000000000000000000000000000000000
+       4631 0000000000000000000000000000000000000000000000000000000000000000
+       4651 0000000000000000000000000000000000000000000000000000000000000000
+       4671 0000000000000000000000000000000000000000000000000000000000000000
+       4691 0000000000000000000000000000000000000000000000000000000000000000
+       46B1 0000000000000000000000000000000000000000000000000000000000000000
+       46D1 0000000000000000000000000000000000000000000000000000000000000000
+       46F1 0000000000000000000000000000000000000000000000000000000000000000
+       4711 0000000000000000000000000000000000000000000000000000000000000000
+       4731 0000000000000000000000000000000000000000000000000000000000000000
+       4751 0000000000000000000000000000000000000000000000000000000000000000
+       4771 0000000000000000000000000000000000000000000000000000000000000000
+       4791 0000000000000000000000000000000000000000000000000000000000000000
+       47B1 0000000000000000000000000000000000000000000000000000000000000000
+       47D1 0000000000000000000000000000000000000000000000000000000000000000
+       47F1 0000000000000000000000000000000000000000000000000000000000000000
+       4811 0000000000000000000000000000000000000000000000000000000000000000
+       4831 0000000000000000000000000000000000000000000000000000000000000000
+       4851 0000000000000000000000000000000000000000000000000000000000000000
+       4871 0000000000000000000000000000000000000000000000000000000000000000
+       4891 0000000000000000000000000000000000000000000000000000000000000000
+       48B1 0000000000000000000000000000000000000000000000000000000000000000
+       48D1 0000000000000000000000000000000000000000000000000000000000000000
+       48F1 0000000000000000000000000000000000000000000000000000000000000000
+       4911 0000000000000000000000000000000000000000000000000000000000000000
+       4931 0000000000000000000000000000000000000000000000000000000000000000
+       4951 0000000000000000000000000000000000000000000000000000000000000000
+       4971 0000000000000000000000000000000000000000000000000000000000000000
+       4991 0000000000000000000000000000000000000000000000000000000000000000
+       49B1 0000000000000000000000000000000000000000000000000000000000000000
+       49D1 0000000000000000000000000000000000000000000000000000000000000000
+       49F1 0000000000000000000000000000000000000000000000000000000000000000
+       4A11 0000000000000000000000000000000000000000000000000000000000000000
+       4A31 0000000000000000000000000000000000000000000000000000000000000000
+       4A51 0000000000000000000000000000000000000000000000000000000000000000
+       4A71 0000000000000000000000000000000000000000000000000000000000000000
+       4A91 0000000000000000000000000000000000000000000000000000000000000000
+       4AB1 0000000000000000000000000000000000000000000000000000000000000000
+       4AD1 0000000000000000000000000000000000000000000000000000000000000000
+(1647) 4AF1 0000        ; nextwordindex_009 .wrd 0
+(1648) 4AF3 0000        ; nextnumberindex_010 .wrd 0
+(1649) 4AF5 0000        ; linenumber_011 .wrd 0
+(1650) 4AF7 0000        ; wordtablefull_012 .wrd 0
+(1651) 4AF9 0000        ; numbertablefull_013 .wrd 0
+(1652) 4AFB 0000        ; newline_014 .wrd 0
+(1653) 4AFD 0000        ; gotword_015 .wrd 0
+(1654) 4AFF 00          ; _bss_end .byt 0
+(1655) 4B00 00000000    ; _stk .byt 0[1023]
+       4B04 0000000000000000000000000000000000000000000000000000000000000000
+       4B24 0000000000000000000000000000000000000000000000000000000000000000
+       4B44 0000000000000000000000000000000000000000000000000000000000000000
+       4B64 0000000000000000000000000000000000000000000000000000000000000000
+       4B84 0000000000000000000000000000000000000000000000000000000000000000
+       4BA4 0000000000000000000000000000000000000000000000000000000000000000
+       4BC4 0000000000000000000000000000000000000000000000000000000000000000
+       4BE4 0000000000000000000000000000000000000000000000000000000000000000
+       4C04 0000000000000000000000000000000000000000000000000000000000000000
+       4C24 0000000000000000000000000000000000000000000000000000000000000000
+       4C44 0000000000000000000000000000000000000000000000000000000000000000
+       4C64 0000000000000000000000000000000000000000000000000000000000000000
+       4C84 0000000000000000000000000000000000000000000000000000000000000000
+       4CA4 0000000000000000000000000000000000000000000000000000000000000000
+       4CC4 0000000000000000000000000000000000000000000000000000000000000000
+       4CE4 0000000000000000000000000000000000000000000000000000000000000000
+       4D04 0000000000000000000000000000000000000000000000000000000000000000
+       4D24 0000000000000000000000000000000000000000000000000000000000000000
+       4D44 0000000000000000000000000000000000000000000000000000000000000000
+       4D64 0000000000000000000000000000000000000000000000000000000000000000
+       4D84 0000000000000000000000000000000000000000000000000000000000000000
+       4DA4 0000000000000000000000000000000000000000000000000000000000000000
+       4DC4 0000000000000000000000000000000000000000000000000000000000000000
+       4DE4 0000000000000000000000000000000000000000000000000000000000000000
+       4E04 0000000000000000000000000000000000000000000000000000000000000000
+       4E24 0000000000000000000000000000000000000000000000000000000000000000
+       4E44 0000000000000000000000000000000000000000000000000000000000000000
+       4E64 0000000000000000000000000000000000000000000000000000000000000000
+       4E84 0000000000000000000000000000000000000000000000000000000000000000
+       4EA4 0000000000000000000000000000000000000000000000000000000000000000
+       4EC4 0000000000000000000000000000000000000000000000000000000000000000
+       4EE4 000000000000000000000000000000000000000000000000000000
+(1656) 4EFF FF          ; _stk_top .byt -1

@@ -1,643 +1,705 @@
 (   8) 0200 ABBA        ; 	tsx.w		; Preserve original stack pointer
-(   9) 0202 CBA2380D    ; 	lds.w #_stk_top	; Initialize program stack pointer
-(  10) 0206 9C3509      ; 	stz _bss_start
-(  11) 0209 ABA23509    ; 	ldx.w #_bss_start
-(  12) 020D ABA03609    ; 	ldy.w #_bss_start+1
-(  13) 0211 ABA9380D    ; 	lda.w #_stk_top
+(   9) 0202 CBA2850D    ; 	lds.w #_stk_top	; Initialize program stack pointer
+(  10) 0206 9C8209      ; 	stz _bss_start
+(  11) 0209 ABA28209    ; 	ldx.w #_bss_start
+(  12) 020D ABA08309    ; 	ldy.w #_bss_start+1
+(  13) 0211 ABA9850D    ; 	lda.w #_stk_top
 (  14) 0215 38          ; 	sec
-(  15) 0216 ABE93509    ; 	sbc.w #_bss_start
+(  15) 0216 ABE98209    ; 	sbc.w #_bss_start
 (  16) 021A 540A        ; 	mov #10
-(  17) 021C 4C2107      ; 	jmp _pc65_main
+(  17) 021C 4C9A06      ; 	jmp _pc65_main
 (  72) 021F ABDA        ; 	phx.w
 (  73) 0221 ABBA        ; 	tsx.w
 (  75) 0223 ABB507      ; 	lda.w digit_014,X
 (  77) 0226 ABC90100    ; 	cmp.w #1
-(  78) 022A 9BD01400    ; 	jne L_017
-(  80) 022E ABE23109    ; 	psh.w #S_018
-(  81) 0232 ABE20000    ; 	psh.w #0
-(  82) 0236 ABE20400    ; 	psh.w #4
-(  83) 023A 20FFFF      ; 	jsr _swrite
-(  84) 023D C206        ; 	adj #6
-(  85) 023F 4C2203      ; 	jmp L_015
-(  88) 0242 ABC90200    ; 	cmp.w #2
-(  89) 0246 9BD01400    ; 	jne L_020
-(  91) 024A ABE22D09    ; 	psh.w #S_021
-(  92) 024E ABE20000    ; 	psh.w #0
-(  93) 0252 ABE20400    ; 	psh.w #4
-(  94) 0256 20FFFF      ; 	jsr _swrite
-(  95) 0259 C206        ; 	adj #6
-(  96) 025B 4C2203      ; 	jmp L_015
-(  99) 025E ABC90300    ; 	cmp.w #3
-( 100) 0262 9BD01400    ; 	jne L_023
-( 102) 0266 ABE22709    ; 	psh.w #S_024
-( 103) 026A ABE20000    ; 	psh.w #0
-( 104) 026E ABE20600    ; 	psh.w #6
-( 105) 0272 20FFFF      ; 	jsr _swrite
-( 106) 0275 C206        ; 	adj #6
-( 107) 0277 4C2203      ; 	jmp L_015
-( 110) 027A ABC90400    ; 	cmp.w #4
-( 111) 027E 9BD01400    ; 	jne L_026
-( 113) 0282 ABE22209    ; 	psh.w #S_027
-( 114) 0286 ABE20000    ; 	psh.w #0
-( 115) 028A ABE20500    ; 	psh.w #5
-( 116) 028E 20FFFF      ; 	jsr _swrite
-( 117) 0291 C206        ; 	adj #6
-( 118) 0293 4C2203      ; 	jmp L_015
-( 121) 0296 ABC90500    ; 	cmp.w #5
-( 122) 029A 9BD01400    ; 	jne L_029
-( 124) 029E ABE21D09    ; 	psh.w #S_030
-( 125) 02A2 ABE20000    ; 	psh.w #0
-( 126) 02A6 ABE20500    ; 	psh.w #5
-( 127) 02AA 20FFFF      ; 	jsr _swrite
-( 128) 02AD C206        ; 	adj #6
-( 129) 02AF 4C2203      ; 	jmp L_015
-( 132) 02B2 ABC90600    ; 	cmp.w #6
-( 133) 02B6 9BD01400    ; 	jne L_032
-( 135) 02BA ABE21909    ; 	psh.w #S_033
-( 136) 02BE ABE20000    ; 	psh.w #0
-( 137) 02C2 ABE20400    ; 	psh.w #4
-( 138) 02C6 20FFFF      ; 	jsr _swrite
-( 139) 02C9 C206        ; 	adj #6
-( 140) 02CB 4C2203      ; 	jmp L_015
-( 143) 02CE ABC90700    ; 	cmp.w #7
-( 144) 02D2 9BD01400    ; 	jne L_035
-( 146) 02D6 ABE21309    ; 	psh.w #S_036
-( 147) 02DA ABE20000    ; 	psh.w #0
-( 148) 02DE ABE20600    ; 	psh.w #6
-( 149) 02E2 20FFFF      ; 	jsr _swrite
-( 150) 02E5 C206        ; 	adj #6
-( 151) 02E7 4C2203      ; 	jmp L_015
-( 154) 02EA ABC90800    ; 	cmp.w #8
-( 155) 02EE 9BD01400    ; 	jne L_038
-( 157) 02F2 ABE20D09    ; 	psh.w #S_039
-( 158) 02F6 ABE20000    ; 	psh.w #0
-( 159) 02FA ABE20600    ; 	psh.w #6
-( 160) 02FE 20FFFF      ; 	jsr _swrite
-( 161) 0301 C206        ; 	adj #6
-( 162) 0303 4C2203      ; 	jmp L_015
-( 165) 0306 ABC90900    ; 	cmp.w #9
-( 166) 030A 9BD01400    ; 	jne L_041
-( 168) 030E ABE20809    ; 	psh.w #S_042
-( 169) 0312 ABE20000    ; 	psh.w #0
-( 170) 0316 ABE20500    ; 	psh.w #5
-( 171) 031A 20FFFF      ; 	jsr _swrite
-( 172) 031D C206        ; 	adj #6
-( 173) 031F 4C2203      ; 	jmp L_015
-( 178) 0322 AB9A        ; 	txs.w
-( 179) 0324 ABFA        ; 	plx.w
-( 180) 0326 60          ; 	rts
-( 192) 0327 ABDA        ; 	phx.w
-( 193) 0329 ABBA        ; 	tsx.w
-( 195) 032B ABB507      ; 	lda.w teens_044,X
-( 197) 032E ABC90A00    ; 	cmp.w #10
-( 198) 0332 9BD01400    ; 	jne L_047
-( 200) 0336 ABE20409    ; 	psh.w #S_048
-( 201) 033A ABE20000    ; 	psh.w #0
-( 202) 033E ABE20400    ; 	psh.w #4
-( 203) 0342 20FFFF      ; 	jsr _swrite
-( 204) 0345 C206        ; 	adj #6
-( 205) 0347 4C4604      ; 	jmp L_045
-( 208) 034A ABC90B00    ; 	cmp.w #11
-( 209) 034E 9BD01400    ; 	jne L_050
-( 211) 0352 ABE2FD08    ; 	psh.w #S_051
-( 212) 0356 ABE20000    ; 	psh.w #0
-( 213) 035A ABE20700    ; 	psh.w #7
-( 214) 035E 20FFFF      ; 	jsr _swrite
-( 215) 0361 C206        ; 	adj #6
-( 216) 0363 4C4604      ; 	jmp L_045
-( 219) 0366 ABC90C00    ; 	cmp.w #12
-( 220) 036A 9BD01400    ; 	jne L_053
-( 222) 036E ABE2F608    ; 	psh.w #S_054
-( 223) 0372 ABE20000    ; 	psh.w #0
-( 224) 0376 ABE20700    ; 	psh.w #7
-( 225) 037A 20FFFF      ; 	jsr _swrite
-( 226) 037D C206        ; 	adj #6
-( 227) 037F 4C4604      ; 	jmp L_045
-( 230) 0382 ABC90D00    ; 	cmp.w #13
-( 231) 0386 9BD01400    ; 	jne L_056
-( 233) 038A ABE2ED08    ; 	psh.w #S_057
-( 234) 038E ABE20000    ; 	psh.w #0
-( 235) 0392 ABE20900    ; 	psh.w #9
-( 236) 0396 20FFFF      ; 	jsr _swrite
-( 237) 0399 C206        ; 	adj #6
-( 238) 039B 4C4604      ; 	jmp L_045
-( 241) 039E ABC90E00    ; 	cmp.w #14
-( 242) 03A2 9BD01400    ; 	jne L_059
-( 244) 03A6 ABE2E408    ; 	psh.w #S_060
-( 245) 03AA ABE20000    ; 	psh.w #0
-( 246) 03AE ABE20900    ; 	psh.w #9
-( 247) 03B2 20FFFF      ; 	jsr _swrite
-( 248) 03B5 C206        ; 	adj #6
-( 249) 03B7 4C4604      ; 	jmp L_045
-( 252) 03BA ABC90F00    ; 	cmp.w #15
-( 253) 03BE 9BD01400    ; 	jne L_062
-( 255) 03C2 ABE2DC08    ; 	psh.w #S_063
-( 256) 03C6 ABE20000    ; 	psh.w #0
-( 257) 03CA ABE20800    ; 	psh.w #8
-( 258) 03CE 20FFFF      ; 	jsr _swrite
-( 259) 03D1 C206        ; 	adj #6
-( 260) 03D3 4C4604      ; 	jmp L_045
-( 263) 03D6 ABC91000    ; 	cmp.w #16
-( 264) 03DA 9BD01400    ; 	jne L_065
-( 266) 03DE ABE2D408    ; 	psh.w #S_066
-( 267) 03E2 ABE20000    ; 	psh.w #0
-( 268) 03E6 ABE20800    ; 	psh.w #8
-( 269) 03EA 20FFFF      ; 	jsr _swrite
-( 270) 03ED C206        ; 	adj #6
-( 271) 03EF 4C4604      ; 	jmp L_045
-( 274) 03F2 ABC91100    ; 	cmp.w #17
-( 275) 03F6 9BD01400    ; 	jne L_068
-( 277) 03FA ABE2CA08    ; 	psh.w #S_069
-( 278) 03FE ABE20000    ; 	psh.w #0
-( 279) 0402 ABE20A00    ; 	psh.w #10
-( 280) 0406 20FFFF      ; 	jsr _swrite
-( 281) 0409 C206        ; 	adj #6
-( 282) 040B 4C4604      ; 	jmp L_045
-( 285) 040E ABC91200    ; 	cmp.w #18
-( 286) 0412 9BD01400    ; 	jne L_071
-( 288) 0416 ABE2C108    ; 	psh.w #S_072
-( 289) 041A ABE20000    ; 	psh.w #0
-( 290) 041E ABE20900    ; 	psh.w #9
-( 291) 0422 20FFFF      ; 	jsr _swrite
-( 292) 0425 C206        ; 	adj #6
-( 293) 0427 4C4604      ; 	jmp L_045
-( 296) 042A ABC91300    ; 	cmp.w #19
-( 297) 042E 9BD01400    ; 	jne L_074
-( 299) 0432 ABE2B808    ; 	psh.w #S_075
-( 300) 0436 ABE20000    ; 	psh.w #0
-( 301) 043A ABE20900    ; 	psh.w #9
-( 302) 043E 20FFFF      ; 	jsr _swrite
-( 303) 0441 C206        ; 	adj #6
-( 304) 0443 4C4604      ; 	jmp L_045
-( 309) 0446 AB9A        ; 	txs.w
-( 310) 0448 ABFA        ; 	plx.w
-( 311) 044A 60          ; 	rts
-( 323) 044B ABDA        ; 	phx.w
-( 324) 044D ABBA        ; 	tsx.w
-( 326) 044F ABB507      ; 	lda.w digit_077,X
-( 328) 0452 ABC90200    ; 	cmp.w #2
-( 329) 0456 9BD01400    ; 	jne L_080
-( 331) 045A ABE2B108    ; 	psh.w #S_081
-( 332) 045E ABE20000    ; 	psh.w #0
-( 333) 0462 ABE20700    ; 	psh.w #7
-( 334) 0466 20FFFF      ; 	jsr _swrite
-( 335) 0469 C206        ; 	adj #6
-( 336) 046B 4C3205      ; 	jmp L_078
-( 339) 046E ABC90300    ; 	cmp.w #3
-( 340) 0472 9BD01400    ; 	jne L_083
-( 342) 0476 ABE2AA08    ; 	psh.w #S_084
-( 343) 047A ABE20000    ; 	psh.w #0
-( 344) 047E ABE20700    ; 	psh.w #7
-( 345) 0482 20FFFF      ; 	jsr _swrite
-( 346) 0485 C206        ; 	adj #6
-( 347) 0487 4C3205      ; 	jmp L_078
-( 350) 048A ABC90400    ; 	cmp.w #4
-( 351) 048E 9BD01400    ; 	jne L_086
-( 353) 0492 ABE2A408    ; 	psh.w #S_087
-( 354) 0496 ABE20000    ; 	psh.w #0
-( 355) 049A ABE20600    ; 	psh.w #6
-( 356) 049E 20FFFF      ; 	jsr _swrite
-( 357) 04A1 C206        ; 	adj #6
-( 358) 04A3 4C3205      ; 	jmp L_078
-( 361) 04A6 ABC90500    ; 	cmp.w #5
-( 362) 04AA 9BD01400    ; 	jne L_089
-( 364) 04AE ABE29E08    ; 	psh.w #S_090
-( 365) 04B2 ABE20000    ; 	psh.w #0
-( 366) 04B6 ABE20600    ; 	psh.w #6
-( 367) 04BA 20FFFF      ; 	jsr _swrite
-( 368) 04BD C206        ; 	adj #6
-( 369) 04BF 4C3205      ; 	jmp L_078
-( 372) 04C2 ABC90600    ; 	cmp.w #6
-( 373) 04C6 9BD01400    ; 	jne L_092
-( 375) 04CA ABE29808    ; 	psh.w #S_093
-( 376) 04CE ABE20000    ; 	psh.w #0
-( 377) 04D2 ABE20600    ; 	psh.w #6
-( 378) 04D6 20FFFF      ; 	jsr _swrite
-( 379) 04D9 C206        ; 	adj #6
-( 380) 04DB 4C3205      ; 	jmp L_078
-( 383) 04DE ABC90700    ; 	cmp.w #7
-( 384) 04E2 9BD01400    ; 	jne L_095
-( 386) 04E6 ABE29008    ; 	psh.w #S_096
-( 387) 04EA ABE20000    ; 	psh.w #0
-( 388) 04EE ABE20800    ; 	psh.w #8
-( 389) 04F2 20FFFF      ; 	jsr _swrite
-( 390) 04F5 C206        ; 	adj #6
-( 391) 04F7 4C3205      ; 	jmp L_078
-( 394) 04FA ABC90800    ; 	cmp.w #8
-( 395) 04FE 9BD01400    ; 	jne L_098
-( 397) 0502 ABE28908    ; 	psh.w #S_099
-( 398) 0506 ABE20000    ; 	psh.w #0
-( 399) 050A ABE20700    ; 	psh.w #7
-( 400) 050E 20FFFF      ; 	jsr _swrite
-( 401) 0511 C206        ; 	adj #6
-( 402) 0513 4C3205      ; 	jmp L_078
-( 405) 0516 ABC90900    ; 	cmp.w #9
-( 406) 051A 9BD01400    ; 	jne L_101
-( 408) 051E ABE28208    ; 	psh.w #S_102
-( 409) 0522 ABE20000    ; 	psh.w #0
-( 410) 0526 ABE20700    ; 	psh.w #7
-( 411) 052A 20FFFF      ; 	jsr _swrite
-( 412) 052D C206        ; 	adj #6
-( 413) 052F 4C3205      ; 	jmp L_078
-( 418) 0532 AB9A        ; 	txs.w
-( 419) 0534 ABFA        ; 	plx.w
-( 420) 0536 60          ; 	rts
-( 425) 0537 ABDA        ; 	phx.w
-( 426) 0539 ABBA        ; 	tsx.w
-( 427) 053B C2F8        ; 	adj #-8
-( 431) 053D ABB507      ; 	lda.w part_008,X
-( 432) 0540 AB48        ; 	pha.w
-( 433) 0542 A964        ; 	lda #100
-( 434) 0544 AB48        ; 	pha.w
-( 435) 0546 20FFFF      ; 	jsr _idiv
-( 436) 0549 C204        ; 	adj #4
-( 437) 054B AB9DFFFF    ; 	sta.w hundredsdigit_009,X
-( 439) 054F ABB507      ; 	lda.w part_008,X
-( 440) 0552 AB48        ; 	pha.w
-( 441) 0554 A964        ; 	lda #100
-( 442) 0556 AB48        ; 	pha.w
-( 443) 0558 20FFFF      ; 	jsr _idiv
-( 444) 055B C204        ; 	adj #4
-( 445) 055D 1B          ; 	swp a
-( 446) 055E AB9DFDFF    ; 	sta.w tenspart_010,X
-( 450) 0562 ABBDFFFF    ; 	lda.w hundredsdigit_009,X
-( 451) 0566 AB48        ; 	pha.w
-( 452) 0568 A900        ; 	lda #0
-( 453) 056A CB4401      ; 	xma.w 1,S
-( 454) 056D CBD501      ; 	cmp.w 1,S
-( 455) 0570 C202        ; 	adj #2
-( 456) 0572 08          ; 	php
-( 457) 0573 A901        ; 	lda #1
-( 458) 0575 28          ; 	plp
-( 459) 0576 AB1002      ; 	bgt L_105
-( 460) 0579 A900        ; 	lda #0
-( 462) 057B ABC90100    ; 	cmp.w #1
-( 463) 057F F003        ; 	beq L_103
-( 464) 0581 4CA205      ; 	jmp L_104
-( 467) 0584 ABBDFFFF    ; 	lda.w hundredsdigit_009,X
-( 468) 0588 AB48        ; 	pha.w
-( 469) 058A ABDA        ; 	phx.w
-( 470) 058C 201F02      ; 	jsr doones_013
-( 471) 058F C204        ; 	adj #4
-( 473) 0591 ABE27A08    ; 	psh.w #S_106
-( 474) 0595 ABE20000    ; 	psh.w #0
-( 475) 0599 ABE20800    ; 	psh.w #8
-( 476) 059D 20FFFF      ; 	jsr _swrite
-( 477) 05A0 C206        ; 	adj #6
-( 483) 05A2 ABBDFDFF    ; 	lda.w tenspart_010,X
-( 484) 05A6 AB48        ; 	pha.w
-( 485) 05A8 A90A        ; 	lda #10
-( 486) 05AA CB4401      ; 	xma.w 1,S
-( 487) 05AD CBD501      ; 	cmp.w 1,S
-( 488) 05B0 C202        ; 	adj #2
-( 489) 05B2 08          ; 	php
-( 490) 05B3 A901        ; 	lda #1
-( 491) 05B5 28          ; 	plp
-( 492) 05B6 AB5002      ; 	bge L_109
-( 493) 05B9 A900        ; 	lda #0
-( 495) 05BB AB48        ; 	pha.w
-( 496) 05BD ABBDFDFF    ; 	lda.w tenspart_010,X
-( 497) 05C1 AB48        ; 	pha.w
-( 498) 05C3 A913        ; 	lda #19
-( 499) 05C5 CB4401      ; 	xma.w 1,S
-( 500) 05C8 CBD501      ; 	cmp.w 1,S
-( 501) 05CB C202        ; 	adj #2
-( 502) 05CD 08          ; 	php
-( 503) 05CE A901        ; 	lda #1
-( 504) 05D0 28          ; 	plp
-( 505) 05D1 AB3002      ; 	ble L_110
-( 506) 05D4 A900        ; 	lda #0
-( 508) 05D6 CB3501      ; 	and.w 1,S
-( 509) 05D9 C202        ; 	adj #2
-( 510) 05DB ABC90100    ; 	cmp.w #1
-( 511) 05DF F003        ; 	beq L_107
-( 512) 05E1 4CF405      ; 	jmp L_108
-( 515) 05E4 ABBDFDFF    ; 	lda.w tenspart_010,X
-( 516) 05E8 AB48        ; 	pha.w
-( 517) 05EA ABDA        ; 	phx.w
-( 518) 05EC 202703      ; 	jsr doteens_043
-( 519) 05EF C204        ; 	adj #4
-( 522) 05F1 4C7906      ; 	jmp L_111
-( 525) 05F4 ABBDFDFF    ; 	lda.w tenspart_010,X
-( 526) 05F8 AB48        ; 	pha.w
-( 527) 05FA A90A        ; 	lda #10
-( 528) 05FC AB48        ; 	pha.w
-( 529) 05FE 20FFFF      ; 	jsr _idiv
-( 530) 0601 C204        ; 	adj #4
-( 531) 0603 AB9DFBFF    ; 	sta.w tensdigit_011,X
-( 533) 0607 ABBDFDFF    ; 	lda.w tenspart_010,X
-( 534) 060B AB48        ; 	pha.w
-( 535) 060D A90A        ; 	lda #10
-( 536) 060F AB48        ; 	pha.w
-( 537) 0611 20FFFF      ; 	jsr _idiv
-( 538) 0614 C204        ; 	adj #4
-( 539) 0616 1B          ; 	swp a
-( 540) 0617 AB9DF9FF    ; 	sta.w onesdigit_012,X
-( 543) 061B ABBDFBFF    ; 	lda.w tensdigit_011,X
-( 544) 061F AB48        ; 	pha.w
-( 545) 0621 A900        ; 	lda #0
-( 546) 0623 CB4401      ; 	xma.w 1,S
-( 547) 0626 CBD501      ; 	cmp.w 1,S
-( 548) 0629 C202        ; 	adj #2
-( 549) 062B 08          ; 	php
-( 550) 062C A901        ; 	lda #1
-( 551) 062E 28          ; 	plp
-( 552) 062F AB1002      ; 	bgt L_114
-( 553) 0632 A900        ; 	lda #0
-( 555) 0634 ABC90100    ; 	cmp.w #1
-( 556) 0638 F003        ; 	beq L_112
-( 557) 063A 4C4A06      ; 	jmp L_113
-( 559) 063D ABBDFBFF    ; 	lda.w tensdigit_011,X
-( 560) 0641 AB48        ; 	pha.w
-( 561) 0643 ABDA        ; 	phx.w
-( 562) 0645 204B04      ; 	jsr dotens_076
-( 563) 0648 C204        ; 	adj #4
-( 566) 064A ABBDF9FF    ; 	lda.w onesdigit_012,X
-( 567) 064E AB48        ; 	pha.w
-( 568) 0650 A900        ; 	lda #0
-( 569) 0652 CB4401      ; 	xma.w 1,S
-( 570) 0655 CBD501      ; 	cmp.w 1,S
-( 571) 0658 C202        ; 	adj #2
-( 572) 065A 08          ; 	php
-( 573) 065B A901        ; 	lda #1
-( 574) 065D 28          ; 	plp
-( 575) 065E AB1002      ; 	bgt L_117
-( 576) 0661 A900        ; 	lda #0
-( 578) 0663 ABC90100    ; 	cmp.w #1
-( 579) 0667 F003        ; 	beq L_115
-( 580) 0669 4C7906      ; 	jmp L_116
-( 582) 066C ABBDF9FF    ; 	lda.w onesdigit_012,X
-( 583) 0670 AB48        ; 	pha.w
-( 584) 0672 ABDA        ; 	phx.w
-( 585) 0674 201F02      ; 	jsr doones_013
-( 586) 0677 C204        ; 	adj #4
-( 591) 0679 AB9A        ; 	txs.w
-( 592) 067B ABFA        ; 	plx.w
-( 593) 067D 60          ; 	rts
-( 598) 067E ABDA        ; 	phx.w
-( 599) 0680 ABBA        ; 	tsx.w
-( 600) 0682 C2FC        ; 	adj #-4
-( 604) 0684 ABB507      ; 	lda.w n_004,X
-( 605) 0687 AB48        ; 	pha.w
-( 606) 0689 ABA9E803    ; 	lda.w #1000
-( 607) 068D AB48        ; 	pha.w
-( 608) 068F 20FFFF      ; 	jsr _idiv
-( 609) 0692 C204        ; 	adj #4
-( 610) 0694 AB9DFFFF    ; 	sta.w partbefore_005,X
-( 612) 0698 ABB507      ; 	lda.w n_004,X
-( 613) 069B AB48        ; 	pha.w
-( 614) 069D ABA9E803    ; 	lda.w #1000
-( 615) 06A1 AB48        ; 	pha.w
-( 616) 06A3 20FFFF      ; 	jsr _idiv
-( 617) 06A6 C204        ; 	adj #4
-( 618) 06A8 1B          ; 	swp a
-( 619) 06A9 AB9DFDFF    ; 	sta.w partafter_006,X
-( 622) 06AD ABBDFFFF    ; 	lda.w partbefore_005,X
-( 623) 06B1 AB48        ; 	pha.w
-( 624) 06B3 A900        ; 	lda #0
-( 625) 06B5 CB4401      ; 	xma.w 1,S
-( 626) 06B8 CBD501      ; 	cmp.w 1,S
-( 627) 06BB C202        ; 	adj #2
-( 628) 06BD 08          ; 	php
-( 629) 06BE A901        ; 	lda #1
-( 630) 06C0 28          ; 	plp
-( 631) 06C1 AB1002      ; 	bgt L_120
-( 632) 06C4 A900        ; 	lda #0
-( 634) 06C6 ABC90100    ; 	cmp.w #1
-( 635) 06CA F003        ; 	beq L_118
-( 636) 06CC 4CED06      ; 	jmp L_119
-( 639) 06CF ABBDFFFF    ; 	lda.w partbefore_005,X
-( 640) 06D3 AB48        ; 	pha.w
-( 641) 06D5 ABDA        ; 	phx.w
-( 642) 06D7 203705      ; 	jsr dopart_007
-( 643) 06DA C204        ; 	adj #4
-( 645) 06DC ABE27108    ; 	psh.w #S_121
-( 646) 06E0 ABE20000    ; 	psh.w #0
-( 647) 06E4 ABE20900    ; 	psh.w #9
-( 648) 06E8 20FFFF      ; 	jsr _swrite
-( 649) 06EB C206        ; 	adj #6
-( 654) 06ED ABBDFDFF    ; 	lda.w partafter_006,X
-( 655) 06F1 AB48        ; 	pha.w
-( 656) 06F3 A900        ; 	lda #0
-( 657) 06F5 CB4401      ; 	xma.w 1,S
-( 658) 06F8 CBD501      ; 	cmp.w 1,S
-( 659) 06FB C202        ; 	adj #2
-( 660) 06FD 08          ; 	php
-( 661) 06FE A901        ; 	lda #1
-( 662) 0700 28          ; 	plp
-( 663) 0701 AB1002      ; 	bgt L_124
-( 664) 0704 A900        ; 	lda #0
-( 666) 0706 ABC90100    ; 	cmp.w #1
-( 667) 070A F003        ; 	beq L_122
-( 668) 070C 4C1C07      ; 	jmp L_123
-( 670) 070F ABBDFDFF    ; 	lda.w partafter_006,X
-( 671) 0713 AB48        ; 	pha.w
-( 672) 0715 ABDA        ; 	phx.w
-( 673) 0717 203705      ; 	jsr dopart_007
-( 674) 071A C204        ; 	adj #4
-( 677) 071C AB9A        ; 	txs.w
-( 678) 071E ABFA        ; 	plx.w
-( 679) 0720 60          ; 	rts
-( 685) 0721 ABDA        ; 	phx.w
-( 686) 0723 ABBA        ; 	tsx.w
-( 692) 0725 ABE23609    ; 	psh.w #number_002
-( 693) 0729 20FFFF      ; 	jsr _iread
-( 694) 072C 8B6B        ; 	pli.s
-( 695) 072E AB8300      ; 	sta.w 0,I++
-( 697) 0731 ABAD3609    ; 	lda.w number_002
-( 698) 0735 AB48        ; 	pha.w
-( 699) 0737 A906        ; 	lda #6
-( 700) 0739 AB48        ; 	pha.w
-( 701) 073B 20FFFF      ; 	jsr _iwrite
-( 702) 073E C204        ; 	adj #4
-( 703) 0740 ABE26F08    ; 	psh.w #S_127
-( 704) 0744 ABE20000    ; 	psh.w #0
-( 705) 0748 ABE20200    ; 	psh.w #2
-( 706) 074C 20FFFF      ; 	jsr _swrite
-( 707) 074F C206        ; 	adj #6
-( 710) 0751 ABAD3609    ; 	lda.w number_002
-( 711) 0755 AB48        ; 	pha.w
-( 712) 0757 A900        ; 	lda #0
-( 713) 0759 CB4401      ; 	xma.w 1,S
-( 714) 075C CBD501      ; 	cmp.w 1,S
-( 715) 075F C202        ; 	adj #2
-( 716) 0761 08          ; 	php
-( 717) 0762 A901        ; 	lda #1
-( 718) 0764 28          ; 	plp
-( 719) 0765 AB7002      ; 	blt L_130
-( 720) 0768 A900        ; 	lda #0
-( 722) 076A ABC90100    ; 	cmp.w #1
-( 723) 076E F003        ; 	beq L_128
-( 724) 0770 4C8707      ; 	jmp L_129
-( 727) 0773 ABE25508    ; 	psh.w #S_131
-( 728) 0777 ABE20000    ; 	psh.w #0
-( 729) 077B ABE21A00    ; 	psh.w #26
-( 730) 077F 20FFFF      ; 	jsr _swrite
-( 731) 0782 C206        ; 	adj #6
-( 734) 0784 4C1008      ; 	jmp L_132
-( 736) 0787 ABAD3609    ; 	lda.w number_002
-( 737) 078B AB48        ; 	pha.w
-( 738) 078D ABA93075    ; 	lda.w #30000
-( 739) 0791 CB4401      ; 	xma.w 1,S
-( 740) 0794 CBD501      ; 	cmp.w 1,S
-( 741) 0797 C202        ; 	adj #2
-( 742) 0799 08          ; 	php
-( 743) 079A A901        ; 	lda #1
-( 744) 079C 28          ; 	plp
-( 745) 079D AB1002      ; 	bgt L_135
-( 746) 07A0 A900        ; 	lda #0
-( 748) 07A2 ABC90100    ; 	cmp.w #1
-( 749) 07A6 F003        ; 	beq L_133
-( 750) 07A8 4CCE07      ; 	jmp L_134
-( 753) 07AB ABE23C08    ; 	psh.w #S_136
-( 754) 07AF ABE20000    ; 	psh.w #0
-( 755) 07B3 ABE21900    ; 	psh.w #25
-( 756) 07B7 20FFFF      ; 	jsr _swrite
-( 757) 07BA C206        ; 	adj #6
-( 758) 07BC ABA93075    ; 	lda.w #30000
-( 759) 07C0 AB48        ; 	pha.w
-( 760) 07C2 A901        ; 	lda #1
-( 761) 07C4 AB48        ; 	pha.w
-( 762) 07C6 20FFFF      ; 	jsr _iwrite
-( 763) 07C9 C204        ; 	adj #4
-( 766) 07CB 4C1008      ; 	jmp L_137
-( 768) 07CE ABAD3609    ; 	lda.w number_002
-( 769) 07D2 AB48        ; 	pha.w
-( 770) 07D4 A900        ; 	lda #0
-( 771) 07D6 CB4401      ; 	xma.w 1,S
-( 772) 07D9 CBD501      ; 	cmp.w 1,S
-( 773) 07DC C202        ; 	adj #2
-( 774) 07DE 08          ; 	php
-( 775) 07DF A901        ; 	lda #1
-( 776) 07E1 28          ; 	plp
-( 777) 07E2 F002        ; 	beq L_140
-( 778) 07E4 A900        ; 	lda #0
-( 780) 07E6 ABC90100    ; 	cmp.w #1
-( 781) 07EA F003        ; 	beq L_138
-( 782) 07EC 4C0308      ; 	jmp L_139
-( 785) 07EF ABE23708    ; 	psh.w #S_141
-( 786) 07F3 ABE20000    ; 	psh.w #0
-( 787) 07F7 ABE20500    ; 	psh.w #5
-( 788) 07FB 20FFFF      ; 	jsr _swrite
-( 789) 07FE C206        ; 	adj #6
-( 792) 0800 4C1008      ; 	jmp L_142
-( 795) 0803 ABAD3609    ; 	lda.w number_002
-( 796) 0807 AB48        ; 	pha.w
-( 797) 0809 ABDA        ; 	phx.w
-( 798) 080B 207E06      ; 	jsr translate_003
-( 799) 080E C204        ; 	adj #4
-( 806) 0810 20FFFF      ; 	jsr _writeln
-( 808) 0813 ABAD3609    ; 	lda.w number_002
-( 809) 0817 AB48        ; 	pha.w
-( 810) 0819 A900        ; 	lda #0
-( 811) 081B CB4401      ; 	xma.w 1,S
-( 812) 081E CBD501      ; 	cmp.w 1,S
-( 813) 0821 C202        ; 	adj #2
-( 814) 0823 08          ; 	php
-( 815) 0824 A901        ; 	lda #1
-( 816) 0826 28          ; 	plp
-( 817) 0827 F002        ; 	beq L_143
-( 818) 0829 A900        ; 	lda #0
-( 820) 082B ABC90100    ; 	cmp.w #1
-( 821) 082F F003        ; 	beq L_126
-( 822) 0831 4C2507      ; 	jmp L_125
-( 825) 0834 ABFA        ; 	plx.w
-( 826) 0836 60          ; 	rts
-( 831) 0837 207A6572    ; S_141 .str " zero"
-       083B 6F
-( 832) 083C 202A2A2A    ; S_136 .str " ***** Error -- number > "
-       0840 2A2A204572726F72202D2D206E756D626572203E20
-( 833) 0855 202A2A2A    ; S_131 .str " ***** Error -- number < 0"
-       0859 2A2A204572726F72202D2D206E756D626572203C2030
-( 834) 086F 203A        ; S_127 .str " :"
-( 835) 0871 2074686F    ; S_121 .str " thousand"
-       0875 7573616E64
-( 836) 087A 2068756E    ; S_106 .str " hundred"
-       087E 64726564
-( 837) 0882 206E696E    ; S_102 .str " ninety"
-       0886 657479
-( 838) 0889 20656967    ; S_099 .str " eighty"
-       088D 687479
-( 839) 0890 20736576    ; S_096 .str " seventy"
-       0894 656E7479
-( 840) 0898 20736978    ; S_093 .str " sixty"
-       089C 7479
-( 841) 089E 20666966    ; S_090 .str " fifty"
-       08A2 7479
-( 842) 08A4 20666F72    ; S_087 .str " forty"
-       08A8 7479
-( 843) 08AA 20746869    ; S_084 .str " thirty"
-       08AE 727479
-( 844) 08B1 20747765    ; S_081 .str " twenty"
-       08B5 6E7479
-( 845) 08B8 206E696E    ; S_075 .str " nineteen"
-       08BC 657465656E
-( 846) 08C1 20656967    ; S_072 .str " eighteen"
-       08C5 687465656E
-( 847) 08CA 20736576    ; S_069 .str " seventeen"
-       08CE 656E7465656E
-( 848) 08D4 20736978    ; S_066 .str " sixteen"
-       08D8 7465656E
-( 849) 08DC 20666966    ; S_063 .str " fifteen"
-       08E0 7465656E
-( 850) 08E4 20666F75    ; S_060 .str " fourteen"
-       08E8 727465656E
-( 851) 08ED 20746869    ; S_057 .str " thirteen"
-       08F1 727465656E
-( 852) 08F6 20747765    ; S_054 .str " twelve"
-       08FA 6C7665
-( 853) 08FD 20656C65    ; S_051 .str " eleven"
-       0901 76656E
-( 854) 0904 2074656E    ; S_048 .str " ten"
-( 855) 0908 206E696E    ; S_042 .str " nine"
-       090C 65
-( 856) 090D 20656967    ; S_039 .str " eight"
-       0911 6874
-( 857) 0913 20736576    ; S_036 .str " seven"
-       0917 656E
-( 858) 0919 20736978    ; S_033 .str " six"
-( 859) 091D 20666976    ; S_030 .str " five"
-       0921 65
-( 860) 0922 20666F75    ; S_027 .str " four"
-       0926 72
-( 861) 0927 20746872    ; S_024 .str " three"
-       092B 6565
-( 862) 092D 2074776F    ; S_021 .str " two"
-( 863) 0931 206F6E65    ; S_018 .str " one"
-( 864) 0935 00          ; _bss_start .byt 0
-( 865) 0936 0000        ; number_002 .wrd 0
-( 866) 0938 00          ; _bss_end .byt 0
-( 867) 0939 00000000    ; _stk .byt 0[1023]
-       093D 0000000000000000000000000000000000000000000000000000000000000000
-       095D 0000000000000000000000000000000000000000000000000000000000000000
-       097D 0000000000000000000000000000000000000000000000000000000000000000
-       099D 0000000000000000000000000000000000000000000000000000000000000000
-       09BD 0000000000000000000000000000000000000000000000000000000000000000
-       09DD 0000000000000000000000000000000000000000000000000000000000000000
-       09FD 0000000000000000000000000000000000000000000000000000000000000000
-       0A1D 0000000000000000000000000000000000000000000000000000000000000000
-       0A3D 0000000000000000000000000000000000000000000000000000000000000000
-       0A5D 0000000000000000000000000000000000000000000000000000000000000000
-       0A7D 0000000000000000000000000000000000000000000000000000000000000000
-       0A9D 0000000000000000000000000000000000000000000000000000000000000000
-       0ABD 0000000000000000000000000000000000000000000000000000000000000000
-       0ADD 0000000000000000000000000000000000000000000000000000000000000000
-       0AFD 0000000000000000000000000000000000000000000000000000000000000000
-       0B1D 0000000000000000000000000000000000000000000000000000000000000000
-       0B3D 0000000000000000000000000000000000000000000000000000000000000000
-       0B5D 0000000000000000000000000000000000000000000000000000000000000000
-       0B7D 0000000000000000000000000000000000000000000000000000000000000000
-       0B9D 0000000000000000000000000000000000000000000000000000000000000000
-       0BBD 0000000000000000000000000000000000000000000000000000000000000000
-       0BDD 0000000000000000000000000000000000000000000000000000000000000000
-       0BFD 0000000000000000000000000000000000000000000000000000000000000000
-       0C1D 0000000000000000000000000000000000000000000000000000000000000000
-       0C3D 0000000000000000000000000000000000000000000000000000000000000000
-       0C5D 0000000000000000000000000000000000000000000000000000000000000000
-       0C7D 0000000000000000000000000000000000000000000000000000000000000000
-       0C9D 0000000000000000000000000000000000000000000000000000000000000000
-       0CBD 0000000000000000000000000000000000000000000000000000000000000000
-       0CDD 0000000000000000000000000000000000000000000000000000000000000000
-       0CFD 0000000000000000000000000000000000000000000000000000000000000000
-       0D1D 000000000000000000000000000000000000000000000000000000
-( 868) 0D38 FF          ; _stk_top .byt -1
+(  78) 022A D014        ; 	bne L_017
+(  80) 022C ABE27E09    ; 	psh.w #S_018
+(  81) 0230 ABE20000    ; 	psh.w #0
+(  82) 0234 ABE20400    ; 	psh.w #4
+(  83) 0238 20F307      ; 	jsr _swrite
+(  84) 023B C206        ; 	adj #6
+(  85) 023D 4C1003      ; 	jmp L_015
+(  88) 0240 ABC90200    ; 	cmp.w #2
+(  89) 0244 D014        ; 	bne L_020
+(  91) 0246 ABE27A09    ; 	psh.w #S_021
+(  92) 024A ABE20000    ; 	psh.w #0
+(  93) 024E ABE20400    ; 	psh.w #4
+(  94) 0252 20F307      ; 	jsr _swrite
+(  95) 0255 C206        ; 	adj #6
+(  96) 0257 4C1003      ; 	jmp L_015
+(  99) 025A ABC90300    ; 	cmp.w #3
+( 100) 025E D014        ; 	bne L_023
+( 102) 0260 ABE27409    ; 	psh.w #S_024
+( 103) 0264 ABE20000    ; 	psh.w #0
+( 104) 0268 ABE20600    ; 	psh.w #6
+( 105) 026C 20F307      ; 	jsr _swrite
+( 106) 026F C206        ; 	adj #6
+( 107) 0271 4C1003      ; 	jmp L_015
+( 110) 0274 ABC90400    ; 	cmp.w #4
+( 111) 0278 D014        ; 	bne L_026
+( 113) 027A ABE26F09    ; 	psh.w #S_027
+( 114) 027E ABE20000    ; 	psh.w #0
+( 115) 0282 ABE20500    ; 	psh.w #5
+( 116) 0286 20F307      ; 	jsr _swrite
+( 117) 0289 C206        ; 	adj #6
+( 118) 028B 4C1003      ; 	jmp L_015
+( 121) 028E ABC90500    ; 	cmp.w #5
+( 122) 0292 D014        ; 	bne L_029
+( 124) 0294 ABE26A09    ; 	psh.w #S_030
+( 125) 0298 ABE20000    ; 	psh.w #0
+( 126) 029C ABE20500    ; 	psh.w #5
+( 127) 02A0 20F307      ; 	jsr _swrite
+( 128) 02A3 C206        ; 	adj #6
+( 129) 02A5 4C1003      ; 	jmp L_015
+( 132) 02A8 ABC90600    ; 	cmp.w #6
+( 133) 02AC D014        ; 	bne L_032
+( 135) 02AE ABE26609    ; 	psh.w #S_033
+( 136) 02B2 ABE20000    ; 	psh.w #0
+( 137) 02B6 ABE20400    ; 	psh.w #4
+( 138) 02BA 20F307      ; 	jsr _swrite
+( 139) 02BD C206        ; 	adj #6
+( 140) 02BF 4C1003      ; 	jmp L_015
+( 143) 02C2 ABC90700    ; 	cmp.w #7
+( 144) 02C6 D014        ; 	bne L_035
+( 146) 02C8 ABE26009    ; 	psh.w #S_036
+( 147) 02CC ABE20000    ; 	psh.w #0
+( 148) 02D0 ABE20600    ; 	psh.w #6
+( 149) 02D4 20F307      ; 	jsr _swrite
+( 150) 02D7 C206        ; 	adj #6
+( 151) 02D9 4C1003      ; 	jmp L_015
+( 154) 02DC ABC90800    ; 	cmp.w #8
+( 155) 02E0 D014        ; 	bne L_038
+( 157) 02E2 ABE25A09    ; 	psh.w #S_039
+( 158) 02E6 ABE20000    ; 	psh.w #0
+( 159) 02EA ABE20600    ; 	psh.w #6
+( 160) 02EE 20F307      ; 	jsr _swrite
+( 161) 02F1 C206        ; 	adj #6
+( 162) 02F3 4C1003      ; 	jmp L_015
+( 165) 02F6 ABC90900    ; 	cmp.w #9
+( 166) 02FA D014        ; 	bne L_041
+( 168) 02FC ABE25509    ; 	psh.w #S_042
+( 169) 0300 ABE20000    ; 	psh.w #0
+( 170) 0304 ABE20500    ; 	psh.w #5
+( 171) 0308 20F307      ; 	jsr _swrite
+( 172) 030B C206        ; 	adj #6
+( 173) 030D 4C1003      ; 	jmp L_015
+( 178) 0310 AB9A        ; 	txs.w
+( 179) 0312 ABFA        ; 	plx.w
+( 180) 0314 60          ; 	rts
+( 192) 0315 ABDA        ; 	phx.w
+( 193) 0317 ABBA        ; 	tsx.w
+( 195) 0319 ABB507      ; 	lda.w teens_044,X
+( 197) 031C ABC90A00    ; 	cmp.w #10
+( 198) 0320 D014        ; 	bne L_047
+( 200) 0322 ABE25109    ; 	psh.w #S_048
+( 201) 0326 ABE20000    ; 	psh.w #0
+( 202) 032A ABE20400    ; 	psh.w #4
+( 203) 032E 20F307      ; 	jsr _swrite
+( 204) 0331 C206        ; 	adj #6
+( 205) 0333 4C2004      ; 	jmp L_045
+( 208) 0336 ABC90B00    ; 	cmp.w #11
+( 209) 033A D014        ; 	bne L_050
+( 211) 033C ABE24A09    ; 	psh.w #S_051
+( 212) 0340 ABE20000    ; 	psh.w #0
+( 213) 0344 ABE20700    ; 	psh.w #7
+( 214) 0348 20F307      ; 	jsr _swrite
+( 215) 034B C206        ; 	adj #6
+( 216) 034D 4C2004      ; 	jmp L_045
+( 219) 0350 ABC90C00    ; 	cmp.w #12
+( 220) 0354 D014        ; 	bne L_053
+( 222) 0356 ABE24309    ; 	psh.w #S_054
+( 223) 035A ABE20000    ; 	psh.w #0
+( 224) 035E ABE20700    ; 	psh.w #7
+( 225) 0362 20F307      ; 	jsr _swrite
+( 226) 0365 C206        ; 	adj #6
+( 227) 0367 4C2004      ; 	jmp L_045
+( 230) 036A ABC90D00    ; 	cmp.w #13
+( 231) 036E D014        ; 	bne L_056
+( 233) 0370 ABE23A09    ; 	psh.w #S_057
+( 234) 0374 ABE20000    ; 	psh.w #0
+( 235) 0378 ABE20900    ; 	psh.w #9
+( 236) 037C 20F307      ; 	jsr _swrite
+( 237) 037F C206        ; 	adj #6
+( 238) 0381 4C2004      ; 	jmp L_045
+( 241) 0384 ABC90E00    ; 	cmp.w #14
+( 242) 0388 D014        ; 	bne L_059
+( 244) 038A ABE23109    ; 	psh.w #S_060
+( 245) 038E ABE20000    ; 	psh.w #0
+( 246) 0392 ABE20900    ; 	psh.w #9
+( 247) 0396 20F307      ; 	jsr _swrite
+( 248) 0399 C206        ; 	adj #6
+( 249) 039B 4C2004      ; 	jmp L_045
+( 252) 039E ABC90F00    ; 	cmp.w #15
+( 253) 03A2 D014        ; 	bne L_062
+( 255) 03A4 ABE22909    ; 	psh.w #S_063
+( 256) 03A8 ABE20000    ; 	psh.w #0
+( 257) 03AC ABE20800    ; 	psh.w #8
+( 258) 03B0 20F307      ; 	jsr _swrite
+( 259) 03B3 C206        ; 	adj #6
+( 260) 03B5 4C2004      ; 	jmp L_045
+( 263) 03B8 ABC91000    ; 	cmp.w #16
+( 264) 03BC D014        ; 	bne L_065
+( 266) 03BE ABE22109    ; 	psh.w #S_066
+( 267) 03C2 ABE20000    ; 	psh.w #0
+( 268) 03C6 ABE20800    ; 	psh.w #8
+( 269) 03CA 20F307      ; 	jsr _swrite
+( 270) 03CD C206        ; 	adj #6
+( 271) 03CF 4C2004      ; 	jmp L_045
+( 274) 03D2 ABC91100    ; 	cmp.w #17
+( 275) 03D6 D014        ; 	bne L_068
+( 277) 03D8 ABE21709    ; 	psh.w #S_069
+( 278) 03DC ABE20000    ; 	psh.w #0
+( 279) 03E0 ABE20A00    ; 	psh.w #10
+( 280) 03E4 20F307      ; 	jsr _swrite
+( 281) 03E7 C206        ; 	adj #6
+( 282) 03E9 4C2004      ; 	jmp L_045
+( 285) 03EC ABC91200    ; 	cmp.w #18
+( 286) 03F0 D014        ; 	bne L_071
+( 288) 03F2 ABE20E09    ; 	psh.w #S_072
+( 289) 03F6 ABE20000    ; 	psh.w #0
+( 290) 03FA ABE20900    ; 	psh.w #9
+( 291) 03FE 20F307      ; 	jsr _swrite
+( 292) 0401 C206        ; 	adj #6
+( 293) 0403 4C2004      ; 	jmp L_045
+( 296) 0406 ABC91300    ; 	cmp.w #19
+( 297) 040A D014        ; 	bne L_074
+( 299) 040C ABE20509    ; 	psh.w #S_075
+( 300) 0410 ABE20000    ; 	psh.w #0
+( 301) 0414 ABE20900    ; 	psh.w #9
+( 302) 0418 20F307      ; 	jsr _swrite
+( 303) 041B C206        ; 	adj #6
+( 304) 041D 4C2004      ; 	jmp L_045
+( 309) 0420 AB9A        ; 	txs.w
+( 310) 0422 ABFA        ; 	plx.w
+( 311) 0424 60          ; 	rts
+( 323) 0425 ABDA        ; 	phx.w
+( 324) 0427 ABBA        ; 	tsx.w
+( 326) 0429 ABB507      ; 	lda.w digit_077,X
+( 328) 042C ABC90200    ; 	cmp.w #2
+( 329) 0430 D014        ; 	bne L_080
+( 331) 0432 ABE2FE08    ; 	psh.w #S_081
+( 332) 0436 ABE20000    ; 	psh.w #0
+( 333) 043A ABE20700    ; 	psh.w #7
+( 334) 043E 20F307      ; 	jsr _swrite
+( 335) 0441 C206        ; 	adj #6
+( 336) 0443 4CFC04      ; 	jmp L_078
+( 339) 0446 ABC90300    ; 	cmp.w #3
+( 340) 044A D014        ; 	bne L_083
+( 342) 044C ABE2F708    ; 	psh.w #S_084
+( 343) 0450 ABE20000    ; 	psh.w #0
+( 344) 0454 ABE20700    ; 	psh.w #7
+( 345) 0458 20F307      ; 	jsr _swrite
+( 346) 045B C206        ; 	adj #6
+( 347) 045D 4CFC04      ; 	jmp L_078
+( 350) 0460 ABC90400    ; 	cmp.w #4
+( 351) 0464 D014        ; 	bne L_086
+( 353) 0466 ABE2F108    ; 	psh.w #S_087
+( 354) 046A ABE20000    ; 	psh.w #0
+( 355) 046E ABE20600    ; 	psh.w #6
+( 356) 0472 20F307      ; 	jsr _swrite
+( 357) 0475 C206        ; 	adj #6
+( 358) 0477 4CFC04      ; 	jmp L_078
+( 361) 047A ABC90500    ; 	cmp.w #5
+( 362) 047E D014        ; 	bne L_089
+( 364) 0480 ABE2EB08    ; 	psh.w #S_090
+( 365) 0484 ABE20000    ; 	psh.w #0
+( 366) 0488 ABE20600    ; 	psh.w #6
+( 367) 048C 20F307      ; 	jsr _swrite
+( 368) 048F C206        ; 	adj #6
+( 369) 0491 4CFC04      ; 	jmp L_078
+( 372) 0494 ABC90600    ; 	cmp.w #6
+( 373) 0498 D014        ; 	bne L_092
+( 375) 049A ABE2E508    ; 	psh.w #S_093
+( 376) 049E ABE20000    ; 	psh.w #0
+( 377) 04A2 ABE20600    ; 	psh.w #6
+( 378) 04A6 20F307      ; 	jsr _swrite
+( 379) 04A9 C206        ; 	adj #6
+( 380) 04AB 4CFC04      ; 	jmp L_078
+( 383) 04AE ABC90700    ; 	cmp.w #7
+( 384) 04B2 D014        ; 	bne L_095
+( 386) 04B4 ABE2DD08    ; 	psh.w #S_096
+( 387) 04B8 ABE20000    ; 	psh.w #0
+( 388) 04BC ABE20800    ; 	psh.w #8
+( 389) 04C0 20F307      ; 	jsr _swrite
+( 390) 04C3 C206        ; 	adj #6
+( 391) 04C5 4CFC04      ; 	jmp L_078
+( 394) 04C8 ABC90800    ; 	cmp.w #8
+( 395) 04CC D014        ; 	bne L_098
+( 397) 04CE ABE2D608    ; 	psh.w #S_099
+( 398) 04D2 ABE20000    ; 	psh.w #0
+( 399) 04D6 ABE20700    ; 	psh.w #7
+( 400) 04DA 20F307      ; 	jsr _swrite
+( 401) 04DD C206        ; 	adj #6
+( 402) 04DF 4CFC04      ; 	jmp L_078
+( 405) 04E2 ABC90900    ; 	cmp.w #9
+( 406) 04E6 D014        ; 	bne L_101
+( 408) 04E8 ABE2CF08    ; 	psh.w #S_102
+( 409) 04EC ABE20000    ; 	psh.w #0
+( 410) 04F0 ABE20700    ; 	psh.w #7
+( 411) 04F4 20F307      ; 	jsr _swrite
+( 412) 04F7 C206        ; 	adj #6
+( 413) 04F9 4CFC04      ; 	jmp L_078
+( 418) 04FC AB9A        ; 	txs.w
+( 419) 04FE ABFA        ; 	plx.w
+( 420) 0500 60          ; 	rts
+( 425) 0501 ABDA        ; 	phx.w
+( 426) 0503 ABBA        ; 	tsx.w
+( 427) 0505 C2F8        ; 	adj #-8
+( 431) 0507 ABB507      ; 	lda.w part_008,X
+( 432) 050A AB48        ; 	pha.w
+( 434) 050C ABE26400    ; 	psh.w #100
+( 435) 0510 208C07      ; 	jsr _idiv
+( 436) 0513 C204        ; 	adj #4
+( 437) 0515 AB95FF      ; 	sta.w hundredsdigit_009,X
+( 439) 0518 ABB507      ; 	lda.w part_008,X
+( 440) 051B AB48        ; 	pha.w
+( 442) 051D ABE26400    ; 	psh.w #100
+( 443) 0521 208C07      ; 	jsr _idiv
+( 444) 0524 C204        ; 	adj #4
+( 445) 0526 1B          ; 	swp a
+( 446) 0527 AB95FD      ; 	sta.w tenspart_010,X
+( 450) 052A ABB5FF      ; 	lda.w hundredsdigit_009,X
+( 454) 052D ABC90000    ; 	cmp.w #0
+( 456) 0531 AB1004      ; 	bgt L_105T
+( 457) 0534 A900        ; 	lda #0
+( 458) 0536 8002        ; 	bra L_105
+( 459) 0538 A901        ; L_105T lda #1
+( 462) 053A ABC90100    ; 	cmp.w #1
+( 463) 053E F003        ; 	beq L_103
+( 464) 0540 4C6005      ; 	jmp L_104
+( 467) 0543 ABB5FF      ; 	lda.w hundredsdigit_009,X
+( 468) 0546 AB48        ; 	pha.w
+( 469) 0548 ABDA        ; 	phx.w
+( 470) 054A 201F02      ; 	jsr doones_013
+( 471) 054D C204        ; 	adj #4
+( 473) 054F ABE2C708    ; 	psh.w #S_106
+( 474) 0553 ABE20000    ; 	psh.w #0
+( 475) 0557 ABE20800    ; 	psh.w #8
+( 476) 055B 20F307      ; 	jsr _swrite
+( 477) 055E C206        ; 	adj #6
+( 483) 0560 ABB5FD      ; 	lda.w tenspart_010,X
+( 487) 0563 ABC90A00    ; 	cmp.w #10
+( 489) 0567 AB5004      ; 	bge L_109T
+( 490) 056A A900        ; 	lda #0
+( 491) 056C 8002        ; 	bra L_109
+( 492) 056E A901        ; L_109T lda #1
+( 495) 0570 AB48        ; 	pha.w
+( 496) 0572 ABB5FD      ; 	lda.w tenspart_010,X
+( 500) 0575 ABC91300    ; 	cmp.w #19
+( 502) 0579 AB3004      ; 	ble L_110T
+( 503) 057C A900        ; 	lda #0
+( 504) 057E 8002        ; 	bra L_110
+( 505) 0580 A901        ; L_110T lda #1
+( 508) 0582 CB3501      ; 	and.w 1,S
+( 509) 0585 C202        ; 	adj #2
+( 510) 0587 ABC90100    ; 	cmp.w #1
+( 511) 058B F003        ; 	beq L_107
+( 512) 058D 4C9F05      ; 	jmp L_108
+( 515) 0590 ABB5FD      ; 	lda.w tenspart_010,X
+( 516) 0593 AB48        ; 	pha.w
+( 517) 0595 ABDA        ; 	phx.w
+( 518) 0597 201503      ; 	jsr doteens_043
+( 519) 059A C204        ; 	adj #4
+( 522) 059C 4C0C06      ; 	jmp L_111
+( 525) 059F ABB5FD      ; 	lda.w tenspart_010,X
+( 526) 05A2 AB48        ; 	pha.w
+( 528) 05A4 ABE20A00    ; 	psh.w #10
+( 529) 05A8 208C07      ; 	jsr _idiv
+( 530) 05AB C204        ; 	adj #4
+( 531) 05AD AB95FB      ; 	sta.w tensdigit_011,X
+( 533) 05B0 ABB5FD      ; 	lda.w tenspart_010,X
+( 534) 05B3 AB48        ; 	pha.w
+( 536) 05B5 ABE20A00    ; 	psh.w #10
+( 537) 05B9 208C07      ; 	jsr _idiv
+( 538) 05BC C204        ; 	adj #4
+( 539) 05BE 1B          ; 	swp a
+( 540) 05BF AB95F9      ; 	sta.w onesdigit_012,X
+( 543) 05C2 ABB5FB      ; 	lda.w tensdigit_011,X
+( 547) 05C5 ABC90000    ; 	cmp.w #0
+( 549) 05C9 AB1004      ; 	bgt L_114T
+( 550) 05CC A900        ; 	lda #0
+( 551) 05CE 8002        ; 	bra L_114
+( 552) 05D0 A901        ; L_114T lda #1
+( 555) 05D2 ABC90100    ; 	cmp.w #1
+( 556) 05D6 F003        ; 	beq L_112
+( 557) 05D8 4CE705      ; 	jmp L_113
+( 559) 05DB ABB5FB      ; 	lda.w tensdigit_011,X
+( 560) 05DE AB48        ; 	pha.w
+( 561) 05E0 ABDA        ; 	phx.w
+( 562) 05E2 202504      ; 	jsr dotens_076
+( 563) 05E5 C204        ; 	adj #4
+( 566) 05E7 ABB5F9      ; 	lda.w onesdigit_012,X
+( 570) 05EA ABC90000    ; 	cmp.w #0
+( 572) 05EE AB1004      ; 	bgt L_117T
+( 573) 05F1 A900        ; 	lda #0
+( 574) 05F3 8002        ; 	bra L_117
+( 575) 05F5 A901        ; L_117T lda #1
+( 578) 05F7 ABC90100    ; 	cmp.w #1
+( 579) 05FB F003        ; 	beq L_115
+( 580) 05FD 4C0C06      ; 	jmp L_116
+( 582) 0600 ABB5F9      ; 	lda.w onesdigit_012,X
+( 583) 0603 AB48        ; 	pha.w
+( 584) 0605 ABDA        ; 	phx.w
+( 585) 0607 201F02      ; 	jsr doones_013
+( 586) 060A C204        ; 	adj #4
+( 591) 060C AB9A        ; 	txs.w
+( 592) 060E ABFA        ; 	plx.w
+( 593) 0610 60          ; 	rts
+( 598) 0611 ABDA        ; 	phx.w
+( 599) 0613 ABBA        ; 	tsx.w
+( 600) 0615 C2FC        ; 	adj #-4
+( 604) 0617 ABB507      ; 	lda.w n_004,X
+( 605) 061A AB48        ; 	pha.w
+( 607) 061C ABE2E803    ; 	psh.w #1000
+( 608) 0620 208C07      ; 	jsr _idiv
+( 609) 0623 C204        ; 	adj #4
+( 610) 0625 AB95FF      ; 	sta.w partbefore_005,X
+( 612) 0628 ABB507      ; 	lda.w n_004,X
+( 613) 062B AB48        ; 	pha.w
+( 615) 062D ABE2E803    ; 	psh.w #1000
+( 616) 0631 208C07      ; 	jsr _idiv
+( 617) 0634 C204        ; 	adj #4
+( 618) 0636 1B          ; 	swp a
+( 619) 0637 AB95FD      ; 	sta.w partafter_006,X
+( 622) 063A ABB5FF      ; 	lda.w partbefore_005,X
+( 626) 063D ABC90000    ; 	cmp.w #0
+( 628) 0641 AB1004      ; 	bgt L_120T
+( 629) 0644 A900        ; 	lda #0
+( 630) 0646 8002        ; 	bra L_120
+( 631) 0648 A901        ; L_120T lda #1
+( 634) 064A ABC90100    ; 	cmp.w #1
+( 635) 064E F003        ; 	beq L_118
+( 636) 0650 4C7006      ; 	jmp L_119
+( 639) 0653 ABB5FF      ; 	lda.w partbefore_005,X
+( 640) 0656 AB48        ; 	pha.w
+( 641) 0658 ABDA        ; 	phx.w
+( 642) 065A 200105      ; 	jsr dopart_007
+( 643) 065D C204        ; 	adj #4
+( 645) 065F ABE2BE08    ; 	psh.w #S_121
+( 646) 0663 ABE20000    ; 	psh.w #0
+( 647) 0667 ABE20900    ; 	psh.w #9
+( 648) 066B 20F307      ; 	jsr _swrite
+( 649) 066E C206        ; 	adj #6
+( 654) 0670 ABB5FD      ; 	lda.w partafter_006,X
+( 658) 0673 ABC90000    ; 	cmp.w #0
+( 660) 0677 AB1004      ; 	bgt L_124T
+( 661) 067A A900        ; 	lda #0
+( 662) 067C 8002        ; 	bra L_124
+( 663) 067E A901        ; L_124T lda #1
+( 666) 0680 ABC90100    ; 	cmp.w #1
+( 667) 0684 F003        ; 	beq L_122
+( 668) 0686 4C9506      ; 	jmp L_123
+( 670) 0689 ABB5FD      ; 	lda.w partafter_006,X
+( 671) 068C AB48        ; 	pha.w
+( 672) 068E ABDA        ; 	phx.w
+( 673) 0690 200105      ; 	jsr dopart_007
+( 674) 0693 C204        ; 	adj #4
+( 677) 0695 AB9A        ; 	txs.w
+( 678) 0697 ABFA        ; 	plx.w
+( 679) 0699 60          ; 	rts
+( 685) 069A ABDA        ; 	phx.w
+( 686) 069C ABBA        ; 	tsx.w
+( 692) 069E ABE28309    ; 	psh.w #number_002
+( 693) 06A2 20FFFF      ; 	jsr _iread
+( 694) 06A5 8B6B        ; 	pli.s
+( 695) 06A7 AB8300      ; 	sta.w 0,I++
+( 697) 06AA ABAD8309    ; 	lda.w number_002
+( 698) 06AE AB48        ; 	pha.w
+( 700) 06B0 ABE20600    ; 	psh.w #6
+( 701) 06B4 200508      ; 	jsr _iwrite
+( 702) 06B7 C204        ; 	adj #4
+( 703) 06B9 ABE2BC08    ; 	psh.w #S_127
+( 704) 06BD ABE20000    ; 	psh.w #0
+( 705) 06C1 ABE20200    ; 	psh.w #2
+( 706) 06C5 20F307      ; 	jsr _swrite
+( 707) 06C8 C206        ; 	adj #6
+( 710) 06CA ABAD8309    ; 	lda.w number_002
+( 714) 06CE ABC90000    ; 	cmp.w #0
+( 716) 06D2 AB7004      ; 	blt L_130T
+( 717) 06D5 A900        ; 	lda #0
+( 718) 06D7 8002        ; 	bra L_130
+( 719) 06D9 A901        ; L_130T lda #1
+( 722) 06DB ABC90100    ; 	cmp.w #1
+( 723) 06DF F003        ; 	beq L_128
+( 724) 06E1 4CF806      ; 	jmp L_129
+( 727) 06E4 ABE2A208    ; 	psh.w #S_131
+( 728) 06E8 ABE20000    ; 	psh.w #0
+( 729) 06EC ABE21A00    ; 	psh.w #26
+( 730) 06F0 20F307      ; 	jsr _swrite
+( 731) 06F3 C206        ; 	adj #6
+( 734) 06F5 4C6D07      ; 	jmp L_132
+( 736) 06F8 ABAD8309    ; 	lda.w number_002
+( 740) 06FC ABC93075    ; 	cmp.w #30000
+( 742) 0700 AB1004      ; 	bgt L_135T
+( 743) 0703 A900        ; 	lda #0
+( 744) 0705 8002        ; 	bra L_135
+( 745) 0707 A901        ; L_135T lda #1
+( 748) 0709 ABC90100    ; 	cmp.w #1
+( 749) 070D F003        ; 	beq L_133
+( 750) 070F 4C3307      ; 	jmp L_134
+( 753) 0712 ABE28908    ; 	psh.w #S_136
+( 754) 0716 ABE20000    ; 	psh.w #0
+( 755) 071A ABE21900    ; 	psh.w #25
+( 756) 071E 20F307      ; 	jsr _swrite
+( 757) 0721 C206        ; 	adj #6
+( 759) 0723 ABE23075    ; 	psh.w #30000
+( 761) 0727 ABE20100    ; 	psh.w #1
+( 762) 072B 200508      ; 	jsr _iwrite
+( 763) 072E C204        ; 	adj #4
+( 766) 0730 4C6D07      ; 	jmp L_137
+( 768) 0733 ABAD8309    ; 	lda.w number_002
+( 772) 0737 ABC90000    ; 	cmp.w #0
+( 774) 073B F004        ; 	beq L_140T
+( 775) 073D A900        ; 	lda #0
+( 776) 073F 8002        ; 	bra L_140
+( 777) 0741 A901        ; L_140T lda #1
+( 780) 0743 ABC90100    ; 	cmp.w #1
+( 781) 0747 F003        ; 	beq L_138
+( 782) 0749 4C6007      ; 	jmp L_139
+( 785) 074C ABE28408    ; 	psh.w #S_141
+( 786) 0750 ABE20000    ; 	psh.w #0
+( 787) 0754 ABE20500    ; 	psh.w #5
+( 788) 0758 20F307      ; 	jsr _swrite
+( 789) 075B C206        ; 	adj #6
+( 792) 075D 4C6D07      ; 	jmp L_142
+( 795) 0760 ABAD8309    ; 	lda.w number_002
+( 796) 0764 AB48        ; 	pha.w
+( 797) 0766 ABDA        ; 	phx.w
+( 798) 0768 201106      ; 	jsr translate_003
+( 799) 076B C204        ; 	adj #4
+( 806) 076D 20ED07      ; 	jsr _writeln
+( 808) 0770 ABAD8309    ; 	lda.w number_002
+( 812) 0774 ABC90000    ; 	cmp.w #0
+( 814) 0778 F004        ; 	beq L_143T
+( 815) 077A A900        ; 	lda #0
+( 816) 077C 8002        ; 	bra L_143
+( 817) 077E A901        ; L_143T lda #1
+( 820) 0780 ABC90100    ; 	cmp.w #1
+( 821) 0784 F003        ; 	beq L_126
+( 822) 0786 4C9E06      ; 	jmp L_125
+( 825) 0789 ABFA        ; 	plx.w
+( 826) 078B 60          ; 	rts
+( 838) 078C A900        ;             lda #0          ; clear remainder (A)
+( 839) 078E 0B          ;             dup a           ; push
+( 840) 078F CBB505      ;             lda.w _Q,S      ; load dividend (Q)
+( 841) 0792 A010        ;             ldy #16         ; bit counter
+( 844) 0794 18          ;             clc
+( 845) 0795 AB0A        ;             asl.w a         ; shift AQ left
+( 846) 0797 1B          ;             swp a
+( 847) 0798 AB2A        ;             rol.w a
+( 849) 079A B006        ;             bcs _idiv_Plus  ; if A < 0 then A = A + D else A = A - D
+( 852) 079C 38          ;             sec
+( 853) 079D CBF503      ;             sbc.w _D,S      ; subtract divisor (D)
+( 855) 07A0 8004        ;             bra _idiv_Next
+( 858) 07A2 18          ;             clc
+( 859) 07A3 CB7503      ;             adc.w _D,S      ; add divisor (D)
+( 862) 07A6 1B          ;             swp a           ; restore order of Acc stack {Q, A, -}
+( 863) 07A7 3002        ;             bmi _idiv_Dec   ; if A < 0 then Q[0] = 0 else Q[0] = 1
+( 864) 07A9 AB1A        ;             inc.w a
+( 867) 07AB 88          ;             dey             ; loop until loop counter == 0
+( 868) 07AC D0E6        ;             bne _idiv_Lp
+( 871) 07AE 1B          ;             swp a           ; Test remainder
+( 872) 07AF AB090000    ;             ora.w #0
+( 873) 07B3 1004        ;             bpl _idiv_Finish
+( 874) 07B5 18          ;             clc
+( 875) 07B6 CB7503      ;             adc.w 3,S
+( 877) 07B9 1B          ;             swp a
+( 879) 07BA 60          ;             rts
+( 892) 07BB A010        ;             ldy #16             ; y = bit count
+( 893) 07BD A900        ;             lda #0              ; A = { 0,  x,  x} - clear product
+( 894) 07BF 0B          ;             dup a               ; A = { 0,  0,  x}
+( 895) 07C0 0B          ;             dup a               ; A = { 0,  0,  0}
+( 896) 07C1 CBB503      ;             lda.w _R,S          ; A = { R,  0,  0} - load multiplier (R)
+( 897) 07C4 9B2B        ;             rev                 ; A = {`R,  0,  0} - reverse multiplier (`R)
+( 898) 07C6 AB090000    ;             ora.w #0            ; set N flag if msb ATOS == 1
+( 899) 07CA 18          ;             clc                 ; initialize Booth recoding bit
+( 900) 07CB 2B          ;             rot a               ; A = {PH, PL, `R}
+( 902) 07CC 8003        ;             bra _imul_TstB
+( 905) 07CE AB0A        ;             asl.w a             ; A = {`R << 1, PH, PL}
+( 906) 07D0 2B          ;             rot a               ; A = {PH, PL, `R}
+( 908) 07D1 9008        ;             bcc _imul_SubShft   ; (C, x) ? Add_Shift : Sub_Shift
+( 911) 07D3 300C        ;             bmi _imul_ShftP     ; (1, N) ? P >> 1 : (P += M) >> 1
+( 913) 07D5 18          ;             clc
+( 914) 07D6 CB7505      ;             adc.w _M,S          ; PH += M
+( 915) 07D9 8006        ;             bra _imul_ShftP
+( 918) 07DB 1004        ;             bpl _imul_ShftP     ; (0, N) ? (P -= M) >> 1 : P >> 1
+( 920) 07DD 38          ;             sec
+( 921) 07DE CBF505      ;             sbc.w _M,S          ; PH -= M
+( 924) 07E1 BB4A        ;             asr.w a             ; A = {PH >> 1, PL, `R}
+( 925) 07E3 2B          ;             rot a               ; A = {PL, `R, PH}
+( 926) 07E4 AB6A        ;             ror.w a             ; A = {PL >> 2, `R, PH}
+( 927) 07E6 2B          ;             rot a               ; A = {`R, PH, PL}
+( 930) 07E7 88          ;             dey
+( 931) 07E8 D0E4        ;             bne _imul_Lp
+( 934) 07EA 2B          ;             rot a               ; A = {PH, PL, `R}
+( 935) 07EB 1B          ;             swp a               ; A = {PL, PH, `R}
+( 937) 07EC 60          ;             rts
+( 950) 07ED A90A        ;             lda #_newLine
+( 951) 07EF 8D01F0      ;             sta _putChar
+( 953) 07F2 60          ;             rts
+( 965) 07F3 CBB403      ;             ldy.w _sLenOff,S        ; load string length
+( 966) 07F6 CBB507      ;             lda.w _sPtrOff,S        ; load string pointer
+( 967) 07F9 9B0B        ;             tai                     ; transfer sptr to IP
+( 970) 07FB A300        ;             lda 0,I++               ; load char from strig
+( 971) 07FD 8D01F0      ;             sta _putChar            ; write char to output
+( 973) 0800 AB88        ;             dey.w                   ; loop while string length <> 0
+( 974) 0802 D0F7        ;             bne _swrite_Lp
+( 976) 0804 60          ;             rts
+( 989) 0805 ABDA        ;             phx.w                   ; save current base pointer
+( 990) 0807 ABBA        ;             tsx.w                   ; assign new base pointer
+( 992) 0809 B505        ;             lda _fLenOff,X          ; load field width specifier
+( 993) 080B C905        ;             cmp #5                  ; compare against max integer digit count
+( 994) 080D AB3002      ;             ble _iwrite_SetCnt
+( 995) 0810 A905        ;             lda #5
+( 998) 0812 AB48        ;             pha.w                   ; set iteration count to fld width
+( 999) 0814 ABB507      ;             lda.w _iValOff,X        ; load a with integer value
+(1002) 0817 AB48        ;             pha.w                   ; push dividend argument to _idiv
+(1003) 0819 ABE20A00    ;             psh.w #10               ; push divisor argument to _idiv
+(1004) 081D 9B5C6BFF    ;             csr _idiv               ; determine the remainder,
+(1005) 0821 C204        ;             adj #4                  ; remove arguments passed to _idiv from stk
+(1006) 0823 1B          ;             swp a                   ; put the remainder into ATOS
+(1008) 0824 18          ;             clc                     ; convert remainder into ASCII character
+(1009) 0825 6930        ;             adc #48
+(1010) 0827 48          ;             pha                     ; push LS digit of integer onto stack
+(1012) 0828 2B          ;             rot a                   ; rotate quotient into ATOS position
+(1014) 0829 ABD6FF      ;             dec.w _iCntOff,X        ; decrement digit iteration count
+(1015) 082C D0E9        ;             bne _iwrite_Lp
+(1017) 082E 0B          ;             dup a                   ; save integer part of the conversion
+(1020) 082F B505        ;             lda _fLenOff,X          ; load field width specifier
+(1021) 0831 C905        ;             cmp #5                  ; compare against max integer digit count
+(1022) 0833 AB300A      ;             ble _iwrite_GenPtr
+(1023) 0836 38          ;             sec                     ; subtract max integer length from fld len
+(1024) 0837 E905        ;             sbc #5
+(1025) 0839 A8          ;             tay                     ; set difference as loop counter
+(1026) 083A A930        ;             lda #48                 ; fill remaining field with '0'
+(1029) 083C 48          ;             pha
+(1030) 083D 88          ;             dey
+(1031) 083E D0FC        ;             bne _iwrite_Fill_Lp
+(1034) 0840 EBABBA      ;             tsa.w                   ; transfer current stk pointer to A
+(1035) 0843 AB1A        ;             inc.w a                 ; remove stack pointer write bias
+(1036) 0845 AB48        ;             pha.w                   ; push string pointer to stack
+(1038) 0847 2B          ;             rot a                   ; restore integer part of the conversion
+(1040) 0848 ABC90000    ;             cmp.w #0                ; test for 0. If not 0, int > 10^fld
+(1041) 084C F00F        ;             beq _iwrite_Sup0
+(1042) 084E A000        ;             ldy #0
+(1044) 0850 A92A        ;             lda #0x2A               ; fill integer field with '*'
+(1045) 0852 8B9101      ;             sta (1,S),Y
+(1046) 0855 C8          ;             iny
+(1047) 0856 FBD505      ;             cmp.y _fLenOff,X
+(1048) 0859 D0F5        ;             bne _iwrite_ErrLp
+(1049) 085B 8014        ;             bra _iwrite_Exit
+(1052) 085D A000        ;             ldy #0                  ; initialize string index
+(1054) 085F 8BB101      ;             lda (1,S),Y
+(1055) 0862 C930        ;             cmp #48                 ; if leading position == 0, replace with ' '
+(1056) 0864 D00B        ;             bne _iwrite_Exit        ; exit loop on first non-0 digit
+(1057) 0866 A920        ;             lda #32                 ; replace leading 0 with ' '
+(1058) 0868 8B9101      ;             sta (1,S),Y
+(1059) 086B C8          ;             iny                     ; increment string index and compare to fLen
+(1060) 086C FBD505      ;             cmp.y _fLenOff,X
+(1061) 086F D0EE        ;             bne _iwrite_Sup0_Lp     ; loop until Y == fLen
+(1064) 0871 ABE20000    ;             psh.w #0                ; NULL argument
+(1065) 0875 B505        ;             lda _fLenOff,X          ; push field width specifier
+(1066) 0877 AB48        ;             pha.w
+(1067) 0879 9B5C76FF    ;             csr _swrite             ; write integer value string using _swrite()
+(1068) 087D C206        ;             adj #6                  ; remove parameters to _swrite() from stack
+(1070) 087F AB9A        ;             txs.w                   ; deallocate stack variables
+(1071) 0881 ABFA        ;             plx.w                   ; restore previous base pointer
+(1072) 0883 60          ;             rts
+(1077) 0884 207A6572    ; S_141 .str " zero"
+       0888 6F
+(1078) 0889 202A2A2A    ; S_136 .str " ***** Error -- number > "
+       088D 2A2A204572726F72202D2D206E756D626572203E20
+(1079) 08A2 202A2A2A    ; S_131 .str " ***** Error -- number < 0"
+       08A6 2A2A204572726F72202D2D206E756D626572203C2030
+(1080) 08BC 203A        ; S_127 .str " :"
+(1081) 08BE 2074686F    ; S_121 .str " thousand"
+       08C2 7573616E64
+(1082) 08C7 2068756E    ; S_106 .str " hundred"
+       08CB 64726564
+(1083) 08CF 206E696E    ; S_102 .str " ninety"
+       08D3 657479
+(1084) 08D6 20656967    ; S_099 .str " eighty"
+       08DA 687479
+(1085) 08DD 20736576    ; S_096 .str " seventy"
+       08E1 656E7479
+(1086) 08E5 20736978    ; S_093 .str " sixty"
+       08E9 7479
+(1087) 08EB 20666966    ; S_090 .str " fifty"
+       08EF 7479
+(1088) 08F1 20666F72    ; S_087 .str " forty"
+       08F5 7479
+(1089) 08F7 20746869    ; S_084 .str " thirty"
+       08FB 727479
+(1090) 08FE 20747765    ; S_081 .str " twenty"
+       0902 6E7479
+(1091) 0905 206E696E    ; S_075 .str " nineteen"
+       0909 657465656E
+(1092) 090E 20656967    ; S_072 .str " eighteen"
+       0912 687465656E
+(1093) 0917 20736576    ; S_069 .str " seventeen"
+       091B 656E7465656E
+(1094) 0921 20736978    ; S_066 .str " sixteen"
+       0925 7465656E
+(1095) 0929 20666966    ; S_063 .str " fifteen"
+       092D 7465656E
+(1096) 0931 20666F75    ; S_060 .str " fourteen"
+       0935 727465656E
+(1097) 093A 20746869    ; S_057 .str " thirteen"
+       093E 727465656E
+(1098) 0943 20747765    ; S_054 .str " twelve"
+       0947 6C7665
+(1099) 094A 20656C65    ; S_051 .str " eleven"
+       094E 76656E
+(1100) 0951 2074656E    ; S_048 .str " ten"
+(1101) 0955 206E696E    ; S_042 .str " nine"
+       0959 65
+(1102) 095A 20656967    ; S_039 .str " eight"
+       095E 6874
+(1103) 0960 20736576    ; S_036 .str " seven"
+       0964 656E
+(1104) 0966 20736978    ; S_033 .str " six"
+(1105) 096A 20666976    ; S_030 .str " five"
+       096E 65
+(1106) 096F 20666F75    ; S_027 .str " four"
+       0973 72
+(1107) 0974 20746872    ; S_024 .str " three"
+       0978 6565
+(1108) 097A 2074776F    ; S_021 .str " two"
+(1109) 097E 206F6E65    ; S_018 .str " one"
+(1110) 0982 00          ; _bss_start .byt 0
+(1111) 0983 0000        ; number_002 .wrd 0
+(1112) 0985 00          ; _bss_end .byt 0
+(1113) 0986 00000000    ; _stk .byt 0[1023]
+       098A 0000000000000000000000000000000000000000000000000000000000000000
+       09AA 0000000000000000000000000000000000000000000000000000000000000000
+       09CA 0000000000000000000000000000000000000000000000000000000000000000
+       09EA 0000000000000000000000000000000000000000000000000000000000000000
+       0A0A 0000000000000000000000000000000000000000000000000000000000000000
+       0A2A 0000000000000000000000000000000000000000000000000000000000000000
+       0A4A 0000000000000000000000000000000000000000000000000000000000000000
+       0A6A 0000000000000000000000000000000000000000000000000000000000000000
+       0A8A 0000000000000000000000000000000000000000000000000000000000000000
+       0AAA 0000000000000000000000000000000000000000000000000000000000000000
+       0ACA 0000000000000000000000000000000000000000000000000000000000000000
+       0AEA 0000000000000000000000000000000000000000000000000000000000000000
+       0B0A 0000000000000000000000000000000000000000000000000000000000000000
+       0B2A 0000000000000000000000000000000000000000000000000000000000000000
+       0B4A 0000000000000000000000000000000000000000000000000000000000000000
+       0B6A 0000000000000000000000000000000000000000000000000000000000000000
+       0B8A 0000000000000000000000000000000000000000000000000000000000000000
+       0BAA 0000000000000000000000000000000000000000000000000000000000000000
+       0BCA 0000000000000000000000000000000000000000000000000000000000000000
+       0BEA 0000000000000000000000000000000000000000000000000000000000000000
+       0C0A 0000000000000000000000000000000000000000000000000000000000000000
+       0C2A 0000000000000000000000000000000000000000000000000000000000000000
+       0C4A 0000000000000000000000000000000000000000000000000000000000000000
+       0C6A 0000000000000000000000000000000000000000000000000000000000000000
+       0C8A 0000000000000000000000000000000000000000000000000000000000000000
+       0CAA 0000000000000000000000000000000000000000000000000000000000000000
+       0CCA 0000000000000000000000000000000000000000000000000000000000000000
+       0CEA 0000000000000000000000000000000000000000000000000000000000000000
+       0D0A 0000000000000000000000000000000000000000000000000000000000000000
+       0D2A 0000000000000000000000000000000000000000000000000000000000000000
+       0D4A 0000000000000000000000000000000000000000000000000000000000000000
+       0D6A 000000000000000000000000000000000000000000000000000000
+(1114) 0D85 FF          ; _stk_top .byt -1

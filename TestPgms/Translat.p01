@@ -28,7 +28,7 @@
   73 	tsx.w
   75 	lda.w digit_014,X
   77 	cmp.w #1
-  78 	jne L_017
+  78 	bne L_017
   79 L_016
   80 	psh.w #S_018
   81 	psh.w #0
@@ -38,7 +38,7 @@
   85 	jmp L_015
   86 L_017
   88 	cmp.w #2
-  89 	jne L_020
+  89 	bne L_020
   90 L_019
   91 	psh.w #S_021
   92 	psh.w #0
@@ -48,7 +48,7 @@
   96 	jmp L_015
   97 L_020
   99 	cmp.w #3
- 100 	jne L_023
+ 100 	bne L_023
  101 L_022
  102 	psh.w #S_024
  103 	psh.w #0
@@ -58,7 +58,7 @@
  107 	jmp L_015
  108 L_023
  110 	cmp.w #4
- 111 	jne L_026
+ 111 	bne L_026
  112 L_025
  113 	psh.w #S_027
  114 	psh.w #0
@@ -68,7 +68,7 @@
  118 	jmp L_015
  119 L_026
  121 	cmp.w #5
- 122 	jne L_029
+ 122 	bne L_029
  123 L_028
  124 	psh.w #S_030
  125 	psh.w #0
@@ -78,7 +78,7 @@
  129 	jmp L_015
  130 L_029
  132 	cmp.w #6
- 133 	jne L_032
+ 133 	bne L_032
  134 L_031
  135 	psh.w #S_033
  136 	psh.w #0
@@ -88,7 +88,7 @@
  140 	jmp L_015
  141 L_032
  143 	cmp.w #7
- 144 	jne L_035
+ 144 	bne L_035
  145 L_034
  146 	psh.w #S_036
  147 	psh.w #0
@@ -98,7 +98,7 @@
  151 	jmp L_015
  152 L_035
  154 	cmp.w #8
- 155 	jne L_038
+ 155 	bne L_038
  156 L_037
  157 	psh.w #S_039
  158 	psh.w #0
@@ -108,7 +108,7 @@
  162 	jmp L_015
  163 L_038
  165 	cmp.w #9
- 166 	jne L_041
+ 166 	bne L_041
  167 L_040
  168 	psh.w #S_042
  169 	psh.w #0
@@ -128,7 +128,7 @@
  193 	tsx.w
  195 	lda.w teens_044,X
  197 	cmp.w #10
- 198 	jne L_047
+ 198 	bne L_047
  199 L_046
  200 	psh.w #S_048
  201 	psh.w #0
@@ -138,7 +138,7 @@
  205 	jmp L_045
  206 L_047
  208 	cmp.w #11
- 209 	jne L_050
+ 209 	bne L_050
  210 L_049
  211 	psh.w #S_051
  212 	psh.w #0
@@ -148,7 +148,7 @@
  216 	jmp L_045
  217 L_050
  219 	cmp.w #12
- 220 	jne L_053
+ 220 	bne L_053
  221 L_052
  222 	psh.w #S_054
  223 	psh.w #0
@@ -158,7 +158,7 @@
  227 	jmp L_045
  228 L_053
  230 	cmp.w #13
- 231 	jne L_056
+ 231 	bne L_056
  232 L_055
  233 	psh.w #S_057
  234 	psh.w #0
@@ -168,7 +168,7 @@
  238 	jmp L_045
  239 L_056
  241 	cmp.w #14
- 242 	jne L_059
+ 242 	bne L_059
  243 L_058
  244 	psh.w #S_060
  245 	psh.w #0
@@ -178,7 +178,7 @@
  249 	jmp L_045
  250 L_059
  252 	cmp.w #15
- 253 	jne L_062
+ 253 	bne L_062
  254 L_061
  255 	psh.w #S_063
  256 	psh.w #0
@@ -188,7 +188,7 @@
  260 	jmp L_045
  261 L_062
  263 	cmp.w #16
- 264 	jne L_065
+ 264 	bne L_065
  265 L_064
  266 	psh.w #S_066
  267 	psh.w #0
@@ -198,7 +198,7 @@
  271 	jmp L_045
  272 L_065
  274 	cmp.w #17
- 275 	jne L_068
+ 275 	bne L_068
  276 L_067
  277 	psh.w #S_069
  278 	psh.w #0
@@ -208,7 +208,7 @@
  282 	jmp L_045
  283 L_068
  285 	cmp.w #18
- 286 	jne L_071
+ 286 	bne L_071
  287 L_070
  288 	psh.w #S_072
  289 	psh.w #0
@@ -218,7 +218,7 @@
  293 	jmp L_045
  294 L_071
  296 	cmp.w #19
- 297 	jne L_074
+ 297 	bne L_074
  298 L_073
  299 	psh.w #S_075
  300 	psh.w #0
@@ -238,7 +238,7 @@
  324 	tsx.w
  326 	lda.w digit_077,X
  328 	cmp.w #2
- 329 	jne L_080
+ 329 	bne L_080
  330 L_079
  331 	psh.w #S_081
  332 	psh.w #0
@@ -248,7 +248,7 @@
  336 	jmp L_078
  337 L_080
  339 	cmp.w #3
- 340 	jne L_083
+ 340 	bne L_083
  341 L_082
  342 	psh.w #S_084
  343 	psh.w #0
@@ -258,7 +258,7 @@
  347 	jmp L_078
  348 L_083
  350 	cmp.w #4
- 351 	jne L_086
+ 351 	bne L_086
  352 L_085
  353 	psh.w #S_087
  354 	psh.w #0
@@ -268,7 +268,7 @@
  358 	jmp L_078
  359 L_086
  361 	cmp.w #5
- 362 	jne L_089
+ 362 	bne L_089
  363 L_088
  364 	psh.w #S_090
  365 	psh.w #0
@@ -278,7 +278,7 @@
  369 	jmp L_078
  370 L_089
  372 	cmp.w #6
- 373 	jne L_092
+ 373 	bne L_092
  374 L_091
  375 	psh.w #S_093
  376 	psh.w #0
@@ -288,7 +288,7 @@
  380 	jmp L_078
  381 L_092
  383 	cmp.w #7
- 384 	jne L_095
+ 384 	bne L_095
  385 L_094
  386 	psh.w #S_096
  387 	psh.w #0
@@ -298,7 +298,7 @@
  391 	jmp L_078
  392 L_095
  394 	cmp.w #8
- 395 	jne L_098
+ 395 	bne L_098
  396 L_097
  397 	psh.w #S_099
  398 	psh.w #0
@@ -308,7 +308,7 @@
  402 	jmp L_078
  403 L_098
  405 	cmp.w #9
- 406 	jne L_101
+ 406 	bne L_101
  407 L_100
  408 	psh.w #S_102
  409 	psh.w #0
@@ -664,43 +664,221 @@
  825 	plx.w
  826 	rts
  827 	.end _pc65_main
- 829 	.dat
- 831 S_141 .str " zero"
- 832 S_136 .str " ***** Error -- number > "
- 833 S_131 .str " ***** Error -- number < 0"
- 834 S_127 .str " :"
- 835 S_121 .str " thousand"
- 836 S_106 .str " hundred"
- 837 S_102 .str " ninety"
- 838 S_099 .str " eighty"
- 839 S_096 .str " seventy"
- 840 S_093 .str " sixty"
- 841 S_090 .str " fifty"
- 842 S_087 .str " forty"
- 843 S_084 .str " thirty"
- 844 S_081 .str " twenty"
- 845 S_075 .str " nineteen"
- 846 S_072 .str " eighteen"
- 847 S_069 .str " seventeen"
- 848 S_066 .str " sixteen"
- 849 S_063 .str " fifteen"
- 850 S_060 .str " fourteen"
- 851 S_057 .str " thirteen"
- 852 S_054 .str " twelve"
- 853 S_051 .str " eleven"
- 854 S_048 .str " ten"
- 855 S_042 .str " nine"
- 856 S_039 .str " eight"
- 857 S_036 .str " seven"
- 858 S_033 .str " six"
- 859 S_030 .str " five"
- 860 S_027 .str " four"
- 861 S_024 .str " three"
- 862 S_021 .str " two"
- 863 S_018 .str " one"
- 864 _bss_start .byt 0
- 865 number_002 .wrd 0
- 866 _bss_end .byt 0
- 867 _stk .byt 0[1023]
- 868 _stk_top .byt -1
- 870 	.end
+ 832             .cod
+ 834 _Q          .equ    5
+ 835 _D          .equ    3
+ 837 _idiv       .proc
+ 838             lda #0          ; clear remainder (A)
+ 839             dup a           ; push
+ 840             lda.w _Q,S      ; load dividend (Q)
+ 841             ldy #16         ; bit counter
+ 843 _idiv_Lp
+ 844             clc
+ 845             asl.w a         ; shift AQ left
+ 846             swp a
+ 847             rol.w a
+ 849             bcs _idiv_Plus  ; if A < 0 then A = A + D else A = A - D
+ 851 _idiv_Minus
+ 852             sec
+ 853             sbc.w _D,S      ; subtract divisor (D)
+ 855             bra _idiv_Next
+ 857 _idiv_Plus
+ 858             clc
+ 859             adc.w _D,S      ; add divisor (D)
+ 861 _idiv_Next
+ 862             swp a           ; restore order of Acc stack {Q, A, -}
+ 863             bmi _idiv_Dec   ; if A < 0 then Q[0] = 0 else Q[0] = 1
+ 864             inc.w a
+ 866 _idiv_Dec
+ 867             dey             ; loop until loop counter == 0
+ 868             bne _idiv_Lp
+ 870 _idiv_Exit
+ 871             swp a           ; Test remainder
+ 872             ora.w #0
+ 873             bpl _idiv_Finish
+ 874             clc
+ 875             adc.w 3,S
+ 876 _idiv_Finish
+ 877             swp a
+ 879             rts
+ 881             .endp _idiv
+ 886             .cod
+ 888 _M          .equ    5
+ 889 _R          .equ    3
+ 891 _imul       .proc
+ 892             ldy #16             ; y = bit count
+ 893             lda #0              ; A = { 0,  x,  x} - clear product
+ 894             dup a               ; A = { 0,  0,  x}
+ 895             dup a               ; A = { 0,  0,  0}
+ 896             lda.w _R,S          ; A = { R,  0,  0} - load multiplier (R)
+ 897             rev                 ; A = {`R,  0,  0} - reverse multiplier (`R)
+ 898             ora.w #0            ; set N flag if msb ATOS == 1
+ 899             clc                 ; initialize Booth recoding bit
+ 900             rot a               ; A = {PH, PL, `R}
+ 902             bra _imul_TstB
+ 904 _imul_Lp
+ 905             asl.w a             ; A = {`R << 1, PH, PL}
+ 906             rot a               ; A = {PH, PL, `R}
+ 907 _imul_TstB
+ 908             bcc _imul_SubShft   ; (C, x) ? Add_Shift : Sub_Shift
+ 910 _imul_AddShft
+ 911             bmi _imul_ShftP     ; (1, N) ? P >> 1 : (P += M) >> 1
+ 912 _imul_AddM
+ 913             clc
+ 914             adc.w _M,S          ; PH += M
+ 915             bra _imul_ShftP
+ 917 _imul_SubShft
+ 918             bpl _imul_ShftP     ; (0, N) ? (P -= M) >> 1 : P >> 1
+ 919 _imul_SubM
+ 920             sec
+ 921             sbc.w _M,S          ; PH -= M
+ 923 _imul_ShftP
+ 924             asr.w a             ; A = {PH >> 1, PL, `R}
+ 925             rot a               ; A = {PL, `R, PH}
+ 926             ror.w a             ; A = {PL >> 2, `R, PH}
+ 927             rot a               ; A = {`R, PH, PL}
+ 929 _imul_Dec
+ 930             dey
+ 931             bne _imul_Lp
+ 933 _imul_Exit
+ 934             rot a               ; A = {PH, PL, `R}
+ 935             swp a               ; A = {PL, PH, `R}
+ 937             rts
+ 939             .endp _imul
+ 944             .cod
+ 946 _newLine    .equ    0x0A
+ 947 _putChar    .equ    0xF001
+ 949 _writeln    .proc
+ 950             lda #_newLine
+ 951             sta _putChar
+ 953             rts
+ 955             .endp _writeln
+ 959             .cod
+ 961 _sPtrOff    .equ    7
+ 962 _sLenOff    .equ    3
+ 964 _swrite     .proc
+ 965             ldy.w _sLenOff,S        ; load string length
+ 966             lda.w _sPtrOff,S        ; load string pointer
+ 967             tai                     ; transfer sptr to IP
+ 969 _swrite_Lp
+ 970             lda 0,I++               ; load char from strig
+ 971             sta _putChar            ; write char to output
+ 973             dey.w                   ; loop while string length <> 0
+ 974             bne _swrite_Lp
+ 976             rts
+ 978             .endp _swrite
+ 982             .cod
+ 984 _iValOff    .equ    7
+ 985 _fLenOff    .equ    5
+ 986 _iCntOff    .equ    -1
+ 988 _iwrite     .proc
+ 989             phx.w                   ; save current base pointer
+ 990             tsx.w                   ; assign new base pointer
+ 992             lda _fLenOff,X          ; load field width specifier
+ 993             cmp #5                  ; compare against max integer digit count
+ 994             ble _iwrite_SetCnt
+ 995             lda #5
+ 997 _iwrite_SetCnt
+ 998             pha.w                   ; set iteration count to fld width
+ 999             lda.w _iValOff,X        ; load a with integer value
+1001 _iwrite_Lp
+1002             pha.w                   ; push dividend argument to _idiv
+1003             psh.w #10               ; push divisor argument to _idiv
+1004             csr _idiv               ; determine the remainder,
+1005             adj #4                  ; remove arguments passed to _idiv from stk
+1006             swp a                   ; put the remainder into ATOS
+1008             clc                     ; convert remainder into ASCII character
+1009             adc #48
+1010             pha                     ; push LS digit of integer onto stack
+1012             rot a                   ; rotate quotient into ATOS position
+1014             dec.w _iCntOff,X        ; decrement digit iteration count
+1015             bne _iwrite_Lp
+1017             dup a                   ; save integer part of the conversion
+1019 _iwrite_Fill
+1020             lda _fLenOff,X          ; load field width specifier
+1021             cmp #5                  ; compare against max integer digit count
+1022             ble _iwrite_GenPtr
+1023             sec                     ; subtract max integer length from fld len
+1024             sbc #5
+1025             tay                     ; set difference as loop counter
+1026             lda #48                 ; fill remaining field with '0'
+1028 _iwrite_Fill_Lp                     ; increase string on stack with fill data
+1029             pha
+1030             dey
+1031             bne _iwrite_Fill_Lp
+1033 _iwrite_GenPtr
+1034             tsa.w                   ; transfer current stk pointer to A
+1035             inc.w a                 ; remove stack pointer write bias
+1036             pha.w                   ; push string pointer to stack
+1038             rot a                   ; restore integer part of the conversion
+1040             cmp.w #0                ; test for 0. If not 0, int > 10^fld
+1041             beq _iwrite_Sup0
+1042             ldy #0
+1043 _iwrite_ErrLp
+1044             lda #0x2A               ; fill integer field with '*'
+1045             sta (1,S),Y
+1046             iny
+1047             cmp.y _fLenOff,X
+1048             bne _iwrite_ErrLp
+1049             bra _iwrite_Exit
+1051 _iwrite_Sup0
+1052             ldy #0                  ; initialize string index
+1053 _iwrite_Sup0_Lp
+1054             lda (1,S),Y
+1055             cmp #48                 ; if leading position == 0, replace with ' '
+1056             bne _iwrite_Exit        ; exit loop on first non-0 digit
+1057             lda #32                 ; replace leading 0 with ' '
+1058             sta (1,S),Y
+1059             iny                     ; increment string index and compare to fLen
+1060             cmp.y _fLenOff,X
+1061             bne _iwrite_Sup0_Lp     ; loop until Y == fLen
+1063 _iwrite_Exit
+1064             psh.w #0                ; NULL argument
+1065             lda _fLenOff,X          ; push field width specifier
+1066             pha.w
+1067             csr _swrite             ; write integer value string using _swrite()
+1068             adj #6                  ; remove parameters to _swrite() from stack
+1070             txs.w                   ; deallocate stack variables
+1071             plx.w                   ; restore previous base pointer
+1072             rts
+1074             .endp _iwrite
+1075 	.dat
+1077 S_141 .str " zero"
+1078 S_136 .str " ***** Error -- number > "
+1079 S_131 .str " ***** Error -- number < 0"
+1080 S_127 .str " :"
+1081 S_121 .str " thousand"
+1082 S_106 .str " hundred"
+1083 S_102 .str " ninety"
+1084 S_099 .str " eighty"
+1085 S_096 .str " seventy"
+1086 S_093 .str " sixty"
+1087 S_090 .str " fifty"
+1088 S_087 .str " forty"
+1089 S_084 .str " thirty"
+1090 S_081 .str " twenty"
+1091 S_075 .str " nineteen"
+1092 S_072 .str " eighteen"
+1093 S_069 .str " seventeen"
+1094 S_066 .str " sixteen"
+1095 S_063 .str " fifteen"
+1096 S_060 .str " fourteen"
+1097 S_057 .str " thirteen"
+1098 S_054 .str " twelve"
+1099 S_051 .str " eleven"
+1100 S_048 .str " ten"
+1101 S_042 .str " nine"
+1102 S_039 .str " eight"
+1103 S_036 .str " seven"
+1104 S_033 .str " six"
+1105 S_030 .str " five"
+1106 S_027 .str " four"
+1107 S_024 .str " three"
+1108 S_021 .str " two"
+1109 S_018 .str " one"
+1110 _bss_start .byt 0
+1111 number_002 .wrd 0
+1112 _bss_end .byt 0
+1113 _stk .byt 0[1023]
+1114 _stk_top .byt -1
+1116 	.end

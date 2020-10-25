@@ -6,8 +6,12 @@ from PyAsm65Utilities import *
 
 opcodes = loadOpcodeTable(genOpcodeLst=True)    # Load default opcode table
 
-filename = input('Enter base name of file to process: ')
-libpath  = input('Enter path to library: ')
+filename  = input('Enter base name of file to process: ')
+libpath   = input('Enter path to library: ')
+enablePho = input('Enable Peephole Optimization: ')
+if enablePho == '':
+    phoEnable = False
+else: phoEnable = True
 
 labels    = {}
 constants = {}
@@ -41,17 +45,25 @@ with open(filename+'.p01', 'wt') as fout:
     Insert Peephole Optimizations here
 '''
 
-#source = pho_ldaImmPha_to_pshImm(source)
+if phoEnable:
+    source = pho_ldaImmPha_to_pshImm(source)
+    source = pho_ldaImmSta_to_Stz(source)
+    source = pho_StackAdd_to_DirectAdd(source)
+    source = pho_StackCmp_to_DirectCmp(source)
+    source = pho_optimizeBooleanTest(source, False)
+    source = pho_ConvertAdc_to_Inc(source)
 
 '''
     Output intermediate file #2
 '''
 
 with open(filename+'.p02', 'wt') as fout:
+    i = 0
     for ln in source:
         inpLine = ln[0][0]
         srcText = ln[0][1]
-        print('%4d' % (inpLine), srcText, file=fout)
+        print('[%4d]' % (i), '%4d' % (inpLine), srcText, file=fout)
+        i += 1
 
 '''
     Assembler Pass 1
@@ -238,7 +250,7 @@ for src in source:
                     operand = dt.split(',')[0][1:]
                     try:
                         val = eval(str(operand), vlc) & 0xFFFF
-                        if val < 256:
+                        if val >= -128 or val <= 127:
                             addrsMode = 'zpXI'
                         else: addrsMode = 'absXI'
                     except:
@@ -291,7 +303,7 @@ for src in source:
                     operand = dt.split(',')[0]
                     try:
                         val = eval(str(operand), vlc) & 0xFFFF
-                        if val < 256:
+                        if val >= -128 or val <= 127:
                             addrsMode = 'zpX'
                         else: addrsMode = 'absX'
                     except:
@@ -488,32 +500,64 @@ for src in source:
                 if dt == '':
                     addrsMode = 'imp'
                     operand = ''
-                elif re.match('^[aAxXyY]{1}$', dt):
+                elif re.match('^[aAxXyY]$', dt):
                     addrsMode = dt.lower()
                     operand = dt.lower()
                 elif re.match('^#', dt):
                     addrsMode = 'imm'
                     operand = dt[1:]
-                elif re.match('^\(.*,[xX]\)$', dt):
-                    addrsMode = 'zpXI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^\(.*,[sS]\)$', dt):
-                    addrsMode = 'zpSI'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^\(.*,[sS]\),[yY]$', dt):
-                    addrsMode = 'zpSIY'
-                    operand = dt.split(',')[0][1:]
-                elif re.match('^\(.*\),[yY]$', dt):
-                    addrsMode = 'zpIY'
-                    operand = dt.split(')')[0][1:]
-                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
-                    addrsMode = 'ippI'
-                    operand = dt.split(',')[0][1:]
                 elif re.match('^[(]{2}.*,[sS][)]{2},[aA]$', dt):
                     addrsMode = 'zpSIIA'
                     operand = dt.split(',')[0][2:]
+                elif re.match('^\(.*,[xX]\)$', dt):
+                    operand = dt.split(',')[0][1:]
+                    try:
+                        val = eval(str(operand), vlc) & 0xFFFF
+                        if val >= -128 or val <= 127:
+                            addrsMode = 'zpXI'
+                        else: addrsMode = 'absXI'
+                    except:
+                        addrsMode = 'absXI'
+                elif re.match('^\(.*,[sS]\)$', dt):
+                    operand = dt.split(',')[0][1:]
+                    try:
+                        val = eval(str(operand), vlc) & 0xFFFF
+                        if val < 256:
+                            addrsMode = 'zpSI'
+                        else: addrsMode = 'absSI'
+                    except:
+                        addrsMode = 'absSI'
                 elif re.match('^\(.*,[aA]\)$', dt):
-                    addrsMode = 'absAI'
+                    operand = dt.split(',')[0][1:]
+                    try:
+                        val = eval(str(operand), vlc) & 0xFFFF
+                        if val < 256:
+                            if op == 'jmp':
+                                addrsMode = 'absAI'
+                            else: addrsMode = 'zpAI'
+                        else: addrsMode = 'absAI'
+                    except:
+                        addrsMode = 'absAI'
+                elif re.match('^\(.*,[sS]\),[yY]$', dt):
+                    operand = dt.split(',')[0][1:]
+                    try:
+                        val = eval(str(operand), vlc) & 0xFFFF
+                        if val < 256:
+                            addrsMode = 'zpSIY'
+                        else: addrsMode = 'absSIY'
+                    except:
+                        addrsMode = 'absSIY'
+                elif re.match('^\(.*\),[yY]$', dt):
+                    operand = dt.split(')')[0][1:]
+                    try:
+                        val = eval(str(operand), vlc) & 0xFFFF
+                        if val < 256:
+                            addrsMode = 'zpIY'
+                        else: addrsMode = 'absIY'
+                    except:
+                        addrsMode = 'absIY'
+                elif re.match('^\(.*,[iI][+]{2}\)$', dt):
+                    addrsMode = 'ippI'
                     operand = dt.split(',')[0][1:]
                 elif re.match('^\(.*\)$', dt):
                     addrsMode = 'zpI'
@@ -521,8 +565,8 @@ for src in source:
                 elif re.match('^.*,[xX]$', dt):
                     operand = dt.split(',')[0]
                     try:
-                        val = eval(str(operand), vlc)
-                        if val < 256:
+                        val = eval(str(operand), vlc) & 0xFFFF
+                        if val >= -128 or val <= 127:
                             addrsMode = 'zpX'
                         else: addrsMode = 'absX'
                     except:
@@ -551,7 +595,7 @@ for src in source:
                             else: addrsMode = 'abs'
                         except:
                             addrsMode = 'abs'
-
+                        
                     operand = dt
                     if re.match('^_\w*$', dt):
                         if dt not in library:
@@ -622,19 +666,19 @@ for var in variables:
     value, *_ = variables[var]
     vlc[var] = value
 
-#print('-'*80)
-#print
-#for key in vlc:
-    #print('%-18s : %s' % (key, vlc[key]))
-#print
-#print('-'*80)
+# print('-'*80)
+# print
+# for key in vlc:
+    # print('%-18s : %s' % (key, vlc[key]))
+# print
+# print('-'*80)
 
-#print('-'*80)
-#print
-#for key in constants:
-    #print('%-18s : %8s (0x%04X)' % (key, constants[key], constants[key]))
-#print
-#print('-'*80)
+# print('-'*80)
+# print
+# for key in constants:
+    # print('%-18s : %8s (0x%04X)' % (key, constants[key], constants[key]))
+# print
+# print('-'*80)
 
 '''
     Assembler Pass 2

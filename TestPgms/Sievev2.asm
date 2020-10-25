@@ -1,4 +1,4 @@
-;    1: PROGRAM newton (input, output);
+;    1: PROGRAM eratosthenes (output);
 	.stk 1024
 	.cod 512
 STATIC_LINK .equ +5
@@ -7,443 +7,253 @@ HIGH_RETURN_VALUE .equ -1
 _start
 	tsx.w		; Preserve original stack pointer
 	lds.w #_stk_top	; Initialize program stack pointer
-	stz _bss_start
-	ldx.w #_bss_start
-	ldy.w #_bss_start+1
-	lda.w #_stk_top
-	sec
-	sbc.w #_bss_start
-	mov #10
+;	stz _bss_start
+;	ldx.w #_bss_start
+;	ldy.w #_bss_start+1
+;	lda.w #_stk_top
+;	sec
+;	sbc.w #_bss_start
+;	mov #10
 	jmp _pc65_main
 ;    2: 
 ;    3: CONST
-;    4:     epsilon = 1e-6;
+;    4:     max = 1000;
 ;    5: 
 ;    6: VAR
-;    7:     number, root, sqroot : real;
-;    8: 
-;    9: BEGIN
+;    7:     sieve : ARRAY [1..max] OF BOOLEAN;
+;    8:     i, j, limit, prime, factor : INTEGER;
+;    9: 
+;   10: BEGIN
 _pc65_main .sub
 	phx.w
 	tsx.w
-;   10:     REPEAT
-L_005
-;   11:     writeln;
-	jsr _writeln
-;   12:     write('Enter new number (0 to quit): ');
-	psh.w #S_007
-	psh.w #0
-	psh.w #30
-	jsr _swrite
-	adj #6
-;   13:     read(number);
-	psh.w #number_002
-	jsr _fread
+;   11:     limit := max DIV 2;
+	lda.w #1000
+	pha.w
+	lda #2
+	pha.w
+	jsr _idiv
+	adj #4
+	sta.w limit_005
+;   12:     sieve[1] := FALSE;
+	psh.w #sieve_002
+	lda #1
+	dec.w a
+	asl.w a
+	clc
+	adc.w 1,S
+	sta.w 1,S
+	lda #0
 	pli.s
 	sta.w 0,I++
-	swp a
-	sta.w 0,I++
-;   14: 
-;   15:     IF number = 0 THEN BEGIN
-	lda.w number_002+2	;emit_load_value
-	swp a
-	lda.w number_002
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda #0
-	pha.w
-	jsr _fconv
-	adj #2
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fcmp
-	adj #8
-	cmp.w #0
-	php
+;   13: 
+;   14:     {FOR i := 2 TO max DO
+;   15:         sieve[i] := TRUE;}
+;   16: 
+;   17:     prime := 1;
 	lda #1
-	plp
-	beq L_010
-	lda #0
-L_010
-	cmp.w #1
-	beq L_008
-	jmp L_009
+	sta.w prime_006
+;   18: 
+;   19:     REPEAT
 L_008
-;   16:         writeln(number:12:6, 0.0:12:6);
-	lda.w number_002+2	;emit_load_value
-	swp a
-	lda.w number_002
-	swp a
+;   20:         prime := prime + 1;
+	lda.w prime_006
 	pha.w
-	swp a
-	pha.w
-	lda #12
-	pha.w
-	lda #6
-	pha.w
-	jsr _fwrite
-	adj #8
-	lda.w F_011+2	;float_literal
-	swp a
-	lda.w F_011
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda #12
-	pha.w
-	lda #6
-	pha.w
-	jsr _fwrite
-	adj #8
-	jsr _writeln
-;   17:     END
-;   18:     ELSE IF number < 0 THEN BEGIN
-	jmp L_012
-L_009
-	lda.w number_002+2	;emit_load_value
-	swp a
-	lda.w number_002
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda #0
-	pha.w
-	jsr _fconv
+	lda #1
+	clc
+	adc.w 1,S
 	adj #2
-	swp a
+	sta.w prime_006
+;   21:         WHILE NOT sieve[prime] DO
+L_010
+	psh.w #sieve_002
+	lda.w prime_006
+	dec.w a
+	asl.w a
+	clc
+	adc.w 1,S
+	sta.w 1,S
+	pli.s
+	lda.w 0,I++
+	eor #1
+	cmp.w #1
+	beq L_011
+	jmp L_012
+L_011
+;   22:             prime := prime + 1;
+	lda.w prime_006
 	pha.w
-	swp a
+	lda #1
+	clc
+	adc.w 1,S
+	adj #2
+	sta.w prime_006
+	jmp L_010
+L_012
+;   23: 
+;   24:         factor := prime*2;
+	lda.w prime_006
 	pha.w
-	jsr _fcmp
-	adj #8
-	cmp.w #0
+	lda #2
+	pha.w
+	jsr _imul
+	adj #4
+	sta.w factor_007
+;   25: 
+;   26:         WHILE factor <= max DO BEGIN
+L_013
+	lda.w factor_007
+	pha.w
+	lda.w #1000
+	xma.w 1,S
+	cmp.w 1,S
+	adj #2
 	php
 	lda #1
 	plp
-	blt L_015
+	ble L_016
 	lda #0
-L_015
+L_016
 	cmp.w #1
-	beq L_013
-	jmp L_014
-L_013
-;   19:         writeln('*** ERROR:  number < 0');
-	psh.w #S_016
+	beq L_014
+	jmp L_015
+L_014
+;   27:             sieve[factor] := FALSE;
+	psh.w #sieve_002
+	lda.w factor_007
+	dec.w a
+	asl.w a
+	clc
+	adc.w 1,S
+	sta.w 1,S
+	lda #0
+	pli.s
+	sta.w 0,I++
+;   28:             factor := factor + prime;
+	lda.w factor_007
+	pha.w
+	lda.w prime_006
+	clc
+	adc.w 1,S
+	adj #2
+	sta.w factor_007
+;   29:         END
+;   30:     UNTIL prime > limit;
+	jmp L_013
+L_015
+	lda.w prime_006
+	pha.w
+	lda.w limit_005
+	xma.w 1,S
+	cmp.w 1,S
+	adj #2
+	php
+	lda #1
+	plp
+	bgt L_017
+	lda #0
+L_017
+	cmp.w #1
+	beq L_009
+	jmp L_008
+L_009
+;   31: 
+;   32:     writeln('Sieve of Eratosthenes');
+	psh.w #S_018
 	psh.w #0
-	psh.w #22
+	psh.w #21
 	jsr _swrite
 	adj #6
 	jsr _writeln
-;   20:     END
-;   21:     ELSE BEGIN
-	jmp L_017
-L_014
-;   22:         sqroot := sqrt(number);
-	lda.w number_002+2	;emit_load_value
-	swp a
-	lda.w number_002
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fsqrt
-	adj #4
-	sta.w sqroot_004
-	swp a
-	sta.w sqroot_004+2	;assgnment_statement
-;   23:         writeln(number:12:6, sqroot:12:6);
-	lda.w number_002+2	;emit_load_value
-	swp a
-	lda.w number_002
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda #12
-	pha.w
-	lda #6
-	pha.w
-	jsr _fwrite
-	adj #8
-	lda.w sqroot_004+2	;emit_load_value
-	swp a
-	lda.w sqroot_004
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda #12
-	pha.w
-	lda #6
-	pha.w
-	jsr _fwrite
-	adj #8
+;   33:     writeln;
 	jsr _writeln
-;   24:         writeln;
-	jsr _writeln
-;   25: 
-;   26:         root := 1;
+;   34: 
+;   35:     i := 1;
 	lda #1
-	pha.w
-	jsr _fconv
-	adj #2
-	sta.w root_003
-	swp a
-	sta.w root_003+2	;assgnment_statement
-;   27:         REPEAT
-L_018
-;   28:         root := (number/root + root)/2;
-	lda.w number_002+2	;emit_load_value
-	swp a
-	lda.w number_002
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda.w root_003+2	;emit_load_value
-	swp a
-	lda.w root_003
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fdiv
-	adj #8
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda.w root_003+2	;emit_load_value
-	swp a
-	lda.w root_003
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fadd
-	adj #8
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda #2
-	pha.w
-	jsr _fconv
-	adj #2
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fdiv
-	adj #8
-	sta.w root_003
-	swp a
-	sta.w root_003+2	;assgnment_statement
-;   29:         writeln(root:24:6,
-	lda.w root_003+2	;emit_load_value
-	swp a
-	lda.w root_003
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda #24
-	pha.w
-	lda #6
-	pha.w
-	jsr _fwrite
-	adj #8
-;   30:             100*abs(root - sqroot)/sqroot:12:2,
-	lda #100
-	pha.w
-	lda.w root_003+2	;emit_load_value
-	swp a
-	lda.w root_003
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda.w sqroot_004+2	;emit_load_value
-	swp a
-	lda.w sqroot_004
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fsub
-	adj #8
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fabs
-	adj #4
-	swp a
-	pha.w
-	swp a
-	pha.w
-	pla.w
-	swp a
-	pla.w
-	ply.w
-	pha.w
-	swp a
-	pha.w
-	phy.w
-	jsr _fconv
-	adj #2
-	ply.w
-	swp y
-	ply.w
-	swp a
-	pha.w
-	swp a
-	pha.w
-	phy.w
-	swp y
-	phy.w
-	jsr _fmul
-	adj #8
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda.w sqroot_004+2	;emit_load_value
-	swp a
-	lda.w sqroot_004
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fdiv
-	adj #8
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda #12
-	pha.w
-	lda #2
-	pha.w
-	jsr _fwrite
-	adj #8
-;   31:             '%')
-	lda #37
-	pha.w
-	psh.w #0
-	jsr _cwrite
-	adj #4
-;   32:         UNTIL abs(number/sqr(root) - 1) < epsilon;
-	jsr _writeln
-	lda.w number_002+2	;emit_load_value
-	swp a
-	lda.w number_002
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda.w root_003+2	;emit_load_value
-	swp a
-	lda.w root_003
-	swp a
-	pha.w
-	swp a
-	pha.w
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fmul
-	adj #8
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fdiv
-	adj #8
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda #1
-	pha.w
-	jsr _fconv
-	adj #2
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fsub
-	adj #8
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fabs
-	adj #4
-	swp a
-	pha.w
-	swp a
-	pha.w
-	lda.w F_020+2	;float_literal
-	swp a
-	lda.w F_020
-	swp a
-	pha.w
-	swp a
-	pha.w
-	jsr _fcmp
-	adj #8
-	cmp.w #0
-	php
-	lda #1
-	plp
-	blt L_021
-	lda #0
-L_021
-	cmp.w #1
-	beq L_019
-	jmp L_018
+	sta.w i_003
+;   36:     REPEAT
 L_019
-;   33:     END
-;   34:     UNTIL number = 0
-L_017
-L_012
-	lda.w number_002+2	;emit_load_value
-	swp a
-	lda.w number_002
-	swp a
-	pha.w
-	swp a
-	pha.w
+;   37:         FOR j := 0 TO 19 DO BEGIN
 	lda #0
-;   35: END.
+	sta.w j_004
+L_021
+	lda #19
+	cmp.w j_004
+	bge L_022
+	jmp L_023
+L_022
+;   38:             prime := i + j;
+	lda.w i_003
 	pha.w
-	jsr _fconv
+	lda.w j_004
+	clc
+	adc.w 1,S
 	adj #2
-	swp a
+	sta.w prime_006
+;   39:             IF sieve[prime] THEN
+	psh.w #sieve_002
+	lda.w prime_006
+	dec.w a
+	asl.w a
+	clc
+	adc.w 1,S
+	sta.w 1,S
+	pli.s
+	lda.w 0,I++
+	cmp.w #1
+	beq L_024
+	jmp L_025
+L_024
+;   40:                 write(prime:3)
+	lda.w prime_006
 	pha.w
-	swp a
+	lda #3
 	pha.w
-	jsr _fcmp
-	adj #8
-	cmp.w #0
+	jsr _iwrite
+	adj #4
+;   41:             ELSE
+	jmp L_026
+L_025
+;   42:                 write('   ');
+	psh.w #S_027
+	psh.w #0
+	psh.w #3
+	jsr _swrite
+	adj #6
+L_026
+;   43:         END;
+	inc.w j_004
+	jmp L_021
+L_023
+	dec.w j_004
+;   44:         writeln;
+	jsr _writeln
+;   45:         i := i + 20
+	lda.w i_003
+	pha.w
+	lda #20
+;   46:     UNTIL i > max
+	clc
+	adc.w 1,S
+	adj #2
+	sta.w i_003
+	lda.w i_003
+	pha.w
+;   47: END.
+	lda.w #1000
+	xma.w 1,S
+	cmp.w 1,S
+	adj #2
 	php
 	lda #1
 	plp
-	beq L_022
+	bgt L_028
 	lda #0
-L_022
+L_028
 	cmp.w #1
-	beq L_006
-	jmp L_005
-L_006
+	beq L_020
+	jmp L_019
+L_020
 	plx.w
 	rts
 	.end _pc65_main
@@ -697,14 +507,15 @@ _iwrite_Exit
 
 	.dat
 
-S_016 .str "*** ERROR:  number < 0"
-S_007 .str "Enter new number (0 to quit): "
-F_020 .flt 1.000000e-06
-F_011 .flt 0.000000e+00
+S_027 .str "   "
+S_018 .str "Sieve of Eratosthenes"
 _bss_start .byt 0
-number_002 .flt 0
-root_003 .flt 0
-sqroot_004 .flt 0
+sieve_002 .wrd 1[1000]
+i_003 .wrd 0
+j_004 .wrd 0
+limit_005 .wrd 0
+prime_006 .wrd 0
+factor_007 .wrd 0
 _bss_end .byt 0
 _stk .byt 0[1023]
 _stk_top .byt -1

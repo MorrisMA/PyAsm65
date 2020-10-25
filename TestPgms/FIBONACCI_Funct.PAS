@@ -1,0 +1,38 @@
+PROGRAM Fibonacci (output);
+
+CONST
+    max = 23;
+
+VAR
+    i, j : INTEGER;
+    
+FUNCTION FIB(n : INTEGER) : INTEGER;
+    VAR i, tmp, fn1, fn2 : INTEGER;
+    
+    BEGIN
+        fn1 := 1;
+        fn2 := 0;
+        
+        IF n < 1 THEN
+            FIB := fn2
+        ELSE BEGIN
+            FOR i := 1 TO n DO BEGIN
+                tmp := fn1 + fn2;
+                fn2 := fn1;
+                fn1 := tmp
+            END;
+        
+            FIB := fn1
+        END
+    END;
+    
+BEGIN
+    FOR i := 1 to max DO BEGIN
+        j := FIB(i);
+        {write('Fib[');
+        write(i:2);
+        write('] = ');
+        write(j:5);
+        writeln}
+    END
+END.
