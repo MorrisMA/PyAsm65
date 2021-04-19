@@ -1066,7 +1066,7 @@ absI    : 109
         : 1   [tsb_absI     , 2, 2,     9B0C]
         : 2   [trb_absI     , 2, 2,     9B1C]
         : 3   [bit_absI     , 2, 2,     9B2C]
-        : 4   [jmp_absI     , 2, 2,     9B4C]
+        : 4   [jmp_absI     , 2, 2,     9B4C]   <--- should be 0x6C not 0x9B4C
         : 5   [sty_absI     , 2, 2,     9B8C]
         : 6   [stz_absI     , 2, 2,     9B9C]
         : 7   [ldy_absI     , 2, 2,     9BAC]
@@ -1603,7 +1603,7 @@ absS    : 65
         : 0   [tsb_absS     , 2, 2,     8B0C]
         : 1   [trb_absS     , 2, 2,     8B1C]
         : 2   [bit_absS     , 2, 2,     8B3C]
-        : 3   [jmp_absS     , 2, 2,     8B6C]
+        : 3   [jmp_absS     , 2, 2,     8B6C]   <--- should be 0x8B4C not 0x8B6C
         : 4   [sty_absS     , 2, 2,     8B8C]
         : 5   [stz_absS     , 2, 2,     8B9C]
         : 6   [ldy_absS     , 2, 2,     8BBC]

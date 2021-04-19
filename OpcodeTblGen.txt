@@ -195,9 +195,9 @@ FB  OAY  imp   N   N   N   N   N   N   N   N
 1C  TRB  abs   Y   Y   Y   Y   Y   Y   Y   Y
 2C  BIT  abs   Y   Y   Y   N   N   N   Y   Y
 3C  BIT  absX  Y   Y   Y   Y   Y   Y   Y   Y
-4C  JMP  abs   Y   N   N   N   N   N   N   N
+4C  JMP  abs   N   N   N   Y   N   N   N   N
 5C  PHR  rel16 Y   N   N   Y   N   Y   N   N
-6C  JMP  absX  Y   N   N   Y   N   N   Y   N
+6C  JMP  absI  Y   N   N   N   N   N   N   N
 7C  JMP  absXI Y   N   N   Y   N   N   Y   N
 8C  STY  abs   Y   Y   Y   Y   Y   Y   N   N
 9C  STZ  abs   Y   Y   Y   Y   Y   Y   N   N
