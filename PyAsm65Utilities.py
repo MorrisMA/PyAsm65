@@ -765,71 +765,40 @@ def pho_optimizeBooleanTest(source, balanced):
     print('optimizeBooleanTest   =>', j, len(source), len(newSrc))
     return newSrc
 
-def pho_optimizeBooleanTest(source, balanced):
+def pho_optimizeBooleanTest2(source):
     newSrc = []
-    length = len(source) - 4
+    length = len(source) - 1
     i = j = 0
     
-    nL = [0 for x in range(5)]
-    ln = [0 for x in range(5)]
-    lb = [0 for x in range(5)]
-    op = [0 for x in range(5)]
-    dt = [0 for x in range(5)]
+    nL = [0 for x in range(2)]
+    ln = [0 for x in range(2)]
+    lb = [0 for x in range(2)]
+    op = [0 for x in range(2)]
+    dt = [0 for x in range(2)]
 
     while i < length:
         found = False
         nL[0] = source[i]
         ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
-        if op[0] in ['php'] \
+        if op[0] in ['cmp.w'] \
+           and dt[0] == '#1' \
            and lb[0] == '':
             nL[1] = source[i+1]
             ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
-            if op[1] in ['lda'] \
-               and dt[1] == '#1' \
+            if op[1] in ['beq'] \
                and lb[1] == '':
-                nL[2] = source[i+2]
-                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
-                if op[2] in ['plp'] \
-                   and lb[2] == '':
-                    nL[3] = source[i+3]
-                    ln[3], lb[3], op[3], dt[3] = processLine(nL[3])
-                    if op[3] in conditional \
-                       and lb[3] == '':
-                        nL[4] = source[i+4]
-                        ln[4], lb[4], op[4], dt[4] = processLine(nL[4])
-                        if op[4] in ['lda'] \
-                           and dt[4] == '#0' \
-                           and lb[4] == '':
-                            lb[3] = dt[3]+'T'
-                            nL[0] = [[ln[0], '\t'+op[3]+' '+lb[3]], \
-                                     ['', op[3], lb[3]]]
-                            newSrc.append(nL[0])
-                            nL[1] = [[ln[1], '\t'+'lda'+' '+'#0'], \
-                                     ['', 'lda', '#0']]
-                            newSrc.append(nL[1])
-                            nL[2] = [[ln[2], '\t'+'bra'+' '+dt[3]], \
-                                     ['', 'bra', dt[3]]]
-                            newSrc.append(nL[2])
-                            if balanced:
-                                nL[3] = [[ln[3], lb[3]+' '+'lda'+' '+'#1'], \
-                                         [lb[3], 'lda', '#1']]
-                                newSrc.append(nL[3])
-                                nL[4] = [[ln[4], '\t'+'.byt'+' '+'234[2]'], \
-                                         ['', '.byt', '234[2]']]
-                                newSrc.append(nL[4])
-                            else:
-                                nL[3] = [[ln[3], lb[3]+' '+'lda'+' '+'#1'], \
-                                         [lb[3], 'lda', '#1']]
-                                newSrc.append(nL[3])
-                            i += 4; j += 1
-                            found = True
+                nL[0] = [[ln[0], '\t'+'bne'+' '+dt[1]], \
+                                     ['', 'bne', dt[1]]]
+                newSrc.append(nL[0])
+                i += 1; j += 1
+                found = True
         if not found: newSrc.append(nL[0])
         i += 1
         
     for nL in source[length:]:
         newSrc.append(nL)
 
-    print('optimizeBooleanTest   =>', j, len(source), len(newSrc))
+    print('optimizeBooleanTest2  =>', j, len(source), len(newSrc))
     return newSrc
 
 def numVal(dt):

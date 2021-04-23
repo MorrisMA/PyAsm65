@@ -51,6 +51,7 @@ if phoEnable:
     source = pho_StackAdd_to_DirectAdd(source)
     source = pho_StackCmp_to_DirectCmp(source)
     source = pho_optimizeBooleanTest(source, False)
+    source = pho_optimizeBooleanTest2(source)
     source = pho_ConvertAdc_to_Inc(source)
 
 '''
