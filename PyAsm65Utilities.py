@@ -439,11 +439,12 @@ def pho_ldaImmPha_to_pshImm(source):
     while i < length:
         newLine = source[i]
         inpLine, lbl, op, dt = processLine(newLine)
-        if op in ['lda', 'lda.w'] and dt[0] == '#':
+        if op in ['lda', 'lda.w'] \
+           and dt[0] == '#':
             nxtLine = source[i+1]
-            
             nxtLn, nxtLbl, nxtOp, nxtDt = processLine(nxtLine)
-            if nxtOp in ['pha', 'pha.w', 'pha.s', 'pha.sw'] and nxtLbl == '':
+            if nxtOp in ['pha', 'pha.w', 'pha.s', 'pha.sw'] \
+               and nxtLbl == '':
                 if '.' in nxtOp:
                     op = 'psh'+'.'+nxtOp.split('.')[1]
                 else: op = 'psh'
@@ -733,9 +734,12 @@ def pho_optimizeBooleanTest(source, balanced):
                         if op[4] in ['lda'] \
                            and dt[4] == '#0' \
                            and lb[4] == '':
-                            lb[3] = dt[3]+'T'
-                            nL[0] = [[ln[0], '\t'+op[3]+' '+lb[3]], \
-                                     ['', op[3], lb[3]]]
+                            if balanced:
+                                nL[0] = [[ln[0], '\t'+op[3]+' '+dt[3]+'T'], \
+                                         ['', op[3], dt[3]+'T']]
+                            else:
+                                nL[0] = [[ln[0], '\t'+op[3]+' '+dt[3]+'T'], \
+                                         ['', op[3], dt[3]+'-2']]
                             newSrc.append(nL[0])
                             nL[1] = [[ln[1], '\t'+'lda'+' '+'#0'], \
                                      ['', 'lda', '#0']]
@@ -744,16 +748,19 @@ def pho_optimizeBooleanTest(source, balanced):
                                      ['', 'bra', dt[3]]]
                             newSrc.append(nL[2])
                             if balanced:
-                                nL[3] = [[ln[3], lb[3]+' '+'lda'+' '+'#1'], \
-                                         [lb[3], 'lda', '#1']]
+                                nL[3] = [[ln[3], dt[3]+'T'+' '+'.byt'+' '+'234[2]'], \
+                                         [dt[3]+'T', '.byt', '234[2]']]
                                 newSrc.append(nL[3])
-                                nL[4] = [[ln[4], '\t'+'.byt'+' '+'234[2]'], \
-                                         ['', '.byt', '234[2]']]
+                                nL[4] = [[ln[4], '\t'+'lda'+' '+'#1'], \
+                                         [lb[4], 'lda', '#1']]
                                 newSrc.append(nL[4])
                             else:
-                                nL[3] = [[ln[3], lb[3]+' '+'lda'+' '+'#1'], \
-                                         [lb[3], 'lda', '#1']]
+                                nL[3] = [[ln[3], dt[3]+'T'], \
+                                         [dt[3]+'T', '', '']]
                                 newSrc.append(nL[3])
+                                nL[4] = [[ln[4], '\t'+'lda'+' '+'#1'], \
+                                         [lb[4], 'lda', '#1']]
+                                newSrc.append(nL[4])
                             i += 4; j += 1
                             found = True
         if not found: newSrc.append(nL[0])
@@ -787,9 +794,9 @@ def pho_optimizeBooleanTest2(source):
             ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
             if op[1] in ['beq'] \
                and lb[1] == '':
-                nL[0] = [[ln[0], '\t'+'bne'+' '+dt[1]], \
+                nL[1] = [[ln[1], '\t'+'bne'+' '+dt[1]], \
                                      ['', 'bne', dt[1]]]
-                newSrc.append(nL[0])
+                newSrc.append(nL[1])
                 i += 1; j += 1
                 found = True
         if not found: newSrc.append(nL[0])
@@ -799,6 +806,288 @@ def pho_optimizeBooleanTest2(source):
         newSrc.append(nL)
 
     print('optimizeBooleanTest2  =>', j, len(source), len(newSrc))
+    return newSrc
+
+def pho_optimize1DArrayLoad(source):
+    newSrc = []
+    length = len(source) - 8
+    i = j = 0
+    
+    nL = [0 for x in range(9)]
+    ln = [0 for x in range(9)]
+    lb = [0 for x in range(9)]
+    op = [0 for x in range(9)]
+    dt = [0 for x in range(9)]
+
+    while i < length:
+        found = False
+        nL[0] = source[i]
+        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+        if op[0] in ['psh.w'] \
+           and dt[0][0] == '#' \
+           and lb[0] == '':
+            nL[1] = source[i+1]
+            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+            if op[1] in ['lda.w', 'lda'] \
+               and lb[1] == '':
+                nL[2] = source[i+2]
+                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
+                if op[2] in ['dec.w'] \
+                   and dt[2] == 'a' \
+                   and lb[2] == '':
+                    nL[3] = source[i+3]
+                    ln[3], lb[3], op[3], dt[3] = processLine(nL[3])
+                    if op[3] in ['asl.w'] \
+                       and dt[3] == 'a' \
+                       and lb[3] == '':
+                        nL[4] = source[i+4]
+                        ln[4], lb[4], op[4], dt[4] = processLine(nL[4])
+                        if op[4] in ['clc'] \
+                           and lb[4] == '':
+                            nL[5] = source[i+5]
+                            ln[5], lb[5], op[5], dt[5] = processLine(nL[5])
+                            if op[5] in ['adc.w'] \
+                               and dt[5] == '1,S' \
+                               and lb[5] == '':
+                                nL[6] = source[i+6]
+                                ln[6], lb[6], op[6], dt[6] = processLine(nL[6])
+                                if op[6] in ['sta.w'] \
+                                   and dt[6] == '1,S' \
+                                   and lb[6] == '':
+                                    nL[7] = source[i+7]
+                                    ln[7], lb[7], op[7], dt[7] = processLine(nL[7])
+                                    if op[7] in ['pli.s'] \
+                                       and lb[7] == '':
+                                        nL[8] = source[i+8]
+                                        ln[8], lb[8], op[8], dt[8] = processLine(nL[8])
+                                        if op[8] in ['lda.w'] \
+                                           and dt[8] == '0,I++' \
+                                           and lb[8] == '':
+                                            newSrc.append(source[i+1])
+                                            newSrc.append(source[i+2])
+                                            newSrc.append(source[i+3])
+                                            
+                                            nL[4] = [[ln[4], '\t'+'tay.w'+' '+dt[4]], \
+                                                     ['', 'tay.w', dt[4]]]
+                                            newSrc.append(nL[4])
+                                            nL[8] = [[ln[8], '\t'+op[8]+' '+dt[0][1:]+',Y'], \
+                                                     [lb[8], op[8], dt[0][1:]+',Y']]
+                                            newSrc.append(nL[8])
+                                
+                                            i += 8; j += 1
+                                            found = True
+        if not found: newSrc.append(nL[0])
+        i += 1
+
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('optimize1DArrayLoad   =>', j, len(source), len(newSrc))
+    return newSrc
+
+def pho_optimize1DArrayWrite(source):
+    newSrc = []
+    length = len(source) - 9
+    i = j = 0
+    
+    nL = [0 for x in range(10)]
+    ln = [0 for x in range(10)]
+    lb = [0 for x in range(10)]
+    op = [0 for x in range(10)]
+    dt = [0 for x in range(10)]
+
+    while i < length:
+        found = False
+        nL[0] = source[i]
+        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+        if op[0] in ['psh.w'] \
+           and dt[0][0] == '#' \
+           and lb[0] == '':
+            nL[1] = source[i+1]
+            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+            if op[1] in ['lda.w', 'lda'] \
+               and lb[1] == '':
+                nL[2] = source[i+2]
+                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
+                if op[2] in ['dec.w'] \
+                   and dt[2] == 'a' \
+                   and lb[2] == '':
+                    nL[3] = source[i+3]
+                    ln[3], lb[3], op[3], dt[3] = processLine(nL[3])
+                    if op[3] in ['asl.w'] \
+                       and dt[3] == 'a' \
+                       and lb[3] == '':
+                        nL[4] = source[i+4]
+                        ln[4], lb[4], op[4], dt[4] = processLine(nL[4])
+                        if op[4] in ['clc'] \
+                           and lb[4] == '':
+                            nL[5] = source[i+5]
+                            ln[5], lb[5], op[5], dt[5] = processLine(nL[5])
+                            if op[5] in ['adc.w'] \
+                               and dt[5] == '1,S' \
+                               and lb[5] == '':
+                                nL[6] = source[i+6]
+                                ln[6], lb[6], op[6], dt[6] = processLine(nL[6])
+                                if op[6] in ['sta.w'] \
+                                   and dt[6] == '1,S' \
+                                   and lb[6] == '':
+                                    # ignore line 7 - should load value to write to 1D array
+                                    nL[7] = source[i+7]
+
+                                    nL[8] = source[i+8]
+                                    ln[8], lb[8], op[8], dt[8] = processLine(nL[8])
+                                    if op[8] in ['pli.s'] \
+                                       and lb[8] == '':
+                                        nL[9] = source[i+9]
+                                        ln[9], lb[9], op[9], dt[9] = processLine(nL[9])
+                                        if op[9] in ['sta.w'] \
+                                           and dt[9] == '0,I++' \
+                                           and lb[9] == '':
+                                            newSrc.append(source[i+1])
+                                            newSrc.append(source[i+2])
+                                            newSrc.append(source[i+3])
+                                            
+                                            nL[4] = [[ln[4], '\t'+'tay.w'+' '+dt[4]], \
+                                                     ['', 'tay.w', dt[4]]]
+                                            newSrc.append(nL[4])
+                                            newSrc.append(source[i+7])
+                                            nL[9] = [[ln[9], '\t'+op[9]+' '+dt[0][1:]+',Y'], \
+                                                     [lb[9], op[9], dt[0][1:]+',Y']]
+                                            newSrc.append(nL[9])
+                                
+                                            i += 9; j += 1
+                                            found = True
+        if not found: newSrc.append(nL[0])
+        i += 1
+
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('optimize1DArrayWrite  =>', j, len(source), len(newSrc))
+    return newSrc
+
+def pho_ReduceConstantQuotient(source):
+    newSrc = []
+    length  = len(source) - 3
+    i = j = 0
+    
+    nL = [0 for x in range(4)]
+    ln = [0 for x in range(4)]
+    lb = [0 for x in range(4)]
+    op = [0 for x in range(4)]
+    dt = [0 for x in range(4)]
+
+    while i < length:
+        found = False
+        for k in range(4):
+            nL[k] = source[i+k]
+            ln[k], lb[k], op[k], dt[k] = processLine(nL[k])
+        if op[0] in ['psh.w'] \
+           and dt[0][0] == '#' \
+           and op[1] in ['psh.w'] \
+           and dt[1][0] == '#' \
+           and op[2] in ['jsr'] \
+           and dt[2] in ['_idiv']:
+            dividend = int(dt[0][1:])
+            divisor  = int(dt[1][1:])
+            quotient = int(dividend / divisor)
+            dt[3] = '#'+str("%d" % (quotient))
+            op[3] = 'lda.w'
+            nL[3] = [[ln[3], lb[3]+'\t'+op[3]+' '+dt[3]], \
+                     [lb[3], op[3], dt[3]]]
+            newSrc.append(nL[3])
+            i += 3; j += 1
+            found = True
+
+        if not found: newSrc.append(nL[0])
+        i += 1
+        
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('ReduceConstantQuotient=>', j, len(source), len(newSrc))
+    return newSrc
+
+def pho_ReduceVarImmProduct(source):
+    newSrc = []
+    length  = len(source) - 4
+    i = j = 0
+    
+    nL = [0 for x in range(5)]
+    ln = [0 for x in range(5)]
+    lb = [0 for x in range(5)]
+    op = [0 for x in range(5)]
+    dt = [0 for x in range(5)]
+
+    while i < length:
+        found = False
+        for k in range(5):
+            nL[k] = source[i+k]
+            ln[k], lb[k], op[k], dt[k] = processLine(nL[k])
+        if op[1] in ['pha.w'] \
+           and op[2] in ['psh.w'] \
+           and dt[2][0] == '#' \
+           and op[3] in ['jsr'] \
+           and dt[3] in ['_imul']:
+            newSrc.append(nL[0])
+            multiplier  = int(dt[2][1:])
+            if multiplier == 2:
+                dt[4] = 'a'
+                op[4] = 'asl.w'
+                nL[4] = [[ln[4], lb[4]+'\t'+op[4]+' '+dt[4]], \
+                         [lb[4], op[4], dt[4]]]
+                newSrc.append(nL[4])
+                i += 4; j += 1
+                found = True
+
+        if not found: newSrc.append(nL[0])
+        i += 1
+        
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('reduceVarImmProduct   =>', j, len(source), len(newSrc))
+    return newSrc
+
+def pho_ReduceImmVarProduct(source):
+    newSrc = []
+    length  = len(source) - 4
+    i = j = 0
+    
+    nL = [0 for x in range(5)]
+    ln = [0 for x in range(5)]
+    lb = [0 for x in range(5)]
+    op = [0 for x in range(5)]
+    dt = [0 for x in range(5)]
+
+    while i < length:
+        found = False
+        for k in range(5):
+            nL[k] = source[i+k]
+            ln[k], lb[k], op[k], dt[k] = processLine(nL[k])
+        if op[0] in ['psh.w'] \
+           and dt[0][0] == '#' \
+           and op[2] in ['pha.w'] \
+           and op[3] in ['jsr'] \
+           and dt[3] in ['_imul']:
+            newSrc.append(nL[1])
+            multiplier  = int(dt[0][1:])
+            if multiplier == 2:
+                dt[4] = 'a'
+                op[4] = 'asl.w'
+                nL[4] = [[ln[4], lb[4]+'\t'+op[4]+' '+dt[4]], \
+                         [lb[4], op[4], dt[4]]]
+                newSrc.append(nL[4])
+                i += 4; j += 1
+                found = True
+
+        if not found: newSrc.append(nL[0])
+        i += 1
+        
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('reduceImmVarProduct   =>', j, len(source), len(newSrc))
     return newSrc
 
 def numVal(dt):

@@ -11,7 +11,12 @@ libpath   = input('Enter path to library: ')
 enablePho = input('Enable Peephole Optimization: ')
 if enablePho == '':
     phoEnable = False
-else: phoEnable = True
+else:
+    phoEnable = True
+    enableBalancedBooleanTests = input('Enable Balanced Boolean Tests: ')
+    if enableBalancedBooleanTests == '':
+        balanced = False
+    else: balanced = True  
 
 labels    = {}
 constants = {}
@@ -50,9 +55,14 @@ if phoEnable:
     source = pho_ldaImmSta_to_Stz(source)
     source = pho_StackAdd_to_DirectAdd(source)
     source = pho_StackCmp_to_DirectCmp(source)
-    source = pho_optimizeBooleanTest(source, False)
+    source = pho_optimizeBooleanTest(source, balanced)
     source = pho_optimizeBooleanTest2(source)
     source = pho_ConvertAdc_to_Inc(source)
+    source = pho_optimize1DArrayLoad(source)
+    source = pho_optimize1DArrayWrite(source)
+    source = pho_ReduceConstantQuotient(source)
+    source = pho_ReduceVarImmProduct(source)
+    source = pho_ReduceImmVarProduct(source)
 
 '''
     Output intermediate file #2

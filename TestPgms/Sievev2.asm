@@ -1,9 +1,9 @@
 ;    1: PROGRAM eratosthenes (output);
-	.stk 1024
-	.cod 512
-STATIC_LINK .equ +5
-RETURN_VALUE .equ -3
-HIGH_RETURN_VALUE .equ -1
+STACK	.stk 1024
+CODE    .cod 512
+STATIC_LINK         .equ +5
+RETURN_VALUE        .equ -3
+HIGH_RETURN_VALUE   .equ -1
 _start
 	tsx.w		; Preserve original stack pointer
 	lds.w #_stk_top	; Initialize program stack pointer
