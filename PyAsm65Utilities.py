@@ -738,7 +738,7 @@ def pho_optimizeBooleanTest(source, balanced):
                                 nL[0] = [[ln[0], '\t'+op[3]+' '+dt[3]+'T'], \
                                          ['', op[3], dt[3]+'T']]
                             else:
-                                nL[0] = [[ln[0], '\t'+op[3]+' '+dt[3]+'T'], \
+                                nL[0] = [[ln[0], '\t'+op[3]+' '+dt[3]+'-2'], \
                                          ['', op[3], dt[3]+'-2']]
                             newSrc.append(nL[0])
                             nL[1] = [[ln[1], '\t'+'lda'+' '+'#0'], \

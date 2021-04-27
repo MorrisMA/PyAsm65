@@ -942,8 +942,12 @@ with open(filename+'.lst', 'rt') as lst:
                             lstInp = '(0)\n'
                             break
                     else:
-                        print('(%4d)' % (srcLine), ' '*16,
-                              ';', asmInp[:-1], file=prn)
+                        if asmInp[0] not in [' ', '\t']:
+                            print('(%4d)' % (srcLine), ' '*16,
+                                  ';', asmInp[:-1], file=prn)
+                        elif asmInp[1] == '.':
+                            print('(%4d)' % (srcLine), ' '*16,
+                                  ';', asmInp[:-1], file=prn)
                 else:
                     while True:
                         print(lstInp[:-1], file=prn)
@@ -968,3 +972,4 @@ with open(filename+'.lst', 'rt') as lst:
             while asmInp != '':
                 print('(%4d)' % (srcLine), ' '*16, ';', asmInp[:-1], file=prn)
                 asmInp = asm.readline(); srcLine += 1
+
