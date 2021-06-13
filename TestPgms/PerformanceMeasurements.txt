@@ -1,0 +1,37 @@
+.l Sieve.bin 200
+Wrote +3869 bytes from $0200 to $111C
+.cycles
+Total = 757963, Num Inst = 258300, Pgm Rd = 573377, Data Rd = 109668, Data Wr = 74246, Dummy Cycles = 672
+  CPI = 2.93, Avg Inst Len = 2.22, Time =  5.705, time / cycle = 0.000008, MIPS =   45274.90
+.l Sieve2.bin 200
+Wrote +3702 bytes from $0200 to $1075
+.cycles
+Total = 540185, Num Inst = 193030, Pgm Rd = 429337, Data Rd = 72370, Data Wr = 37806, Dummy Cycles = 672
+  CPI = 2.80, Avg Inst Len = 2.22, Time =  5.886, time / cycle = 0.000011, MIPS =   32797.17
+
+.l Sieve3.bin 200
+Wrote +1862 bytes from $0200 to $0945
+.cycles
+Total = 493474, Num Inst = 177013, Pgm Rd = 384084, Data Rd = 70821, Data Wr = 37897, Dummy Cycles = 672
+  CPI = 2.79, Avg Inst Len = 2.17, Time =  5.751, time / cycle = 0.000012, MIPS =   30779.33
+
+.load Sieve.bin 200
+.cycles
+Total = 370905, Num Inst = 105047, Pgm Rd = 265316, Data Rd = 59425, Data Wr = 46164, Dummy Cycles = 0
+  CPI = 3.53, Avg Inst Len = 2.53, Time =  0.777, time / cycle = 0.000002, MIPS =  135158.80
+
+.l Sieve2.bin 200
+.cycles
+Total = 187977, Num Inst = 48495, Pgm Rd = 143426, Data Rd = 28477, Data Wr = 16074, Dummy Cycles = 0
+  CPI = 3.88, Avg Inst Len = 2.96, Time =  0.374, time / cycle = 0.000002, MIPS =  129590.55
+
+.l Sieve3.bin 200
+.cycles
+Total = 139759, Num Inst = 32509, Pgm Rd = 99366, Data Rd = 26128, Data Wr = 14265, Dummy Cycles = 0
+  CPI = 4.30, Avg Inst Len = 3.06, Time =  0.361, time / cycle = 0.000003, MIPS =   89935.19
+
+.l Sieve4.bin 200
+.cycles
+Total = 139186, Num Inst = 32222, Pgm Rd = 98793, Data Rd = 26128, Data Wr = 14265, Dummy Cycles = 0
+  CPI = 4.32, Avg Inst Len = 3.07, Time =  0.306, time / cycle = 0.000002, MIPS =  105331.56
+  
