@@ -805,7 +805,7 @@ for ln in cod:
             out[addrs] = [opLen + dtLen, \
                           ''.join([opStr, loStr, hiStr]), \
                           srcTxt, srcLine]
-    elif md in ['zprel', 'zpIrel', 'zpSrel',   'zpSIrel', ]:
+    elif md in ['zprel', 'zpIrel', 'zpSrel', 'zpSIrel', ]:
         flds = dt.split(',')
         try:
             zpAddr = eval(str(flds[0]), vlc)
