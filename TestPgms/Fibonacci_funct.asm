@@ -66,16 +66,12 @@ L_010
 	sta.w RETURN_VALUE,X
 	jmp L_013
 L_011
-;   19:             FOR i := 1 TO n DO BEGIN
+;   19:             i := 1;
 	lda #1
 	sta.w i_006,X
+;   20:             REPEAT
 L_014
-	lda.w n_005,X
-	cmp.w i_006,X
-	bge L_015
-	jmp L_016
-L_015
-;   20:                 tmp := fn1 + fn2;
+;   21:                 tmp := fn1 + fn2;
 	lda.w fn1_008,X
 	pha.w
 	lda.w fn2_009,X
@@ -83,65 +79,103 @@ L_015
 	adc.w 1,S
 	adj #2
 	sta.w tmp_007,X
-;   21:                 fn2 := fn1;
+;   22:                 fn2 := fn1;
 	lda.w fn1_008,X
 	sta.w fn2_009,X
-;   22:                 fn1 := tmp
-;   23:             END;
+;   23:                 fn1 := tmp;
 	lda.w tmp_007,X
 	sta.w fn1_008,X
-	inc.w i_006,X
-	jmp L_014
+;   24:                 
+;   25:                 i := i + 1
+	lda.w i_006,X
+	pha.w
+	lda #1
+;   26:             UNTIL (i >= n);
+	clc
+	adc.w 1,S
+	adj #2
+	sta.w i_006,X
+	lda.w i_006,X
+	pha.w
+	lda.w n_005,X
+	xma.w 1,S
+	cmp.w 1,S
+	adj #2
+	php
+	lda #1
+	plp
+	bge L_016
+	lda #0
 L_016
-	dec.w i_006,X
-;   24:         
-;   25:             FIB := fn1
-;   26:         END
+	cmp.w #1
+	beq L_015
+	jmp L_014
+L_015
+;   27:             
+;   28:             FIB := fn1
+;   29:         END
 	lda.w fn1_008,X
 	sta.w RETURN_VALUE,X
-;   27:     END;
+;   30:     END;
 L_013
 	lda.w RETURN_VALUE,X
 	txs.w
 	plx.w
 	rts
 	.end fib_004
-;   28:     
-;   29: BEGIN
+;   31:     
+;   32: BEGIN
 _pc65_main .sub
 	phx.w
 	tsx.w
-;   30:     FOR i := 1 to max DO BEGIN
-	lda #1
-	sta.w i_002
-L_017
+;   33: {
+;   34:     FOR i := 1 to max DO BEGIN
+;   35:         j := FIB(i);
+;   36:     END;
+;   37: }
+;   38:     i := max;
 	lda #23
-	cmp.w i_002
-	bge L_018
-	jmp L_019
-L_018
-;   31:         j := FIB(i);
+	sta.w i_002
+;   39:     j := FIB(i);
 	lda.w i_002
 	pha.w
 	phx.w
 	jsr fib_004
 	adj #4
 	sta.w j_003
-;   32:         {write('Fib[');
-;   33:         write(i:2);
-;   34:         write('] = ');
-;   35:         write(j:5);
-;   36:         writeln}
-;   37:     END
-;   38: END.
-	inc.w i_002
-	jmp L_017
-L_019
-	dec.w i_002
+;   40:     write('Fib[');
+	psh.w #S_017
+	psh.w #0
+	psh.w #4
+	jsr _swrite
+	adj #6
+;   41:     write(i:2);
+	lda.w i_002
+	pha.w
+	lda #2
+	pha.w
+	jsr _iwrite
+	adj #4
+;   42:     write('] = ');
+	psh.w #S_018
+	psh.w #0
+	psh.w #4
+	jsr _swrite
+	adj #6
+;   43:     write(j:5);
+	lda.w j_003
+	pha.w
+	lda #5
+	pha.w
+	jsr _iwrite
+	adj #4
+;   44:     writeln
+;   45: END.
+	jsr _writeln
 	plx.w
 	rts
 	.end _pc65_main
-
+;
 ;
 ;   unsigned division 16 x 16
 ;
@@ -388,8 +422,11 @@ _iwrite_Exit
             rts
 ;
             .endp _iwrite
+;
 	.dat
 
+S_018 .str "] = "
+S_017 .str "Fib["
 _bss_start .byt 0
 i_002 .wrd 0
 j_003 .wrd 0

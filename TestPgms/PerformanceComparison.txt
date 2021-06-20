@@ -1,4 +1,4 @@
-       | Time (s) | CPI  | Avg Inst Len | Total Cycles | Num Inst | sec/cycle (s) |    MIPS    | 
+       | Time (s) | CPI  | Avg Inst Len | Total Cycles | Num Inst | sec/cycle (s) |    MIPS    |
 Sieve  |   0.777  | 3.53 |     2.53     |   370,905    | 105,047  |  0.00000209   | 135,158.80 |
 Sieve2 |   0.374  | 3.88 |     2.96     |   187,977    |  48,495  |  0.00000199   | 129,590.55 |
 Sieve3 |   0.361  | 4.30 |     3.06     |   139,759    |  32,509  |  0.00000258   |  89,935.19 |

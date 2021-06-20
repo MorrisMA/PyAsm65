@@ -24,7 +24,7 @@
   38 	lda #2
   39 	sta.w i_005
   40 L_006
-  41 	lda #24
+  41 	lda #23
   42 	cmp.w i_005
   43 	bge L_007
   44 	jmp L_008

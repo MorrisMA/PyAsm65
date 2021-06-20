@@ -17,7 +17,7 @@ _start
 	jmp _pc65_main
 ;    2: 
 ;    3: CONST
-;    4:     max = 24;
+;    4:     max = 23;
 ;    5: 
 ;    6: VAR
 ;    7:     FN1, FN2 : INTEGER;
@@ -38,7 +38,7 @@ _pc65_main .sub
 	lda #2
 	sta.w i_005
 L_006
-	lda #24
+	lda #23
 	cmp.w i_005
 	bge L_007
 	jmp L_008
@@ -94,7 +94,7 @@ L_008
 	plx.w
 	rts
 	.end _pc65_main
-
+;
 ;
 ;   unsigned division 16 x 16
 ;
@@ -341,7 +341,7 @@ _iwrite_Exit
             rts
 ;
             .endp _iwrite
-
+;
 	.dat
 
 S_010 .str "] = "

@@ -16,23 +16,30 @@ FUNCTION FIB(n : INTEGER) : INTEGER;
         IF n < 1 THEN
             FIB := fn2
         ELSE BEGIN
-            FOR i := 1 TO n DO BEGIN
+            i := 1;
+            REPEAT
                 tmp := fn1 + fn2;
                 fn2 := fn1;
-                fn1 := tmp
-            END;
-        
+                fn1 := tmp;
+                
+                i := i + 1
+            UNTIL (i >= n);
+            
             FIB := fn1
         END
     END;
     
 BEGIN
+{
     FOR i := 1 to max DO BEGIN
         j := FIB(i);
-        {write('Fib[');
-        write(i:2);
-        write('] = ');
-        write(j:5);
-        writeln}
-    END
+    END;
+}
+    i := max;
+    j := FIB(i);
+    write('Fib[');
+    write(i:2);
+    write('] = ');
+    write(j:5);
+    writeln
 END.

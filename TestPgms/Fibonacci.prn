@@ -17,7 +17,7 @@
 (  17) 021C 4C1F02      ; 	jmp _pc65_main
 (  18)                  ; ;    2: 
 (  19)                  ; ;    3: CONST
-(  20)                  ; ;    4:     max = 24;
+(  20)                  ; ;    4:     max = 23;
 (  21)                  ; ;    5: 
 (  22)                  ; ;    6: VAR
 (  23)                  ; ;    7:     FN1, FN2 : INTEGER;
@@ -31,25 +31,21 @@
 (  31) 0223 A901        ; 	lda #1
 (  32) 0225 AB8DAE03    ; 	sta.w fn1_002
 (  33)                  ; ;   12:     FN2 := 0;
-(  34)                  ; 	lda #0
 (  35) 0229 AB9CB003    ; 	stz.w fn2_003
 (  36)                  ; ;   13:     
 (  37)                  ; ;   14:     FOR i := 2 to max DO BEGIN
 (  38) 022D A902        ; 	lda #2
 (  39) 022F AB8DB403    ; 	sta.w i_005
 (  40)                  ; L_006
-(  41) 0233 A918        ; 	lda #24
+(  41) 0233 A917        ; 	lda #23
 (  42) 0235 ABCDB403    ; 	cmp.w i_005
 (  43) 0239 AB5003      ; 	bge L_007
 (  44) 023C 4C6302      ; 	jmp L_008
 (  45)                  ; L_007
 (  46)                  ; ;   15:         tmp := FN1 + FN2;
 (  47) 023F ABADAE03    ; 	lda.w fn1_002
-(  48)                  ; 	pha.w
-(  49)                  ; 	lda.w fn2_003
 (  50) 0243 18          ; 	clc
 (  51) 0244 AB6DB003    ; 	adc.w fn2_003
-(  52)                  ; 	adj #2
 (  53) 0248 AB8DB203    ; 	sta.w tmp_004
 (  54)                  ; ;   16:         FN2 := FN1;
 (  55) 024C ABADAE03    ; 	lda.w fn1_002
@@ -71,7 +67,6 @@
 (  71)                  ; ;   20:     write(i:2);
 (  72) 0278 ABADB403    ; 	lda.w i_005
 (  73) 027C AB48        ; 	pha.w
-(  74)                  ; 	lda #2
 (  75) 027E ABE20200    ; 	psh.w #2
 (  76) 0282 202603      ; 	jsr _iwrite
 (  77) 0285 C204        ; 	adj #4
@@ -84,7 +79,6 @@
 (  84)                  ; ;   22:     write(FN1:5);
 (  85) 0298 ABADAE03    ; 	lda.w fn1_002
 (  86) 029C AB48        ; 	pha.w
-(  87)                  ; 	lda #5
 (  88) 029E ABE20500    ; 	psh.w #5
 (  89) 02A2 202603      ; 	jsr _iwrite
 (  90) 02A5 C204        ; 	adj #4
@@ -94,11 +88,10 @@
 (  94) 02AA ABFA        ; 	plx.w
 (  95) 02AC 60          ; 	rts
 (  96)                  ; 	.end _pc65_main
-(  97)                  ; 
+(  97)                  ; ;
 (  98)                  ; ;
 (  99)                  ; ;   unsigned division 16 x 16
 ( 100)                  ; ;
-( 101)                  ;             .cod
 ( 102)                  ; ;
 ( 103)                  ; _Q          .equ    5
 ( 104)                  ; _D          .equ    3
@@ -147,12 +140,10 @@
 ( 147)                  ; ;
 ( 148) 02DB 60          ;             rts
 ( 149)                  ; ;
-( 150)                  ;             .endp _idiv
 ( 151)                  ; 
 ( 152)                  ; ;
 ( 153)                  ; ; signed multiplication: 16 x 16 => 32
 ( 154)                  ; ;
-( 155)                  ;             .cod
 ( 156)                  ; ;
 ( 157)                  ; _M          .equ    5
 ( 158)                  ; _R          .equ    3
@@ -205,12 +196,10 @@
 ( 205)                  ; ;
 ( 206) 030D 60          ;             rts
 ( 207)                  ; ;
-( 208)                  ;             .endp _imul
 ( 209)                  ; 
 ( 210)                  ; ;
 ( 211)                  ; ; put <newLine> to output
 ( 212)                  ; ;
-( 213)                  ;             .cod
 ( 214)                  ; ;
 ( 215)                  ; _newLine    .equ    0x0A
 ( 216)                  ; _putChar    .equ    0xF001
@@ -221,11 +210,9 @@
 ( 221)                  ; ;
 ( 222) 0313 60          ;             rts
 ( 223)                  ; ;
-( 224)                  ;             .endp _writeln
 ( 225)                  ; ;
 ( 226)                  ; ; put string to output
 ( 227)                  ; ;
-( 228)                  ;             .cod
 ( 229)                  ; ;
 ( 230)                  ; _sPtrOff    .equ    7
 ( 231)                  ; _sLenOff    .equ    3
@@ -244,11 +231,9 @@
 ( 244)                  ; ;
 ( 245) 0325 60          ;             rts
 ( 246)                  ; ;
-( 247)                  ;             .endp _swrite
 ( 248)                  ; ;
 ( 249)                  ; ; put integer to output
 ( 250)                  ; ;
-( 251)                  ;             .cod
 ( 252)                  ; ;
 ( 253)                  ; _iValOff    .equ    7
 ( 254)                  ; _fLenOff    .equ    5
@@ -340,8 +325,7 @@
 ( 340) 03A2 ABFA        ;             plx.w                   ; restore previous base pointer
 ( 341) 03A4 60          ;             rts
 ( 342)                  ; ;
-( 343)                  ;             .endp _iwrite
-( 344)                  ; 
+( 344)                  ; ;
 ( 345)                  ; 	.dat
 ( 346)                  ; 
 ( 347) 03A5 5D203D20    ; S_010 .str "] = "

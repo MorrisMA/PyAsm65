@@ -1,7 +1,7 @@
 PROGRAM Fibonacci (output);
 
 CONST
-    max = 24;
+    max = 23;
 
 VAR
     FN1, FN2 : INTEGER;
