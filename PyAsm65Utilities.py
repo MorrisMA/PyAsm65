@@ -885,6 +885,78 @@ def pho_optimize1DArrayLoad(source):
     print('optimize1DArrayLoad   =>', j, len(source), len(newSrc))
     return newSrc
 
+def pho_optimize1DArrayLoad2(source):
+    newSrc = []
+    length = len(source) - 7
+    i = j = 0
+    
+    nL = [0 for x in range(8)]
+    ln = [0 for x in range(8)]
+    lb = [0 for x in range(8)]
+    op = [0 for x in range(8)]
+    dt = [0 for x in range(8)]
+
+    while i < length:
+        found = False
+        nL[0] = source[i]
+        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+        if op[0] in ['psh.w'] \
+           and dt[0][0] == '#' \
+           and lb[0] == '':
+            nL[1] = source[i+1]
+            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+            if op[1] in ['lda.w', 'lda'] \
+               and lb[1] == '':
+                nL[2] = source[i+2]
+                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
+                if op[2] in ['asl.w'] \
+                   and dt[2] == 'a' \
+                   and lb[2] == '':
+                    nL[3] = source[i+3]
+                    ln[3], lb[3], op[3], dt[3] = processLine(nL[3])
+                    if op[3] in ['clc'] \
+                       and lb[3] == '':
+                        nL[4] = source[i+4]
+                        ln[4], lb[4], op[4], dt[4] = processLine(nL[4])
+                        if op[4] in ['adc.w'] \
+                           and dt[4] == '1,S' \
+                           and lb[4] == '':
+                            nL[5] = source[i+5]
+                            ln[5], lb[5], op[5], dt[5] = processLine(nL[5])
+                            if op[5] in ['sta.w'] \
+                               and dt[5] == '1,S' \
+                               and lb[5] == '':
+                                nL[6] = source[i+6]
+                                ln[6], lb[6], op[6], dt[6] = processLine(nL[6])
+                                if op[6] in ['pli.s'] \
+                                   and lb[6] == '':
+                                    nL[7] = source[i+7]
+                                    ln[7], lb[7], op[7], dt[7] = processLine(nL[7])
+                                    if op[7] in ['lda.w'] \
+                                       and dt[7] == '0,I++' \
+                                       and lb[7] == '':
+                                        newSrc.append(source[i+1])
+                                        newSrc.append(source[i+2])
+                                        
+                                        nL[4] = [[ln[4], '\t'+'tay.w'+' '+''], \
+                                                 ['', 'tay.w', '']]
+                                        newSrc.append(nL[4])
+
+                                        nL[7] = [[ln[7], '\t'+op[7]+' '+dt[0][1:]+',Y'], \
+                                                 [lb[7], op[7], dt[0][1:]+',Y']]
+                                        newSrc.append(nL[7])
+                            
+                                        i += 7; j += 1
+                                        found = True
+        if not found: newSrc.append(nL[0])
+        i += 1
+
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('optimize1DArrayLoad2  =>', j, len(source), len(newSrc))
+    return newSrc
+
 def pho_optimize1DArrayWrite(source):
     newSrc = []
     length = len(source) - 9

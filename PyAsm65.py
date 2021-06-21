@@ -59,6 +59,7 @@ if phoEnable:
     source = pho_optimizeBooleanTest2(source)
     source = pho_ConvertAdc_to_Inc(source)
     source = pho_optimize1DArrayLoad(source)
+    source = pho_optimize1DArrayLoad2(source)
     source = pho_optimize1DArrayWrite(source)
     source = pho_ReduceConstantQuotient(source)
     source = pho_ReduceVarImmProduct(source)
