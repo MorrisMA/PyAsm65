@@ -1,3 +1,7 @@
-                | Time (s) |  CPI |  AIL | # Cycles | # Inst | Tc (us) |     MIPS    |
-Fibonacci       | 0.017424 | 3.53 | 2.53 |   6846   |  1890  |  2.545  | 109,469.829 |
-Fibonacci_funct | 0.018704 | 3.88 | 2.96 |   6900   |  1976  |  2.711  | 105,644.721 |
+                 | Time (s) |  CPI |  AIL | # Cycles | # Inst | Tc (us) |     MIPS    |
+Fibonacci        | 0.017424 | 3.62 | 2.03 |   6846   |  1890  |  2.545  | 109,469.829 | peephole, balanced
+Fibonacci2       | 0.017375 | 3.62 | 2.03 |   6846   |  1890  |  2.538  | 108,776.978 | peephole, not balanced
+Fibonacci3       | 0.017631 | 3.62 | 2.04 |   7090   |  1959  |  2.487  | 111,112.370 | no peephole optimization
+Fibonacci_funct  | 0.019328 | 3.49 | 1.94 |   6900   |  1976  |  2.801  | 102,232.455 | peephole, balanced
+Fibonacci_funct2 | 0.019074 | 3.49 | 1.94 |   6898   |  1974  |  2.765  | 103,491.122 | peephole, not balanced
+Fibonacci_funct3 | 0.021689 | 3.47 | 1.98 |   8112   |  2336  |  2.674  | 107,705.856 | no peephole optimization
