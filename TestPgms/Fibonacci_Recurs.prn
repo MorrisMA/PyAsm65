@@ -6,15 +6,15 @@
 (   6)                  ; HIGH_RETURN_VALUE .equ -1
 (   7)                  ; _start
 (   8) 0200 ABBA        ; 	tsx.w		; Preserve original stack pointer
-(   9) 0202 CBA2A708    ; 	lds.w #_stk_top	; Initialize program stack pointer
-(  10) 0206 9C7204      ; 	stz _bss_start
-(  11) 0209 ABA27204    ; 	ldx.w #_bss_start
-(  12) 020D ABA07304    ; 	ldy.w #_bss_start+1
-(  13) 0211 ABA9A708    ; 	lda.w #_stk_top
+(   9) 0202 CBA27E08    ; 	lds.w #_stk_top	; Initialize program stack pointer
+(  10) 0206 9C4904      ; 	stz _bss_start
+(  11) 0209 ABA24904    ; 	ldx.w #_bss_start
+(  12) 020D ABA04A04    ; 	ldy.w #_bss_start+1
+(  13) 0211 ABA97E08    ; 	lda.w #_stk_top
 (  14) 0215 38          ; 	sec
-(  15) 0216 ABE97204    ; 	sbc.w #_bss_start
+(  15) 0216 ABE94904    ; 	sbc.w #_bss_start
 (  16) 021A 540A        ; 	mov #10
-(  17) 021C 4CB202      ; 	jmp _pc65_main
+(  17) 021C 4C9B02      ; 	jmp _pc65_main
 (  18)                  ; ;    2: 
 (  19)                  ; ;    3: CONST
 (  20)                  ; ;    4:     max = 23;
@@ -33,116 +33,101 @@
 (  33)                  ; ;   12:         IF fn[n] = 0 THEN
 (  35) 0225 ABB507      ; 	lda.w n_006,X
 (  36) 0228 AB0A        ; 	asl.w a
-(  38) 022A ABA8        ; 	tay.w 
-(  41) 022C ABB97704    ; 	lda.w fn_004,Y
-(  45) 0230 ABC90000    ; 	cmp.w #0
-(  47) 0234 F004        ; 	beq L_009-2
-(  48) 0236 A900        ; 	lda #0
-(  49) 0238 8002        ; 	bra L_009
-(  51) 023A A901        ; 	lda #1
+(  37) 022A 18          ; 	clc
+(  38) 022B AB694E04    ; 	adc.w #fn_004
+(  39) 022F 9B0B        ; 	tai 
+(  41) 0231 ABA300      ; 	lda.w 0,I++
+(  45) 0234 ABC90000    ; 	cmp.w #0
+(  47) 0238 F004        ; 	beq L_009T
+(  48) 023A A900        ; 	lda #0
+(  49) 023C 8004        ; 	bra L_009
+(  50) 023E EAEA        ; L_009T .byt 234[2]
+(  51) 0240 A901        ; 	lda #1
 (  52)                  ; L_009
-(  54) 023C D003        ; 	bne L_007
-(  55) 023E 4C9C02      ; 	jmp L_008
+(  54) 0242 D003        ; 	bne L_007
+(  55) 0244 4C8102      ; 	jmp L_008
 (  56)                  ; L_007
 (  57)                  ; ;   13:             fn[n] := FIB(n-1) + fn[n-2];
-(  58) 0241 ABE27704    ; 	psh.w #fn_004
-(  59) 0245 ABB507      ; 	lda.w n_006,X
-(  60) 0248 AB0A        ; 	asl.w a
-(  61) 024A 18          ; 	clc
-(  62) 024B CB7501      ; 	adc.w 1,S
-(  63) 024E CB9501      ; 	sta.w 1,S
-(  64) 0251 ABB507      ; 	lda.w n_006,X
-(  65) 0254 AB48        ; 	pha.w
-(  66) 0256 A901        ; 	lda #1
-(  67) 0258 CB4401      ; 	xma.w 1,S
-(  68) 025B 38          ; 	sec
-(  69) 025C CBF501      ; 	sbc.w 1,S
-(  70) 025F C202        ; 	adj #2
-(  71) 0261 AB48        ; 	pha.w
-(  72) 0263 ABB505      ; 	lda.w STATIC_LINK,X
-(  73) 0266 AB48        ; 	pha.w
-(  74) 0268 201F02      ; 	jsr fib_005
-(  75) 026B C204        ; 	adj #4
-(  76) 026D AB48        ; 	pha.w
-(  77) 026F ABE27704    ; 	psh.w #fn_004
-(  78) 0273 ABB507      ; 	lda.w n_006,X
-(  79) 0276 AB48        ; 	pha.w
-(  80) 0278 A902        ; 	lda #2
-(  81) 027A CB4401      ; 	xma.w 1,S
-(  82) 027D 38          ; 	sec
-(  83) 027E CBF501      ; 	sbc.w 1,S
-(  84) 0281 C202        ; 	adj #2
-(  85) 0283 AB0A        ; 	asl.w a
-(  86) 0285 18          ; 	clc
-(  87) 0286 CB7501      ; 	adc.w 1,S
-(  88) 0289 CB9501      ; 	sta.w 1,S
-(  89) 028C 8B6B        ; 	pli.s
-(  90) 028E ABA300      ; 	lda.w 0,I++
-(  91) 0291 18          ; 	clc
-(  92) 0292 CB7501      ; 	adc.w 1,S
-(  93) 0295 C202        ; 	adj #2
-(  94) 0297 8B6B        ; 	pli.s
-(  95) 0299 AB8300      ; 	sta.w 0,I++
+(  59) 0247 ABB507      ; 	lda.w n_006,X
+(  60) 024A AB0A        ; 	asl.w a
+(  61) 024C 18          ; 	clc
+(  62) 024D AB694E04    ; 	adc.w #fn_004
+(  63) 0251 AB48        ; 	pha.w
+(  64) 0253 ABB507      ; 	lda.w n_006,X
+(  69) 0256 AB3A        ; 	dec.w a
+(  71) 0258 AB48        ; 	pha.w
+(  72) 025A ABB505      ; 	lda.w STATIC_LINK,X
+(  73) 025D AB48        ; 	pha.w
+(  74) 025F 201F02      ; 	jsr fib_005
+(  75) 0262 C204        ; 	adj #4
+(  76) 0264 AB48        ; 	pha.w
+(  78) 0266 ABB507      ; 	lda.w n_006,X
+(  82) 0269 38          ; 	sec
+(  83) 026A ABE90200    ; 	sbc.w #2
+(  85) 026E AB0A        ; 	asl.w a
+(  86) 0270 ABA8        ; 	tay.w 
+(  90) 0272 ABB94E04    ; 	lda.w fn_004,Y
+(  91) 0276 18          ; 	clc
+(  92) 0277 CB7501      ; 	adc.w 1,S
+(  93) 027A C202        ; 	adj #2
+(  94) 027C 8B6B        ; 	pli.s
+(  95) 027E AB8300      ; 	sta.w 0,I++
 (  96)                  ; L_008
 (  97)                  ; ;   14:         FIB := fn[n];
-(  99) 029C ABB507      ; 	lda.w n_006,X
-( 100) 029F AB0A        ; 	asl.w a
-( 102) 02A1 ABA8        ; 	tay.w 
-( 105) 02A3 ABB97704    ; 	lda.w fn_004,Y
-( 106) 02A7 AB95FD      ; 	sta.w RETURN_VALUE,X
+(  99) 0281 ABB507      ; 	lda.w n_006,X
+( 100) 0284 AB0A        ; 	asl.w a
+( 101) 0286 18          ; 	clc
+( 102) 0287 AB694E04    ; 	adc.w #fn_004
+( 103) 028B 9B0B        ; 	tai 
+( 105) 028D ABA300      ; 	lda.w 0,I++
+( 106) 0290 AB95FD      ; 	sta.w RETURN_VALUE,X
 ( 107)                  ; ;   15:     END;
-( 108) 02AA ABB5FD      ; 	lda.w RETURN_VALUE,X
-( 109) 02AD AB9A        ; 	txs.w
-( 110) 02AF ABFA        ; 	plx.w
-( 111) 02B1 60          ; 	rts
+( 108) 0293 ABB5FD      ; 	lda.w RETURN_VALUE,X
+( 109) 0296 AB9A        ; 	txs.w
+( 110) 0298 ABFA        ; 	plx.w
+( 111) 029A 60          ; 	rts
 ( 112)                  ; 	.end fib_005
 ( 113)                  ; ;   16:     
 ( 114)                  ; ;   17: BEGIN
 ( 115)                  ; _pc65_main .sub
-( 116) 02B2 ABDA        ; 	phx.w
-( 117) 02B4 ABBA        ; 	tsx.w
+( 116) 029B ABDA        ; 	phx.w
+( 117) 029D ABBA        ; 	tsx.w
 ( 118)                  ; ;   18:     fn[0] := 1;
-( 119) 02B6 ABE27704    ; 	psh.w #fn_004
-( 120) 02BA A900        ; 	lda #0
-( 121) 02BC AB0A        ; 	asl.w a
-( 122) 02BE 18          ; 	clc
-( 123) 02BF CB7501      ; 	adc.w 1,S
-( 124) 02C2 CB9501      ; 	sta.w 1,S
-( 125) 02C5 A901        ; 	lda #1
-( 126) 02C7 8B6B        ; 	pli.s
-( 127) 02C9 AB8300      ; 	sta.w 0,I++
+( 120) 029F A900        ; 	lda #0
+( 121) 02A1 AB0A        ; 	asl.w a
+( 122) 02A3 18          ; 	clc
+( 123) 02A4 AB694E04    ; 	adc.w #fn_004
+( 124) 02A8 9B0B        ; 	tai 
+( 125) 02AA A901        ; 	lda #1
+( 127) 02AC AB8300      ; 	sta.w 0,I++
 ( 128)                  ; ;   19:     fn[1] := 1;
-( 129) 02CC ABE27704    ; 	psh.w #fn_004
-( 130) 02D0 A901        ; 	lda #1
-( 131) 02D2 AB0A        ; 	asl.w a
-( 132) 02D4 18          ; 	clc
-( 133) 02D5 CB7501      ; 	adc.w 1,S
-( 134) 02D8 CB9501      ; 	sta.w 1,S
-( 135) 02DB A901        ; 	lda #1
-( 136) 02DD 8B6B        ; 	pli.s
-( 137) 02DF AB8300      ; 	sta.w 0,I++
+( 130) 02AF A901        ; 	lda #1
+( 131) 02B1 AB0A        ; 	asl.w a
+( 132) 02B3 18          ; 	clc
+( 133) 02B4 AB694E04    ; 	adc.w #fn_004
+( 134) 02B8 9B0B        ; 	tai 
+( 135) 02BA A901        ; 	lda #1
+( 137) 02BC AB8300      ; 	sta.w 0,I++
 ( 138)                  ; ;   20:     FOR i := 2 to max DO fn[i] := 0;
-( 139) 02E2 A902        ; 	lda #2
-( 140) 02E4 AB8D7304    ; 	sta.w i_002
+( 139) 02BF A902        ; 	lda #2
+( 140) 02C1 AB8D4A04    ; 	sta.w i_002
 ( 141)                  ; L_010
-( 142) 02E8 A917        ; 	lda #23
-( 143) 02EA ABCD7304    ; 	cmp.w i_002
-( 144) 02EE AB5003      ; 	bge L_011
-( 145) 02F1 4C1303      ; 	jmp L_012
+( 142) 02C5 A917        ; 	lda #23
+( 143) 02C7 ABCD4A04    ; 	cmp.w i_002
+( 144) 02CB AB5003      ; 	bge L_011
+( 145) 02CE 4CEA02      ; 	jmp L_012
 ( 146)                  ; L_011
-( 147) 02F4 ABE27704    ; 	psh.w #fn_004
-( 148) 02F8 ABAD7304    ; 	lda.w i_002
-( 149) 02FC AB0A        ; 	asl.w a
-( 150) 02FE 18          ; 	clc
-( 151) 02FF CB7501      ; 	adc.w 1,S
-( 152) 0302 CB9501      ; 	sta.w 1,S
-( 153) 0305 A900        ; 	lda #0
-( 154) 0307 8B6B        ; 	pli.s
-( 155) 0309 AB8300      ; 	sta.w 0,I++
-( 156) 030C ABEE7304    ; 	inc.w i_002
-( 157) 0310 4CE802      ; 	jmp L_010
+( 148) 02D1 ABAD4A04    ; 	lda.w i_002
+( 149) 02D5 AB0A        ; 	asl.w a
+( 150) 02D7 18          ; 	clc
+( 151) 02D8 AB694E04    ; 	adc.w #fn_004
+( 152) 02DC 9B0B        ; 	tai 
+( 153) 02DE A900        ; 	lda #0
+( 155) 02E0 AB8300      ; 	sta.w 0,I++
+( 156) 02E3 ABEE4A04    ; 	inc.w i_002
+( 157) 02E7 4CC502      ; 	jmp L_010
 ( 158)                  ; L_012
-( 159) 0313 ABCE7304    ; 	dec.w i_002
+( 159) 02EA ABCE4A04    ; 	dec.w i_002
 ( 160)                  ; ;   21: 
 ( 161)                  ; ;   22: {     FOR i := 0 to max DO BEGIN
 ( 162)                  ; ;   23:         j := FIB(i);
@@ -154,44 +139,44 @@
 ( 168)                  ; ;   29:     END
 ( 169)                  ; ;   30:  }
 ( 170)                  ; ;   31:     i := max;
-( 171) 0317 A917        ; 	lda #23
-( 172) 0319 AB8D7304    ; 	sta.w i_002
+( 171) 02EE A917        ; 	lda #23
+( 172) 02F0 AB8D4A04    ; 	sta.w i_002
 ( 173)                  ; ;   32:     j := FIB(22);
-( 175) 031D ABE21600    ; 	psh.w #22
-( 176) 0321 ABDA        ; 	phx.w
-( 177) 0323 201F02      ; 	jsr fib_005
-( 178) 0326 C204        ; 	adj #4
-( 179) 0328 AB8D7504    ; 	sta.w j_003
+( 175) 02F4 ABE21600    ; 	psh.w #22
+( 176) 02F8 ABDA        ; 	phx.w
+( 177) 02FA 201F02      ; 	jsr fib_005
+( 178) 02FD C204        ; 	adj #4
+( 179) 02FF AB8D4C04    ; 	sta.w j_003
 ( 180)                  ; ;   33:     write('Fib[');
-( 181) 032C ABE26E04    ; 	psh.w #S_013
-( 182) 0330 ABE20000    ; 	psh.w #0
-( 183) 0334 ABE20400    ; 	psh.w #4
-( 184) 0338 20D903      ; 	jsr _swrite
-( 185) 033B C206        ; 	adj #6
+( 181) 0303 ABE24504    ; 	psh.w #S_013
+( 182) 0307 ABE20000    ; 	psh.w #0
+( 183) 030B ABE20400    ; 	psh.w #4
+( 184) 030F 20B003      ; 	jsr _swrite
+( 185) 0312 C206        ; 	adj #6
 ( 186)                  ; ;   34:     write(i:2);
-( 187) 033D ABAD7304    ; 	lda.w i_002
-( 188) 0341 AB48        ; 	pha.w
-( 190) 0343 ABE20200    ; 	psh.w #2
-( 191) 0347 20EB03      ; 	jsr _iwrite
-( 192) 034A C204        ; 	adj #4
+( 187) 0314 ABAD4A04    ; 	lda.w i_002
+( 188) 0318 AB48        ; 	pha.w
+( 190) 031A ABE20200    ; 	psh.w #2
+( 191) 031E 20C203      ; 	jsr _iwrite
+( 192) 0321 C204        ; 	adj #4
 ( 193)                  ; ;   35:     write('] = ');
-( 194) 034C ABE26A04    ; 	psh.w #S_014
-( 195) 0350 ABE20000    ; 	psh.w #0
-( 196) 0354 ABE20400    ; 	psh.w #4
-( 197) 0358 20D903      ; 	jsr _swrite
-( 198) 035B C206        ; 	adj #6
+( 194) 0323 ABE24104    ; 	psh.w #S_014
+( 195) 0327 ABE20000    ; 	psh.w #0
+( 196) 032B ABE20400    ; 	psh.w #4
+( 197) 032F 20B003      ; 	jsr _swrite
+( 198) 0332 C206        ; 	adj #6
 ( 199)                  ; ;   36:     write(j:5);
-( 200) 035D ABAD7504    ; 	lda.w j_003
-( 201) 0361 AB48        ; 	pha.w
-( 203) 0363 ABE20500    ; 	psh.w #5
-( 204) 0367 20EB03      ; 	jsr _iwrite
-( 205) 036A C204        ; 	adj #4
+( 200) 0334 ABAD4C04    ; 	lda.w j_003
+( 201) 0338 AB48        ; 	pha.w
+( 203) 033A ABE20500    ; 	psh.w #5
+( 204) 033E 20C203      ; 	jsr _iwrite
+( 205) 0341 C204        ; 	adj #4
 ( 206)                  ; ;   37:     writeln
 ( 207)                  ; ;   38:  
 ( 208)                  ; ;   39:  END.
-( 209) 036C 20D303      ; 	jsr _writeln
-( 210) 036F ABFA        ; 	plx.w
-( 211) 0371 60          ; 	rts
+( 209) 0343 20AA03      ; 	jsr _writeln
+( 210) 0346 ABFA        ; 	plx.w
+( 211) 0348 60          ; 	rts
 ( 212)                  ; 	.end _pc65_main
 ( 213)                  ; ;
 ( 214)                  ; ;
@@ -202,48 +187,48 @@
 ( 220)                  ; _D          .equ    3
 ( 221)                  ; ;
 ( 222)                  ; _idiv       .proc
-( 223) 0372 A900        ;             lda #0          ; clear remainder (A)
-( 224) 0374 0B          ;             dup a           ; push
-( 225) 0375 CBB505      ;             lda.w _Q,S      ; load dividend (Q)
-( 226) 0378 A010        ;             ldy #16         ; bit counter
+( 223) 0349 A900        ;             lda #0          ; clear remainder (A)
+( 224) 034B 0B          ;             dup a           ; push
+( 225) 034C CBB505      ;             lda.w _Q,S      ; load dividend (Q)
+( 226) 034F A010        ;             ldy #16         ; bit counter
 ( 227)                  ; ;
 ( 228)                  ; _idiv_Lp    
-( 229) 037A 18          ;             clc
-( 230) 037B AB0A        ;             asl.w a         ; shift AQ left
-( 231) 037D 1B          ;             swp a
-( 232) 037E AB2A        ;             rol.w a
+( 229) 0351 18          ;             clc
+( 230) 0352 AB0A        ;             asl.w a         ; shift AQ left
+( 231) 0354 1B          ;             swp a
+( 232) 0355 AB2A        ;             rol.w a
 ( 233)                  ; ;
-( 234) 0380 B006        ;             bcs _idiv_Plus  ; if A < 0 then A = A + D else A = A - D
+( 234) 0357 B006        ;             bcs _idiv_Plus  ; if A < 0 then A = A + D else A = A - D
 ( 235)                  ; ;
 ( 236)                  ; _idiv_Minus
-( 237) 0382 38          ;             sec
-( 238) 0383 CBF503      ;             sbc.w _D,S      ; subtract divisor (D)
+( 237) 0359 38          ;             sec
+( 238) 035A CBF503      ;             sbc.w _D,S      ; subtract divisor (D)
 ( 239)                  ; ;
-( 240) 0386 8004        ;             bra _idiv_Next
+( 240) 035D 8004        ;             bra _idiv_Next
 ( 241)                  ; ;
 ( 242)                  ; _idiv_Plus
-( 243) 0388 18          ;             clc
-( 244) 0389 CB7503      ;             adc.w _D,S      ; add divisor (D)
+( 243) 035F 18          ;             clc
+( 244) 0360 CB7503      ;             adc.w _D,S      ; add divisor (D)
 ( 245)                  ; ;
 ( 246)                  ; _idiv_Next    
-( 247) 038C 1B          ;             swp a           ; restore order of Acc stack {Q, A, -}
-( 248) 038D 3002        ;             bmi _idiv_Dec   ; if A < 0 then Q[0] = 0 else Q[0] = 1
-( 249) 038F AB1A        ;             inc.w a
+( 247) 0363 1B          ;             swp a           ; restore order of Acc stack {Q, A, -}
+( 248) 0364 3002        ;             bmi _idiv_Dec   ; if A < 0 then Q[0] = 0 else Q[0] = 1
+( 249) 0366 AB1A        ;             inc.w a
 ( 250)                  ; ;
 ( 251)                  ; _idiv_Dec
-( 252) 0391 88          ;             dey             ; loop until loop counter == 0
-( 253) 0392 D0E6        ;             bne _idiv_Lp
+( 252) 0368 88          ;             dey             ; loop until loop counter == 0
+( 253) 0369 D0E6        ;             bne _idiv_Lp
 ( 254)                  ; ;
 ( 255)                  ; _idiv_Exit
-( 256) 0394 1B          ;             swp a           ; Test remainder
-( 257) 0395 AB090000    ;             ora.w #0
-( 258) 0399 1004        ;             bpl _idiv_Finish
-( 259) 039B 18          ;             clc
-( 260) 039C CB7503      ;             adc.w 3,S
+( 256) 036B 1B          ;             swp a           ; Test remainder
+( 257) 036C AB090000    ;             ora.w #0
+( 258) 0370 1004        ;             bpl _idiv_Finish
+( 259) 0372 18          ;             clc
+( 260) 0373 CB7503      ;             adc.w 3,S
 ( 261)                  ; _idiv_Finish
-( 262) 039F 1B          ;             swp a
+( 262) 0376 1B          ;             swp a
 ( 263)                  ; ;
-( 264) 03A0 60          ;             rts
+( 264) 0377 60          ;             rts
 ( 265)                  ; ;
 ( 267)                  ; 
 ( 268)                  ; ;
@@ -254,52 +239,52 @@
 ( 274)                  ; _R          .equ    3
 ( 275)                  ; ;
 ( 276)                  ; _imul       .proc
-( 277) 03A1 A010        ;             ldy #16             ; y = bit count
-( 278) 03A3 A900        ;             lda #0              ; A = { 0,  x,  x} - clear product
-( 279) 03A5 0B          ;             dup a               ; A = { 0,  0,  x}
-( 280) 03A6 0B          ;             dup a               ; A = { 0,  0,  0}
-( 281) 03A7 CBB503      ;             lda.w _R,S          ; A = { R,  0,  0} - load multiplier (R)
-( 282) 03AA 9B2B        ;             rev                 ; A = {`R,  0,  0} - reverse multiplier (`R)
-( 283) 03AC AB090000    ;             ora.w #0            ; set N flag if msb ATOS == 1
-( 284) 03B0 18          ;             clc                 ; initialize Booth recoding bit
-( 285) 03B1 2B          ;             rot a               ; A = {PH, PL, `R}
+( 277) 0378 A010        ;             ldy #16             ; y = bit count
+( 278) 037A A900        ;             lda #0              ; A = { 0,  x,  x} - clear product
+( 279) 037C 0B          ;             dup a               ; A = { 0,  0,  x}
+( 280) 037D 0B          ;             dup a               ; A = { 0,  0,  0}
+( 281) 037E CBB503      ;             lda.w _R,S          ; A = { R,  0,  0} - load multiplier (R)
+( 282) 0381 9B2B        ;             rev                 ; A = {`R,  0,  0} - reverse multiplier (`R)
+( 283) 0383 AB090000    ;             ora.w #0            ; set N flag if msb ATOS == 1
+( 284) 0387 18          ;             clc                 ; initialize Booth recoding bit
+( 285) 0388 2B          ;             rot a               ; A = {PH, PL, `R}
 ( 286)                  ; ;
-( 287) 03B2 8003        ;             bra _imul_TstB
+( 287) 0389 8003        ;             bra _imul_TstB
 ( 288)                  ; ;
 ( 289)                  ; _imul_Lp
-( 290) 03B4 AB0A        ;             asl.w a             ; A = {`R << 1, PH, PL}
-( 291) 03B6 2B          ;             rot a               ; A = {PH, PL, `R}
+( 290) 038B AB0A        ;             asl.w a             ; A = {`R << 1, PH, PL}
+( 291) 038D 2B          ;             rot a               ; A = {PH, PL, `R}
 ( 292)                  ; _imul_TstB
-( 293) 03B7 9008        ;             bcc _imul_SubShft   ; (C, x) ? Add_Shift : Sub_Shift
+( 293) 038E 9008        ;             bcc _imul_SubShft   ; (C, x) ? Add_Shift : Sub_Shift
 ( 294)                  ; ;
 ( 295)                  ; _imul_AddShft
-( 296) 03B9 300C        ;             bmi _imul_ShftP     ; (1, N) ? P >> 1 : (P += M) >> 1
+( 296) 0390 300C        ;             bmi _imul_ShftP     ; (1, N) ? P >> 1 : (P += M) >> 1
 ( 297)                  ; _imul_AddM
-( 298) 03BB 18          ;             clc
-( 299) 03BC CB7505      ;             adc.w _M,S          ; PH += M
-( 300) 03BF 8006        ;             bra _imul_ShftP
+( 298) 0392 18          ;             clc
+( 299) 0393 CB7505      ;             adc.w _M,S          ; PH += M
+( 300) 0396 8006        ;             bra _imul_ShftP
 ( 301)                  ; ;
 ( 302)                  ; _imul_SubShft
-( 303) 03C1 1004        ;             bpl _imul_ShftP     ; (0, N) ? (P -= M) >> 1 : P >> 1
+( 303) 0398 1004        ;             bpl _imul_ShftP     ; (0, N) ? (P -= M) >> 1 : P >> 1
 ( 304)                  ; _imul_SubM
-( 305) 03C3 38          ;             sec
-( 306) 03C4 CBF505      ;             sbc.w _M,S          ; PH -= M
+( 305) 039A 38          ;             sec
+( 306) 039B CBF505      ;             sbc.w _M,S          ; PH -= M
 ( 307)                  ; ;
 ( 308)                  ; _imul_ShftP
-( 309) 03C7 BB4A        ;             asr.w a             ; A = {PH >> 1, PL, `R}
-( 310) 03C9 2B          ;             rot a               ; A = {PL, `R, PH}
-( 311) 03CA AB6A        ;             ror.w a             ; A = {PL >> 2, `R, PH}
-( 312) 03CC 2B          ;             rot a               ; A = {`R, PH, PL}
+( 309) 039E BB4A        ;             asr.w a             ; A = {PH >> 1, PL, `R}
+( 310) 03A0 2B          ;             rot a               ; A = {PL, `R, PH}
+( 311) 03A1 AB6A        ;             ror.w a             ; A = {PL >> 2, `R, PH}
+( 312) 03A3 2B          ;             rot a               ; A = {`R, PH, PL}
 ( 313)                  ; ;
 ( 314)                  ; _imul_Dec
-( 315) 03CD 88          ;             dey
-( 316) 03CE D0E4        ;             bne _imul_Lp
+( 315) 03A4 88          ;             dey
+( 316) 03A5 D0E4        ;             bne _imul_Lp
 ( 317)                  ; ;
 ( 318)                  ; _imul_Exit
-( 319) 03D0 2B          ;             rot a               ; A = {PH, PL, `R}
-( 320) 03D1 1B          ;             swp a               ; A = {PL, PH, `R}
+( 319) 03A7 2B          ;             rot a               ; A = {PH, PL, `R}
+( 320) 03A8 1B          ;             swp a               ; A = {PL, PH, `R}
 ( 321)                  ; ;
-( 322) 03D2 60          ;             rts
+( 322) 03A9 60          ;             rts
 ( 323)                  ; ;
 ( 325)                  ; 
 ( 326)                  ; ;
@@ -310,10 +295,10 @@
 ( 332)                  ; _putChar    .equ    0xF001
 ( 333)                  ; ;
 ( 334)                  ; _writeln    .proc
-( 335) 03D3 A90A        ;             lda #_newLine
-( 336) 03D5 8D01F0      ;             sta _putChar
+( 335) 03AA A90A        ;             lda #_newLine
+( 336) 03AC 8D01F0      ;             sta _putChar
 ( 337)                  ; ;
-( 338) 03D8 60          ;             rts
+( 338) 03AF 60          ;             rts
 ( 339)                  ; ;
 ( 341)                  ; ;
 ( 342)                  ; ; put string to output
@@ -323,18 +308,18 @@
 ( 347)                  ; _sLenOff    .equ    3
 ( 348)                  ; ;
 ( 349)                  ; _swrite     .proc
-( 350) 03D9 CBB403      ;             ldy.w _sLenOff,S        ; load string length
-( 351) 03DC CBB507      ;             lda.w _sPtrOff,S        ; load string pointer
-( 352) 03DF 9B0B        ;             tai                     ; transfer sptr to IP
+( 350) 03B0 CBB403      ;             ldy.w _sLenOff,S        ; load string length
+( 351) 03B3 CBB507      ;             lda.w _sPtrOff,S        ; load string pointer
+( 352) 03B6 9B0B        ;             tai                     ; transfer sptr to IP
 ( 353)                  ; ;
 ( 354)                  ; _swrite_Lp
-( 355) 03E1 A300        ;             lda 0,I++               ; load char from strig
-( 356) 03E3 8D01F0      ;             sta _putChar            ; write char to output
+( 355) 03B8 A300        ;             lda 0,I++               ; load char from strig
+( 356) 03BA 8D01F0      ;             sta _putChar            ; write char to output
 ( 357)                  ; ;
-( 358) 03E6 AB88        ;             dey.w                   ; loop while string length <> 0
-( 359) 03E8 D0F7        ;             bne _swrite_Lp
+( 358) 03BD AB88        ;             dey.w                   ; loop while string length <> 0
+( 359) 03BF D0F7        ;             bne _swrite_Lp
 ( 360)                  ; ;
-( 361) 03EA 60          ;             rts
+( 361) 03C1 60          ;             rts
 ( 362)                  ; ;
 ( 364)                  ; ;
 ( 365)                  ; ; put integer to output
@@ -345,136 +330,136 @@
 ( 371)                  ; _iCntOff    .equ    -1
 ( 372)                  ; ;
 ( 373)                  ; _iwrite     .proc
-( 374) 03EB ABDA        ;             phx.w                   ; save current base pointer
-( 375) 03ED ABBA        ;             tsx.w                   ; assign new base pointer
+( 374) 03C2 ABDA        ;             phx.w                   ; save current base pointer
+( 375) 03C4 ABBA        ;             tsx.w                   ; assign new base pointer
 ( 376)                  ; ;
-( 377) 03EF B505        ;             lda _fLenOff,X          ; load field width specifier
-( 378) 03F1 C905        ;             cmp #5                  ; compare against max integer digit count
-( 379) 03F3 AB3002      ;             ble _iwrite_SetCnt
-( 380) 03F6 A905        ;             lda #5
+( 377) 03C6 B505        ;             lda _fLenOff,X          ; load field width specifier
+( 378) 03C8 C905        ;             cmp #5                  ; compare against max integer digit count
+( 379) 03CA AB3002      ;             ble _iwrite_SetCnt
+( 380) 03CD A905        ;             lda #5
 ( 381)                  ; ;
 ( 382)                  ; _iwrite_SetCnt
-( 383) 03F8 AB48        ;             pha.w                   ; set iteration count to fld width
-( 384) 03FA ABB507      ;             lda.w _iValOff,X        ; load a with integer value
+( 383) 03CF AB48        ;             pha.w                   ; set iteration count to fld width
+( 384) 03D1 ABB507      ;             lda.w _iValOff,X        ; load a with integer value
 ( 385)                  ; ;
 ( 386)                  ; _iwrite_Lp
-( 387) 03FD AB48        ;             pha.w                   ; push dividend argument to _idiv
-( 388) 03FF ABE20A00    ;             psh.w #10               ; push divisor argument to _idiv
-( 389) 0403 9B5C6BFF    ;             csr _idiv               ; determine the remainder,
-( 390) 0407 C204        ;             adj #4                  ; remove arguments passed to _idiv from stk
-( 391) 0409 1B          ;             swp a                   ; put the remainder into ATOS
+( 387) 03D4 AB48        ;             pha.w                   ; push dividend argument to _idiv
+( 388) 03D6 ABE20A00    ;             psh.w #10               ; push divisor argument to _idiv
+( 389) 03DA 9B5C6BFF    ;             csr _idiv               ; determine the remainder,
+( 390) 03DE C204        ;             adj #4                  ; remove arguments passed to _idiv from stk
+( 391) 03E0 1B          ;             swp a                   ; put the remainder into ATOS
 ( 392)                  ; ;
-( 393) 040A 18          ;             clc                     ; convert remainder into ASCII character
-( 394) 040B 6930        ;             adc #48
-( 395) 040D 48          ;             pha                     ; push LS digit of integer onto stack
+( 393) 03E1 18          ;             clc                     ; convert remainder into ASCII character
+( 394) 03E2 6930        ;             adc #48
+( 395) 03E4 48          ;             pha                     ; push LS digit of integer onto stack
 ( 396)                  ; ;
-( 397) 040E 2B          ;             rot a                   ; rotate quotient into ATOS position
+( 397) 03E5 2B          ;             rot a                   ; rotate quotient into ATOS position
 ( 398)                  ; ;
-( 399) 040F ABD6FF      ;             dec.w _iCntOff,X        ; decrement digit iteration count
-( 400) 0412 D0E9        ;             bne _iwrite_Lp
+( 399) 03E6 ABD6FF      ;             dec.w _iCntOff,X        ; decrement digit iteration count
+( 400) 03E9 D0E9        ;             bne _iwrite_Lp
 ( 401)                  ; ;-------------------------------------------------------------------------------
-( 402) 0414 0B          ;             dup a                   ; save integer part of the conversion
+( 402) 03EB 0B          ;             dup a                   ; save integer part of the conversion
 ( 403)                  ; ;-------------------------------------------------------------------------------
 ( 404)                  ; _iwrite_Fill
-( 405) 0415 B505        ;             lda _fLenOff,X          ; load field width specifier
-( 406) 0417 C905        ;             cmp #5                  ; compare against max integer digit count
-( 407) 0419 AB300A      ;             ble _iwrite_GenPtr
-( 408) 041C 38          ;             sec                     ; subtract max integer length from fld len
-( 409) 041D E905        ;             sbc #5
-( 410) 041F A8          ;             tay                     ; set difference as loop counter
-( 411) 0420 A930        ;             lda #48                 ; fill remaining field with '0'
+( 405) 03EC B505        ;             lda _fLenOff,X          ; load field width specifier
+( 406) 03EE C905        ;             cmp #5                  ; compare against max integer digit count
+( 407) 03F0 AB300A      ;             ble _iwrite_GenPtr
+( 408) 03F3 38          ;             sec                     ; subtract max integer length from fld len
+( 409) 03F4 E905        ;             sbc #5
+( 410) 03F6 A8          ;             tay                     ; set difference as loop counter
+( 411) 03F7 A930        ;             lda #48                 ; fill remaining field with '0'
 ( 412)                  ; ;
 ( 413)                  ; _iwrite_Fill_Lp                     ; increase string on stack with fill data
-( 414) 0422 48          ;             pha
-( 415) 0423 88          ;             dey
-( 416) 0424 D0FC        ;             bne _iwrite_Fill_Lp
+( 414) 03F9 48          ;             pha
+( 415) 03FA 88          ;             dey
+( 416) 03FB D0FC        ;             bne _iwrite_Fill_Lp
 ( 417)                  ; ;-------------------------------------------------------------------------------
 ( 418)                  ; _iwrite_GenPtr
-( 419) 0426 EBABBA      ;             tsa.w                   ; transfer current stk pointer to A
-( 420) 0429 AB1A        ;             inc.w a                 ; remove stack pointer write bias
-( 421) 042B AB48        ;             pha.w                   ; push string pointer to stack
+( 419) 03FD EBABBA      ;             tsa.w                   ; transfer current stk pointer to A
+( 420) 0400 AB1A        ;             inc.w a                 ; remove stack pointer write bias
+( 421) 0402 AB48        ;             pha.w                   ; push string pointer to stack
 ( 422)                  ; ;-------------------------------------------------------------------------------
-( 423) 042D 2B          ;             rot a                   ; restore integer part of the conversion
+( 423) 0404 2B          ;             rot a                   ; restore integer part of the conversion
 ( 424)                  ; ;-------------------------------------------------------------------------------
-( 425) 042E ABC90000    ;             cmp.w #0                ; test for 0. If not 0, int > 10^fld
-( 426) 0432 F00F        ;             beq _iwrite_Sup0
-( 427) 0434 A000        ;             ldy #0
+( 425) 0405 ABC90000    ;             cmp.w #0                ; test for 0. If not 0, int > 10^fld
+( 426) 0409 F00F        ;             beq _iwrite_Sup0
+( 427) 040B A000        ;             ldy #0
 ( 428)                  ; _iwrite_ErrLp
-( 429) 0436 A92A        ;             lda #0x2A               ; fill integer field with '*'
-( 430) 0438 8B9101      ;             sta (1,S),Y
-( 431) 043B C8          ;             iny
-( 432) 043C FBD505      ;             cmp.y _fLenOff,X
-( 433) 043F D0F5        ;             bne _iwrite_ErrLp
-( 434) 0441 8014        ;             bra _iwrite_Exit
+( 429) 040D A92A        ;             lda #0x2A               ; fill integer field with '*'
+( 430) 040F 8B9101      ;             sta (1,S),Y
+( 431) 0412 C8          ;             iny
+( 432) 0413 FBD505      ;             cmp.y _fLenOff,X
+( 433) 0416 D0F5        ;             bne _iwrite_ErrLp
+( 434) 0418 8014        ;             bra _iwrite_Exit
 ( 435)                  ; ;-------------------------------------------------------------------------------
 ( 436)                  ; _iwrite_Sup0
-( 437) 0443 A000        ;             ldy #0                  ; initialize string index
+( 437) 041A A000        ;             ldy #0                  ; initialize string index
 ( 438)                  ; _iwrite_Sup0_Lp
-( 439) 0445 8BB101      ;             lda (1,S),Y
-( 440) 0448 C930        ;             cmp #48                 ; if leading position == 0, replace with ' '
-( 441) 044A D00B        ;             bne _iwrite_Exit        ; exit loop on first non-0 digit
-( 442) 044C A920        ;             lda #32                 ; replace leading 0 with ' '
-( 443) 044E 8B9101      ;             sta (1,S),Y
-( 444) 0451 C8          ;             iny                     ; increment string index and compare to fLen
-( 445) 0452 FBD505      ;             cmp.y _fLenOff,X
-( 446) 0455 D0EE        ;             bne _iwrite_Sup0_Lp     ; loop until Y == fLen
+( 439) 041C 8BB101      ;             lda (1,S),Y
+( 440) 041F C930        ;             cmp #48                 ; if leading position == 0, replace with ' '
+( 441) 0421 D00B        ;             bne _iwrite_Exit        ; exit loop on first non-0 digit
+( 442) 0423 A920        ;             lda #32                 ; replace leading 0 with ' '
+( 443) 0425 8B9101      ;             sta (1,S),Y
+( 444) 0428 C8          ;             iny                     ; increment string index and compare to fLen
+( 445) 0429 FBD505      ;             cmp.y _fLenOff,X
+( 446) 042C D0EE        ;             bne _iwrite_Sup0_Lp     ; loop until Y == fLen
 ( 447)                  ; ;-------------------------------------------------------------------------------
 ( 448)                  ; _iwrite_Exit
-( 449) 0457 ABE20000    ;             psh.w #0                ; NULL argument
-( 450) 045B B505        ;             lda _fLenOff,X          ; push field width specifier
-( 451) 045D AB48        ;             pha.w
-( 452) 045F 9B5C76FF    ;             csr _swrite             ; write integer value string using _swrite()
-( 453) 0463 C206        ;             adj #6                  ; remove parameters to _swrite() from stack
+( 449) 042E ABE20000    ;             psh.w #0                ; NULL argument
+( 450) 0432 B505        ;             lda _fLenOff,X          ; push field width specifier
+( 451) 0434 AB48        ;             pha.w
+( 452) 0436 9B5C76FF    ;             csr _swrite             ; write integer value string using _swrite()
+( 453) 043A C206        ;             adj #6                  ; remove parameters to _swrite() from stack
 ( 454)                  ; ;
-( 455) 0465 AB9A        ;             txs.w                   ; deallocate stack variables
-( 456) 0467 ABFA        ;             plx.w                   ; restore previous base pointer
-( 457) 0469 60          ;             rts
+( 455) 043C AB9A        ;             txs.w                   ; deallocate stack variables
+( 456) 043E ABFA        ;             plx.w                   ; restore previous base pointer
+( 457) 0440 60          ;             rts
 ( 458)                  ; ;
 ( 460)                  ; ;
 ( 461)                  ; 	.dat
 ( 462)                  ; 
-( 463) 046A 5D203D20    ; S_014 .str "] = "
-( 464) 046E 4669625B    ; S_013 .str "Fib["
-( 465) 0472 00          ; _bss_start .byt 0
-( 466) 0473 0000        ; i_002 .wrd 0
-( 467) 0475 0000        ; j_003 .wrd 0
-( 468) 0477 00000000    ; fn_004 .byt 0[48]
-       047B 0000000000000000000000000000000000000000000000000000000000000000
-       049B 000000000000000000000000
-( 469) 04A7 00          ; _bss_end .byt 0
-( 470) 04A8 00000000    ; _stk .byt 0[1023]
-       04AC 0000000000000000000000000000000000000000000000000000000000000000
-       04CC 0000000000000000000000000000000000000000000000000000000000000000
-       04EC 0000000000000000000000000000000000000000000000000000000000000000
-       050C 0000000000000000000000000000000000000000000000000000000000000000
-       052C 0000000000000000000000000000000000000000000000000000000000000000
-       054C 0000000000000000000000000000000000000000000000000000000000000000
-       056C 0000000000000000000000000000000000000000000000000000000000000000
-       058C 0000000000000000000000000000000000000000000000000000000000000000
-       05AC 0000000000000000000000000000000000000000000000000000000000000000
-       05CC 0000000000000000000000000000000000000000000000000000000000000000
-       05EC 0000000000000000000000000000000000000000000000000000000000000000
-       060C 0000000000000000000000000000000000000000000000000000000000000000
-       062C 0000000000000000000000000000000000000000000000000000000000000000
-       064C 0000000000000000000000000000000000000000000000000000000000000000
-       066C 0000000000000000000000000000000000000000000000000000000000000000
-       068C 0000000000000000000000000000000000000000000000000000000000000000
-       06AC 0000000000000000000000000000000000000000000000000000000000000000
-       06CC 0000000000000000000000000000000000000000000000000000000000000000
-       06EC 0000000000000000000000000000000000000000000000000000000000000000
-       070C 0000000000000000000000000000000000000000000000000000000000000000
-       072C 0000000000000000000000000000000000000000000000000000000000000000
-       074C 0000000000000000000000000000000000000000000000000000000000000000
-       076C 0000000000000000000000000000000000000000000000000000000000000000
-       078C 0000000000000000000000000000000000000000000000000000000000000000
-       07AC 0000000000000000000000000000000000000000000000000000000000000000
-       07CC 0000000000000000000000000000000000000000000000000000000000000000
-       07EC 0000000000000000000000000000000000000000000000000000000000000000
-       080C 0000000000000000000000000000000000000000000000000000000000000000
-       082C 0000000000000000000000000000000000000000000000000000000000000000
-       084C 0000000000000000000000000000000000000000000000000000000000000000
-       086C 0000000000000000000000000000000000000000000000000000000000000000
-       088C 000000000000000000000000000000000000000000000000000000
-( 471) 08A7 FF          ; _stk_top .byt -1
+( 463) 0441 5D203D20    ; S_014 .str "] = "
+( 464) 0445 4669625B    ; S_013 .str "Fib["
+( 465) 0449 00          ; _bss_start .byt 0
+( 466) 044A 0000        ; i_002 .wrd 0
+( 467) 044C 0000        ; j_003 .wrd 0
+( 468) 044E 00000000    ; fn_004 .byt 0[48]
+       0452 0000000000000000000000000000000000000000000000000000000000000000
+       0472 000000000000000000000000
+( 469) 047E 00          ; _bss_end .byt 0
+( 470) 047F 00000000    ; _stk .byt 0[1023]
+       0483 0000000000000000000000000000000000000000000000000000000000000000
+       04A3 0000000000000000000000000000000000000000000000000000000000000000
+       04C3 0000000000000000000000000000000000000000000000000000000000000000
+       04E3 0000000000000000000000000000000000000000000000000000000000000000
+       0503 0000000000000000000000000000000000000000000000000000000000000000
+       0523 0000000000000000000000000000000000000000000000000000000000000000
+       0543 0000000000000000000000000000000000000000000000000000000000000000
+       0563 0000000000000000000000000000000000000000000000000000000000000000
+       0583 0000000000000000000000000000000000000000000000000000000000000000
+       05A3 0000000000000000000000000000000000000000000000000000000000000000
+       05C3 0000000000000000000000000000000000000000000000000000000000000000
+       05E3 0000000000000000000000000000000000000000000000000000000000000000
+       0603 0000000000000000000000000000000000000000000000000000000000000000
+       0623 0000000000000000000000000000000000000000000000000000000000000000
+       0643 0000000000000000000000000000000000000000000000000000000000000000
+       0663 0000000000000000000000000000000000000000000000000000000000000000
+       0683 0000000000000000000000000000000000000000000000000000000000000000
+       06A3 0000000000000000000000000000000000000000000000000000000000000000
+       06C3 0000000000000000000000000000000000000000000000000000000000000000
+       06E3 0000000000000000000000000000000000000000000000000000000000000000
+       0703 0000000000000000000000000000000000000000000000000000000000000000
+       0723 0000000000000000000000000000000000000000000000000000000000000000
+       0743 0000000000000000000000000000000000000000000000000000000000000000
+       0763 0000000000000000000000000000000000000000000000000000000000000000
+       0783 0000000000000000000000000000000000000000000000000000000000000000
+       07A3 0000000000000000000000000000000000000000000000000000000000000000
+       07C3 0000000000000000000000000000000000000000000000000000000000000000
+       07E3 0000000000000000000000000000000000000000000000000000000000000000
+       0803 0000000000000000000000000000000000000000000000000000000000000000
+       0823 0000000000000000000000000000000000000000000000000000000000000000
+       0843 0000000000000000000000000000000000000000000000000000000000000000
+       0863 000000000000000000000000000000000000000000000000000000
+( 471) 087E FF          ; _stk_top .byt -1
 ( 472)                  ; 
 ( 473)                  ; 	.end

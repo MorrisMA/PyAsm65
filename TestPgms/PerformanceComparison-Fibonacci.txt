@@ -5,4 +5,6 @@ Fibonacci3       | 0.017631 | 3.62 | 2.04 |   7090   |  1959  |  2.487  | 111,11
 Fibonacci_funct  | 0.019328 | 3.49 | 1.94 |   6900   |  1976  |  2.801  | 102,232.455 | peephole, balanced
 Fibonacci_funct2 | 0.019074 | 3.49 | 1.94 |   6898   |  1974  |  2.765  | 103,491.122 | peephole, not balanced
 Fibonacci_funct3 | 0.021689 | 3.47 | 1.98 |   8112   |  2336  |  2.674  | 107,705.856 | no peephole optimization
-Fibonacci_recurs | 0.029163 | 3.63 | 2.15 |  12177   |  3350  |  2.395  | 114,870.402 | peephole, not balanced
+Fibonacci_recurs | 0.024695 | 3.37 | 2.08 |   9986   |  2962  |  2.473  | 119,944.767 | peephole, balanced
+Fibonacci_recurs2| 0.024487 | 3.40 | 2.08 |   9856   |  2898  |  2.485  | 118,346.095 | peephole, not balanced
+Fibonacci_recurs3| 0.029769 | 3.62 | 2.14 |  12705   |  3507  |  2.343  | 117,805.138 | no peephole optimization

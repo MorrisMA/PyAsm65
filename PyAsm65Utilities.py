@@ -538,63 +538,75 @@ def pho_StackAdd_to_DirectAdd(source):
     print('StackAdd_to_DirectAdd =>', j, len(source), len(newSrc))
     return newSrc
 
-# def pho_StackSub_to_DirectSub(source):
-    # seqLen = 7
-    # newSrc = []
-    # length  = len(source) - seqLen + 1
-    # i = j = 0
+def pho_StackSub_to_DirectSub(source):
+    newSrc = []
+    length  = len(source) - 6
+    i = j = 0
     
-    # nL = [0 for x in range(seqLen)]
-    # ln = [0 for x in range(seqLen)]
-    # lb = [0 for x in range(seqLen)]
-    # op = [0 for x in range(seqLen)]
-    # dt = [0 for x in range(seqLen)]
+    nL = [0 for x in range(7)]
+    ln = [0 for x in range(7)]
+    lb = [0 for x in range(7)]
+    op = [0 for x in range(7)]
+    dt = [0 for x in range(7)]
 
-    # while i < length:
-        # found = False
-        # nL[0] = source[i]
-        # ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
-        # if op[0] in ['lda', 'lda.w']:
-            # nL[1] = source[i+1]
-            # ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
-            # if op[1] in ['pha', 'pha.w'] \
-               # and lb[1] == '':
-                # nL[2] = source[i+2]
-                # ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
-                # if op[2] in ['lda', 'lda.w'] \
-                   # and lb[2] == '':
-                    # nL[3] = source[i+3]
-                    # ln[3], lb[3], op[3], dt[3] = processLine(nL[3])
-                    # if op[3] in ['clc'] \
-                       # and lb[3] == '':
-                        # nL[4] = source[i+4]
-                        # ln[4], lb[4], op[4], dt[4] = processLine(nL[4])
-                        # if op[4] in ['adc', 'adc.w'] \
-                           # and dt[4] == '1,S' \
-                           # and lb[4] == '':
-                            # nL[5] = source[i+5]
-                            # ln[5], lb[5], op[5], dt[5] = processLine(nL[5])
-                            # if op[5] in ['adj'] \
-                               # and dt[5] == '#2' \
-                               # and lb[5] == '':
-                                # newSrc.append(nL[0])
-                                # newSrc.append(nL[3])
-                                # if '.' in op[4]:
-                                    # op[4] = 'adc'+'.'+op[4].split('.')[1]
-                                # else: op[4] = 'adc'
-                                # nL[4] = [[ln[4], lb[4]+'\t'+op[4]+' '+dt[2]], \
-                                         # [lb[4], op[4], dt[2]]]
-                                # newSrc.append(nL[4])
-                                # i += 5; j += 1
-                                # found = True
-        # if not found: newSrc.append(nL[0])
-        # i += 1
+    while i < length:
+        found = False
+        nL[0] = source[i]
+        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+        if op[0] in ['lda', 'lda.w']:
+            nL[1] = source[i+1]
+            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+            if op[1] in ['pha', 'pha.w'] \
+               and lb[1] == '':
+                nL[2] = source[i+2]
+                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
+                if op[2] in ['lda', 'lda.w'] \
+                   and lb[2] == '':
+                    nL[3] = source[i+3]
+                    ln[3], lb[3], op[3], dt[3] = processLine(nL[3])
+                    if op[3] in ['xma', 'xma.w'] \
+                       and dt[3] == '1,S' \
+                       and lb[3] == '':
+                        nL[4] = source[i+4]
+                        ln[4], lb[4], op[4], dt[4] = processLine(nL[4])
+                        if op[4] in ['sec'] \
+                           and lb[4] == '':
+                            nL[5] = source[i+5]
+                            ln[5], lb[5], op[5], dt[5] = processLine(nL[5])
+                            if op[5] in ['sbc', 'sbc.w'] \
+                               and dt[5] == '1,S' \
+                               and lb[5] == '':
+                                nL[6] = source[i+6]
+                                ln[6], lb[6], op[6], dt[6] = processLine(nL[6])
+                                if op[6] in ['adj'] \
+                                   and dt[6] == '#2' \
+                                   and lb[6] == '':
+                                    newSrc.append(nL[0])
+                                    if dt[2] == '#1':
+                                        if '.' in op[5]:
+                                            op[5] = 'dec'+'.'+op[5].split('.')[1]
+                                        else: op[5] = 'dec'
+                                        nL[5] = [[ln[5], lb[5]+'\t'+op[5]+' '+'a'], \
+                                                 [lb[5], op[5], 'a']]
+                                        newSrc.append(nL[5])
+                                    else:
+                                        newSrc.append(nL[4])
+                                        if '.' in op[5]:
+                                            op[5] = 'sbc'+'.'+op[5].split('.')[1]
+                                        else: op[5] = 'sbc'
+                                        nL[5] = [[ln[5], lb[5]+'\t'+op[5]+' '+dt[2]], \
+                                                 [lb[5], op[5], dt[2]]]
+                                        newSrc.append(nL[5])
+                                    i += 6; j += 1
+                                    found = True
+        if not found: newSrc.append(nL[0])
+        i += 1
         
-    # for nL in source[length:]:
-        # newSrc.append(nL)
+    for nL in source[length:]:
+        newSrc.append(nL)
 
-    # print('StackSub_to_DirectSub =>', j, len(source), len(newSrc))
-    # return newSrc
+    print('StackSub_to_DirectSub =>', j, len(source), len(newSrc))
+    return newSrc
 
 def pho_StackCmp_to_DirectCmp(source):
     newSrc = []
@@ -808,6 +820,132 @@ def pho_optimizeBooleanTest2(source):
     print('optimizeBooleanTest2  =>', j, len(source), len(newSrc))
     return newSrc
 
+def pho_optimizeBooleanTest3(source):
+    newSrc = []
+    length = len(source) - 6
+    i = j = 0
+    
+    nL = [0 for x in range(7)]
+    ln = [0 for x in range(7)]
+    lb = [0 for x in range(7)]
+    op = [0 for x in range(7)]
+    dt = [0 for x in range(7)]
+
+    while i < length:
+        found = False
+        nL[0] = source[i]
+        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+        if op[0] in ['lda', 'lda.w'] \
+           and lb[0] == '':
+            nL[1] = source[i+1]
+            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+            if op[1] in ['cmp', 'cmp.w'] \
+               and dt[1] == '#0' \
+               and lb[1] == '':
+                nL[2] = source[i+2]
+                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
+                if op[2] in ['beq'] \
+                   and lb[2] == '':
+                    nL[3] = source[i+3]
+                    ln[3], lb[3], op[3], dt[3] = processLine(nL[3])
+                    if op[3] in ['lda'] \
+                       and dt[3] == '#0' \
+                       and lb[3] == '':
+                        nL[4] = source[i+4]
+                        ln[4], lb[4], op[4], dt[4] = processLine(nL[4])
+                        if op[4] in ['bra'] \
+                           and lb[4] == '':
+                            nL[5] = source[i+5]
+                            ln[5], lb[5], op[5], dt[5] = processLine(nL[5])
+                            if lb[5] != '':
+                                nL[6] = source[i+6]
+                                ln[6], lb[6], op[6], dt[6] = processLine(nL[6])
+                                if op[6] in ['lda'] \
+                                   and dt[6] == '#1' \
+                                   and lb[6] == '':
+                                    if dt[4] == dt[2].split('-')[0]:
+                                        newSrc.append(nL[0])
+                                        
+                                        newSrc.append(nL[2])
+                                        newSrc.append(nL[3])
+                                        newSrc.append(nL[4])
+                                        newSrc.append(nL[5])
+                                        newSrc.append(nL[6])
+                                        i += 6; j += 1
+                                        found = True
+
+        if not found: newSrc.append(nL[0])
+        i += 1
+        
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('optimizeBooleanTest3  =>', j, len(source), len(newSrc))
+    return newSrc
+
+def pho_optimize1DArrayPtr(source):
+    newSrc = []
+    length = len(source) - 5
+    i = j = 0
+    
+    nL = [0 for x in range(6)]
+    ln = [0 for x in range(6)]
+    lb = [0 for x in range(6)]
+    op = [0 for x in range(6)]
+    dt = [0 for x in range(6)]
+
+    while i < length:
+        found = False
+        nL[0] = source[i]
+        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+        if op[0] in ['psh.w'] \
+           and dt[0][0] == '#' \
+           and lb[0] == '':
+            nL[1] = source[i+1]
+            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+            if op[1] in ['lda.w', 'lda'] \
+               and lb[1] == '':
+                nL[2] = source[i+2]
+                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
+                if op[2] in ['asl.w'] \
+                   and dt[2] == 'a' \
+                   and lb[2] == '':
+                    nL[3] = source[i+3]
+                    ln[3], lb[3], op[3], dt[3] = processLine(nL[3])
+                    if op[3] in ['clc'] \
+                       and lb[3] == '':
+                        nL[4] = source[i+4]
+                        ln[4], lb[4], op[4], dt[4] = processLine(nL[4])
+                        if op[4] in ['adc.w'] \
+                           and dt[4] == '1,S' \
+                           and lb[4] == '':
+                            nL[5] = source[i+5]
+                            ln[5], lb[5], op[5], dt[5] = processLine(nL[5])
+                            if op[5] in ['sta.w'] \
+                               and dt[5] == '1,S' \
+                               and lb[5] == '':
+                                newSrc.append(source[i+1])
+                                newSrc.append(source[i+2])
+                                newSrc.append(source[i+3])
+                                
+                                nL[4] = [[ln[4], '\t'+op[4]+' '+dt[0]], \
+                                         [lb[4], op[4], dt[0]]]
+                                newSrc.append(nL[4])
+                                nL[5] = [[ln[5], '\t'+'pha.w'], \
+                                         [lb[5], 'pha.w', '']]
+                                newSrc.append(nL[5])
+                    
+                                i += 5; j += 1
+                                found = True
+        if not found: newSrc.append(nL[0])
+        i += 1
+
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('optimize1DArrayPtr    =>', j, len(source), len(newSrc))
+    return newSrc
+
 def pho_optimize1DArrayLoad(source):
     newSrc = []
     length = len(source) - 8
@@ -955,6 +1093,88 @@ def pho_optimize1DArrayLoad2(source):
         newSrc.append(nL)
 
     print('optimize1DArrayLoad2  =>', j, len(source), len(newSrc))
+    return newSrc
+
+def pho_optimize1DArrayLoad3(source):
+    newSrc = []
+    length = len(source) - 9
+    i = j = 0
+    
+    nL = [0 for x in range(10)]
+    ln = [0 for x in range(10)]
+    lb = [0 for x in range(10)]
+    op = [0 for x in range(10)]
+    dt = [0 for x in range(10)]
+
+    while i < length:
+        found = False
+        nL[0] = source[i]
+        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+        if op[0] in ['psh.w'] \
+           and dt[0][0] == '#' \
+           and lb[0] == '':
+            nL[1] = source[i+1]
+            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+            if op[1] in ['lda.w', 'lda'] \
+               and lb[1] == '':
+                nL[2] = source[i+2]
+                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
+                if op[2] in ['sec'] \
+                   and lb[2] == '':
+                    nL[3] = source[i+3]
+                    ln[3], lb[3], op[3], dt[3] = processLine(nL[3])
+                    if op[3] in ['sbc.w'] \
+                       and lb[3] == '':
+                        nL[4] = source[i+4]
+                        ln[4], lb[4], op[4], dt[4] = processLine(nL[4])
+                        if op[4] in ['asl.w'] \
+                           and dt[4] == 'a' \
+                           and lb[4] == '':
+                            nL[5] = source[i+5]
+                            ln[5], lb[5], op[5], dt[5] = processLine(nL[5])
+                            if op[5] in ['clc'] \
+                               and lb[5] == '':
+                                nL[6] = source[i+6]
+                                ln[6], lb[6], op[6], dt[6] = processLine(nL[6])
+                                if op[6] in ['adc.w'] \
+                                   and dt[6] == '1,S' \
+                                   and lb[6] == '':
+                                    nL[7] = source[i+7]
+                                    ln[7], lb[7], op[7], dt[7] = processLine(nL[7])
+                                    if op[7] in ['sta.w'] \
+                                       and dt[7] == '1,S' \
+                                       and lb[7] == '':
+                                        nL[8] = source[i+8]
+                                        ln[8], lb[8], op[8], dt[8] = processLine(nL[8])
+                                        if op[8] in ['pli.s'] \
+                                           and lb[8] == '':
+                                            nL[9] = source[i+9]
+                                            ln[9], lb[9], op[9], dt[9] = processLine(nL[9])
+                                            if op[9] in ['lda.w'] \
+                                               and dt[9] == '0,I++' \
+                                               and lb[9] == '':
+                                                newSrc.append(source[i+1])
+                                                newSrc.append(source[i+2])
+                                                newSrc.append(source[i+3])
+                                                newSrc.append(source[i+4])
+                                                
+                                                nL[5] = [[ln[5], '\t'+'tay.w'+' '+''], \
+                                                         ['', 'tay.w', '']]
+                                                newSrc.append(nL[5])
+
+                                                nL[9] = [[ln[9], '\t'+op[9]+' '+dt[0][1:]+',Y'], \
+                                                         [lb[9], op[9], dt[0][1:]+',Y']]
+                                                newSrc.append(nL[9])
+                                    
+                                                i += 9; j += 1
+                                                found = True
+        if not found: newSrc.append(nL[0])
+        i += 1
+
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('optimize1DArrayLoad3  =>', j, len(source), len(newSrc))
     return newSrc
 
 def pho_optimize1DArrayWrite(source):
@@ -1160,6 +1380,144 @@ def pho_ReduceImmVarProduct(source):
         newSrc.append(nL)
 
     print('reduceImmVarProduct   =>', j, len(source), len(newSrc))
+    return newSrc
+
+def pho_ReducePhaPli_to_Tai(source):
+    newSrc = []
+    length  = len(source) - 2
+    i = j = 0
+    
+    nL = [0 for x in range(3)]
+    ln = [0 for x in range(3)]
+    lb = [0 for x in range(3)]
+    op = [0 for x in range(3)]
+    dt = [0 for x in range(3)]
+
+    while i < length:
+        found = False
+        nL[0] = source[i]
+        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+        if op[0] in 'pha.w' \
+           and lb[0] == '':
+            nL[1] = source[i+1]
+            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+            if op[1] == 'pli.s' \
+               and lb[1] == '':
+                nL[2] = source[i+2]
+                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
+                if op[2] in ['lda.w', 'sta.w'] \
+                   and dt[2] == '0,I++' \
+                   and lb[2] == '':
+                    nL[0] = [[ln[0], lb[0]+'\t'+'tai'+' '+''], \
+                             [lb[0], 'tai', '']]
+                    newSrc.append(nL[0])
+                    newSrc.append(nL[2])
+
+                    i += 2; j += 1
+                    found = True
+
+        if not found: newSrc.append(nL[0])
+        i += 1
+        
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('reducePhaPli_to_Tai   =>', j, len(source), len(newSrc))
+    return newSrc
+
+def pho_ReducePhaLdaPli_to_Tai(source):
+    newSrc = []
+    length  = len(source) - 3
+    i = j = 0
+    
+    nL = [0 for x in range(4)]
+    ln = [0 for x in range(4)]
+    lb = [0 for x in range(4)]
+    op = [0 for x in range(4)]
+    dt = [0 for x in range(4)]
+
+    while i < length:
+        found = False
+        nL[0] = source[i]
+        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+        if op[0] in 'pha.w' \
+           and lb[0] == '':
+            nL[1] = source[i+1]
+            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+            if op[1] in ['lda', 'lda.w'] \
+               and lb[1] == '':
+                nL[2] = source[i+2]
+                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
+                if op[2] in ['pli.s'] \
+                   and lb[2] == '':
+                    nL[3] = source[i+3]
+                    ln[3], lb[3], op[3], dt[3] = processLine(nL[3])
+                    if op[3] in ['sta', 'sta.w'] \
+                       and dt[3] == '0,I++' \
+                       and lb[3] == '':
+                        nL[0] = [[ln[0], lb[0]+'\t'+'tai'+' '+''], \
+                                 [lb[0], 'tai', '']]
+                        newSrc.append(nL[0])
+                        newSrc.append(nL[1])
+                        newSrc.append(nL[3])
+
+                        i += 3; j += 1
+                        found = True
+
+        if not found: newSrc.append(nL[0])
+        i += 1
+        
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('reducePhaLdaPli_to_Tai=>', j, len(source), len(newSrc))
+    return newSrc
+
+def pho_StackPtr_to_Tai(source):
+    newSrc = []
+    length  = len(source) - 2
+    i = j = 0
+    
+    nL = [0 for x in range(3)]
+    ln = [0 for x in range(3)]
+    lb = [0 for x in range(3)]
+    op = [0 for x in range(3)]
+    dt = [0 for x in range(3)]
+
+    while i < length:
+        found = False
+        nL[0] = source[i]
+        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+        if op[0] == 'sta.w' \
+           and dt[0] == '1,S' \
+           and lb[0] == '':
+            nL[1] = source[i+1]
+            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+            if op[1] == 'pli.s' \
+               and lb[1] == '':
+                nL[2] = source[i+2]
+                ln[2], lb[2], op[2], dt[2] = processLine(nL[2])
+                if op[2] in ['lda.w'] \
+                   and dt[2] == '0,I++' \
+                   and lb[2] == '':
+                    nL[0] = [[ln[0], lb[0]+'\t'+'tai'+' '+''], \
+                             [lb[0], 'tai', '']]
+                    newSrc.append(nL[0])
+                    nL[1] = [[ln[1], lb[1]+'\t'+'adj'+' '+'#2'], \
+                             [lb[1], 'adj', '#2']]
+                    newSrc.append(nL[1])
+                    newSrc.append(nL[2])
+
+                    i += 2; j += 1
+                    found = True
+
+        if not found: newSrc.append(nL[0])
+        i += 1
+        
+    for nL in source[length:]:
+        newSrc.append(nL)
+
+    print('StackPtr_to_Tai       =>', j, len(source), len(newSrc))
     return newSrc
 
 def numVal(dt):

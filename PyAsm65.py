@@ -54,16 +54,23 @@ if phoEnable:
     source = pho_ldaImmPha_to_pshImm(source)
     source = pho_ldaImmSta_to_Stz(source)
     source = pho_StackAdd_to_DirectAdd(source)
+    source = pho_StackSub_to_DirectSub(source)
     source = pho_StackCmp_to_DirectCmp(source)
     source = pho_optimizeBooleanTest(source, balanced)
     source = pho_optimizeBooleanTest2(source)
     source = pho_ConvertAdc_to_Inc(source)
+    source = pho_optimize1DArrayPtr(source)
     source = pho_optimize1DArrayLoad(source)
     source = pho_optimize1DArrayLoad2(source)
+    source = pho_optimize1DArrayLoad3(source)
     source = pho_optimize1DArrayWrite(source)
     source = pho_ReduceConstantQuotient(source)
     source = pho_ReduceVarImmProduct(source)
     source = pho_ReduceImmVarProduct(source)
+    source = pho_ReducePhaPli_to_Tai(source)
+    source = pho_ReducePhaLdaPli_to_Tai(source)
+    source = pho_StackPtr_to_Tai(source)
+    source = pho_optimizeBooleanTest3(source)
 
 '''
     Output intermediate file #2
