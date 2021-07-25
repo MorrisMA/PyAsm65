@@ -57,7 +57,7 @@ if phoEnable:
     source = pho_StackSub_to_DirectSub(source)
     source = pho_StackCmp_to_DirectCmp(source)
     source = pho_optimizeBooleanTest(source, balanced)
-    source = pho_optimizeBooleanTest2(source)
+    #source = pho_optimizeBooleanTest2(source)
     source = pho_ConvertAdc_to_Inc(source)
     source = pho_optimize1DArrayPtr(source)
     source = pho_optimize1DArrayLoad(source)

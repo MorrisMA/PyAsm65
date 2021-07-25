@@ -784,41 +784,41 @@ def pho_optimizeBooleanTest(source, balanced):
     print('optimizeBooleanTest   =>', j, len(source), len(newSrc))
     return newSrc
 
-def pho_optimizeBooleanTest2(source):
-    newSrc = []
-    length = len(source) - 1
-    i = j = 0
-    
-    nL = [0 for x in range(2)]
-    ln = [0 for x in range(2)]
-    lb = [0 for x in range(2)]
-    op = [0 for x in range(2)]
-    dt = [0 for x in range(2)]
-
-    while i < length:
-        found = False
-        nL[0] = source[i]
-        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
-        if op[0] in ['cmp.w'] \
-           and dt[0] == '#1' \
-           and lb[0] == '':
-            nL[1] = source[i+1]
-            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
-            if op[1] in ['beq'] \
-               and lb[1] == '':
-                nL[1] = [[ln[1], '\t'+'bne'+' '+dt[1]], \
-                                     ['', 'bne', dt[1]]]
-                newSrc.append(nL[1])
-                i += 1; j += 1
-                found = True
-        if not found: newSrc.append(nL[0])
-        i += 1
-        
-    for nL in source[length:]:
-        newSrc.append(nL)
-
-    print('optimizeBooleanTest2  =>', j, len(source), len(newSrc))
-    return newSrc
+##def pho_optimizeBooleanTest2(source):
+##    newSrc = []
+##    length = len(source) - 1
+##    i = j = 0
+##    
+##    nL = [0 for x in range(2)]
+##    ln = [0 for x in range(2)]
+##    lb = [0 for x in range(2)]
+##    op = [0 for x in range(2)]
+##    dt = [0 for x in range(2)]
+##
+##    while i < length:
+##        found = False
+##        nL[0] = source[i]
+##        ln[0], lb[0], op[0], dt[0] = processLine(nL[0])
+##        if op[0] in ['cmp.w'] \
+##           and dt[0] == '#1' \
+##           and lb[0] == '':
+##            nL[1] = source[i+1]
+##            ln[1], lb[1], op[1], dt[1] = processLine(nL[1])
+##            if op[1] in ['beq'] \
+##               and lb[1] == '':
+##                nL[1] = [[ln[1], '\t'+'bne'+' '+dt[1]], \
+##                                     ['', 'bne', dt[1]]]
+##                newSrc.append(nL[1])
+##                i += 1; j += 1
+##                found = True
+##        if not found: newSrc.append(nL[0])
+##        i += 1
+##        
+##    for nL in source[length:]:
+##        newSrc.append(nL)
+##
+##    print('optimizeBooleanTest2  =>', j, len(source), len(newSrc))
+##    return newSrc
 
 def pho_optimizeBooleanTest3(source):
     newSrc = []
