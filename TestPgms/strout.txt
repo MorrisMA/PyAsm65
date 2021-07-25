@@ -1,0 +1,31 @@
+(   1)                  ; ;   M65C02A Character String Output Routine
+(   2)                  ; ;       Implemented to support the drogon method where the desired output string
+(   3)                  ; ;       is embedded in the instruction sequence following the jsr instruction.
+(   4)                  ; ;       Thus, the address of the string is the return address on the stack + 1.
+(   5)                  ; ;       The string is NULL terminated, so at the completion of the routine, the
+(   6)                  ; ;       return address on the stack should be pointing to the NULL terminator.
+(   7)                  ; ;
+(   8)                  ; _putch  .equ    0xF001          ; py65 character output memory location
+(   9)                  ; ;
+(  10)                  ;         .cod 512
+(  11)                  ; ;
+(  12)                  ; test    .proc
+(  13) 0200 AB6400   [5];         stz.w 0
+(  14) 0203 8BA2FF   [3];         lds #511                ; initialize stack pointer
+(  15) 0206 201702   [5];         jsr strout              ; output the embedded string to the console
+(  16) 0209 48656C6C    ;         .db "Hello World",10,0
+       020D 6F20576F726C640A00
+(  17) 0216 00       [-];         brk
+(  18)                  ;         .endp
+(  19)                  ; ;
+(  20)                  ; strout  .proc
+(  21) 0217 CBF601   [7]; L000    inc.w 1,S               ; point to string that follows jsr instruction
+(  22) 021A 8BA101   [4];         lda (1,S)               ; load character pointed to by TOS
+(  23) 021D F005     [2];         beq L001                ; if ch==0, end of string found, exit routine
+(  24) 021F 8D01F0   [4];         sta _putch              ; write the character to the console
+(  25) 0222 80F3     [2];         bra L000                ; loop until end of string found
+(  26) 0224 60       [3]; L001    rts                     ; exit
+(  27)                  ;         .endp
+(  28)                  ; ;
+(  29)                  ;         .end
+(  30)                  ; 

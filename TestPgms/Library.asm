@@ -153,9 +153,9 @@ _swrite_Lp
 ;
             .cod
 ;
-_iValOff    .equ    7
-_fLenOff    .equ    5
-_iCntOff    .equ    -1
+_iValOff    .equ    7               ; parameter - integer value to convert
+_fLenOff    .equ    5               ; parameter - field width specifier
+_iCntOff    .equ    -1              ; local variable - conversion iteration cnt.
 ;
 _iwrite     .proc
             phx.w                   ; save current base pointer
@@ -221,21 +221,27 @@ _iwrite_ErrLp
             bra _iwrite_Exit
 ;-------------------------------------------------------------------------------
 _iwrite_Sup0
+            lda #1                  ; load A w/ minimum field width
+            cmp.w _fLenOff,X        ; compare with field width specifier on stk.
+            beq _iwrite_Exit        ; don't suppress zero (0) for 1 char fields
+            dec.w _fLenOff,X        ; decrement field width specifier
             ldy #0                  ; initialize string index
 _iwrite_Sup0_Lp
             lda (1,S),Y
             cmp #48                 ; if leading position == 0, replace with ' '
-            bne _iwrite_Exit        ; exit loop on first non-0 digit
+            bne _iwrite_Sup0_Exit   ; exit loop on first non-0 digit
             lda #32                 ; replace leading 0 with ' '
             sta (1,S),Y
             iny                     ; increment string index and compare to fLen
             cmp.y _fLenOff,X
             bne _iwrite_Sup0_Lp     ; loop until Y == fLen
+_iwrite_Sup0_Exit
+            inc.w _fLenOff,X        ; restore original field width specifier
 ;-------------------------------------------------------------------------------
 _iwrite_Exit
             psh.w #0                ; NULL argument
-            lda _fLenOff,X          ; push field width specifier
-            pha.w
+            lda _fLenOff,X          ; load field width specifier
+            pha.w                   ; push field width specifier
             csr _swrite             ; write integer value string using _swrite()
             adj #6                  ; remove parameters to _swrite() from stack
 ;
